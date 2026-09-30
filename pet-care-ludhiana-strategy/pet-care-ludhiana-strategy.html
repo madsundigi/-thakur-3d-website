@@ -1,0 +1,1139 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pet Care at Your Doorstep — Ludhiana Launch Strategy</title>
+<style>
+  /* ============ FONTS & TOKENS ============ */
+  :root{
+    --ink:#15242a;          /* main text */
+    --ink-soft:#40555c;     /* secondary text */
+    --muted:#6b7f86;        /* captions */
+    --teal:#0e7c72;         /* primary brand */
+    --teal-d:#0a5a53;       /* dark teal */
+    --teal-xd:#073e39;      /* header teal */
+    --mint:#e9f5f2;         /* soft bg */
+    --mint-2:#d6ece7;
+    --sand:#fbf5ea;         /* warm bg */
+    --amber:#e98a1f;        /* accent warm */
+    --amber-d:#c46f12;
+    --coral:#e2604f;        /* con / caution */
+    --coral-bg:#fceeeb;
+    --green:#2f9e6b;        /* positive */
+    --green-bg:#e7f5ee;
+    --line:#d7e3e0;         /* borders */
+    --line-2:#c3d5d0;
+    --card:#ffffff;
+    --shadow:0 1px 2px rgba(7,62,57,.06);
+    --sans:'DejaVu Sans','Liberation Sans',sans-serif;
+    --serif:'DejaVu Serif','Liberation Serif',serif;
+  }
+
+  @page{ size:A4; margin:16mm 15mm 18mm 15mm; }
+  @page:first{ margin:0; }
+
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; }
+  body{
+    font-family:var(--sans);
+    color:var(--ink);
+    font-size:10.2pt;
+    line-height:1.5;
+    -webkit-print-color-adjust:exact;
+    print-color-adjust:exact;
+  }
+
+  /* ============ TYPOGRAPHY ============ */
+  h1,h2,h3,h4{ font-family:var(--serif); color:var(--teal-xd); line-height:1.15; margin:0; }
+  p{ margin:0 0 8px; }
+  strong{ color:var(--ink); }
+  a{ color:var(--teal-d); text-decoration:none; }
+  small{ font-size:8.4pt; }
+
+  .section{ page-break-before:always; padding-top:2mm; }
+  .section:first-of-type{ page-break-before:avoid; }
+
+  .kicker{
+    font-family:var(--sans); font-weight:700; font-size:8.2pt; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--teal); margin-bottom:5px; display:block;
+  }
+  h2.title{ font-size:21pt; margin-bottom:4px; }
+  .rule{ height:3px; width:54px; background:var(--amber); border-radius:2px; margin:9px 0 14px; }
+  .lead{ font-size:11pt; color:var(--ink-soft); margin-bottom:12px; max-width:60em; }
+
+  h3.sub{ font-size:13pt; color:var(--teal-d); margin:18px 0 7px; }
+  h4.mini{ font-size:10.6pt; color:var(--teal-d); margin:12px 0 5px; font-family:var(--sans); font-weight:800; letter-spacing:.01em; }
+
+  /* ============ COVER ============ */
+  .cover{
+    position:relative; height:297mm; width:210mm; overflow:hidden; color:#fff;
+    background:
+      radial-gradient(120% 90% at 82% 8%, #17a396 0%, rgba(23,163,150,0) 55%),
+      radial-gradient(90% 70% at 8% 100%, #0a5a53 0%, rgba(10,90,83,0) 60%),
+      linear-gradient(150deg, #0e7c72 0%, #084640 100%);
+    page-break-after:always;
+  }
+  .cover .pawfield{ position:absolute; inset:0; opacity:.10; }
+  .cover-inner{ position:absolute; inset:0; padding:26mm 22mm; display:flex; flex-direction:column; }
+  .brandline{ display:flex; align-items:center; gap:11px; font-family:var(--sans); font-weight:800; letter-spacing:.02em; font-size:12.5pt; }
+  .brand-badge{ width:34px; height:34px; border-radius:9px; background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.3); display:flex; align-items:center; justify-content:center; }
+  .cover-tag{ margin-top:auto; }
+  .cover-eyebrow{ font-family:var(--sans); font-weight:700; letter-spacing:.18em; text-transform:uppercase; font-size:9pt; color:#bfeee6; margin-bottom:14px; }
+  .cover h1{ color:#fff; font-size:38pt; line-height:1.06; letter-spacing:-.01em; }
+  .cover h1 .hl{ color:#ffd8a8; }
+  .cover .sub{ font-family:var(--sans); font-size:13pt; color:#d9f2ee; margin-top:16px; max-width:30em; line-height:1.5; }
+  .cover-meta{ margin-top:30px; display:flex; gap:34px; flex-wrap:wrap; font-family:var(--sans); }
+  .cover-meta .lbl{ font-size:8pt; letter-spacing:.14em; text-transform:uppercase; color:#8fd4c9; }
+  .cover-meta .val{ font-size:11pt; color:#fff; font-weight:700; margin-top:3px; }
+  .cover-foot{ margin-top:26px; font-family:var(--sans); font-size:9pt; color:#9fdcd2; border-top:1px solid rgba(255,255,255,.18); padding-top:12px; }
+  .cover-chips{ display:flex; gap:8px; flex-wrap:wrap; margin-top:20px; }
+  .cover-chip{ font-family:var(--sans); font-size:8.6pt; font-weight:700; background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.26); color:#eafaf7; padding:5px 11px; border-radius:20px; }
+
+  /* ============ COMPONENTS ============ */
+  .grid{ display:grid; gap:11px; }
+  .g2{ grid-template-columns:1fr 1fr; }
+  .g3{ grid-template-columns:1fr 1fr 1fr; }
+  .g4{ grid-template-columns:repeat(4,1fr); }
+
+  .card{ background:var(--card); border:1px solid var(--line); border-radius:11px; padding:13px 14px; box-shadow:var(--shadow); break-inside:avoid; }
+  .card.mint{ background:var(--mint); border-color:var(--mint-2); }
+  .card.sand{ background:var(--sand); border-color:#efe2c9; }
+
+  .stat{ background:var(--card); border:1px solid var(--line); border-top:3px solid var(--teal); border-radius:10px; padding:12px 13px; break-inside:avoid; }
+  .stat .num{ font-family:var(--serif); font-size:20pt; color:var(--teal-d); font-weight:700; line-height:1; }
+  .stat .num .u{ font-size:11pt; color:var(--amber-d); font-weight:700; }
+  .stat .lbl{ font-family:var(--sans); font-size:8.7pt; color:var(--ink-soft); margin-top:6px; line-height:1.35; }
+  .stat.amber{ border-top-color:var(--amber); }
+  .stat.amber .num{ color:var(--amber-d); }
+  .stat.green{ border-top-color:var(--green); }
+  .stat.green .num{ color:#1f7d52; }
+
+  .callout{ border-radius:10px; padding:12px 14px 12px 15px; border-left:4px solid var(--teal); background:var(--mint); break-inside:avoid; margin:12px 0; }
+  .callout.amber{ border-left-color:var(--amber); background:var(--sand); }
+  .callout.green{ border-left-color:var(--green); background:var(--green-bg); }
+  .callout.coral{ border-left-color:var(--coral); background:var(--coral-bg); }
+  .callout .ct{ font-family:var(--sans); font-weight:800; font-size:9.4pt; letter-spacing:.02em; margin-bottom:4px; color:var(--teal-xd); text-transform:uppercase; }
+  .callout.amber .ct{ color:var(--amber-d); }
+  .callout.green .ct{ color:#1f7d52; }
+  .callout.coral .ct{ color:#b8432f; }
+
+  table{ width:100%; border-collapse:collapse; font-family:var(--sans); font-size:9pt; break-inside:auto; }
+  thead{ display:table-header-group; }
+  th{ background:var(--teal-xd); color:#eafaf7; text-align:left; padding:8px 9px; font-size:8.4pt; letter-spacing:.03em; font-weight:700; }
+  th:first-child{ border-top-left-radius:8px; }
+  th:last-child{ border-top-right-radius:8px; }
+  td{ padding:7px 9px; border-bottom:1px solid var(--line); vertical-align:top; color:var(--ink-soft); }
+  tr:nth-child(even) td{ background:#f6faf9; }
+  td strong{ color:var(--ink); }
+  .t-tight td, .t-tight th{ padding:6px 8px; font-size:8.6pt; }
+
+  .pill{ display:inline-block; font-family:var(--sans); font-size:7.6pt; font-weight:800; letter-spacing:.03em; padding:2px 8px; border-radius:12px; text-transform:uppercase; }
+  .pill.hi{ background:#d8f0e6; color:#1c7a51; }
+  .pill.med{ background:#fdeecf; color:#a9660d; }
+  .pill.lo{ background:#eef2f1; color:#657a80; }
+  .pill.p1{ background:var(--amber); color:#3d2400; }
+
+  ul.clean{ margin:6px 0 10px; padding-left:0; list-style:none; }
+  ul.clean li{ position:relative; padding-left:18px; margin-bottom:5px; color:var(--ink-soft); }
+  ul.clean li::before{ content:""; position:absolute; left:2px; top:6px; width:7px; height:7px; border-radius:50%; background:var(--teal); }
+  ul.clean.amber li::before{ background:var(--amber); }
+  ul.pro li::before{ content:"✔"; background:none; color:var(--green); font-size:10pt; top:-1px; left:0; width:auto; height:auto; }
+  ul.pro li{ padding-left:19px; }
+  ul.con li::before{ content:"✕"; background:none; color:var(--coral); font-size:10pt; top:-1px; left:0; width:auto; height:auto; }
+  ul.con li{ padding-left:19px; }
+  ul.num{ counter-reset:s; list-style:none; padding-left:0; margin:8px 0; }
+  ul.num li{ position:relative; padding-left:30px; margin-bottom:9px; color:var(--ink-soft); }
+  ul.num li::before{ counter-increment:s; content:counter(s); position:absolute; left:0; top:0; width:21px; height:21px; background:var(--teal); color:#fff; border-radius:50%; font-family:var(--sans); font-weight:800; font-size:8.6pt; display:flex; align-items:center; justify-content:center; }
+
+  .swot{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .swot .q{ border-radius:10px; padding:12px 13px; break-inside:avoid; }
+  .swot .qh{ font-family:var(--sans); font-weight:800; font-size:10pt; margin-bottom:7px; display:flex; align-items:center; gap:8px; }
+  .swot .s{ background:var(--green-bg); border:1px solid #bfe6d2; }
+  .swot .s .qh{ color:#1f7d52; }
+  .swot .w{ background:var(--coral-bg); border:1px solid #f3cabf; }
+  .swot .w .qh{ color:#b8432f; }
+  .swot .o{ background:var(--mint); border:1px solid var(--mint-2); }
+  .swot .o .qh{ color:var(--teal-d); }
+  .swot .th{ background:var(--sand); border:1px solid #efe2c9; }
+  .swot .th .qh{ color:var(--amber-d); }
+  .swot ul{ margin:0; padding-left:0; list-style:none; }
+  .swot li{ font-size:8.7pt; padding-left:14px; position:relative; margin-bottom:4px; color:var(--ink-soft); }
+  .swot li::before{ content:"—"; position:absolute; left:0; color:inherit; opacity:.5; }
+
+  .timeline{ position:relative; margin:6px 0 4px; padding-left:8px; }
+  .phase{ position:relative; padding:0 0 14px 30px; border-left:2px solid var(--line-2); margin-left:8px; break-inside:avoid; }
+  .phase:last-child{ border-left-color:transparent; }
+  .phase .dot{ position:absolute; left:-11px; top:0; width:22px; height:22px; border-radius:50%; background:var(--teal); color:#fff; font-family:var(--sans); font-weight:800; font-size:8.4pt; display:flex; align-items:center; justify-content:center; box-shadow:0 0 0 3px #fff; }
+  .phase.p0 .dot{ background:var(--muted); }
+  .phase.p2 .dot{ background:var(--amber); }
+  .phase.p3 .dot{ background:var(--teal-xd); }
+  .phase h4{ font-family:var(--sans); font-weight:800; font-size:10.4pt; color:var(--teal-xd); margin-bottom:1px; }
+  .phase .when{ font-family:var(--sans); font-size:8pt; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:var(--amber-d); margin-bottom:5px; }
+
+  .toc-row{ display:flex; align-items:baseline; gap:8px; padding:6px 0; border-bottom:1px dotted var(--line-2); font-family:var(--sans); }
+  .toc-row .n{ font-weight:800; color:var(--teal); width:26px; font-size:9.4pt; }
+  .toc-row .tt{ font-weight:600; color:var(--ink); font-size:10pt; }
+  .toc-row .pg{ margin-left:auto; color:var(--muted); font-weight:700; font-size:9pt; }
+  .toc-row .dsc{ display:block; font-size:8.3pt; color:var(--muted); margin-top:2px; }
+
+  .kv{ display:grid; grid-template-columns:auto 1fr; gap:3px 12px; font-family:var(--sans); font-size:9pt; }
+  .kv dt{ color:var(--muted); font-weight:700; }
+  .kv dd{ margin:0; color:var(--ink); }
+
+  .verdict-band{ background:linear-gradient(135deg,#0e7c72,#0a5148); color:#fff; border-radius:13px; padding:18px 20px; break-inside:avoid; }
+  .verdict-band .vh{ font-family:var(--sans); font-weight:800; letter-spacing:.14em; text-transform:uppercase; font-size:8.4pt; color:#bfeee6; }
+  .verdict-band .score{ font-family:var(--serif); font-size:30pt; font-weight:700; line-height:1; margin:6px 0 3px; color:#fff; }
+  .verdict-band .score .of{ font-size:14pt; color:#8fd4c9; }
+  .verdict-band p{ color:#dcf3ef; margin:6px 0 0; font-size:9.6pt; }
+
+  .legend{ display:flex; gap:14px; flex-wrap:wrap; font-family:var(--sans); font-size:8.4pt; color:var(--ink-soft); margin-top:6px; }
+  .legend span{ display:flex; align-items:center; gap:5px; }
+  .legend i{ width:11px; height:11px; border-radius:3px; display:inline-block; }
+
+  .chartcap{ font-family:var(--sans); font-size:8pt; color:var(--muted); margin-top:5px; }
+  .foot-note{ font-family:var(--sans); font-size:8pt; color:var(--muted); }
+
+  .num-hero{ font-family:var(--serif); font-weight:700; color:var(--teal-d); }
+  .hr{ border:0; border-top:1px solid var(--line); margin:14px 0; }
+  .two-col{ column-count:2; column-gap:16px; }
+  .avoid{ break-inside:avoid; }
+</style>
+</head>
+<body>
+
+<!-- ============================ COVER ============================ -->
+<section class="cover">
+  <svg class="pawfield" viewBox="0 0 210 297" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <g id="paw">
+        <ellipse cx="0" cy="3" rx="5.2" ry="6.4"/>
+        <ellipse cx="-6.4" cy="-4.2" rx="2.5" ry="3.2"/>
+        <ellipse cx="-1.9" cy="-8.2" rx="2.5" ry="3.3"/>
+        <ellipse cx="2.9" cy="-8" rx="2.5" ry="3.3"/>
+        <ellipse cx="7.1" cy="-4" rx="2.5" ry="3.2"/>
+      </g>
+    </defs>
+    <g fill="#ffffff">
+      <use href="#paw" transform="translate(28 40) rotate(-18) scale(1.3)"/>
+      <use href="#paw" transform="translate(170 26) rotate(22) scale(1.0)"/>
+      <use href="#paw" transform="translate(186 120) rotate(-12) scale(1.5)"/>
+      <use href="#paw" transform="translate(40 150) rotate(16) scale(1.0)"/>
+      <use href="#paw" transform="translate(150 210) rotate(-24) scale(1.25)"/>
+      <use href="#paw" transform="translate(24 245) rotate(10) scale(1.1)"/>
+      <use href="#paw" transform="translate(96 280) rotate(-8) scale(0.9)"/>
+      <use href="#paw" transform="translate(120 92) rotate(30) scale(0.8)"/>
+    </g>
+  </svg>
+  <div class="cover-inner">
+    <div class="brandline">
+      <span class="brand-badge">
+        <svg width="20" height="20" viewBox="-12 -13 24 26" fill="#ffd8a8"><g>
+          <ellipse cx="0" cy="3" rx="5.2" ry="6.4"/>
+          <ellipse cx="-6.4" cy="-4.2" rx="2.5" ry="3.2"/>
+          <ellipse cx="-1.9" cy="-8.2" rx="2.5" ry="3.3"/>
+          <ellipse cx="2.9" cy="-8" rx="2.5" ry="3.3"/>
+          <ellipse cx="7.1" cy="-4" rx="2.5" ry="3.2"/>
+        </g></svg>
+      </span>
+      <span>PawMitra <span style="font-weight:500;color:#bfeee6">· working brand</span></span>
+    </div>
+
+    <div class="cover-tag">
+      <div class="cover-eyebrow">Business Strategy &amp; Feasibility Report</div>
+      <h1>Pet Care at Your<br>Doorstep in <span class="hl">Ludhiana</span></h1>
+      <div class="sub">Grooming, dog walking, vet-at-home &amp; more — an on-demand pet services venture for Punjab's biggest city, from first booking to full-stack brand.</div>
+
+      <div class="cover-chips">
+        <span class="cover-chip">Market &amp; Demand</span>
+        <span class="cover-chip">Service Gap Analysis</span>
+        <span class="cover-chip">Competitors</span>
+        <span class="cover-chip">App vs Website</span>
+        <span class="cover-chip">Earnings &amp; Roadmap</span>
+      </div>
+
+      <div class="cover-meta">
+        <div><div class="lbl">Prepared for</div><div class="val">Sunny Thakur</div></div>
+        <div><div class="lbl">Launch market</div><div class="val">Ludhiana, Punjab</div></div>
+        <div><div class="lbl">Date</div><div class="val">September 2026</div></div>
+        <div><div class="lbl">Verdict</div><div class="val">Go — build lean</div></div>
+      </div>
+
+      <div class="cover-foot">
+        A practical playbook: what to build first, which services to launch, who you're up against in Ludhiana,
+        whether it's worth doing, and how much you can realistically earn.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ TOC + SUMMARY ============================ -->
+<section class="section" style="page-break-before:avoid;">
+  <span class="kicker">Contents</span>
+  <h2 class="title">What's inside</h2>
+  <div class="rule"></div>
+
+  <div style="margin-top:6px;">
+    <div class="toc-row"><span class="n">01</span><span class="tt">Executive Summary — the verdict<span class="dsc">Is this a good idea, what to build first, what you can earn</span></span><span class="pg">03</span></div>
+    <div class="toc-row"><span class="n">02</span><span class="tt">Why Pet Care, Why Now<span class="dsc">The India opportunity and the Tier-2 surge</span></span><span class="pg">04</span></div>
+    <div class="toc-row"><span class="n">03</span><span class="tt">Why Ludhiana First<span class="dsc">The city, the money, the pet-owning profile</span></span><span class="pg">05</span></div>
+    <div class="toc-row"><span class="n">04</span><span class="tt">The Ground-Level Problem<span class="dsc">What pet parents in Ludhiana struggle with today</span></span><span class="pg">06</span></div>
+    <div class="toc-row"><span class="n">05</span><span class="tt">The Services — Deep Dive &amp; Gap Analysis<span class="dsc">Every service, its demand, its gap, its money</span></span><span class="pg">07</span></div>
+    <div class="toc-row"><span class="n">06</span><span class="tt">App vs Website — What to Build First<span class="dsc">The single most important early decision</span></span><span class="pg">10</span></div>
+    <div class="toc-row"><span class="n">07</span><span class="tt">Competitor Analysis<span class="dsc">National players, local players, and your edge</span></span><span class="pg">11</span></div>
+    <div class="toc-row"><span class="n">08</span><span class="tt">How You Make Money<span class="dsc">Revenue streams, pricing and unit economics</span></span><span class="pg">13</span></div>
+    <div class="toc-row"><span class="n">09</span><span class="tt">Earnings Potential &amp; Projections<span class="dsc">Three scenarios and what you take home</span></span><span class="pg">14</span></div>
+    <div class="toc-row"><span class="n">10</span><span class="tt">What It Costs to Start<span class="dsc">Lean vs funded launch budgets</span></span><span class="pg">16</span></div>
+    <div class="toc-row"><span class="n">11</span><span class="tt">Go-to-Market: Your First 100 Customers<span class="dsc">Getting demand and supply in Ludhiana</span></span><span class="pg">17</span></div>
+    <div class="toc-row"><span class="n">12</span><span class="tt">The Roadmap<span class="dsc">Phase 0 to Punjab-wide expansion</span></span><span class="pg">18</span></div>
+    <div class="toc-row"><span class="n">13</span><span class="tt">SWOT + Advantages &amp; Disadvantages<span class="dsc">The honest balance sheet</span></span><span class="pg">19</span></div>
+    <div class="toc-row"><span class="n">14</span><span class="tt">Risks &amp; How to Handle Them<span class="dsc">What can go wrong and your defence</span></span><span class="pg">20</span></div>
+    <div class="toc-row"><span class="n">15</span><span class="tt">The Verdict &amp; Your Next 30 Days<span class="dsc">A concrete action checklist</span></span><span class="pg">21</span></div>
+    <div class="toc-row"><span class="n">16</span><span class="tt">Sources &amp; Assumptions</span><span class="pg">22</span></div>
+  </div>
+
+  <div class="callout amber" style="margin-top:20px;">
+    <div class="ct">How to read this report</div>
+    <p style="margin:0;">All money figures are in Indian Rupees (₹). Market data is cited from public 2024–2025 industry reports (see Sources). Financial projections are <strong>illustrative scenarios</strong> built on clearly stated assumptions — not guarantees. Your real numbers will depend on execution, but the ranges are grounded in how similar Indian pet-care and home-services businesses actually perform.</p>
+  </div>
+</section>
+
+<!-- ============================ 01 EXEC SUMMARY ============================ -->
+<section class="section">
+  <span class="kicker">01 · Executive Summary</span>
+  <h2 class="title">The short version</h2>
+  <div class="rule"></div>
+  <p class="lead">You want to launch a doorstep pet-care service in Ludhiana — grooming, bathing, dog walking, vet-at-home and more. Here is the honest bottom line, up front, before the detail.</p>
+
+  <div class="grid g2" style="grid-template-columns:1.05fr .95fr; align-items:start;">
+    <div>
+      <div class="verdict-band">
+        <div class="vh">Overall Verdict</div>
+        <div class="score">GO <span class="of">— but build lean</span></div>
+        <p>It's a genuinely good idea with strong tailwinds. The risk is not the market — it's spending too much, too early. Start scrappy, prove people pay and come back, then scale.</p>
+      </div>
+      <div class="grid g2" style="margin-top:11px;">
+        <div class="stat green"><div class="num">8.1<span class="u">/10</span></div><div class="lbl">Opportunity score — big demand, rising fast, weak incumbents locally</div></div>
+        <div class="stat amber"><div class="num">Web<span class="u"> first</span></div><div class="lbl">Start with a mobile site + WhatsApp + Instagram. Build the app in Phase 2, not now</div></div>
+      </div>
+    </div>
+
+    <div class="card mint">
+      <h4 class="mini" style="margin-top:0;">The five decisions, answered</h4>
+      <div class="kv" style="grid-template-columns:auto 1fr; row-gap:9px;">
+        <dt>Good idea?</dt><dd><strong>Yes.</strong> Market growing ~20% a year; Tier-2 cities like Ludhiana growing even faster. Local supply is fragmented and low-trust — that's your opening.</dd>
+        <dt>App or web?</dt><dd><strong>Web + WhatsApp first.</strong> Launch in weeks for a few thousand rupees. App later, once customers repeat.</dd>
+        <dt>Which service?</dt><dd><strong>Lead with grooming &amp; bathing at home</strong> (high demand, high frequency), add <strong>vet-at-home + walking</strong> for recurring revenue.</dd>
+        <dt>Who's the rival?</dt><dd>National apps (Vetic, Supertails, thePetNest) + local groomers &amp; clinics. None <em>own</em> Ludhiana yet.</dd>
+        <dt>Can I earn?</dt><dd><strong>Yes, over time.</strong> Year 1 is mostly reinvestment; a well-run Ludhiana operation can reach <strong>₹8–20 lakh/yr profit by Year 2</strong> and much more with Punjab expansion.</dd>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="sub">Why this can work</h3>
+  <div class="grid g4">
+    <div class="stat"><div class="num">₹4.8<span class="u">k Cr+</span></div><div class="lbl">India pet-care market size, 2024–25 — on track to roughly double by 2030</div></div>
+    <div class="stat"><div class="num">~20<span class="u">%</span></div><div class="lbl">Long-run annual growth rate estimated for India's pet-care industry</div></div>
+    <div class="stat"><div class="num">40<span class="u">%+</span></div><div class="lbl">Annual pet-market growth in Tier-2 cities — nearly double the national pace</div></div>
+    <div class="stat"><div class="num">~20<span class="u"> lakh</span></div><div class="lbl">People in Ludhiana metro — a high-income industrial city, ideal test market</div></div>
+  </div>
+
+  <div class="callout">
+    <div class="ct">The one-paragraph strategy</div>
+    <p style="margin:0;">Launch a <strong>trust-first, doorstep pet-services brand in Ludhiana</strong> starting with grooming and bathing, booked through a simple mobile website and WhatsApp. Recruit and train a small set of <strong>background-verified groomers, walkers and a partner vet</strong>. Win on reliability, hygiene and fixed transparent pricing — the exact things pet parents complain about today. Turn one-off bookings into <strong>monthly subscriptions</strong> (grooming + walking + wellness). Once retention is proven, add a mobile app, pet-supply delivery, and expand to Jalandhar, Amritsar and Chandigarh.</p>
+  </div>
+</section>
+
+<!-- ============================ 02 WHY NOW ============================ -->
+<section class="section">
+  <span class="kicker">02 · The Opportunity</span>
+  <h2 class="title">Why pet care, and why now</h2>
+  <div class="rule"></div>
+  <p class="lead">India is in the middle of a pet boom. People increasingly treat pets as family and spend on them accordingly — and the fastest growth is no longer only in the metros.</p>
+
+  <div class="grid g2" style="grid-template-columns:1.1fr .9fr; align-items:stretch;">
+    <div class="card avoid">
+      <h4 class="mini" style="margin-top:0;">India's pet-care market is roughly doubling</h4>
+      <!-- Market growth chart -->
+      <svg viewBox="0 0 340 170" width="100%" xmlns="http://www.w3.org/2000/svg" font-family="DejaVu Sans">
+        <line x1="38" y1="140" x2="330" y2="140" stroke="#c3d5d0" stroke-width="1"/>
+        <!-- gridlines -->
+        <g stroke="#e6efec" stroke-width="1">
+          <line x1="38" y1="112" x2="330" y2="112"/>
+          <line x1="38" y1="84" x2="330" y2="84"/>
+          <line x1="38" y1="56" x2="330" y2="56"/>
+          <line x1="38" y1="28" x2="330" y2="28"/>
+        </g>
+        <g font-size="7.5" fill="#8aa0a6" text-anchor="end">
+          <text x="33" y="143">0</text><text x="33" y="115">3</text><text x="33" y="87">6</text><text x="33" y="59">9</text><text x="33" y="31">12</text>
+        </g>
+        <!-- bars: 2024=4.83, 2028≈7.0, 2030≈9.48  (USD bn) scale: 0..12 -> 112px over 140-28 -->
+        <!-- y = 140 - value/12*112 -->
+        <g>
+          <rect x="66" y="94.9" width="46" height="45.1" rx="3" fill="#0e7c72"/>
+          <rect x="158" y="74.7" width="46" height="65.3" rx="3" fill="#17a396"/>
+          <rect x="250" y="51.5" width="46" height="88.5" rx="3" fill="#e98a1f"/>
+        </g>
+        <g font-size="9" font-weight="700" text-anchor="middle" fill="#15242a">
+          <text x="89" y="89">$4.8B</text>
+          <text x="181" y="69">$7.0B</text>
+          <text x="273" y="46">$9.5B</text>
+        </g>
+        <g font-size="8" text-anchor="middle" fill="#6b7f86">
+          <text x="89" y="153">2024–25</text>
+          <text x="181" y="153">2028 (est.)</text>
+          <text x="273" y="153">2030–31</text>
+        </g>
+      </svg>
+      <div class="chartcap">India pet-care market, USD billion. Some analysts project as high as ~US$25B (₹2.1 lakh crore) by 2032 at ~20% CAGR. Sources: India Briefing, Euromonitor, IMARC.</div>
+    </div>
+
+    <div>
+      <div class="grid" style="gap:9px;">
+        <div class="stat"><div class="num">~10<span class="u"> crore</span></div><div class="lbl">Estimated pets in India in 2025 — about 3 crore in urban households</div></div>
+        <div class="stat amber"><div class="num">3.7<span class="u"> cr → 5+ cr</span></div><div class="lbl">Pet dogs in India, 2024 → projected 2028. Cats add a fast-growing ~40 lakh+</div></div>
+        <div class="stat green"><div class="num">71<span class="u">%</span></div><div class="lbl">Of surveyed Indian pet owners have <em>two or more</em> pets — deep, repeat demand</div></div>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="sub">Four forces pushing this — all in your favour</h3>
+  <div class="grid g2">
+    <div class="card">
+      <h4 class="mini" style="margin-top:0;">1 · Pet humanisation</h4>
+      <p style="margin:0;">Pets are now "family". Owners pay for grooming, wellness, better food and convenience they'd never have considered ten years ago. Spending per pet is climbing every year.</p>
+    </div>
+    <div class="card">
+      <h4 class="mini" style="margin-top:0;">2 · Nuclear families &amp; busy professionals</h4>
+      <p style="margin:0;">More working couples and single professionals with less time. They will happily pay for someone reliable to bathe the dog or take it for a walk — the classic doorstep-service trigger.</p>
+    </div>
+    <div class="card">
+      <h4 class="mini" style="margin-top:0;">3 · The Tier-2 surge</h4>
+      <p style="margin:0;">Pet spending in Tier-2 cities is growing <strong>40%+ a year</strong> vs ~22% nationally. Ludhiana is a wealthy Tier-2 city where big brands under-serve — exactly the gap.</p>
+    </div>
+    <div class="card">
+      <h4 class="mini" style="margin-top:0;">4 · Doorstep is the default now</h4>
+      <p style="margin:0;">Indians already book haircuts, cleaning and repairs to their door via apps like Urban Company. Extending that habit to pets is natural — the behaviour already exists.</p>
+    </div>
+  </div>
+
+  <div class="callout green">
+    <div class="ct">What this means for you</div>
+    <p style="margin:0;">You are not trying to <em>create</em> demand — it already exists and is growing fast. Your job is simpler and cheaper: be the most <strong>reliable, hygienic, fairly-priced</strong> doorstep option in one city, and be there before a big brand plants its flag.</p>
+  </div>
+</section>
+
+<!-- ============================ 03 WHY LUDHIANA ============================ -->
+<section class="section">
+  <span class="kicker">03 · The Market</span>
+  <h2 class="title">Why Ludhiana is a smart first market</h2>
+  <div class="rule"></div>
+  <p class="lead">Starting in one city you know is the right call. Ludhiana is arguably one of the better Tier-2 cities in India to launch a premium-ish doorstep service.</p>
+
+  <div class="grid g4">
+    <div class="stat"><div class="num">~20<span class="u"> lakh</span></div><div class="lbl">Metro population — the largest city in Punjab, growing ~2% a year</div></div>
+    <div class="stat green"><div class="num">4<span class="u">th</span></div><div class="lbl">Among the highest per-capita-income districts in Punjab — real disposable income</div></div>
+    <div class="stat amber"><div class="num">Mfg.<span class="u"> hub</span></div><div class="lbl">"India's Manchester" — hosiery, bicycles, auto parts. Dense business-owning class</div></div>
+    <div class="stat"><div class="num">86<span class="u">%</span></div><div class="lbl">Literacy — a digitally reachable, aspirational, brand-aware audience</div></div>
+  </div>
+
+  <div class="grid g2" style="margin-top:4px; grid-template-columns:1fr 1fr;">
+    <div>
+      <h3 class="sub">The Ludhiana pet-parent profile</h3>
+      <ul class="clean">
+        <li><strong>Affluent business &amp; industrialist families</strong> in areas like Sarabha Nagar, BRS Nagar, Model Town, Civil Lines — large homes, big-breed dogs (Labradors, German Shepherds, Golden Retrievers), willing to pay for convenience.</li>
+        <li><strong>Young working professionals &amp; NRIs' families</strong> — time-poor, value-driven, comfortable booking online and via WhatsApp.</li>
+        <li><strong>First-time pet parents</strong> who bought or adopted during/after COVID and genuinely don't know how to groom, deworm or handle vet visits — they need guidance, not just a service.</li>
+        <li><strong>Status-aware buyers</strong> — Ludhiana is a "keeping-up-with-the-neighbours" market. Visible, well-branded, premium-feeling services spread fast by word of mouth.</li>
+      </ul>
+    </div>
+    <div class="card sand">
+      <h4 class="mini" style="margin-top:0;">Why a Tier-2 city beats starting in a metro</h4>
+      <ul class="clean amber">
+        <li><strong>Cheaper to test</strong> — lower marketing costs, cheaper labour, shorter travel between bookings.</li>
+        <li><strong>Weaker competition</strong> — the funded national brands concentrate on Delhi, Bengaluru, Mumbai first. You get a head start.</li>
+        <li><strong>Word of mouth is stronger</strong> — tight social circles mean one delighted customer brings five more.</li>
+        <li><strong>You know the ground</strong> — local language (Punjabi/Hindi), local trust, local supply. That's a moat outsiders can't copy quickly.</li>
+        <li><strong>A clean template</strong> — win Ludhiana and you have a proven playbook to copy into Jalandhar, Amritsar, Patiala and Chandigarh.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout">
+    <div class="ct">Reality check</div>
+    <p style="margin:0;">Ludhiana's pet-services market is real but <strong>still early</strong>. That's good (room to lead) and challenging (you'll spend some effort <em>educating</em> customers that doorstep grooming and vet-at-home even exist). Budget for a bit of market-building, not just competition.</p>
+  </div>
+</section>
+
+<!-- ============================ 04 THE PROBLEM ============================ -->
+<section class="section">
+  <span class="kicker">04 · The Problem</span>
+  <h2 class="title">What pet parents in Ludhiana struggle with today</h2>
+  <div class="rule"></div>
+  <p class="lead">Services already exist — freelance groomers, a few clinics, some national apps that "cover" the city. But the <strong>experience is broken</strong> in specific, fixable ways. Every gap below is a reason a customer will switch to you.</p>
+
+  <div class="grid g2">
+    <div class="card">
+      <h4 class="mini" style="margin-top:0;">🔒 Trust &amp; safety</h4>
+      <p style="margin:0;">Pet parents let a stranger into their home, around a family member (the pet). Today there's no background verification, no consistent identity, no accountability if something goes wrong. Fear of rough handling or theft is real.</p>
+    </div>
+    <div class="card">
+      <h4 class="mini" style="margin-top:0;">🎯 Inconsistent quality &amp; hygiene</h4>
+      <p style="margin:0;">A freelance groomer may be great once and careless the next time. Dirty clippers, shared towels, no sanitisation between pets — a genuine health worry that no one currently guarantees against.</p>
+    </div>
+    <div class="card">
+      <h4 class="mini" style="margin-top:0;">⏰ Unreliable timing</h4>
+      <p style="margin:0;">"Aa jaunga shaam ko" and then no-show. No fixed slots, no confirmation, no tracking. For a working professional, an unreliable appointment is worse than none.</p>
+    </div>
+    <div class="card">
+      <h4 class="mini" style="margin-top:0;">💸 Opaque, negotiated pricing</h4>
+      <p style="margin:0;">Prices depend on how you look and how you bargain. No fixed menu, surprise add-ons, different rate every time. Customers hate the uncertainty more than the price itself.</p>
+    </div>
+    <div class="card">
+      <h4 class="mini" style="margin-top:0;">🚑 Emergency &amp; vet access</h4>
+      <p style="margin:0;">Finding a good vet fast — especially evenings/Sundays — is stressful. Taking a scared or sick animal across the city is hard. There's little reliable vet-at-home or after-hours help.</p>
+    </div>
+    <div class="card">
+      <h4 class="mini" style="margin-top:0;">📚 No guidance for new owners</h4>
+      <p style="margin:0;">First-time owners don't know vaccination schedules, deworming, grooming frequency, or diet. Nobody is holding their hand. A brand that <em>educates</em> earns loyalty for life.</p>
+    </div>
+  </div>
+
+  <div class="callout amber">
+    <div class="ct">Your positioning writes itself</div>
+    <p style="margin:0;">Every one of these problems is solved not by fancy technology, but by <strong>operational discipline</strong>: verified staff, sanitised kits, fixed slots with reminders, a transparent price menu, a partner vet on call, and friendly guidance. That is your brand promise — and it's very hard for a scattered freelancer to match.</p>
+  </div>
+</section>
+
+<!-- ============================ 05 SERVICES ============================ -->
+<section class="section">
+  <span class="kicker">05 · The Services</span>
+  <h2 class="title">Every service — demand, gap &amp; money</h2>
+  <div class="rule"></div>
+  <p class="lead">Here is each service you could offer, how much people want it, how big the gap is in Ludhiana today, what to charge, and how important it is for your launch. Don't launch all of them — the ranking column tells you where to start.</p>
+
+  <table class="t-tight">
+    <thead>
+      <tr>
+        <th style="width:15%">Service</th>
+        <th style="width:9%">Demand</th>
+        <th style="width:9%">Gap now</th>
+        <th style="width:21%">Typical price (Ludhiana range)</th>
+        <th style="width:10%">Repeat</th>
+        <th style="width:9%">Margin</th>
+        <th style="width:9%">Launch</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Bathing &amp; basic grooming</strong></td><td><span class="pill hi">High</span></td><td><span class="pill med">Medium</span></td><td>₹500–₹1,500 / session</td><td>Monthly</td><td>Good</td><td><span class="pill p1">Phase 1</span></td></tr>
+      <tr><td><strong>Full grooming / haircut &amp; styling</strong></td><td><span class="pill hi">High</span></td><td><span class="pill med">Medium</span></td><td>₹800–₹3,500 / session</td><td>4–8 wks</td><td>Good</td><td><span class="pill p1">Phase 1</span></td></tr>
+      <tr><td><strong>Dog walking</strong></td><td><span class="pill med">Med–High</span></td><td><span class="pill hi">Large</span></td><td>₹3,000–₹6,000 / month</td><td>Daily</td><td>Fair</td><td><span class="pill p1">Phase 1</span></td></tr>
+      <tr><td><strong>Vet-at-home (vaccination, check-up, deworming)</strong></td><td><span class="pill hi">High</span></td><td><span class="pill hi">Large</span></td><td>₹500–₹1,500 visit + meds</td><td>Quarterly</td><td>High*</td><td><span class="pill p1">Phase 1–2</span></td></tr>
+      <tr><td><strong>Tick / flea &amp; skin treatment</strong></td><td><span class="pill hi">High</span></td><td><span class="pill med">Medium</span></td><td>₹400–₹1,200 / treatment</td><td>Seasonal</td><td>Good</td><td>Phase 1</td></tr>
+      <tr><td><strong>Pet boarding / day-care</strong></td><td><span class="pill med">Medium</span></td><td><span class="pill hi">Large</span></td><td>₹500–₹1,200 / night</td><td>Travel</td><td>High</td><td>Phase 2</td></tr>
+      <tr><td><strong>Pet sitting / drop-in visits</strong></td><td><span class="pill med">Medium</span></td><td><span class="pill hi">Large</span></td><td>₹300–₹700 / visit</td><td>Frequent</td><td>Good</td><td>Phase 2</td></tr>
+      <tr><td><strong>Obedience &amp; behaviour training</strong></td><td><span class="pill med">Medium</span></td><td><span class="pill med">Medium</span></td><td>₹5,000–₹15,000 / course</td><td>One-off</td><td>Strong</td><td>Phase 2</td></tr>
+      <tr><td><strong>Pet taxi / transport</strong></td><td><span class="pill lo">Low–Med</span></td><td><span class="pill hi">Large</span></td><td>₹200–₹600 / trip</td><td>Add-on</td><td>Thin</td><td>Phase 2</td></tr>
+      <tr><td><strong>Pet supplies &amp; pharmacy delivery</strong></td><td><span class="pill hi">High</span></td><td><span class="pill med">Medium</span></td><td>Retail margin 15–35%</td><td>Monthly</td><td>Good</td><td>Phase 2–3</td></tr>
+      <tr><td><strong>Premium spa / mobile grooming van</strong></td><td><span class="pill lo">Niche</span></td><td><span class="pill hi">Large</span></td><td>₹1,500–₹4,000 / session</td><td>Monthly</td><td>Strong</td><td>Phase 3</td></tr>
+    </tbody>
+  </table>
+  <div class="foot-note" style="margin-top:6px;">*Vet-at-home retention is high because it comes with a compliance calendar (vaccines, boosters, deworming) you can remind and re-book automatically. Prices are indicative Ludhiana/Tier-2 ranges from public 2025 data; you'll set your own fixed menu.</div>
+
+  <h3 class="sub">The three services to launch with — and why</h3>
+  <div class="grid g3">
+    <div class="card mint">
+      <h4 class="mini" style="margin-top:0;">① Grooming &amp; bathing</h4>
+      <p style="margin:0 0 6px;">Your <strong>front door</strong>. Highest, most obvious demand; easy to explain; repeats monthly. Every dog and cat needs it — this brings people in.</p>
+      <div class="legend"><span><i style="background:var(--green)"></i>Volume driver</span></div>
+    </div>
+    <div class="card mint">
+      <h4 class="mini" style="margin-top:0;">② Vet-at-home</h4>
+      <p style="margin:0 0 6px;">Your <strong>trust &amp; retention</strong> engine. Highest gap, high emotional value, and it locks customers in via vaccination reminders. Start with a partner vet.</p>
+      <div class="legend"><span><i style="background:var(--teal)"></i>Stickiness</span></div>
+    </div>
+    <div class="card mint">
+      <h4 class="mini" style="margin-top:0;">③ Dog walking</h4>
+      <p style="margin:0 0 6px;">Your <strong>recurring revenue</strong>. Daily habit = predictable monthly income and constant customer contact. Big gap — very few reliable walkers exist.</p>
+      <div class="legend"><span><i style="background:var(--amber)"></i>Monthly cash</span></div>
+    </div>
+  </div>
+
+  <h4 class="mini">Service-by-service: where the real gaps are</h4>
+  <div class="grid g2">
+    <div class="card">
+      <p style="margin:0 0 5px;"><strong>Grooming &amp; bathing —</strong> exists but inconsistent. Win on <em>hygiene guarantee</em> (fresh, sanitised kit per pet), fixed price menu, and gentle handling. Photos before/after build trust.</p>
+    </div>
+    <div class="card">
+      <p style="margin:0 0 5px;"><strong>Dog walking —</strong> almost nobody does this reliably in Ludhiana. GPS-tracked walks, a photo/update after each walk, and a fixed daily walker your dog knows = a service parents will pay monthly for.</p>
+    </div>
+    <div class="card">
+      <p style="margin:0 0 5px;"><strong>Vet-at-home —</strong> the biggest emotional gap. Vaccinations, deworming, minor illness and health checks without dragging a scared animal to a clinic. Partner with 1–2 trusted local vets to start; don't hire full-time early.</p>
+    </div>
+    <div class="card">
+      <p style="margin:0 0 5px;"><strong>Boarding / day-care —</strong> current kennels feel unsafe/cramped to owners. A vetted home-boarding network (hosts) or a clean day-care is a strong Phase-2 add-on, especially around holidays and weddings.</p>
+    </div>
+    <div class="card">
+      <p style="margin:0 0 5px;"><strong>Training —</strong> demand from first-time owners with barking/biting/pulling issues. High ticket, low frequency. Add a freelance trainer on commission once you have volume.</p>
+    </div>
+    <div class="card">
+      <p style="margin:0 0 5px;"><strong>Supplies &amp; pharmacy —</strong> food, treats, tick meds delivered with a grooming visit. Low effort to bolt on, improves margin and gives a reason to contact customers monthly. Layer in once bookings are steady.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 06 APP VS WEB ============================ -->
+<section class="section">
+  <span class="kicker">06 · The Build Decision</span>
+  <h2 class="title">App or website — what to build first</h2>
+  <div class="rule"></div>
+  <p class="lead">This is where most first-time founders burn their money. The instinct is "let's build an app." For your situation, that's the expensive, slow, wrong first move. Here's the reasoning and the plan.</p>
+
+  <div class="callout green">
+    <div class="ct">Recommendation</div>
+    <p style="margin:0;"><strong>Start web-first: a clean mobile website (PWA) + WhatsApp Business + Instagram.</strong> Build a native app only in Phase 2, after you have repeat customers and proof the operations work. The app is a scaling tool, not a launching tool.</p>
+  </div>
+
+  <div class="grid g2" style="align-items:stretch;">
+    <div class="card">
+      <h4 class="mini" style="margin-top:0;">Why NOT a native app on day one</h4>
+      <ul class="con">
+        <li>Costs ₹3–8 lakh+ and 3–6 months to build well — before you've earned a rupee.</li>
+        <li>Getting people to <em>download</em> an unknown app is very hard; most won't.</li>
+        <li>You'll change your services, prices and flow ten times in month one — cheap to change on web, painful on an app.</li>
+        <li>It solves a problem you don't have yet (scale). Your day-one problem is trust and getting the first 100 bookings.</li>
+      </ul>
+    </div>
+    <div class="card mint">
+      <h4 class="mini" style="margin-top:0;">Why web + WhatsApp wins early</h4>
+      <ul class="pro">
+        <li>Live in <strong>1–3 weeks</strong> for a fraction of the cost (or near-free with no-code tools).</li>
+        <li>Ludhiana already lives on WhatsApp &amp; Instagram — meet customers where they are.</li>
+        <li>A link shares instantly; no download friction. Great for word-of-mouth.</li>
+        <li>Change anything in minutes. Learn what customers actually want, cheaply.</li>
+        <li>A PWA can still be "added to home screen" and feel app-like.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3 class="sub">The comparison at a glance</h3>
+  <table class="t-tight">
+    <thead><tr><th style="width:26%">Factor</th><th>Mobile website + WhatsApp (start here)</th><th>Native app (Phase 2)</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Time to launch</strong></td><td>1–3 weeks</td><td>3–6 months</td></tr>
+      <tr><td><strong>Cost to build</strong></td><td>₹0–60,000</td><td>₹3–8 lakh+</td></tr>
+      <tr><td><strong>Customer friction</strong></td><td>Tap a link — instant</td><td>Must find &amp; download from store</td></tr>
+      <tr><td><strong>Change / iterate</strong></td><td>Minutes, free</td><td>Slow, needs releases</td></tr>
+      <tr><td><strong>Best at</strong></td><td>Getting the first 500 customers, learning fast</td><td>Retention, notifications, scale, loyalty</td></tr>
+      <tr><td><strong>Right time</strong></td><td><strong>Now</strong></td><td>After ~500–1,000 repeat customers</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub">Your minimum viable stack (launch in weeks)</h3>
+  <div class="grid g3">
+    <div class="card"><h4 class="mini" style="margin-top:0;">Booking front-end</h4><p style="margin:0;">A one-page mobile site with your service menu, fixed prices, and a "Book on WhatsApp" button. Build with a no-code tool (Carrd, Framer, Dukaan) or a simple dev site.</p></div>
+    <div class="card"><h4 class="mini" style="margin-top:0;">Orders &amp; comms</h4><p style="margin:0;">WhatsApp Business (catalogue, quick replies, broadcast). Track bookings in a simple Google Sheet or a free tool like Trello to start.</p></div>
+    <div class="card"><h4 class="mini" style="margin-top:0;">Payments &amp; proof</h4><p style="margin:0;">UPI / Razorpay link for prepaid or pay-after. Ask every happy customer for a Google review and an Instagram story tag — that's your marketing engine.</p></div>
+  </div>
+  <div class="callout amber"><div class="ct">Rule of thumb</div><p style="margin:0;">Spend on <strong>operations and trust</strong> (training, sanitised kits, reliable staff, uniforms) first. Spend on an <strong>app</strong> last. Customers remember a great groom and an on-time walker — not your tech stack.</p></div>
+</section>
+
+<!-- ============================ 07 COMPETITORS ============================ -->
+<section class="section">
+  <span class="kicker">07 · The Competition</span>
+  <h2 class="title">Who you're up against</h2>
+  <div class="rule"></div>
+  <p class="lead">You have three layers of competition: well-funded national apps, established local clinics &amp; groomers, and indirect options like listing sites. None of them <em>owns</em> the doorstep experience in Ludhiana yet — that's the point.</p>
+
+  <h3 class="sub">National / online players</h3>
+  <table class="t-tight">
+    <thead><tr><th style="width:15%">Player</th><th style="width:26%">What they do</th><th style="width:33%">Strength</th><th style="width:26%">Where you can beat them (in Ludhiana)</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Vetic</strong></td><td>Vet clinics + vet-at-home + pharmacy; 65+ clinics, 11 cities; raised ~$40M</td><td>Strong medical brand, funded, e-pharmacy</td><td>Metro-focused; thin on-ground presence &amp; personal touch in Ludhiana</td></tr>
+      <tr><td><strong>Supertails</strong></td><td>Full-stack: supplies, vet consults, grooming, quick commerce; raised ~$30M</td><td>Deep pockets, brand, product range</td><td>Not locally rooted; you win on trust, speed &amp; relationships</td></tr>
+      <tr><td><strong>Heads Up For Tails</strong></td><td>Premium retail + grooming salons (since 2008)</td><td>Brand, products, metro salons</td><td>Retail-led, premium, limited doorstep footprint here</td></tr>
+      <tr><td><strong>thePetNest</strong></td><td>At-home grooming, vet, walking, boarding; lists Ludhiana</td><td>Closest to your model; multi-city</td><td>Aggregator feel, inconsistent local supply — out-operate them locally</td></tr>
+      <tr><td><strong>Mr n Mrs Pet / Petgroomly / Urban Pets</strong></td><td>At-home grooming aggregators listing Ludhiana</td><td>SEO reach, bookings online</td><td>Thin local ops, variable quality — beat on reliability &amp; reviews</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub">Local Ludhiana players</h3>
+  <div class="grid g3">
+    <div class="card"><h4 class="mini" style="margin-top:0;">Clinics &amp; vets</h4><p style="margin:0;">e.g. Dr. Tiwari's Dog Care &amp; Hostel (Haibowal Kalan), Dr. Singh's VDI &amp; Pet Hub. Trusted for medical care but <strong>clinic-based</strong> — little doorstep convenience.</p></div>
+    <div class="card"><h4 class="mini" style="margin-top:0;">Freelance groomers</h4><p style="margin:0;">Individuals found via word of mouth or Justdial. Cheap and available, but <strong>inconsistent, unverified, unreliable timing</strong> — your core opening.</p></div>
+    <div class="card"><h4 class="mini" style="margin-top:0;">Kennels &amp; boarding</h4><p style="margin:0;">A handful of boarding/hostel options. Owners often worry about <strong>safety and cleanliness</strong> — room for a trusted alternative.</p></div>
+  </div>
+
+  <h3 class="sub">Indirect competition</h3>
+  <p style="margin:2px 0 12px;"><strong>Listing sites</strong> (Justdial, Petofy, MyFurries) — where people search today; be listed there but own the relationship. <strong>Urban Company</strong> could add pet care and is the real long-term threat. <strong>Amazon/Flipkart</strong> for supplies. <strong>DIY</strong> — the owner bathing the dog themselves is your quietest competitor; beat it on convenience.</p>
+
+  <div class="card avoid" style="margin-top:6px;">
+    <h4 class="mini" style="margin-top:0;">Positioning map — where the gap is</h4>
+    <svg viewBox="0 0 460 260" width="100%" xmlns="http://www.w3.org/2000/svg" font-family="DejaVu Sans">
+      <!-- axes -->
+      <line x1="40" y1="130" x2="440" y2="130" stroke="#c3d5d0" stroke-width="1.2"/>
+      <line x1="240" y1="20" x2="240" y2="240" stroke="#c3d5d0" stroke-width="1.2"/>
+      <g font-size="8.5" fill="#6b7f86">
+        <text x="46" y="18" font-weight="700">Full-stack / many services</text>
+        <text x="46" y="252" font-weight="700">Single service</text>
+        <text x="44" y="126" text-anchor="start" font-weight="700">Clinic / go-to-them</text>
+        <text x="436" y="126" text-anchor="end" font-weight="700">Doorstep / come-to-you</text>
+      </g>
+      <!-- quadrant tint: bottom-right sweet spot -->
+      <rect x="240" y="130" width="200" height="110" fill="#e9f5f2" opacity=".7"/>
+      <!-- competitors -->
+      <g font-size="8" fill="#15242a" text-anchor="middle">
+        <circle cx="150" cy="70" r="6" fill="#0e7c72"/><text x="150" y="58">Vetic</text>
+        <circle cx="120" cy="95" r="6" fill="#0e7c72"/><text x="120" y="112">HUFT</text>
+        <circle cx="175" cy="55" r="6" fill="#0e7c72"/><text x="192" y="46">Supertails</text>
+        <circle cx="110" cy="150" r="6" fill="#6b7f86"/><text x="110" y="168">Local clinics</text>
+        <circle cx="330" cy="185" r="6" fill="#6b7f86"/><text x="330" y="203">Freelance groomer</text>
+        <circle cx="300" cy="90" r="6" fill="#e98a1f"/><text x="300" y="78">thePetNest</text>
+        <!-- YOU -->
+        <circle cx="350" cy="160" r="10" fill="#e2604f" stroke="#fff" stroke-width="2"/>
+        <text x="350" y="163" fill="#fff" font-weight="800" font-size="7.5">YOU</text>
+        <text x="392" y="150" font-weight="800" fill="#b8432f">PawMitra</text>
+      </g>
+    </svg>
+    <div class="chartcap" style="margin-top:2px;">The empty bottom-right quadrant is the opening: a <strong>full doorstep bundle, done reliably, owned locally in Ludhiana</strong>. Big brands sit top-left (clinic-led); freelancers sit bottom-right but alone and unreliable.</div>
+  </div>
+
+  <div class="callout"><div class="ct">Your defensible edge</div><p style="margin:0;"><strong>Local trust + operational reliability + a full bundle in one place.</strong> Big brands have money but not roots; freelancers have roots but not reliability. You sit in the middle: a recognised local brand that always shows up, always sanitised, always fair-priced — and can do grooming, walking <em>and</em> vet in one relationship.</p></div>
+</section>
+
+<!-- ============================ 08 BUSINESS MODEL ============================ -->
+<section class="section">
+  <span class="kicker">08 · The Money Model</span>
+  <h2 class="title">How you actually make money</h2>
+  <div class="rule"></div>
+  <p class="lead">You have several revenue streams. The smart move is to start with whichever you can run best, then layer the others on. Two structural choices matter: <strong>marketplace</strong> (you connect verified freelancers to customers and take a cut) vs <strong>managed/hybrid</strong> (you employ/train a core team and control quality).</p>
+
+  <div class="grid g2">
+    <div class="card mint">
+      <h4 class="mini" style="margin-top:0;">Model A — Marketplace (asset-light)</h4>
+      <p style="margin:0 0 6px;">You onboard verified groomers, walkers &amp; a partner vet. Customers book through you; you take a <strong>20–25% commission</strong> per booking (in line with how Urban Company works).</p>
+      <ul class="clean"><li>Low cash needed, scales faster</li><li>Less control over quality — must vet &amp; train hard</li></ul>
+    </div>
+    <div class="card sand">
+      <h4 class="mini" style="margin-top:0;">Model B — Managed / hybrid (recommended start)</h4>
+      <p style="margin:0 0 6px;">You employ or contract a small trained core team, control the kit &amp; standards, keep the <strong>full service margin</strong> (minus staff pay).</p>
+      <ul class="clean amber"><li>Best quality &amp; trust — your brand is the quality</li><li>Start hybrid: own grooming/walking, partner out vet &amp; training</li></ul>
+    </div>
+  </div>
+
+  <h3 class="sub">Your five revenue streams</h3>
+  <table class="t-tight">
+    <thead><tr><th style="width:22%">Stream</th><th style="width:42%">How it works</th><th style="width:36%">Why it matters</th></tr></thead>
+    <tbody>
+      <tr><td><strong>1 · Service commission / margin</strong></td><td>20–25% cut (marketplace) or full margin minus staff cost (managed)</td><td>Your bread and butter from day one</td></tr>
+      <tr><td><strong>2 · Subscriptions</strong></td><td>Monthly plans: e.g. "Groom+Walk" or "Wellness" bundles at a fixed price</td><td>Predictable recurring cash + high retention. <em>This is the real prize.</em></td></tr>
+      <tr><td><strong>3 · Supplies &amp; pharmacy</strong></td><td>Sell food, treats, shampoo, tick meds — delivered with visits (15–35% margin)</td><td>Extra margin, more reasons to contact customers</td></tr>
+      <tr><td><strong>4 · Premium / add-ons</strong></td><td>Spa grooming, express slots, festival packages, photo add-ons</td><td>Higher-ticket upsell to your best customers</td></tr>
+      <tr><td><strong>5 · Vet &amp; wellness plans</strong></td><td>Annual vaccination + check-up plans; referral fees; later, insurance</td><td>Locks in yearly revenue and trust</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub">Illustrative unit economics — one grooming booking</h3>
+  <div class="grid g2" style="align-items:stretch;">
+    <div class="card avoid">
+      <svg viewBox="0 0 340 176" width="100%" xmlns="http://www.w3.org/2000/svg" font-family="DejaVu Sans">
+        <!-- waterfall-ish bars, managed model -->
+        <g font-size="8" fill="#6b7f86">
+          <text x="10" y="14" font-weight="700" fill="#15242a">Where ₹900 goes (managed model)</text>
+        </g>
+        <!-- baseline -->
+        <line x1="20" y1="150" x2="330" y2="150" stroke="#c3d5d0"/>
+        <!-- bars -->
+        <g>
+          <rect x="30" y="40" width="42" height="110" rx="3" fill="#0e7c72"/>
+          <text x="51" y="34" font-size="8.5" font-weight="700" text-anchor="middle" fill="#15242a">₹900</text>
+          <text x="51" y="163" font-size="7.5" text-anchor="middle" fill="#6b7f86">Price</text>
+
+          <rect x="95" y="95" width="42" height="55" rx="3" fill="#e2604f"/>
+          <text x="116" y="89" font-size="8.5" font-weight="700" text-anchor="middle" fill="#15242a">₹450</text>
+          <text x="116" y="163" font-size="7.5" text-anchor="middle" fill="#6b7f86">Groomer pay</text>
+
+          <rect x="160" y="120" width="42" height="30" rx="3" fill="#e98a1f"/>
+          <text x="181" y="114" font-size="8.5" font-weight="700" text-anchor="middle" fill="#15242a">₹150</text>
+          <text x="181" y="163" font-size="7.5" text-anchor="middle" fill="#6b7f86">Kit+travel</text>
+
+          <rect x="225" y="132" width="42" height="18" rx="3" fill="#b8c6c2"/>
+          <text x="246" y="126" font-size="8.5" font-weight="700" text-anchor="middle" fill="#15242a">₹60</text>
+          <text x="246" y="163" font-size="7.5" text-anchor="middle" fill="#6b7f86">Payments+ops</text>
+
+          <rect x="290" y="90" width="42" height="60" rx="3" fill="#2f9e6b"/>
+          <text x="311" y="84" font-size="8.5" font-weight="700" text-anchor="middle" fill="#15242a">₹240</text>
+          <text x="311" y="163" font-size="7.5" text-anchor="middle" fill="#6b7f86">You keep</text>
+        </g>
+      </svg>
+      <div class="chartcap">Illustrative only. A ₹900 groom leaves roughly <strong>₹200–260 contribution</strong> before marketing. Marketplace model: you'd instead keep a ~₹180–225 commission with no staff/kit cost.</div>
+    </div>
+    <div>
+      <div class="stat green" style="margin-bottom:9px;"><div class="num">₹200<span class="u">–260</span></div><div class="lbl">Illustrative contribution per grooming booking after direct costs (before marketing)</div></div>
+      <div class="stat" style="margin-bottom:9px;"><div class="num">₹150<span class="u">–300</span></div><div class="lbl">Realistic cost to acquire an early customer (mostly referrals + local social)</div></div>
+      <div class="stat amber"><div class="num">₹3<span class="u">k–4k</span></div><div class="lbl">Lifetime value if a customer stays ~2 years on monthly grooming + occasional vet — a healthy 10×+ return on acquisition cost</div></div>
+    </div>
+  </div>
+  <div class="callout"><div class="ct">The lever that changes everything</div><p style="margin:0;">A one-off groom earns once. A <strong>₹999/month "Groom + 2 walks/week" subscription</strong> earns every month, smooths your income, and makes each customer worth 10–20× more. Push subscriptions from month one — it's the difference between a side-hustle and a real business.</p></div>
+</section>
+
+<!-- ============================ 09 PROJECTIONS ============================ -->
+<section class="section">
+  <span class="kicker">09 · The Earnings</span>
+  <h2 class="title">What you can realistically earn</h2>
+  <div class="rule"></div>
+  <p class="lead">Here's the honest picture across three scenarios. These are <strong>illustrative models</strong> for a Ludhiana-only operation, based on the price and economics above. Year 1 is about proving it and reinvesting; the real money comes in Years 2–3.</p>
+
+  <div class="grid g2" style="align-items:stretch;">
+    <div class="card avoid">
+      <h4 class="mini" style="margin-top:0;">Year 1 — monthly platform revenue ramp (moderate case)</h4>
+      <svg viewBox="0 0 340 175" width="100%" xmlns="http://www.w3.org/2000/svg" font-family="DejaVu Sans">
+        <line x1="34" y1="145" x2="330" y2="145" stroke="#c3d5d0"/>
+        <g stroke="#e6efec"><line x1="34" y1="110" x2="330" y2="110"/><line x1="34" y1="75" x2="330" y2="75"/><line x1="34" y1="40" x2="330" y2="40"/></g>
+        <g font-size="7" fill="#8aa0a6" text-anchor="end"><text x="30" y="148">0</text><text x="30" y="113">70k</text><text x="30" y="78">140k</text><text x="30" y="43">210k</text></g>
+        <!-- points: m1 26,m3 45,m6 88,m9 140,m12 210 (k). scale 0..210 -> 105px (145-40) -->
+        <!-- y=145 - v/210*105 -->
+        <polyline points="60,132 128,122.5 196,101 264,75 320,40" fill="none" stroke="#0e7c72" stroke-width="2.4"/>
+        <polygon points="60,132 128,122.5 196,101 264,75 320,40 320,145 60,145" fill="#0e7c72" opacity=".08"/>
+        <g fill="#0e7c72"><circle cx="60" cy="132" r="3"/><circle cx="128" cy="122.5" r="3"/><circle cx="196" cy="101" r="3"/><circle cx="264" cy="75" r="3"/><circle cx="320" cy="40" r="3.4"/></g>
+        <g font-size="7.5" fill="#15242a" font-weight="700" text-anchor="middle"><text x="60" y="126">26k</text><text x="196" y="95">88k</text><text x="316" y="34">₹2.1L</text></g>
+        <g font-size="7.5" fill="#6b7f86" text-anchor="middle"><text x="60" y="157">M1</text><text x="128" y="157">M3</text><text x="196" y="157">M6</text><text x="264" y="157">M9</text><text x="320" y="157">M12</text></g>
+      </svg>
+      <div class="chartcap">Your <em>platform</em> revenue (commission/margin), not total booking value. By month 12, ~₹2.1L/month ≈ ₹9–10L monthly booking value.</div>
+    </div>
+    <div class="card avoid">
+      <h4 class="mini" style="margin-top:0;">3-year annual platform revenue (moderate case)</h4>
+      <svg viewBox="0 0 340 175" width="100%" xmlns="http://www.w3.org/2000/svg" font-family="DejaVu Sans">
+        <line x1="40" y1="145" x2="330" y2="145" stroke="#c3d5d0"/>
+        <g font-size="8" text-anchor="middle">
+          <!-- Y1 12L, Y2 80L, Y3 240L ; scale 0..240 -> 110px -->
+          <rect x="70" y="139.5" width="54" height="5.5" rx="2" fill="#0e7c72"/>
+          <text x="97" y="132" font-weight="700" fill="#15242a">₹12L</text>
+          <text x="97" y="159" fill="#6b7f86">Year 1</text>
+
+          <rect x="158" y="108.3" width="54" height="36.7" rx="2" fill="#17a396"/>
+          <text x="185" y="101" font-weight="700" fill="#15242a">₹80L</text>
+          <text x="185" y="159" fill="#6b7f86">Year 2</text>
+
+          <rect x="246" y="35" width="54" height="110" rx="2" fill="#e98a1f"/>
+          <text x="273" y="28" font-weight="700" fill="#15242a">₹2.4Cr</text>
+          <text x="273" y="159" fill="#6b7f86">Year 3</text>
+        </g>
+        <text x="185" y="17" text-anchor="middle" font-size="7.5" fill="#8aa0a6">Year 3 assumes expansion beyond Ludhiana into 2–3 Punjab cities</text>
+      </svg>
+      <div class="chartcap">Year 3 step-up depends on expanding to nearby cities and adding subscriptions + supplies. Ludhiana-only Year 3 would be lower (~₹50–90L).</div>
+    </div>
+  </div>
+
+  <h3 class="sub">Three scenarios — what drives the difference is execution</h3>
+  <table class="t-tight">
+    <thead><tr><th style="width:22%">By end of…</th><th>Conservative</th><th>Moderate (base case)</th><th>Aggressive</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Year 1 bookings/month</strong></td><td>~500</td><td>~1,000–1,200</td><td>~2,000</td></tr>
+      <tr><td><strong>Year 1 platform revenue</strong></td><td>₹5–7 lakh</td><td>₹11–13 lakh</td><td>₹20–24 lakh</td></tr>
+      <tr><td><strong>Year 1 owner take-home</strong></td><td>≈ break-even (reinvest)</td><td>₹2–5 lakh (part reinvested)</td><td>₹6–10 lakh</td></tr>
+      <tr><td><strong>Year 2 platform revenue</strong></td><td>₹18–30 lakh</td><td>₹60–90 lakh</td><td>₹1.2–1.6 crore</td></tr>
+      <tr><td><strong>Year 2 net profit</strong></td><td>₹4–8 lakh</td><td>₹12–22 lakh</td><td>₹30–50 lakh</td></tr>
+      <tr><td><strong>Year 3 direction</strong></td><td>Solid Ludhiana business</td><td>2–3 city Punjab brand</td><td>Fundable regional platform</td></tr>
+    </tbody>
+  </table>
+  <div class="foot-note" style="margin-top:6px;">Illustrative models based on cited Tier-2 pricing and ~20–25% take rates. Not a forecast or guarantee. Assumes disciplined costs, strong retention via subscriptions, and reinvestment of most Year-1 surplus.</div>
+
+  <div class="grid g3" style="margin-top:12px;">
+    <div class="stat"><div class="num">Year 1</div><div class="lbl">Prove it &amp; reinvest. Treat profit as fuel, not salary. Success = repeat customers, not big cash-out.</div></div>
+    <div class="stat amber"><div class="num">Year 2</div><div class="lbl">The earning year. A well-run Ludhiana operation can net <strong>₹8–20 lakh</strong>; strong execution more.</div></div>
+    <div class="stat green"><div class="num">Year 3+</div><div class="lbl">Expand across Punjab. Revenue can cross <strong>₹1 crore+</strong>; the brand itself becomes valuable / fundable.</div></div>
+  </div>
+
+  <div class="callout amber"><div class="ct">Be honest with yourself about Year 1</div><p style="margin:0;">Most of the money in Year 1 should go back into the business — better staff, kits, marketing, the app. Founders who try to pull out a big salary in year one usually starve the growth. Think of Year 1 as buying yourself a much bigger Year 2.</p></div>
+</section>
+
+<!-- ============================ 10 STARTUP COST ============================ -->
+<section class="section">
+  <span class="kicker">10 · The Investment</span>
+  <h2 class="title">What it costs to start</h2>
+  <div class="rule"></div>
+  <p class="lead">The beauty of the web-first approach is you can start small. Here are two budgets: a <strong>scrappy lean launch</strong> and a more <strong>serious funded launch</strong>. You do not need the funded version to begin.</p>
+
+  <div class="grid g2">
+    <table class="t-tight">
+      <thead><tr><th>Lean launch (bootstrap)</th><th style="width:32%">Cost</th></tr></thead>
+      <tbody>
+        <tr><td>Brand: name, logo, simple identity</td><td>₹3,000–10,000</td></tr>
+        <tr><td>Mobile site (no-code) + WhatsApp Business</td><td>₹0–15,000</td></tr>
+        <tr><td>Grooming kit + sanitisation supplies</td><td>₹20,000–40,000</td></tr>
+        <tr><td>Uniforms, ID cards, branded materials</td><td>₹5,000–12,000</td></tr>
+        <tr><td>Registration (GST, shop act, etc.)</td><td>₹3,000–12,000</td></tr>
+        <tr><td>First 3 months' marketing (local + social)</td><td>₹20,000–50,000</td></tr>
+        <tr><td>Working capital / buffer</td><td>₹25,000–60,000</td></tr>
+        <tr style="background:var(--mint)"><td><strong>Total to start seriously</strong></td><td><strong>₹80k–2 lakh</strong></td></tr>
+      </tbody>
+    </table>
+    <table class="t-tight">
+      <thead><tr><th>Funded launch (faster scale)</th><th style="width:32%">Cost</th></tr></thead>
+      <tbody>
+        <tr><td>Professional brand + website</td><td>₹40,000–1,00,000</td></tr>
+        <tr><td>Native app (Phase 2 — later)</td><td>₹3–8 lakh</td></tr>
+        <tr><td>Core trained team (2–4 staff, 3 mo.)</td><td>₹1.5–3 lakh</td></tr>
+        <tr><td>Vehicle/scooters + multiple kits</td><td>₹1–2.5 lakh</td></tr>
+        <tr><td>Small day-care/grooming space (optional)</td><td>₹1–3 lakh setup</td></tr>
+        <tr><td>Marketing budget (6 months)</td><td>₹1.5–4 lakh</td></tr>
+        <tr><td>Working capital</td><td>₹1.5–3 lakh</td></tr>
+        <tr style="background:var(--sand)"><td><strong>Total for a funded start</strong></td><td><strong>₹8–20 lakh</strong></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout green"><div class="ct">Recommended path</div><p style="margin:0;">Start on the <strong>lean budget (₹80k–2L)</strong>. Prove the model for 3–6 months. Then reinvest profits or raise a small amount from family/angels for the funded scale-up — <em>after</em> you have real numbers that make the case. Never build the expensive version on hope; build it on proof.</p></div>
+
+  <h4 class="mini">Legal &amp; compliance basics (don't skip)</h4>
+  <ul class="clean">
+    <li>Register the business (proprietorship/LLP/Pvt Ltd), get GST if you'll cross the threshold, and a local shop &amp; establishment registration.</li>
+    <li>For vet-at-home: only a <strong>registered veterinarian</strong> may diagnose/treat and dispense medicine — always partner with licensed vets; don't practise medicine yourself.</li>
+    <li>Basic liability: written service terms, staff verification records, and simple insurance for accidental injury/damage as you grow.</li>
+  </ul>
+</section>
+
+<!-- ============================ 11 GTM ============================ -->
+<section class="section">
+  <span class="kicker">11 · Go-to-Market</span>
+  <h2 class="title">Getting your first 100 customers in Ludhiana</h2>
+  <div class="rule"></div>
+  <p class="lead">A marketplace has two sides — <strong>customers</strong> (demand) and <strong>service providers</strong> (supply). You need both. Here's the practical, low-budget Ludhiana playbook.</p>
+
+  <div class="grid g2">
+    <div>
+      <h4 class="mini" style="margin-top:0;">Winning demand (pet parents)</h4>
+      <ul class="num">
+        <li><strong>Instagram first.</strong> Post before/after grooming reels, walk clips, cute pet content, and customer shout-outs. Ludhiana pet parents live here. Consistency beats budget.</li>
+        <li><strong>Local Facebook &amp; WhatsApp groups</strong> — Ludhiana pet lovers, RWAs, society groups, breed groups. Be helpful, not spammy.</li>
+        <li><strong>Vet clinic &amp; pet-shop tie-ups.</strong> Leave cards; offer a referral cut. Their customers are exactly yours.</li>
+        <li><strong>Launch offer.</strong> First groom at a friendly price + a free nail trim. Get them to try you once — quality does the rest.</li>
+        <li><strong>Reviews are your growth engine.</strong> Ask every happy customer for a Google review + an Instagram tag. Aim for a wall of 5-star social proof fast.</li>
+        <li><strong>Referral program.</strong> "Refer a friend, both get ₹150 off." Cheapest customers you'll ever get.</li>
+      </ul>
+    </div>
+    <div>
+      <h4 class="mini" style="margin-top:0;">Winning supply (groomers, walkers, vets)</h4>
+      <ul class="num">
+        <li><strong>Recruit 2–3 good groomers</strong> to start — poach the best freelancers with steady, reliable income and a real brand to represent.</li>
+        <li><strong>Verify &amp; train everyone.</strong> ID check, reference, a hygiene &amp; handling standard. This <em>is</em> your product.</li>
+        <li><strong>Partner with 1–2 trusted local vets</strong> for at-home visits on revenue-share — don't hire full-time early.</li>
+        <li><strong>Reliable college students / animal-lovers</strong> make great dog walkers on a fixed monthly beat.</li>
+        <li><strong>Treat staff well.</strong> Fair pay, tips, respect. In a service business, happy staff = happy pets = happy customers = referrals.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout"><div class="ct">The first-90-days focus</div><p style="margin:0;">Don't chase every service or every locality. Pick <strong>2–3 posh localities</strong> (e.g. Sarabha Nagar, BRS Nagar, Model Town), nail <strong>grooming + walking</strong> there with a tiny, well-trained team, collect 50+ glowing reviews, and let word of mouth compound. Depth beats spread early.</p></div>
+</section>
+
+<!-- ============================ 12 ROADMAP ============================ -->
+<section class="section">
+  <span class="kicker">12 · The Roadmap</span>
+  <h2 class="title">From first booking to Punjab-wide brand</h2>
+  <div class="rule"></div>
+  <p class="lead">A clear, staged path. Each phase de-risks the next. Don't skip ahead — every phase earns the right to the one after it.</p>
+
+  <div class="timeline">
+    <div class="phase p0">
+      <div class="dot">0</div>
+      <div class="when">Weeks 0–4 · Validate</div>
+      <h4>Prove people will pay — before building anything big</h4>
+      <p style="margin:0;">Set up Instagram + WhatsApp + a one-page site with a fixed price menu. Personally do or coordinate 10–20 grooming bookings in 2–3 localities. Talk to every customer. Confirm demand, pricing and what they actually want. Budget: near-zero.</p>
+    </div>
+    <div class="phase p1">
+      <div class="dot">1</div>
+      <div class="when">Months 1–6 · Launch core</div>
+      <h4>Grooming + walking + vet-at-home, done brilliantly</h4>
+      <p style="margin:0;">Recruit &amp; train 2–3 groomers and a walker; sign a partner vet. Fixed slots, sanitised kits, uniforms, transparent pricing. Introduce the first <strong>monthly subscription</strong>. Push reviews &amp; referrals hard. Target ~1,000 bookings/month by month 6.</p>
+    </div>
+    <div class="phase p2">
+      <div class="dot">2</div>
+      <div class="when">Months 6–15 · Systemise &amp; app</div>
+      <h4>Build the app, add boarding, training &amp; supplies</h4>
+      <p style="margin:0;">Now that customers repeat, build the native app for booking, reminders &amp; loyalty. Add pet boarding/day-care, training and supply delivery. Formalise subscriptions. Strengthen the team &amp; SOPs so quality holds as you grow.</p>
+    </div>
+    <div class="phase p3">
+      <div class="dot">3</div>
+      <div class="when">Year 2–3 · Expand</div>
+      <h4>Copy the playbook across Punjab</h4>
+      <p style="margin:0;">Take the proven Ludhiana model to Jalandhar, Amritsar, Patiala &amp; Chandigarh. Consider a small raise from angels/VCs using your Ludhiana metrics. Build a recognised North-India pet-care brand — the kind bigger players acquire.</p>
+    </div>
+  </div>
+
+  <div class="callout amber"><div class="ct">The golden rule of expansion</div><p style="margin:0;">Only expand to a new city once Ludhiana is <strong>profitable and self-running</strong>. One deep, delighted, profitable city beats five shallow, loss-making ones. Growth built on a leaky bucket just loses money faster.</p></div>
+</section>
+
+<!-- ============================ 13 SWOT + ADV/DIS ============================ -->
+<section class="section">
+  <span class="kicker">13 · The Honest Balance Sheet</span>
+  <h2 class="title">SWOT, advantages &amp; disadvantages</h2>
+  <div class="rule"></div>
+  <p class="lead">No sugar-coating. Here's the full picture — the strengths to lean on and the weaknesses to plan around.</p>
+
+  <div class="swot">
+    <div class="q s"><div class="qh">💪 Strengths</div><ul>
+      <li>Large, fast-growing, under-served market in a wealthy city</li>
+      <li>Low cost to start (web-first, lean)</li>
+      <li>Local roots, language &amp; trust — hard for outsiders to copy</li>
+      <li>Recurring revenue via subscriptions once established</li>
+      <li>Multiple services = multiple ways to earn from one customer</li>
+    </ul></div>
+    <div class="q w"><div class="qh">⚠️ Weaknesses</div><ul>
+      <li>Operations-heavy &amp; people-dependent — quality is only as good as your staff on the day</li>
+      <li>Low barrier to entry — others can copy the idea</li>
+      <li>Thin margins early; profit needs volume &amp; retention</li>
+      <li>Trust takes time to build; one bad incident hurts</li>
+      <li>You'll wear many hats early — demanding on your time</li>
+    </ul></div>
+    <div class="q o"><div class="qh">🚀 Opportunities</div><ul>
+      <li>Be the first real <em>brand</em> for doorstep pet care in Ludhiana</li>
+      <li>Subscriptions + vet plans = predictable, sticky income</li>
+      <li>Expand across Punjab with a proven playbook</li>
+      <li>Supplies, insurance, training as new revenue lines</li>
+      <li>Become an acquisition target for funded national players</li>
+    </ul></div>
+    <div class="q th"><div class="qh">🌩️ Threats</div><ul>
+      <li>Funded players (Vetic, Supertails, Urban Company) entering Ludhiana</li>
+      <li>Staff poaching / freelancers going solo with your customers</li>
+      <li>A safety incident or bad review damaging trust</li>
+      <li>Seasonality &amp; price-sensitive customers</li>
+      <li>Regulatory needs around veterinary services</li>
+    </ul></div>
+  </div>
+
+  <h3 class="sub">Advantages vs disadvantages — at a glance</h3>
+  <div class="grid g2">
+    <div class="card" style="border-top:3px solid var(--green)">
+      <h4 class="mini" style="margin-top:0;color:#1f7d52">Advantages of doing this</h4>
+      <ul class="pro">
+        <li>Ride a genuine, growing wave — you're not forcing demand</li>
+        <li>Start cheap, learn fast, scale on proof</li>
+        <li>Emotional, loyal customers — pets are family</li>
+        <li>Recurring, predictable income once subscriptions kick in</li>
+        <li>Meaningful work you can feel good about (animal welfare)</li>
+        <li>Clear expansion path &amp; real exit potential</li>
+      </ul>
+    </div>
+    <div class="card" style="border-top:3px solid var(--coral)">
+      <h4 class="mini" style="margin-top:0;color:#b8432f">Disadvantages / hard parts</h4>
+      <ul class="con">
+        <li>Hands-on, operationally intense — not passive income</li>
+        <li>Hiring &amp; retaining reliable, caring staff is the hardest bit</li>
+        <li>Trust &amp; reputation are fragile — mistakes cost dearly</li>
+        <li>Slow to profit; needs patience &amp; reinvestment in Year 1</li>
+        <li>Easy to copy — you must out-execute, not just out-idea</li>
+        <li>Deep-pocketed rivals could enter and undercut</li>
+      </ul>
+    </div>
+  </div>
+  <div class="callout"><div class="ct">The balance</div><p style="margin:0;">The disadvantages are real but <strong>manageable with discipline</strong> — they're about execution, not about whether the market exists. That's the good kind of risk: within your control. The verdict stays a confident <strong>Go</strong>.</p></div>
+</section>
+
+<!-- ============================ 14 RISKS ============================ -->
+<section class="section">
+  <span class="kicker">14 · Risk Management</span>
+  <h2 class="title">What can go wrong — and your defence</h2>
+  <div class="rule"></div>
+  <p class="lead">Every risk below has a straightforward mitigation. Knowing them in advance is most of the battle.</p>
+
+  <table class="t-tight">
+    <thead><tr><th style="width:28%">Risk</th><th style="width:36%">Why it hurts</th><th style="width:36%">Your mitigation</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Bad service / injured or stressed pet</strong></td><td>Destroys trust; terrible reviews spread fast</td><td>Rigorous training, sanitised kits, gentle-handling SOP, insurance, quick honest resolution + refunds</td></tr>
+      <tr><td><strong>Unreliable / no-show staff</strong></td><td>Breaks the one promise you're built on</td><td>Backups on call, fixed slots with reminders, fair pay so good people stay, ratings on every job</td></tr>
+      <tr><td><strong>Staff poaching your customers</strong></td><td>Freelancers go direct, you lose the margin</td><td>Own the customer relationship &amp; brand, subscriptions, rotate staff, make the platform more valuable than going solo</td></tr>
+      <tr><td><strong>Big funded rival enters Ludhiana</strong></td><td>They can outspend you on marketing</td><td>Deep local loyalty, superior on-ground service, lock-in via subscriptions before they arrive; speed is your friend</td></tr>
+      <tr><td><strong>Slow demand / cash crunch</strong></td><td>You run out of runway before traction</td><td>Stay lean, keep fixed costs tiny, don't build the app early, focus spend on what drives bookings</td></tr>
+      <tr><td><strong>Seasonality &amp; price sensitivity</strong></td><td>Bookings dip; customers haggle</td><td>Subscriptions smooth income; festival &amp; travel-season packages; clear value, not just low price</td></tr>
+      <tr><td><strong>Regulatory (veterinary)</strong></td><td>Practising/dispensing without a licence is illegal</td><td>Always use registered vets; you handle logistics &amp; booking, they handle medicine</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout green"><div class="ct">The meta-defence</div><p style="margin:0;">Almost every risk is answered by the same two things: <strong>(1) obsessive service quality</strong> and <strong>(2) owning the customer relationship</strong> (brand + subscriptions + reviews). Get those right and you're resilient against nearly everything else.</p></div>
+</section>
+
+<!-- ============================ 15 VERDICT / NEXT STEPS ============================ -->
+<section class="section">
+  <span class="kicker">15 · The Verdict</span>
+  <h2 class="title">Should you do it? Yes. Here's your next 30 days.</h2>
+  <div class="rule"></div>
+
+  <div class="verdict-band" style="margin-bottom:14px;">
+    <div class="vh">Final Recommendation</div>
+    <div class="score" style="font-size:24pt;">Go for it — start lean, start now.</div>
+    <p>The market is real and growing, Ludhiana is a smart first city, and the gaps (trust, reliability, hygiene, fair pricing) are exactly what a focused local founder can win on. The risk isn't the idea — it's overspending before you've proven it. So don't. Start small, delight your first 100 customers, and let the business tell you when to scale.</p>
+  </div>
+
+  <h3 class="sub">Your 30-day action checklist</h3>
+  <div class="grid g2">
+    <div class="card">
+      <h4 class="mini" style="margin-top:0;">Week 1–2 · Set up</h4>
+      <ul class="clean">
+        <li>Lock a brand name &amp; simple logo (see options below)</li>
+        <li>Create Instagram + WhatsApp Business + a one-page site with a fixed price menu</li>
+        <li>Decide your first 2–3 target localities</li>
+        <li>Write your service standards (hygiene, handling, timing)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4 class="mini" style="margin-top:0;">Week 3–4 · First bookings</h4>
+      <ul class="clean amber">
+        <li>Recruit 1–2 verified groomers + one partner vet</li>
+        <li>Run a launch offer; get your first 10–20 bookings</li>
+        <li>Photograph every job; collect reviews &amp; tags</li>
+        <li>Talk to every customer — refine pricing &amp; services</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3 class="sub">Brand name ideas (working title: PawMitra)</h3>
+  <div class="grid" style="grid-template-columns:repeat(5,1fr);gap:8px;">
+    <div class="card mint" style="text-align:center;padding:10px 6px;"><strong>PawMitra</strong><br><small>"paw + friend"</small></div>
+    <div class="card mint" style="text-align:center;padding:10px 6px;"><strong>DoorPaws</strong><br><small>doorstep pet care</small></div>
+    <div class="card mint" style="text-align:center;padding:10px 6px;"><strong>PetKart LDH</strong><br><small>local &amp; clear</small></div>
+    <div class="card mint" style="text-align:center;padding:10px 6px;"><strong>FurFriends</strong><br><small>warm &amp; friendly</small></div>
+    <div class="card mint" style="text-align:center;padding:10px 6px;"><strong>Wagsy</strong><br><small>modern &amp; app-y</small></div>
+  </div>
+  <div class="foot-note" style="margin-top:8px;">Check name availability (domain, Instagram handle, trademark, GST) before finalising. "PawMitra" is used as a working brand in this report only.</div>
+
+  <div class="callout amber" style="margin-top:14px;"><div class="ct">One last thought</div><p style="margin:0;">Businesses like this are won on the ground, one delighted pet parent at a time — not in a business plan. This report gives you the map; the treasure is in showing up, being reliable, and caring more than anyone else in Ludhiana. You've got a real opportunity here. Go earn it. 🐾</p></div>
+</section>
+
+<!-- ============================ 16 SOURCES ============================ -->
+<section class="section">
+  <span class="kicker">16 · Appendix</span>
+  <h2 class="title">Sources &amp; assumptions</h2>
+  <div class="rule"></div>
+
+  <h4 class="mini">Market &amp; data sources (public, 2024–2025)</h4>
+  <ul class="clean" style="font-size:8.6pt;">
+    <li>India Briefing — <em>India's Pet Care Economy 2025</em> (market size, growth, urban pets)</li>
+    <li>Euromonitor / IMARC Group — India pet-care market size &amp; CAGR estimates</li>
+    <li>Dogster / Global Pet Industry — India pet population &amp; ownership statistics (dogs 36.8M → 51M by 2028; ~23M dog households)</li>
+    <li>TGM Research — India pet-care sector trends; Tier-2 growth ~40% vs ~22% national</li>
+    <li>Vetic (blog.vetic.in) &amp; VOSD — grooming, walking &amp; veterinary price benchmarks in India, 2025</li>
+    <li>YourStory, Inc42, Entrepreneur India, DealStreetAsia — Supertails ($30M), Vetic ($40M), Heads Up For Tails, thePetNest profiles</li>
+    <li>Macrotrends &amp; Punjab Economic &amp; Statistical Org. — Ludhiana metro population (~20 lakh) &amp; per-capita income ranking</li>
+    <li>Inc42 / Entrackr — Urban Company marketplace model &amp; ~25% commission benchmark</li>
+    <li>Local Ludhiana listings — Justdial, Petofy, thePetNest, Mr n Mrs Pet, MyFurries, Petgroomly (service availability &amp; local players)</li>
+  </ul>
+
+  <h4 class="mini">Key assumptions behind the projections</h4>
+  <ul class="clean" style="font-size:8.6pt;">
+    <li>Blended booking value ₹700–900; platform take 20–25% (commission) or equivalent managed margin.</li>
+    <li>Moderate case: ~1,000–1,200 bookings/month by end of Year 1, growing with subscriptions &amp; new services.</li>
+    <li>Year-3 step-up assumes expansion into 2–3 additional Punjab cities; Ludhiana-only would be lower.</li>
+    <li>Costs kept lean (web-first, no early app, small trained team, partner vets). Most Year-1 surplus reinvested.</li>
+    <li>Figures are illustrative planning scenarios to size the opportunity — <strong>not forecasts, guarantees or financial advice.</strong> Validate with your own pilot before committing capital.</li>
+  </ul>
+
+  <div class="callout" style="margin-top:16px;">
+    <div class="ct">Prepared as a strategy &amp; feasibility study</div>
+    <p style="margin:0;">This document turns your idea into a structured plan you can act on, share with a partner or investor, and refine as you learn. Numbers should be re-checked against live quotes and your own pilot results. Good luck — Ludhiana's pets are waiting. 🐾</p>
+  </div>
+  <p class="foot-note" style="margin-top:14px;text-align:center;">PawMitra (working brand) · Pet Care at Your Doorstep — Ludhiana Launch Strategy · Prepared September 2026</p>
+</section>
+
+</body>
+</html>
