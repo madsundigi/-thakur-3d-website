@@ -1,5 +1,82 @@
 [
   {
+    "id": "home-1",
+    "category": "areas",
+    "q": "Which areas of Ludhiana do you cover?",
+    "a": "All of Ludhiana, with no travel charge. Our most-booked areas are Sarabha Nagar, BRS Nagar, Model Town, Civil Lines, Dugri, Pakhowal Road, South City, Ferozepur Road, Haibowal Kalan and Kitchlu Nagar — but if you're anywhere in the city, we'll come to you.",
+    "pages": ["/", "/faq/"]
+  },
+  {
+    "id": "home-2",
+    "category": "safety",
+    "q": "Is home pet grooming safe and hygienic?",
+    "a": "Yes. Every groomer is background-verified (ID and references checked), and every pet gets a fresh, sealed, sanitised kit opened in front of you — nothing used on another pet touches yours. Your pet is the only pet in the room, and you can watch the whole session.",
+    "pages": ["/", "/faq/"]
+  },
+  {
+    "id": "home-3",
+    "category": "grooming",
+    "q": "Why choose PetDoorStep over a salon or a freelance groomer?",
+    "a": "No car ride, no cages and no waiting room — and unlike most freelancers, fixed published prices, verified people, a sealed kit for every pet and a photo update after every visit. Same professional result, without the stress or the bargaining.",
+    "pages": ["/"]
+  },
+  {
+    "id": "home-4",
+    "category": "booking",
+    "q": "How do I book, and do I pay in advance?",
+    "a": "Pick your service, pet size, area and a time window on our website — it takes about a minute — and confirm on WhatsApp. We confirm the exact slot within 10 minutes (9:00–19:00). No advance payment: pay by UPI or cash after the service.",
+    "pages": ["/", "/faq/"]
+  },
+  {
+    "id": "home-5",
+    "category": "booking",
+    "q": "Are your prices really fixed?",
+    "a": "Yes. The price on this website is the price you pay, confirmed on WhatsApp before we arrive — no doorstep bargaining. The only possible addition is a clearly flagged add-on, like de-matting for a severely matted coat, and we tell you before we start, never after.",
+    "pages": ["/", "/faq/"]
+  },
+  {
+    "id": "home-6",
+    "category": "booking",
+    "q": "Searching for \"pet grooming near me\" — how soon can you come?",
+    "a": "Most Ludhiana areas get same-week slots, and booking before 15:00 often gets you a slot the same day. Grooming and vet visits run 9:00–19:00 every day; dog walks start as early as 6:00.",
+    "pages": ["/"]
+  },
+  {
+    "id": "pricing-1",
+    "category": "booking",
+    "q": "Do you charge extra for large dogs?",
+    "a": "Prices go by size because bigger dogs take longer — but they're fixed and published: a Large-dog (over 25 kg) Bath & Brush is ₹999 and a Full Groom ₹1,899. You choose the size when booking, we confirm it on WhatsApp, and there's no doorstep bargaining.",
+    "pages": ["/pricing/"]
+  },
+  {
+    "id": "pricing-2",
+    "category": "booking",
+    "q": "Is there a travel or visit charge?",
+    "a": "No. There's no travel charge anywhere in Ludhiana — the listed price is the full price. The only exception is medicines or vaccines, which are charged at printed MRP with the wrapper shown to you.",
+    "pages": ["/pricing/", "/faq/"]
+  },
+  {
+    "id": "pricing-3",
+    "category": "booking",
+    "q": "What could change the price on the day?",
+    "a": "Only a clearly flagged add-on you agree to first — for example, extra de-matting for a severely matted coat, or a ₹399 tick & flea add-on. We quote it on WhatsApp before starting, never after. Everything else is exactly the listed price.",
+    "pages": ["/pricing/", "/faq/"]
+  },
+  {
+    "id": "pricing-4",
+    "category": "booking",
+    "q": "How do I pay?",
+    "a": "By UPI or cash after the service — no advance payment, ever. Monthly walking plans are paid at month-end. Groom Club members also pay per visit, after each groom.",
+    "pages": ["/pricing/"]
+  },
+  {
+    "id": "pricing-5",
+    "category": "booking",
+    "q": "Grooming ka rate kya hai?",
+    "a": "Bath & Brush ₹599 se shuru (chhote dogs), Full Groom ₹1,199 se, aur cats ke liye flat ₹899. Saare rates is page pe fixed hain — koi bargaining nahi, koi hidden charge nahi. Payment service ke baad, UPI ya cash.",
+    "pages": ["/pricing/", "/faq/"]
+  },
+  {
     "id": "book-1",
     "category": "booking",
     "q": "Can I get a slot today?",
@@ -26,5 +103,542 @@
     "q": "Do I need to pay anything now?",
     "a": "No. Booking is free and no payment is taken online. You pay by UPI or cash after the service, at exactly the price confirmed on WhatsApp.",
     "pages": ["/book/"]
+  },
+  {
+    "id": "contact-1",
+    "category": "booking",
+    "q": "What's the fastest way to reach you?",
+    "a": "WhatsApp. A real person replies within 10 minutes between 9:00 and 19:00, every day. Calls work too — if we miss your call during a visit, we call back within 30 minutes.",
+    "pages": ["/contact/"]
+  },
+  {
+    "id": "contact-2",
+    "category": "areas",
+    "q": "Do you have a shop or clinic I can visit?",
+    "a": "No — PetDoorStep is a doorstep service, so there's no walk-in centre. Our groomers, walkers and vet come to your home anywhere in Ludhiana, with everything they need.",
+    "pages": ["/contact/"]
+  },
+  {
+    "id": "contact-3",
+    "category": "vet",
+    "q": "Is there an emergency number?",
+    "a": "We're not an emergency service. If your pet is injured, bleeding heavily, having seizures, struggling to breathe or may have eaten poison, go straight to the nearest 24-hour veterinary hospital: [FILL:EMERGENCY_VET_LIST].",
+    "pages": ["/contact/"]
+  },
+  {
+    "id": "how-it-works-1",
+    "category": "booking",
+    "q": "Do I need to be home during the visit?",
+    "a": "Yes — an adult needs to be home for grooming and vet visits. For dog walks, the walker can collect your dog from a family member or your society gate, as you agree on WhatsApp.",
+    "pages": ["/how-it-works/"]
+  },
+  {
+    "id": "how-it-works-2",
+    "category": "booking",
+    "q": "How long does a visit take?",
+    "a": "Bath & Brush about 45–60 minutes, Full Groom 60–90, Premium Spa up to 120; cat grooms 45–90; a vet visit usually 20–30 minutes; walks about 30 minutes.",
+    "pages": ["/how-it-works/"]
+  },
+  {
+    "id": "how-it-works-3",
+    "category": "booking",
+    "q": "Can I reschedule?",
+    "a": "Yes, free until 2 hours before your confirmed slot — just reply on WhatsApp. There's no advance payment, so there's nothing to refund.",
+    "pages": ["/how-it-works/"]
+  },
+  {
+    "id": "how-it-works-4",
+    "category": "grooming",
+    "q": "Can I get the same groomer every time?",
+    "a": "Yes, on request — most pet parents prefer it, and pets relax faster with a familiar person. Groom Club members get it as standard, along with priority slots.",
+    "pages": ["/how-it-works/"]
+  },
+  {
+    "id": "how-it-works-5",
+    "category": "grooming",
+    "q": "What if my pet gets stressed during the groom?",
+    "a": "We pause, comfort and take breaks — calm matters more than speed. If your pet is too stressed to continue safely, we stop rather than force it, and plan a gentler session together.",
+    "pages": ["/how-it-works/"]
+  },
+  {
+    "id": "dog-grooming-1",
+    "category": "grooming",
+    "q": "How much does dog grooming at home cost in Ludhiana?",
+    "a": "Fixed prices by size: Bath & Brush ₹599–₹999, Full Groom ₹1,199–₹1,899, Premium Spa Groom ₹1,799–₹2,799. Small is under 10 kg, Medium 10–25 kg, Large over 25 kg. No doorstep bargaining — the price you see is the price you pay.",
+    "pages": ["/ludhiana/dog-grooming/", "/faq/"],
+    "links": [{ "text": "Fixed prices by size", "href": "/pricing/" }]
+  },
+  {
+    "id": "dog-grooming-2",
+    "category": "grooming",
+    "q": "Which areas of Ludhiana do you cover?",
+    "a": "We groom pets at home across Ludhiana, including Sarabha Nagar, BRS Nagar, Model Town, Civil Lines, Dugri, Pakhowal Road, South City, Ferozepur Road, Haibowal Kalan and Kitchlu Nagar.",
+    "pages": ["/ludhiana/dog-grooming/"]
+  },
+  {
+    "id": "dog-grooming-3",
+    "category": "grooming",
+    "q": "Is the grooming kit hygienic and safe for my dog?",
+    "a": "Yes. Every visit uses a fresh sanitised kit — sealed blades and towels opened in front of you — and all our groomers are background-verified and trained, with ID and reference checks.",
+    "pages": ["/ludhiana/dog-grooming/"],
+    "links": [{ "text": "fresh sanitised kit", "href": "/safety-hygiene/" }]
+  },
+  {
+    "id": "dog-grooming-4",
+    "category": "grooming",
+    "q": "Can you groom large or anxious dogs like Labradors and German Shepherds at home?",
+    "a": "Yes. Our groomers handle Labradors, German Shepherds, Golden Retrievers and Indies regularly. Grooming happens at your home with you nearby, which keeps most anxious dogs calmer than a salon visit.",
+    "pages": ["/ludhiana/dog-grooming/", "/faq/"]
+  },
+  {
+    "id": "dog-grooming-5",
+    "category": "grooming",
+    "q": "How long does a home grooming session take?",
+    "a": "Bath & Brush takes about 45–60 minutes, a Full Groom 60–90 and a Premium Spa up to 120. We book slots so your groomer is never rushing your dog — last booking of the day is 17:30.",
+    "pages": ["/ludhiana/dog-grooming/"]
+  },
+  {
+    "id": "dog-grooming-6",
+    "category": "grooming",
+    "q": "What do you need from me at home?",
+    "a": "Just a tap point and a plug — we bring the table, towels, warm-water gear and dryer, and we leave your bathroom or balcony clean. You're welcome to stay and watch the whole groom; most pet parents do.",
+    "pages": ["/ludhiana/dog-grooming/", "/faq/"]
+  },
+  {
+    "id": "dog-grooming-7",
+    "category": "grooming",
+    "q": "Do you do medicated baths?",
+    "a": "Only vet-guided: if your dog has a prescribed medicated shampoo, our groomer will use it at no extra charge. We don't diagnose skin issues ourselves — for that, book a ₹699 vet home visit.",
+    "pages": ["/ludhiana/dog-grooming/"],
+    "links": [{ "text": "vet home visit", "href": "/ludhiana/vet-at-home/" }]
+  },
+  {
+    "id": "dog-grooming-8",
+    "category": "grooming",
+    "q": "Cash ya UPI — payment kaise hota hai?",
+    "a": "Jaise aapko easy lage: UPI or cash, after the service. No advance payment, koi hidden charges nahi — the WhatsApp-confirmed price is final.",
+    "pages": ["/ludhiana/dog-grooming/", "/faq/"]
+  },
+  {
+    "id": "cat-grooming-1",
+    "category": "grooming",
+    "q": "How much does cat grooming at home cost in Ludhiana?",
+    "a": "One flat price for every cat, any breed or coat: Bath & Brush ₹899, Full Groom ₹1,399. There's no travel charge in Ludhiana and no advance payment — pay by UPI or cash after the session. The price is confirmed on WhatsApp before we arrive.",
+    "pages": ["/ludhiana/cat-grooming/"]
+  },
+  {
+    "id": "cat-grooming-2",
+    "category": "grooming",
+    "q": "How do you groom a cat that hates being handled?",
+    "a": "At home most cats are far calmer — no carrier, no car, no dog smells. Our groomers use low-stress handling: nails first, a gentle towel-wrap hold and short breaks, with you nearby. We never sedate. If your cat is too stressed to continue safely, we stop rather than force it.",
+    "pages": ["/ludhiana/cat-grooming/", "/faq/"]
+  },
+  {
+    "id": "cat-grooming-3",
+    "category": "grooming",
+    "q": "My Persian has hard mats — can you remove them without shaving?",
+    "a": "Small mats can be worked out with de-matting tools during a Full Groom. Tight mats close to the skin are painful to comb out, so they're clipped — never pulled, which can tear skin. We show you the mats before starting and leave you a 5-minute daily combing routine so they don't return.",
+    "pages": ["/ludhiana/cat-grooming/"]
+  },
+  {
+    "id": "cat-grooming-4",
+    "category": "grooming",
+    "q": "How often should a Persian cat be groomed?",
+    "a": "A Persian needs a 5-minute comb every day at home and a professional groom every 4–8 weeks, with a bath as part of that groom. Short-haired and Indie cats need far less: a brush-out, nail trim and ear check every 6–8 weeks keeps them comfortable.",
+    "pages": ["/ludhiana/cat-grooming/"],
+    "links": [{ "text": "a professional groom every 4–8 weeks", "href": "/blog/persian-cat-grooming-schedule-india/" }]
+  },
+  {
+    "id": "cat-grooming-5",
+    "category": "grooming",
+    "q": "Can you treat my cat for fleas?",
+    "a": "Yes, with cat-safe products only. Many dog anti-tick products contain permethrin, which is toxic to cats, so we never use them on cats. Add flea treatment to any groom for ₹399 or book it standalone for ₹699; for skin wounds or heavy infestations we'll suggest a ₹699 vet home visit.",
+    "pages": ["/ludhiana/cat-grooming/"],
+    "links": [{ "text": "flea treatment", "href": "/ludhiana/tick-flea-treatment/" }, { "text": "vet home visit", "href": "/ludhiana/vet-at-home/" }]
+  },
+  {
+    "id": "cat-grooming-6",
+    "category": "grooming",
+    "q": "Is it hygienic if you groomed a dog before my cat?",
+    "a": "Yes. Every pet gets a fresh, sealed, sanitised kit opened in front of you — blades, combs and towels never move from one pet to another — and cats get cat-only shampoo. Your groomer is background-verified, and our full protocol is published on the safety page.",
+    "pages": ["/ludhiana/cat-grooming/"],
+    "links": [{ "text": "safety page", "href": "/safety-hygiene/" }]
+  },
+  {
+    "id": "cat-grooming-7",
+    "category": "grooming",
+    "q": "How long does a cat groom take?",
+    "a": "Bath & Brush takes about 45–60 minutes and a Full Groom 60–90 minutes. We build in breaks whenever your cat needs one, so we never rush — calm beats quick with cats.",
+    "pages": ["/ludhiana/cat-grooming/"]
+  },
+  {
+    "id": "cat-grooming-8",
+    "category": "grooming",
+    "q": "Billi ko ghar pe nehlana hai — kaise book karein?",
+    "a": "Bilkul! Book on WhatsApp in under 2 minutes: choose Cat Grooming, pick your area and a time window, and we confirm the exact slot within 10 minutes (9:00–19:00). Flat ₹899 for Bath & Brush — pay by UPI or cash after the groom.",
+    "pages": ["/ludhiana/cat-grooming/"]
+  },
+  {
+    "id": "dog-walking-1",
+    "category": "walking",
+    "q": "How much does a dog walker cost in Ludhiana?",
+    "a": "₹2,999 a month for one ~30-minute walk a day, or ₹4,999 a month for two (morning and evening). Not sure yet? Start with a 7-walk Trial Week for ₹699. Prices are fixed, there's no travel charge in Ludhiana, and monthly plans are paid at month-end by UPI or cash — no advance.",
+    "pages": ["/ludhiana/dog-walking/", "/faq/"]
+  },
+  {
+    "id": "dog-walking-2",
+    "category": "walking",
+    "q": "Will the same walker come every day?",
+    "a": "Yes. You get one assigned walker so your dog builds trust and routine, plus a verified backup walker introduced in advance for leave days. Dogs walk better, pull less and relax faster with a familiar person.",
+    "pages": ["/ludhiana/dog-walking/", "/faq/"]
+  },
+  {
+    "id": "dog-walking-3",
+    "category": "walking",
+    "q": "How do I know my dog is safe with your walker?",
+    "a": "Every walker is background-verified (ID and references checked) and trained in leash handling and heat safety. Dogs stay on a double-clip lead, never off-leash near roads, and you get the GPS route plus a photo and short note after every walk. You meet your walker before the first walk.",
+    "pages": ["/ludhiana/dog-walking/"]
+  },
+  {
+    "id": "dog-walking-4",
+    "category": "walking",
+    "q": "What times do you walk dogs in Ludhiana's summer?",
+    "a": "From April to June we walk only before 8:00 or after 19:00 — midday tarmac can burn paws and heatstroke is a real risk. Walkers carry water on every walk and do the 5-second back-of-hand tarmac test before setting off.",
+    "pages": ["/ludhiana/dog-walking/", "/faq/"]
+  },
+  {
+    "id": "dog-walking-5",
+    "category": "walking",
+    "q": "Do you walk reactive or anxious dogs?",
+    "a": "We meet every dog before the first walk. Mildly reactive or nervous dogs are fine — walkers keep distance from strays and triggers. If a dog is strongly aggressive, we'll tell you honestly that a trainer should come first, rather than risk your dog or anyone else.",
+    "pages": ["/ludhiana/dog-walking/"]
+  },
+  {
+    "id": "dog-walking-6",
+    "category": "walking",
+    "q": "What happens when it rains or there's heavy fog?",
+    "a": "In monsoon rain we shorten the walk or shift the slot, and the walker towel-dries paws and belly afterwards. On dense winter-fog mornings we move the walk later for visibility and road safety. You're told on WhatsApp before any change.",
+    "pages": ["/ludhiana/dog-walking/"]
+  },
+  {
+    "id": "dog-walking-7",
+    "category": "walking",
+    "q": "Can I book just one walk?",
+    "a": "Not yet — in Phase 1 we offer monthly plans and the 7-walk Trial Week (₹699), which is the best way to try us. One-off walks are on our roadmap; ask to join the waitlist on WhatsApp.",
+    "pages": ["/ludhiana/dog-walking/"]
+  },
+  {
+    "id": "dog-walking-8",
+    "category": "walking",
+    "q": "Dog walker ka rate kya hai? Roz same walker aayega?",
+    "a": "₹2,999 mahine ka (roz 1 walk) ya ₹4,999 (roz 2 walks). Haan — roz wahi verified walker aata hai, aur har walk ke baad photo aur GPS route WhatsApp pe milta hai. Pehle ₹699 ka Trial Week try karein.",
+    "pages": ["/ludhiana/dog-walking/"]
+  },
+  {
+    "id": "vet-at-home-1",
+    "category": "vet",
+    "q": "What does the ₹699 home visit include?",
+    "a": "A full examination at your home by a registered veterinarian — temperature, weight, heart and lungs, skin, ears, eyes and teeth — plus diagnosis, a written prescription and a summary on WhatsApp. It usually takes 20–30 minutes. Medicines or vaccines, if needed, are charged at printed MRP. Pay by UPI or cash after the visit.",
+    "pages": ["/ludhiana/vet-at-home/", "/faq/"],
+    "links": [{ "text": "charged at printed MRP", "href": "/pricing/" }]
+  },
+  {
+    "id": "vet-at-home-2",
+    "category": "vet",
+    "q": "Is the vet really registered?",
+    "a": "Yes. Every medical service is done by a registered veterinarian (BVSc & AH) — never by a groomer or assistant. Your vet's name, photo and registration number are shared on WhatsApp before the visit, and the same details appear on your prescription.",
+    "pages": ["/ludhiana/vet-at-home/"]
+  },
+  {
+    "id": "vet-at-home-3",
+    "category": "vet",
+    "q": "Do you handle emergencies or come at night?",
+    "a": "No — we're not an emergency service; visits run 9:00–19:00 every day. If your pet has been hit by a vehicle, is bleeding heavily, having seizures, struggling to breathe, may have eaten poison, or has bloody diarrhoea, go to the nearest 24-hour veterinary hospital immediately — don't wait for a home visit.",
+    "pages": ["/ludhiana/vet-at-home/", "/faq/"]
+  },
+  {
+    "id": "vet-at-home-4",
+    "category": "vet",
+    "q": "When is a clinic better than a home visit?",
+    "a": "Whenever equipment is needed: X-rays, ultrasound, surgery, drips or intensive care. Home visits are ideal for check-ups, vaccinations, deworming, skin and ear problems, tick and flea issues, mild tummy upsets and follow-ups. If our vet finds something that needs a clinic, they'll tell you plainly and suggest where to go.",
+    "pages": ["/ludhiana/vet-at-home/"],
+    "links": [{ "text": "Home visits are ideal", "href": "/blog/vet-home-visit-vs-clinic/" }]
+  },
+  {
+    "id": "vet-at-home-5",
+    "category": "vet",
+    "q": "Can the vet see my cat at home?",
+    "a": "Yes — and cats are often much calmer when the vet comes to them: no carrier, no car, no barking waiting room. The same ₹699 visit applies. Kitten vaccinations follow their own schedule, starting with Tricat at 8–9 weeks.",
+    "pages": ["/ludhiana/vet-at-home/"],
+    "links": [{ "text": "Kitten vaccinations", "href": "/ludhiana/dog-vaccination/" }]
+  },
+  {
+    "id": "vet-at-home-6",
+    "category": "vet",
+    "q": "Can I get a same-day visit?",
+    "a": "Often, yes. Book before 15:00 and we offer the earliest free slot, which is frequently the same day; the exact time is confirmed on WhatsApp within 10 minutes (9:00–19:00). We never promise a time we can't keep.",
+    "pages": ["/ludhiana/vet-at-home/"]
+  },
+  {
+    "id": "vet-at-home-7",
+    "category": "vet",
+    "q": "Do you offer online or video consultations?",
+    "a": "Not in Phase 1. Our vets visit in person, because a hands-on examination is more reliable than a video call for most problems. Message us on WhatsApp and we'll book the earliest home visit.",
+    "pages": ["/ludhiana/vet-at-home/"]
+  },
+  {
+    "id": "vet-at-home-8",
+    "category": "vet",
+    "q": "Ghar pe dog ka doctor bulana ho toh?",
+    "a": "Bilkul — registered vet aapke ghar aata hai, ₹699 visit fee. Medicines MRP pe, bill aapko dikhaya jaata hai. WhatsApp pe 2 minute mein book karein — slot 10 minute mein confirm.",
+    "pages": ["/ludhiana/vet-at-home/", "/faq/"]
+  },
+  {
+    "id": "dog-vaccination-1",
+    "category": "vet",
+    "q": "How much does dog vaccination at home cost in Ludhiana?",
+    "a": "A ₹199 home-service fee plus the vaccine at its printed MRP — you see the vial and its MRP before the injection. A 9-in-1 (DHPPiL) or anti-rabies shot is charged exactly at MRP, with no travel charge in Ludhiana. Pay by UPI or cash after the visit.",
+    "pages": ["/ludhiana/dog-vaccination/"],
+    "links": [{ "text": "home-service fee", "href": "/pricing/" }]
+  },
+  {
+    "id": "dog-vaccination-2",
+    "category": "vet",
+    "q": "Are vaccines given at home as safe as at a clinic?",
+    "a": "Yes, when the cold chain is kept. Our vet carries vaccines in a temperature-controlled box from licensed suppliers, shows you the batch number and expiry, and watches your pet for 15 minutes after the injection — exactly as a clinic would. Home is also calmer, with no sick animals in a waiting room.",
+    "pages": ["/ludhiana/dog-vaccination/"]
+  },
+  {
+    "id": "dog-vaccination-3",
+    "category": "vet",
+    "q": "What is the puppy vaccination schedule in India?",
+    "a": "6 weeks: Puppy DP · 8–9 weeks: DHPPiL · 12 weeks: DHPPiL booster · 14–16 weeks: anti-rabies, with boosters as your vet advises · then DHPPiL and rabies boosters every year for life. Your vet confirms exact dates for your puppy's vaccine brand.",
+    "pages": ["/ludhiana/dog-vaccination/", "/faq/"],
+    "links": [{ "text": "Your vet confirms exact dates", "href": "/blog/puppy-vaccination-schedule-india/" }]
+  },
+  {
+    "id": "dog-vaccination-4",
+    "category": "vet",
+    "q": "Is rabies vaccination compulsory in India?",
+    "a": "In practice, yes: most Indian cities require it for municipal pet registration, and you'll need proof for boarding, travel and after any bite incident. The first dose is usually given at 14–16 weeks, followed by boosters as your vet advises — typically every year.",
+    "pages": ["/ludhiana/dog-vaccination/", "/faq/"]
+  },
+  {
+    "id": "dog-vaccination-5",
+    "category": "vet",
+    "q": "Do you remind me when the next dose is due?",
+    "a": "Yes, free. After every vaccination we add your pet's next due dates to our reminder calendar and WhatsApp you a week before each one, so boosters never slip.",
+    "pages": ["/ludhiana/dog-vaccination/"]
+  },
+  {
+    "id": "dog-vaccination-6",
+    "category": "vet",
+    "q": "Do you vaccinate cats too?",
+    "a": "Yes. Kittens get Tricat from 8–9 weeks with a booster at 12 weeks, then anti-rabies from 14–16 weeks and yearly boosters. It's the same ₹199 fee plus vaccine MRP, and cats are usually far calmer vaccinated at home.",
+    "pages": ["/ludhiana/dog-vaccination/"]
+  },
+  {
+    "id": "dog-vaccination-7",
+    "category": "vet",
+    "q": "Can you deworm my dog in the same visit?",
+    "a": "Yes. A Deworming Visit is ₹499 with a standard dewormer included; booked together with a vaccination you pay ₹199 + vaccine MRP + ₹499. The dose depends on weight, so the vet weighs your pet first.",
+    "pages": ["/ludhiana/dog-vaccination/"],
+    "links": [{ "text": "Deworming Visit", "href": "/ludhiana/vet-at-home/" }]
+  },
+  {
+    "id": "dog-vaccination-8",
+    "category": "vet",
+    "q": "Vaccination ghar pe ho jaati hai?",
+    "a": "Haan — registered vet ghar aakar vaccine lagata hai: ₹199 visit fee + vaccine MRP pe. Vial ka batch aur expiry aapko dikhaya jaata hai, aur next dose ka reminder WhatsApp pe aata hai.",
+    "pages": ["/ludhiana/dog-vaccination/"]
+  },
+  {
+    "id": "tick-flea-treatment-1",
+    "category": "grooming",
+    "q": "How much does tick treatment cost?",
+    "a": "₹399 as an add-on with any groom, or ₹699 as a standalone visit with an anti-tick bath. Both include a full-body tick check and safe removal of visible ticks. Prices are fixed, there's no travel charge in Ludhiana, and you pay by UPI or cash after the service.",
+    "pages": ["/ludhiana/tick-flea-treatment/"]
+  },
+  {
+    "id": "tick-flea-treatment-2",
+    "category": "grooming",
+    "q": "When is tick season in Punjab?",
+    "a": "Ticks pick up from April as it heats up, and the monsoon (July–September) is peak season; tick-fever cases rise from May to September. Start prevention in April, check your dog every night during the monsoon, and keep monthly checks through winter.",
+    "pages": ["/ludhiana/tick-flea-treatment/"],
+    "links": [{ "text": "Start prevention in April", "href": "/blog/tick-season-ludhiana-prevention-calendar/" }]
+  },
+  {
+    "id": "tick-flea-treatment-3",
+    "category": "vet",
+    "q": "What are the signs of tick fever?",
+    "a": "Watch for lethargy, loss of appetite, fever, pale gums and dark or reddish urine. Tick fever can be serious if ignored — if you notice these signs, book a ₹699 vet home visit the same day instead of a grooming treatment.",
+    "pages": ["/ludhiana/tick-flea-treatment/"],
+    "links": [{ "text": "vet home visit", "href": "/ludhiana/vet-at-home/" }]
+  },
+  {
+    "id": "tick-flea-treatment-4",
+    "category": "grooming",
+    "q": "Will one treatment get rid of ticks completely?",
+    "a": "It clears the ticks on your dog that day and protects for a while, but ticks also hide in bedding, wall cracks and gardens. We show you a nightly 60-second tick check and how to wash bedding; heavy infestations usually need repeat treatments and home cleaning, and your vet can advise on longer-lasting prevention.",
+    "pages": ["/ludhiana/tick-flea-treatment/"]
+  },
+  {
+    "id": "tick-flea-treatment-5",
+    "category": "grooming",
+    "q": "Can you treat my cat for fleas?",
+    "a": "Yes, with cat-specific products only — many dog anti-tick products contain permethrin, which is toxic to cats, so we never use them on cats. Same prices: ₹399 with a groom or ₹699 standalone.",
+    "pages": ["/ludhiana/tick-flea-treatment/"]
+  },
+  {
+    "id": "tick-flea-treatment-6",
+    "category": "grooming",
+    "q": "Is the treatment safe for puppies?",
+    "a": "Many anti-tick products have minimum age and weight limits, so we check your puppy's age and weight first and use only what's labelled safe for them. For very young puppies the vet may recommend a different approach — we'll say so rather than take a risk.",
+    "pages": ["/ludhiana/tick-flea-treatment/"]
+  },
+  {
+    "id": "tick-flea-treatment-7",
+    "category": "grooming",
+    "q": "How do I remove a tick myself safely?",
+    "a": "Use a tick tool or fine tweezers: grip the tick close to the skin and pull straight out with steady pressure — no twisting or crushing. Never use kerosene, petrol, burning or petroleum jelly; they can make things worse. Clean the spot, wash your hands, and watch your dog for tick-fever signs.",
+    "pages": ["/ludhiana/tick-flea-treatment/"],
+    "links": [{ "text": "Use a tick tool or fine tweezers", "href": "/blog/remove-tick-from-dog-safely/" }]
+  },
+  {
+    "id": "tick-flea-treatment-8",
+    "category": "grooming",
+    "q": "Dog ko tick ho gaye hain, kya karein?",
+    "a": "Ghabrayein nahi, aur kerosene ya jalaake ticks mat hatayein. Hum ghar aakar anti-tick bath dete hain (₹699, ya groom ke saath ₹399 add-on) aur poore body ka tick check karte hain. Agar dog sust hai ya khana nahi kha raha, toh ₹699 vet visit book karein.",
+    "pages": ["/ludhiana/tick-flea-treatment/"]
+  },
+  {
+    "id": "puppy-grooming-1",
+    "category": "grooming",
+    "q": "When can a puppy have its first bath or groom?",
+    "a": "From about 8 weeks, ideally 10–12 weeks once the first vaccinations have started — very young puppies can't regulate body temperature well. Before that, spot-clean with a damp cloth. Check your pup's vaccination dates on our vaccination page first.",
+    "pages": ["/ludhiana/puppy-grooming/", "/faq/"],
+    "links": [{ "text": "vaccination page", "href": "/ludhiana/dog-vaccination/" }]
+  },
+  {
+    "id": "puppy-grooming-2",
+    "category": "grooming",
+    "q": "How much does puppy grooming cost?",
+    "a": "₹699 flat for any breed from 8 weeks to 6 months — the Puppy Intro Groom. After 6 months your pup moves to regular dog grooming from ₹599. There's no travel charge in Ludhiana, and you pay by UPI or cash after the groom.",
+    "pages": ["/ludhiana/puppy-grooming/"]
+  },
+  {
+    "id": "puppy-grooming-3",
+    "category": "grooming",
+    "q": "My puppy isn't fully vaccinated — is a home groom safe?",
+    "a": "Safer than a salon: your puppy never meets other dogs or shared tubs. Every visit uses a fresh, sealed kit opened in front of you, and your background-verified groomer sanitises hands and wears a fresh apron before touching your pup.",
+    "pages": ["/ludhiana/puppy-grooming/"],
+    "links": [{ "text": "fresh, sealed kit", "href": "/safety-hygiene/" }]
+  },
+  {
+    "id": "puppy-grooming-4",
+    "category": "grooming",
+    "q": "How long does it take, and what if my puppy gets scared?",
+    "a": "About 45 minutes, with as many breaks as your puppy needs. The goal is a happy first experience, not a perfect haircut — if your pup gets overwhelmed, we slow down, play, and finish the rest next time.",
+    "pages": ["/ludhiana/puppy-grooming/"]
+  },
+  {
+    "id": "puppy-grooming-5",
+    "category": "grooming",
+    "q": "Will you cut my puppy's hair?",
+    "a": "Usually just a tidy around the eyes, paws and hygiene area. Full haircuts wait until your pup is comfortable with clippers — we introduce the clipper sound and feel gently in the first session.",
+    "pages": ["/ludhiana/puppy-grooming/"]
+  },
+  {
+    "id": "puppy-grooming-6",
+    "category": "grooming",
+    "q": "What should I do before the groomer arrives?",
+    "a": "Let your puppy play and toilet first so they're relaxed, keep a few small treats handy, and have a bathroom or balcony with a tap and a plug point ready. We bring everything else.",
+    "pages": ["/ludhiana/puppy-grooming/"]
+  },
+  {
+    "id": "puppy-grooming-7",
+    "category": "grooming",
+    "q": "Puppy ki pehli grooming kab karwayein?",
+    "a": "8 hafte ke baad, behtar 10–12 hafte jab pehli vaccines shuru ho jaayein. Pehli grooming chhoti aur pyaar se hoti hai — ₹699 flat, ghar pe. Vaccination ki dates humare vaccination page pe dekhein.",
+    "pages": ["/ludhiana/puppy-grooming/"],
+    "links": [{ "text": "vaccination page", "href": "/ludhiana/dog-vaccination/" }]
+  },
+  {
+    "id": "puppy-grooming-8",
+    "category": "grooming",
+    "q": "Can vaccination and grooming happen on the same day?",
+    "a": "Ask your vet first — many vets advise waiting a day or two after a vaccine before a bath. Book both on WhatsApp and we'll plan the Puppy Intro Groom around your vaccination dates.",
+    "pages": ["/ludhiana/puppy-grooming/"],
+    "links": [{ "text": "vaccination dates", "href": "/ludhiana/dog-vaccination/" }]
+  },
+  {
+    "id": "join-as-groomer-1",
+    "category": "careers",
+    "q": "Do I need my own grooming kit?",
+    "a": "No. We provide the standard sealed kit and supplies, and train you on how we clean and seal it after every visit.",
+    "pages": ["/join-as-groomer/"]
+  },
+  {
+    "id": "join-as-groomer-2",
+    "category": "careers",
+    "q": "Is this full-time or part-time?",
+    "a": "Both. You choose your available slots; full-time groomers get first pick of bookings in their area.",
+    "pages": ["/join-as-groomer/"]
+  },
+  {
+    "id": "join-as-groomer-3",
+    "category": "careers",
+    "q": "How soon will I get bookings?",
+    "a": "After your three supervised visits, bookings follow demand in your area — we'll tell you honestly what to expect before you start.",
+    "pages": ["/join-as-groomer/"]
+  },
+  {
+    "id": "join-as-groomer-4",
+    "category": "careers",
+    "q": "Do you train beginners?",
+    "a": "Walkers, yes — we train you fully. Groomers need basic grooming skills; we then train you on our handling, hygiene and heat-safety standards.",
+    "pages": ["/join-as-groomer/"]
+  },
+  {
+    "id": "join-as-groomer-5",
+    "category": "careers",
+    "q": "Do I have to pay anything to join?",
+    "a": "Never. No joining fee, no deposit, no kit charge.",
+    "pages": ["/join-as-groomer/"]
+  },
+  {
+    "id": "faq-s1",
+    "category": "safety",
+    "q": "What does \"background-verified\" actually mean?",
+    "a": "Before their first visit, every groomer and walker submits government ID and address proof, and we call two references. They then pass a skills trial on a volunteer pet, train on our hygiene and handling standards, and complete three supervised visits before working alone. You see their name and photo on WhatsApp before they arrive.",
+    "pages": ["/faq/"]
+  },
+  {
+    "id": "faq-s2",
+    "category": "safety",
+    "q": "What safety measures do you follow inside my home?",
+    "a": "Your groomer wears an ID badge, opens a sealed, sanitised kit in front of you, works only in the space you choose, and cleans up before leaving. You're welcome to watch everything — that transparency is the whole point of a doorstep service.",
+    "pages": ["/faq/"]
+  },
+  {
+    "id": "faq-s3",
+    "category": "safety",
+    "q": "What happens if something goes wrong during a visit?",
+    "a": "We stop immediately, tell you on the spot, and help you get a vet check right away — from our partner vet or the nearest clinic. We'd always rather pause a groom than push a stressed or unwell pet.",
+    "pages": ["/faq/"]
+  },
+  {
+    "id": "faq-a1",
+    "category": "areas",
+    "q": "Do you serve outside Ludhiana?",
+    "a": "Not yet — we're Ludhiana-only while we get every detail right. Choose \"Outside Ludhiana\" in the booking form to join the waitlist: you'll be first to know when we reach your city, plus ₹200 off your first groom.",
+    "pages": ["/faq/"]
+  },
+  {
+    "id": "faq-a2",
+    "category": "areas",
+    "q": "Will you offer boarding, training or pet supplies?",
+    "a": "They're planned for a later phase and aren't available yet. Message us on WhatsApp to join the waitlist, and we'll tell you first when they launch.",
+    "pages": ["/faq/"]
   }
 ]
