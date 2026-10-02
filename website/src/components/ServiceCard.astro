@@ -1,0 +1,68 @@
+---
+// Service card (08-DESIGN-SYSTEM §4.7): home services grid (H-3), /ludhiana/ hub grid, "Pet parents also book"
+// (SP-11), area pages' "Book any service in {Area}" (AP-3). The whole card is ONE <a> with the h3 inside, and there
+// are no nested links. The card links only when its page is live (routes registry, 02 P074). Until then it renders
+// as a plain card marked "Coming soon" (home H-3).
+// Grid (page-side): base 1-col · md 2-col · lg 3-col (7 cards = 3+3+1 centred), gap 16 → 24 at lg.
+import Chip from './Chip.astro';
+import Photo from './Photo.astro';
+import Icon from './icons/Icon.astro';
+import { isLive, routeLabel } from '../data/routes';
+import { SERVICE_PRICE_CHIP } from '../data/content';
+
+interface Props {
+  /** Money-page path from routes.ts, e.g. '/ludhiana/dog-grooming/'. */
+  path: string;
+  /** h3 = the page name from 01-SITEMAP (routes.ts label) by default. Override for locality anchors on area pages,
+   *  e.g. 'Dog grooming at home in Sarabha Nagar' (AP-3). */
+  name?: string;
+  /** One-liner, ≤ 70 chars, from that page's 06 §2.3 subhead. */
+  blurb: string;
+  /** Price chip text(s) built with pricing helpers. Default: SERVICE_PRICE_CHIP[path]. An array renders several chips. */
+  price?: string | readonly string[];
+  /** 4:3 card photo: planned 08 §5.2 filename + 08 §5.4 alt. */
+  photo: { name: string; alt: string; position?: string };
+  /** Heading level inside the card (default 3). */
+  level?: 2 | 3 | 4;
+  class?: string;
+}
+
+const { path, name = routeLabel(path), blurb, photo, level = 3, class: cls = '' } = Astro.props;
+const priceProp = Astro.props.price ?? SERVICE_PRICE_CHIP[path];
+const prices = priceProp === undefined ? [] : typeof priceProp === 'string' ? [priceProp] : [...priceProp];
+const live = isLive(path);
+const Tag = live ? 'a' : 'div';
+const H = `h${level}` as 'h2' | 'h3' | 'h4';
+---
+<Tag
+  href={live ? path : undefined}
+  class:list={[
+    'service-card flex h-full flex-col rounded-lg border border-line bg-paper p-4 text-ink no-underline lg:p-6',
+    live ? 'is-link' : '',
+    cls,
+  ]}
+>
+  <Photo name={photo.name} alt={photo.alt} preset="card" position={photo.position} class="block aspect-[4/3] h-auto w-full rounded-md object-cover" />
+  <H class="t-h3 m-0 mt-4">{name}</H>
+  <p class="m-0 mt-2 text-sm text-slate">{blurb}</p>
+  <div class="mt-auto flex items-center justify-between gap-3 pt-4">
+    <span class="flex min-w-0 flex-wrap gap-2">
+      {prices.map((p) => <Chip kind="price" label={p} />)}
+    </span>
+    {live ? (
+      <span class="service-card-arrow flex-none text-brand"><Icon name="arrow-right" size={20} /></span>
+    ) : (
+      <span class="flex-none text-sm font-medium text-slate">Coming soon</span>
+    )}
+  </div>
+</Tag>
+
+<style>
+  .service-card { transition: box-shadow var(--dur-1) ease-out, border-color var(--dur-1) ease-out; }
+  /* Hover: shadow-2 swaps in for the border (08 §3.3: never shadow and border together). */
+  .service-card.is-link:hover { box-shadow: var(--shadow-2); border-color: transparent; }
+  .service-card.is-link:hover :is(h2, h3, h4) { color: var(--color-brand-deep); }
+  .service-card-arrow { transition: transform var(--dur-1) ease-out; }
+  .service-card.is-link:hover .service-card-arrow { transform: translateX(4px); }
+  .service-card.is-link:focus-visible { border-radius: var(--radius-lg); }
+</style>

@@ -1,0 +1,113 @@
+---
+// Photo (08-DESIGN-SYSTEM §5; mechanics 04-TECHNICAL-SEO §1.4 / §5.2.2). Renders a real photo when its planned file
+// exists in src/assets/photos/ (08 §5.2 shot-list filename), else the grey dev placeholder from /public/placeholders/.
+// Dropping the real file in later needs zero code changes. Placeholders must never ship: the 08 §0 grep gate
+// (`grep -rl 'placeholder-' dist`) blocks launch while any page still renders one.
+//
+// Real photo  → astro:assets <Picture> AVIF + WebP (+ source-format fallback), cropped to `ratio` (fit cover),
+//               explicit width/height, lazy unless `eager`.
+// Placeholder → <img src="/placeholders/placeholder-{ratio}.svg"> with the same alt, width/height and loading.
+// `preload`   → renders ONLY the <link rel="preload" as="image"> for this image (put it in <head>; 04 §5.2.2).
+import { Picture, getImage } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+type Ratio = '4x3' | '16x10' | '1x1' | '16x9';
+type Preset = 'hero' | 'card' | 'blog' | 'pair' | 'groomer';
+
+interface Props {
+  /** Planned filename from 08 §5.2, e.g. 'golden-retriever-bath-home-ludhiana.jpg' (src/assets/photos/<name>). */
+  name: string;
+  /** Alt per 08 §5.4 (≤ 125 chars, no "image of"). Pass "" only for a purely decorative image. */
+  alt: string;
+  /** Output aspect ratio — real photos are cropped to it; placeholders use the matching SVG. */
+  ratio?: Ratio;
+  /** Rendered widths in px (srcset). The largest one sets the width/height attributes. */
+  widths?: number[];
+  /** The `sizes` attribute for the srcset. */
+  sizes?: string;
+  /** 08 §5.6 row: fills ratio/widths/sizes (explicit props win). hero · card · blog · pair · groomer. */
+  preset?: Preset;
+  /** LCP/above-the-fold image: loading="eager" + fetchpriority="high". Default: lazy. */
+  eager?: boolean;
+  /** Render only the <link rel="preload"> for this image (same transform as the <Picture>, so the URLs match). */
+  preload?: boolean;
+  /** Crop focus for real photos (CSS object-position syntax), e.g. 'center top'. Default 'center'. */
+  position?: string;
+  /** Class for the <img> (on a real photo, Astro puts it on the <img> inside <picture>). */
+  class?: string;
+}
+
+// 08 §5.6 — per-component numbers (the hero is 16:10 at base; Hero.astro crops the 4:3 file with CSS there).
+const PRESETS: Record<Preset, { ratio: Ratio; widths: number[]; sizes: string }> = {
+  hero: { ratio: '4x3', widths: [400, 800, 1200], sizes: '(max-width: 767px) 100vw, 480px' },
+  card: { ratio: '4x3', widths: [320, 640], sizes: '(max-width: 767px) 100vw, 400px' },
+  blog: { ratio: '16x9', widths: [320, 640], sizes: '(max-width: 767px) 100vw, 400px' },
+  pair: { ratio: '1x1', widths: [360, 600, 900], sizes: '(max-width: 767px) 50vw, 420px' },
+  groomer: { ratio: '1x1', widths: [200, 400], sizes: '(max-width: 767px) 96px, 280px' },
+};
+const ASPECT: Record<Ratio, number> = { '4x3': 4 / 3, '16x10': 16 / 10, '1x1': 1, '16x9': 16 / 9 };
+
+const { name, alt, preset, eager = false, preload = false, position = 'center', class: cls } = Astro.props;
+const p = preset ? PRESETS[preset] : undefined;
+const ratio = Astro.props.ratio ?? p?.ratio;
+const widths = Astro.props.widths ?? p?.widths;
+const sizes = Astro.props.sizes ?? p?.sizes;
+if (!ratio || !ASPECT[ratio] || !widths?.length || !sizes) {
+  throw new Error(`Photo "${name}": pass a preset, or ratio ('4x3'|'16x10'|'1x1'|'16x9') + widths + sizes`);
+}
+if (alt === undefined) throw new Error(`Photo "${name}": alt is required (08 §5.4)`);
+
+const width = Math.max(...widths);
+const height = Math.round(width / ASPECT[ratio]);
+
+// Every image file in src/assets/photos/ — matched by exact filename, else by the same name with another extension.
+const photos = import.meta.glob<{ default: ImageMetadata }>('../assets/photos/*.{jpg,jpeg,png,webp,avif}', { eager: true });
+const fileOf = (path: string) => path.slice(path.lastIndexOf('/') + 1);
+const stemOf = (file: string) => file.replace(/\.[^.]+$/, '');
+const entries = Object.entries(photos);
+const hit = entries.find(([path]) => fileOf(path) === name) ?? entries.find(([path]) => stemOf(fileOf(path)) === stemOf(name));
+const src = hit?.[1].default;
+
+const placeholder = `/placeholders/placeholder-${ratio}.svg`;
+const loading = eager ? 'eager' : 'lazy';
+const fetchpriority = eager ? 'high' : undefined;
+
+// Preload: the AVIF srcset, built with the exact transform <Picture> uses for its AVIF <source>.
+const preloadAvif = preload && src
+  ? await getImage({ src, format: 'avif', widths, width, height, fit: 'cover', position })
+  : undefined;
+---
+{preload ? (
+  preloadAvif ? (
+    <link rel="preload" as="image" type="image/avif" imagesrcset={preloadAvif.srcSet.attribute} imagesizes={sizes} fetchpriority="high" />
+  ) : (
+    <link rel="preload" as="image" href={placeholder} fetchpriority="high" />
+  )
+) : src ? (
+  <Picture
+    src={src}
+    alt={alt}
+    formats={['avif', 'webp']}
+    widths={widths}
+    sizes={sizes}
+    width={width}
+    height={height}
+    fit="cover"
+    position={position}
+    loading={loading}
+    decoding="async"
+    fetchpriority={fetchpriority}
+    class={cls}
+  />
+) : (
+  <img
+    src={placeholder}
+    alt={alt}
+    width={width}
+    height={height}
+    loading={loading}
+    decoding="async"
+    fetchpriority={fetchpriority}
+    class={cls}
+  />
+)}

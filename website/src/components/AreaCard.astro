@@ -1,0 +1,63 @@
+---
+// Area card (08-DESIGN-SYSTEM §4.14): home "Areas we serve" (H-9), /ludhiana/ hub (all 10), money-page
+// "Areas we serve in Ludhiana" (SP-9, 3 cards), area pages' "Also near you" (AP-9, 3 cards).
+// The whole card is one <a> to /ludhiana/areas/{slug}/, but only once that page is live (routes registry; 05 §6.10
+// staggered publishing). Before then it is a plain-text card with no link and no arrow.
+// The heading carries the anchor-text pattern (01 §2.7): a small "{prefix}" line + the area name, so the link
+// reads "Pet grooming at home in Sarabha Nagar".
+// Grid (page-side): base 2-col (compact) · md 3-col · lg 5-col (10 areas = 5×2), gap 16 → 24 at lg.
+import Icon from './icons/Icon.astro';
+import { isLive, routeLabel } from '../data/routes';
+import { AREA_LINES } from '../data/content';
+
+interface Props {
+  /** Area slug from 00 §3.3, e.g. 'sarabha-nagar'. */
+  slug: string;
+  /** Anchor-text prefix (01 §2.7 / template SP-9): home + hub 'Pet grooming at home in' (default);
+   *  service pages use their service, e.g. 'Dog grooming at home in'. Pass '' for the bare area name. */
+  prefix?: string;
+  /** Distinct one-liner. Default: AREA_LINES[slug].oneLiner (area template §4 value proposition). */
+  oneLiner?: string;
+  /** Heading level inside the card (default 3). */
+  level?: 2 | 3 | 4;
+  class?: string;
+}
+
+const { slug, prefix = 'Pet grooming at home in', level = 3, class: cls = '' } = Astro.props;
+const path = `/ludhiana/areas/${slug}/`;
+const name = routeLabel(path);
+if (name === path) throw new Error(`AreaCard: "${slug}" is not an area in routes.ts`);
+const oneLiner = Astro.props.oneLiner ?? AREA_LINES[slug]?.oneLiner;
+const live = isLive(path);
+const Tag = live ? 'a' : 'div';
+const H = `h${level}` as 'h2' | 'h3' | 'h4';
+---
+<Tag
+  href={live ? path : undefined}
+  class:list={[
+    'area-card flex h-full min-w-0 flex-col rounded-md border border-line bg-paper p-4 text-ink no-underline',
+    live ? 'is-link' : '',
+    cls,
+  ]}
+>
+  <span class="flex items-center justify-between gap-2">
+    <span class="flex h-9 w-9 flex-none items-center justify-center rounded-pill bg-mint text-brand">
+      <Icon name="map-pin" size={20} />
+    </span>
+    {live ? <span class="area-card-arrow flex-none text-brand"><Icon name="arrow-right" size={20} /></span> : null}
+  </span>
+  <H class="area-card-title t-h3 m-0 mt-3 text-ink">
+    {prefix ? <span class="block text-sm font-medium text-slate">{prefix}</span> : null}
+    {name}
+  </H>
+  {oneLiner ? <span class="mt-1 text-sm text-slate">{oneLiner}</span> : null}
+</Tag>
+
+<style>
+  .area-card { transition: background-color var(--dur-1) ease-out; }
+  .area-card.is-link:hover { background-color: var(--color-mint); }
+  .area-card.is-link:hover .area-card-title { color: var(--color-brand-deep); }
+  .area-card-arrow { transition: transform var(--dur-1) ease-out; }
+  .area-card.is-link:hover .area-card-arrow { transform: translateX(4px); }
+  .area-card.is-link:focus-visible { border-radius: var(--radius-md); }
+</style>

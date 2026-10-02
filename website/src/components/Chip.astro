@@ -1,0 +1,68 @@
+---
+// Badges & chips (08-DESIGN-SYSTEM §4.2) — every kind except the widget's selectable chip (that one lives in the
+// React island). Pill radius, Inter 600; chip 32px tall, badge 24px tall in micro type. Prices are never typed here:
+// pass a label built with src/lib/pricing.ts helpers, or `service` to use the pricing.json card chip (07 §4).
+import Icon from './icons/Icon.astro';
+import { isLive } from '../data/routes';
+import { chipText, getService } from '../lib/pricing';
+
+interface Props {
+  /** trust: mint + check · price: sand, tabular-nums · badge: amber "Most booked" · verified: mint + shield
+   *  (links /safety-hygiene/ once live) · alert: coral + alert icon, ink text */
+  kind: 'trust' | 'price' | 'badge' | 'verified' | 'alert';
+  /** Visible text. Defaults: badge → "Most booked", verified → "Background-verified ✔" (06 §4.2). Slot content also works. */
+  label?: string;
+  /** Price chip only: pricing.json service id → its card chip text via chipText() (e.g. 'full-groom' → "from" + the Small price). Ignored when `label` is set. */
+  service?: string;
+  /** The chip sits on a sand or mint surface (sand band, ReviewCard, Promise band): price and trust chips switch to
+   *  a paper fill so the pill stays visible (a sand chip on sand, or mint on mint, would disappear). */
+  onTint?: boolean;
+  class?: string;
+}
+
+const { kind, label, service, onTint = false, class: cls = '' } = Astro.props;
+
+const defaults: Partial<Record<Props['kind'], string>> = {
+  badge: 'Most booked',
+  verified: 'Background-verified ✔',
+};
+const svc = kind === 'price' && service ? getService(service) : undefined;
+if (kind === 'price' && service && !svc) throw new Error(`Chip: unknown pricing.json service "${service}"`);
+const text = label ?? (svc ? chipText(svc) : defaults[kind]);
+
+const isBadge = kind === 'badge' || kind === 'verified';
+const skin: Record<Props['kind'], string> = {
+  trust: onTint ? 'bg-paper text-brand-deep' : 'bg-mint text-brand-deep',
+  price: onTint ? 'bg-paper text-ink tabular-nums' : 'bg-sand text-ink tabular-nums',
+  badge: 'bg-cta text-ink',
+  verified: onTint ? 'bg-paper text-brand-deep' : 'bg-mint text-brand-deep',
+  alert: 'bg-alert text-ink',
+};
+const icon = kind === 'trust' ? 'check' : kind === 'verified' ? 'shield-check' : kind === 'alert' ? 'alert-circle' : null;
+// The verified badge links the Safety & Hygiene page (06 §4.2) — only once that page is live (routes registry).
+const href = kind === 'verified' && isLive('/safety-hygiene/') ? '/safety-hygiene/' : undefined;
+const pill = [
+  'inline-flex max-w-full items-center whitespace-nowrap rounded-pill font-semibold',
+  isBadge ? 'h-6 gap-1 px-2 t-micro' : 'h-8 gap-2 px-3 text-sm',
+  skin[kind],
+];
+---
+{href ? (
+  <a href={href} class:list={['chip-link inline-flex min-h-11 items-center no-underline', cls]}>
+    <span class:list={pill}>
+      {icon ? <Icon name={icon} size={16} /> : null}
+      {text ?? <slot />}
+    </span>
+  </a>
+) : (
+  <span class:list={[...pill, cls]}>
+    {icon ? <Icon name={icon} size={16} /> : null}
+    {text ?? <slot />}
+  </span>
+)}
+
+<style>
+  /* Linked verified badge: the 44px hit area is the transparent anchor (08 §7.3); the pill darkens on hover. */
+  .chip-link:hover > span { background-color: var(--color-brand-deep); color: var(--color-white); }
+  .chip-link:focus-visible { outline-offset: 0; border-radius: var(--radius-pill); }
+</style>
