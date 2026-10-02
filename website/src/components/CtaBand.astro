@@ -1,7 +1,7 @@
 ---
 // CTA band (08-DESIGN-SYSTEM §4.16): the page-end conversion block on every money page (06 §3.1 "repeat at page
 // end"; template SP-12, area AP-11, home H-12). Full-bleed brand-dark: place it as a direct child of <main>, outside
-// any max-width wrapper. Base: stacked + centred. ≥ md: text left, buttons right.
+// any max-width wrapper. Base: stacked + centred. ≥ md: text left, buttons right (stacked at md, in a row ≥ lg).
 // Heading: the page's R8 line (r8() in src/data/content.ts) or its blueprint line.
 import Button from './Button.astro';
 import PawMark from './icons/PawMark.astro';
@@ -49,8 +49,10 @@ const variantOf = (cta: Cta, fallback: Variant): Variant => {
       <h2 id={id} class="t-h2 m-0 text-white">{heading}</h2>
       {support ? <p class="t-body-lg m-0 mt-3 text-mint">{support}</p> : null}
     </div>
-    <div class="flex w-full flex-none flex-col items-stretch gap-3 md:w-auto md:items-end">
-      <div class="flex flex-col gap-3 md:flex-row">
+    {/* md (768–1023): the two buttons stack in a 288px column so the heading keeps ~420px instead of ~250px (6 lines
+        at 768). ≥ lg they sit side by side, right-aligned. */}
+    <div class="flex w-full flex-none flex-col items-stretch gap-3 md:w-72 lg:w-auto lg:items-end">
+      <div class="flex flex-col gap-3 lg:flex-row">
         <Button href={primary.href} variant={variantOf(primary, 'primary')} source={primary.source} full>{primary.label}</Button>
         {secondary ? (
           <Button href={secondary.href} variant={variantOf(secondary, 'on-dark')} source={secondary.source} full>{secondary.label}</Button>

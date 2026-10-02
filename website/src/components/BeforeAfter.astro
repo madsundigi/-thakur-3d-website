@@ -5,7 +5,7 @@
 // "{Pet name} · {Breed} · {Service} · {Locality}". Both frames carry full alt text (08 §5.4) — the caption is no substitute.
 // Grids of pairs: base 1-col · md 2-col (e.g. <ul class="grid list-none gap-6 p-0 md:grid-cols-2">). Real, consented
 // pairs only (src/data/reviews.ts beforeAfterPairs) — blocks are omitted until enough exist (SP-5 ≥ 2, home H-7 ≥ 3).
-import Icon from './icons/Icon.astro';
+import Photo from './Photo.astro';
 import { isLive } from '../data/routes';
 import { site } from '../data/site';
 import { pairServiceLabel, type BeforeAfterPair } from '../data/reviews';
@@ -33,10 +33,14 @@ const frames = [
   <div class="grid grid-cols-2 gap-2">
     {frames.map((f) => (
       <div class="relative">
-        {/* TODO: swap to Photo.astro (name={f.name}, alt={f.alt}, ratio='1x1', widths={[360, 600, 900]}, sizes='(max-width: 767px) 50vw, 420px') — 08 §5.6 */}
-        <div class="placeholder-photo flex aspect-square w-full items-center justify-center rounded-md bg-line text-muted" role="img" aria-label={f.alt}>
-          <Icon name="camera" size={24} />
-        </div>
+        <Photo
+          name={f.name}
+          alt={f.alt}
+          ratio="1x1"
+          widths={[360, 600, 900]}
+          sizes="(max-width: 767px) 50vw, 420px"
+          class="block aspect-square h-auto w-full rounded-md object-cover"
+        />
         <span
           aria-hidden="true"
           class:list={[
