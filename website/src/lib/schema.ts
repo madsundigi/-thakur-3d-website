@@ -1,8 +1,10 @@
 // JSON-LD builders — patterns from website-plan/04-TECHNICAL-SEO.md §2. No Review/AggregateRating, ever (§2.0.4).
-// Every price comes from src/data/pricing.json (via ./pricing), every contact value from src/data/site.ts, every FAQ
-// from src/data/faq.json (via ./faq). Absolute URLs are built from Astro.site — the same base as the canonical (§3).
+// Every price comes from src/data/pricing.json (via ./pricing), every offer amount from src/data/offers.ts, every
+// contact value from src/data/site.ts, every FAQ from src/data/faq.json (via ./faq). Absolute URLs are built from
+// Astro.site — the same base as the canonical (§3).
 // Use one <script> per page holding a single @graph (§2.0.1): `jsonLd={[schemaGraphLd({ type: 'pricing', crumbs }, Astro.site)]}`.
 import { bookingSteps } from '../data/content';
+import { FIRSTGROOM } from '../data/offers';
 import { routeLabel, routes } from '../data/routes';
 import { instagramHref, isFilled, site as biz } from '../data/site';
 import { faqFor, type FaqEntry } from './faq';
@@ -42,6 +44,8 @@ export const ldId = {
   website: (site: Site) => absUrl('/#website', site),
   service: (path: string, site: Site) => `${absUrl(path, site)}#service`,
   catalog: (site: Site) => `${absUrl('/pricing/', site)}#catalog`,
+  offersCatalog: (site: Site) => `${absUrl('/offers/', site)}#catalog`,
+  article: (slug: string, site: Site) => `${absUrl(`/blog/${slug}/`, site)}#article`,
   webpage: (path: string, site: Site) => `${absUrl(path, site)}#webpage`,
 };
 
@@ -333,11 +337,64 @@ export function offerCatalogLd(site: Site): JsonLd {
       flat('Vaccination at Home', flatPrice('vaccination'),
         `${inr(flatPrice('vaccination'))} service fee + ${plusText('vaccination')}, with reminder calendar.`),
       flat('Deworming Visit (standard dewormer included)', flatPrice('deworming')),
-      {
-        '@type': 'Offer',
-        name: 'Groom Club monthly subscription',
-        description: '1 Full Groom per month at 15% off + free nail-trim visit + priority slots. Price depends on dog size — see Full Groom rates.',
-      },
+      groomClubOffer(),
+    ],
+  };
+}
+
+/** The Groom Club row — shared by the /pricing/ catalog (04 §2.5, last row) and the /offers/ catalog. */
+function groomClubOffer(): JsonLd {
+  return {
+    '@type': 'Offer',
+    name: 'Groom Club monthly subscription',
+    description: '1 Full Groom per month at 15% off + free nail-trim visit + priority slots. Price depends on dog size — see Full Groom rates.',
+  };
+}
+
+// ---- §2.9 /offers/ — OfferCatalog scoped to the offers live today -------------------------------------------------
+
+/** An offer the /offers/ page shows whose amount is not (yet) in src/data/offers.ts — pass the page's visible copy,
+ *  built with inr() from data, so markup and text stay identical (04 §2.0.3). */
+export interface LiveOffer { name: string; description: string }
+export interface LiveOffers { referral: LiveOffer; seasonal?: LiveOffer }
+
+function offerNode(o: LiveOffer): JsonLd {
+  // A row only for a real, live offer: never an empty or [FILL:SEASONAL_OFFER] placeholder (blueprints/offers.md OF-5).
+  if (!o.name.trim() || !o.description.trim() || /\[FILL:/.test(o.name + o.description)) {
+    throw new Error(`schema: offer "${o.name}" is not a live offer — omit it until its real terms exist`);
+  }
+  return { '@type': 'Offer', name: o.name, description: o.description };
+}
+
+/** FIRSTGROOM (06 §7.1) — wording from blueprints/offers.md OF-2; amounts from offers.ts + pricing.json. */
+export function firstGroomOffer(): LiveOffer {
+  const nailEar = need('nail-ear');
+  return {
+    name: `${FIRSTGROOM.code} — ${inr(FIRSTGROOM.off)} off your first groom`,
+    description:
+      `${inr(FIRSTGROOM.off)} off your first Full Groom or Premium Spa Groom + a free ${nailEar.label} (${inr(flatPrice('nail-ear'))} value) between grooms, ` +
+      `redeemable within ${FIRSTGROOM.validDays} days of the first visit. ` +
+      'Terms: one use per household · applies to Full Groom or Premium Spa only · not combinable with another discount on the same booking.',
+  };
+}
+
+/** `/offers/` OfferCatalog (04 §2.9; blueprints/offers.md: "OfferCatalog (live offers only)"), rows in the page's
+ *  block order: FIRSTGROOM (OF-2) · referral (OF-3) · Groom Club (OF-4) · seasonal (OF-5, only while a real dated
+ *  offer is live — omit it otherwise, exactly as the page omits the section). The referral row is passed in because
+ *  its amount is not in src/data/offers.ts yet; build it from the same values the OF-3 card renders. */
+export function offersCatalogLd(site: Site, live: LiveOffers): JsonLd {
+  return {
+    '@context': CONTEXT,
+    '@type': 'OfferCatalog',
+    '@id': ldId.offersCatalog(site),
+    name: 'PetDoorStep Ludhiana — Current Offers',
+    url: absUrl('/offers/', site),
+    provider: ref(ldId.business(site)),
+    itemListElement: [
+      offerNode(firstGroomOffer()),
+      offerNode(live.referral),
+      groomClubOffer(),
+      ...(live.seasonal ? [offerNode(live.seasonal)] : []),
     ],
   };
 }
@@ -381,6 +438,52 @@ export function howToLd(site: Site, steps: readonly { name: string; text: string
   };
 }
 
+// ---- §2.7 BlogPosting (/blog/<slug>/) ------------------------------------------------------------------------------
+
+/** Post fields the blog layout passes — names follow the front-matter of blueprints/_TEMPLATE-blog-post.md §1, which
+ *  wins over 04 §2.7's draft names (publishDate/updatedDate/vetReviewed). `author` is the byline the layout renders
+ *  ("By [FILL:AUTHOR_NAME], PetDoorStep" until filled); `image` is the og:image the page emits (the 1200×630 hero crop,
+ *  04 §2.7: /og/blog/<slug>.jpg); `reviewer` only when a real vet reviewed the post (template BP-8). */
+export interface BlogPostLdInput {
+  slug: string;
+  title: string;
+  description: string;
+  date: string | Date;
+  updated?: string | Date;
+  author: string;
+  image: string;
+  reviewer?: { name: string };
+}
+
+/** ISO 8601 calendar date (04 §2.7: "2026-11-05"). */
+function isoDate(d: string | Date, field: string): string {
+  const v = d instanceof Date ? d.toISOString().slice(0, 10) : d;
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(v)) throw new Error(`schema: blog ${field} "${v}" is not an ISO date (YYYY-MM-DD)`);
+  return v;
+}
+
+export function blogPostingLd(post: BlogPostLdInput, site: Site): JsonLd {
+  if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(post.slug)) throw new Error(`schema: blog slug "${post.slug}" must be lowercase-hyphenated`);
+  if (post.title.length > 110) throw new Error(`schema: blog headline is ${post.title.length} chars — 04 §2.7 caps it at 110`);
+  const path = `/blog/${post.slug}/`;
+  const published = isoDate(post.date, 'date');
+  return {
+    '@context': CONTEXT,
+    '@type': 'BlogPosting',
+    '@id': ldId.article(post.slug, site),
+    mainEntityOfPage: absUrl(path, site),
+    headline: post.title,
+    description: post.description,
+    image: absUrl(post.image, site),
+    author: { '@type': 'Person', name: post.author, url: absUrl('/about/', site) },
+    publisher: ref(ldId.business(site)),
+    datePublished: published,
+    dateModified: post.updated ? isoDate(post.updated, 'updated') : published,
+    inLanguage: 'en-IN',
+    ...(post.reviewer ? { reviewedBy: { '@type': 'Person', name: post.reviewer.name, jobTitle: 'Veterinarian' } } : {}),
+  };
+}
+
 // ---- §2.9 page-type nodes (ContactPage / AboutPage / hub WebPage) -------------------------------------------------
 
 /** `/contact/`: ContactPage wrapping mainEntity → #business. */
@@ -412,7 +515,12 @@ export function graphLd(...nodes: JsonLd[]): JsonLd {
   };
 }
 
-/** The 04 §2.9 schema-per-page matrix as one call — pass the result as Base's `jsonLd={[…]}`. */
+/** The 04 §2.9 schema-per-page matrix as one call — pass the result as Base's `jsonLd={[…]}`.
+ *  Row → spec: `/` home · `/contact/` contact · `/ludhiana/<service>/` service · `/ludhiana/areas/<area>/` area ·
+ *  `/ludhiana/` city-hub · `/pricing/` pricing · `/how-it-works/` howto · `/about/` about · `/faq/` faq ·
+ *  `/blog/<slug>/` blog · `/offers/` offers · `/reviews/`, `/safety-hygiene/`, `/book/`, legal pages and
+ *  `/join-as-groomer/` breadcrumb-only (JobPosting is added per live role only — none is open yet) ·
+ *  `/thank-you/`, `/404` no JSON-LD at all. */
 export type SchemaSpec =
   | { type: 'home' }
   | { type: 'service'; service: ServicePage; crumbs: Crumb[] }
@@ -423,6 +531,8 @@ export type SchemaSpec =
   | { type: 'about'; crumbs: Crumb[] }
   | { type: 'contact'; crumbs: Crumb[] }
   | { type: 'faq'; crumbs: Crumb[] }
+  | { type: 'blog'; post: BlogPostLdInput; crumbs: Crumb[] }
+  | { type: 'offers'; live: LiveOffers; crumbs: Crumb[] }
   | { type: 'breadcrumb-only'; crumbs: Crumb[] };
 
 export function schemaGraphLd(spec: SchemaSpec, site: Site): JsonLd {
@@ -445,6 +555,10 @@ export function schemaGraphLd(spec: SchemaSpec, site: Site): JsonLd {
       return graphLd(localBusinessLd(site), breadcrumbLd(spec.crumbs, site), contactPageLd(site));
     case 'faq':
       return graphLd(faqPageLd(faqFor('/faq/')), breadcrumbLd(spec.crumbs, site));
+    case 'blog':
+      return graphLd(blogPostingLd(spec.post, site), breadcrumbLd(spec.crumbs, site));
+    case 'offers':
+      return graphLd(breadcrumbLd(spec.crumbs, site), offersCatalogLd(site, spec.live));
     case 'breadcrumb-only':
       return graphLd(breadcrumbLd(spec.crumbs, site));
   }
