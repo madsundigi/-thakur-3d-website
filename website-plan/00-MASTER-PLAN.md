@@ -54,7 +54,8 @@ Change a fact → change it here first, then propagate.
 | Phone (click-to-call) | `[FILL:PHONE]` (may equal WhatsApp number) |
 | Email | `[FILL:EMAIL]` — suggest hello@petdoorstep.in |
 | Business type for Google | **Service-Area Business (SAB)** — doorstep service, no walk-in storefront; home/office address hidden on GBP |
-| Service hours (draft) | Mon–Sun 9:00–19:00 (last booking 17:30) |
+| Service hours (draft) | Mon–Sun 9:00–19:00 for grooming & vet visits and WhatsApp replies (last booking 17:30) |
+| Walk hours (draft) | 6:00–9:30 and 17:30–20:30 daily · Apr–Jun heat rule: walks only before 8:00 or after 19:00 |
 
 ### 3.2 Services & launch price menu (DRAFT — Sunny must confirm before launch; benchmarked to Ludhiana ranges in the strategy report)
 
@@ -64,7 +65,7 @@ Change a fact → change it here first, then propagate.
 | Full Groom (Bath & Brush + haircut/styling, paw & sanitary trim) | ₹1,199 | ₹1,499 | ₹1,899 | Hero service |
 | Premium Spa Groom (Full Groom + de-shed/de-mat, conditioning masque, perfume) | ₹1,799 | ₹2,199 | ₹2,799 | Upsell |
 | Puppy Intro Groom (< 6 months, gentle first-time) | ₹699 flat | | | Lead magnet |
-| Cat Grooming — Bath & Brush / Full | ₹899 / ₹1,399 flat | | | Calm-handling trained |
+| Cat Grooming — Bath & Brush / Full | ₹899 / ₹1,399 flat | | | Calm-handling trained. B&B: lukewarm bath, gentle dry, brush-out, nail trim, ear & eye clean (~45–60 min). Full: + de-mat, hygiene trim, comfort trim on request (~60–90 min). Cat-safe products only |
 | Tick & Flea Treatment | add-on ₹399 · standalone ₹699 | | | Seasonal spike pre-monsoon |
 | Nail Trim + Ear Clean visit | ₹299 | | | Quick visit / add-on |
 | Dog Walking — 1 walk/day | ₹2,999 / month | | | Fixed walker, ~30-min walk, GPS + photo update |
