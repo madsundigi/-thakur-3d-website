@@ -52,10 +52,25 @@ from the one its page assumed, update that page's alt in the same commit.
 
 ## Launch gate
 
-Grey placeholders are for development only. Before go-live this must print nothing (08 §0 gate 2):
+Grey placeholders are for development only. 08 §8.4 allows zero `placeholder-*` files in `dist`. Two things can
+break that: a page that still renders a placeholder, and the placeholder files themselves, because everything in
+`public/` is copied into `dist`. Before go-live:
 
-```bash
-npm run build && grep -rl 'placeholder-' dist
-```
+1. Check that no page still renders a placeholder. This must print nothing; each file it lists is a page still
+   waiting for its photo:
 
-Any file it lists is a page still waiting for its photo.
+   ```bash
+   npm run build && grep -rl 'placeholder-' dist --include='*.html'
+   ```
+
+2. Delete the placeholder folder: `rm -r public/placeholders`. Once step 1 is clean, nothing references it.
+3. Rebuild and run the full gate (08 §0 gate 2 + 08 §8.4). Both commands must print nothing:
+
+   ```bash
+   npm run build
+   grep -rl 'placeholder-' dist
+   find dist -name 'placeholder-*'
+   ```
+
+Each placeholder SVG carries the text `placeholder-` in a comment, so the `grep` fails on its own while one still
+ships. The `find` check is a backstop in case a file is ever renamed or re-exported without that comment.

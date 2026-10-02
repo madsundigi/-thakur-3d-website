@@ -43,9 +43,9 @@ const H = `h${level}` as 'h2' | 'h3' | 'h4';
   ]}
 >
   <Photo name={photo.name} alt={photo.alt} preset="card" position={photo.position} class="block aspect-[4/3] h-auto w-full rounded-md object-cover" />
-  <H class="t-h3 m-0 mt-4">{name}</H>
+  <H class="t-h3 m-0 mt-3">{name}</H>
   <p class="m-0 mt-2 text-sm text-slate">{blurb}</p>
-  <div class="mt-auto flex items-center justify-between gap-3 pt-4">
+  <div class="mt-auto flex items-center justify-between gap-3 pt-3">
     <span class="flex min-w-0 flex-wrap gap-2">
       {prices.map((p) => <Chip kind="price" label={p} />)}
     </span>

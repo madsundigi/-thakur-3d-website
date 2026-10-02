@@ -2,12 +2,17 @@
 // Photo (08-DESIGN-SYSTEM §5; mechanics 04-TECHNICAL-SEO §1.4 / §5.2.2). Renders a real photo when its planned file
 // exists in src/assets/photos/ (08 §5.2 shot-list filename), else the grey dev placeholder from /public/placeholders/.
 // Dropping the real file in later needs zero code changes. Placeholders must never ship: the 08 §0 grep gate
-// (`grep -rl 'placeholder-' dist`) blocks launch while any page still renders one.
+// (`grep -rl 'placeholder-' dist`) matches every page that still renders one AND the placeholder files themselves
+// (each SVG carries the marker), so the launch build passes only once every photo is real and public/placeholders/
+// is deleted (src/assets/photos/README.md, launch gate).
 //
 // Real photo  → astro:assets <Picture> AVIF + WebP (+ source-format fallback), cropped to `ratio` (fit cover),
 //               explicit width/height, lazy unless `eager`.
 // Placeholder → <img src="/placeholders/placeholder-{ratio}.svg"> with the same alt, width/height and loading.
-// `preload`   → renders ONLY the <link rel="preload" as="image"> for this image (put it in <head>; 04 §5.2.2).
+// `preload`   → renders ONLY the <link rel="preload" as="image"> for this image. It belongs in <head> (04 §1.4/§5.2.2):
+//               the page passes it to the layout as `<Photo slot="head" preload preset="hero" name="…" />`, a direct
+//               child of <Base>. This needs <slot name="head" /> in Base.astro's <head>; without it Astro drops the
+//               link silently.
 import { Picture, getImage } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 
@@ -17,8 +22,8 @@ type Preset = 'hero' | 'card' | 'blog' | 'pair' | 'groomer';
 interface Props {
   /** Planned filename from 08 §5.2, e.g. 'golden-retriever-bath-home-ludhiana.jpg' (src/assets/photos/<name>). */
   name: string;
-  /** Alt per 08 §5.4 (≤ 125 chars, no "image of"). Pass "" only for a purely decorative image. */
-  alt: string;
+  /** Alt per 08 §5.4 (≤ 125 chars, no "image of"). Pass "" only for a purely decorative image. Not needed with `preload`. */
+  alt?: string;
   /** Output aspect ratio — real photos are cropped to it; placeholders use the matching SVG. */
   ratio?: Ratio;
   /** Rendered widths in px (srcset). The largest one sets the width/height attributes. */
@@ -55,7 +60,8 @@ const sizes = Astro.props.sizes ?? p?.sizes;
 if (!ratio || !ASPECT[ratio] || !widths?.length || !sizes) {
   throw new Error(`Photo "${name}": pass a preset, or ratio ('4x3'|'16x10'|'1x1'|'16x9') + widths + sizes`);
 }
-if (alt === undefined) throw new Error(`Photo "${name}": alt is required (08 §5.4)`);
+if (alt === undefined && !preload) throw new Error(`Photo "${name}": alt is required (08 §5.4)`);
+const altText = alt ?? '';
 
 const width = Math.max(...widths);
 const height = Math.round(width / ASPECT[ratio]);
@@ -86,7 +92,7 @@ const preloadAvif = preload && src
 ) : src ? (
   <Picture
     src={src}
-    alt={alt}
+    alt={altText}
     formats={['avif', 'webp']}
     widths={widths}
     sizes={sizes}
@@ -102,7 +108,7 @@ const preloadAvif = preload && src
 ) : (
   <img
     src={placeholder}
-    alt={alt}
+    alt={altText}
     width={width}
     height={height}
     loading={loading}

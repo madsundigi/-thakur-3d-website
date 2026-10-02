@@ -11,7 +11,8 @@ type Variant = 'primary' | 'whatsapp' | 'secondary' | 'ghost' | 'on-dark';
 interface Cta {
   label: string;
   href: string;
-  /** Default: 'whatsapp' for wa.me links, else 'primary' (primary) / 'on-dark' (secondary). */
+  /** Default: 'whatsapp' for wa.me links, else 'primary' (primary) / 'on-dark' (secondary). 'whatsapp' is honoured
+   *  only on a wa.me link (08 §1.4 rule 2). */
   variant?: Variant;
   /** 09 §2d source value, e.g. 'service_full-groom' (money pages, 07 §2 row 4) or 'hero_home'. */
   source: string;
@@ -32,10 +33,16 @@ interface Props {
 }
 
 const { heading, support, primary, secondary, reply = R3, id = 'cta-band-heading' } = Astro.props;
-const variantOf = (cta: Cta, fallback: Variant): Variant => cta.variant ?? (cta.href.includes('wa.me') ? 'whatsapp' : fallback);
+// WhatsApp green is for wa.me actions only (08 §1.4 rule 2): a 'whatsapp' variant on any other link (e.g. /book/)
+// falls back to the slot's default, amber primary or on-dark outline.
+const variantOf = (cta: Cta, fallback: Variant): Variant => {
+  const isWa = cta.href.includes('wa.me');
+  if (cta.variant === 'whatsapp' && !isWa) return fallback;
+  return cta.variant ?? (isWa ? 'whatsapp' : fallback);
+};
 ---
 <section aria-labelledby={id} class="on-dark relative overflow-hidden bg-brand-dark text-white">
-  <!-- Watermark top-right: as far as possible from the footer's bottom-right paw (08 §6.3: one watermark per viewport). -->
+  {/* Watermark top-right: as far as possible from the footer's bottom-right paw (08 §6.3: one watermark per viewport). */}
   <PawMark size={200} class="pointer-events-none absolute -right-12 -top-12 rotate-[-12deg] text-mint opacity-[0.08]" />
   <div class="relative mx-auto flex max-w-[1200px] flex-col items-center gap-8 px-4 py-12 text-center md:flex-row md:items-center md:justify-between md:text-left lg:px-6 lg:py-20">
     <div class="measure min-w-0">
