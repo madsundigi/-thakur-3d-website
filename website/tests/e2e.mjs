@@ -7,7 +7,7 @@ import { mkdirSync } from 'node:fs';
 const globalRoot = execSync('npm root -g').toString().trim();
 // Uses a global Playwright (`npm i -g playwright && npx playwright install chromium`); CHROMIUM_PATH overrides the browser.
 const { chromium } = createRequire(globalRoot + '/')('playwright');
-const PORT = 4329;
+const PORT = Number(process.env.E2E_PORT) || 4329; // override when several runs share a machine
 const BASE = `http://localhost:${PORT}`;
 const SHOTS = process.env.SHOTS || 'test-results';
 mkdirSync(SHOTS, { recursive: true });
