@@ -1,0 +1,84 @@
+---
+// Groomer / walker / vet profile card (08-DESIGN-SYSTEM §4.10). Content order is law from 06-CONVERSION-PLAYBOOK §4.2:
+// ① photo 1:1 ② first name ③ "Background-verified ✔" badge → /safety-hygiene/ ④ years · speciality ⑤ languages
+// ⑥ one human line ⑦ pets-groomed counter (only once real). Condensed variant (service pages): ①–④ only.
+// Vet card (vet-at-home.md SP-7): name + "BVSc & AH" · Reg. No. badge · years of practice · species · languages.
+// Base: horizontal card (96px photo left, name beside it, badge + details full-width below). ≥ md: vertical card —
+// wrap cards in a 3-up grid: <ul class="grid list-none gap-4 p-0 md:grid-cols-3 lg:gap-6"><li>…</li></ul>. Zero JS.
+// Data: src/data/people.ts — a card exists only for a person already on the team (about.md AB-6).
+import Icon from './icons/Icon.astro';
+import { isLive } from '../data/routes';
+import { personAlt, type Person } from '../data/people';
+
+interface Props {
+  person: Person;
+  /** 'condensed' = items ①–④ (template SP-7, home H-8); 'full' = all items (about AB-6). */
+  variant?: 'full' | 'condensed';
+  /** Heading level of the name — h3 under a section H2 (default). */
+  headingLevel?: 2 | 3 | 4;
+  class?: string;
+}
+
+const { person: p, variant = 'full', headingLevel = 3, class: cls = '' } = Astro.props;
+const H = `h${headingLevel}` as 'h2' | 'h3' | 'h4';
+const full = variant === 'full';
+const isVet = p.role === 'vet';
+const alt = personAlt(p);
+
+const years = p.years ? `${p.years} ${p.years === 1 ? 'year' : 'years'} ${isVet ? 'of practice' : 'experience'}` : '';
+const meta = [years, p.speciality].filter(Boolean).join(' · ');
+const counterLabel = p.role === 'groomer' ? 'pets groomed' : p.role === 'walker' ? 'walks done' : '';
+const safetyLive = isLive('/safety-hygiene/');
+---
+<article class:list={['gc h-full min-w-0 rounded-lg border border-line bg-paper p-4', cls]}>
+  {/* TODO: swap to Photo.astro (name={p.photo}, alt={alt}, ratio='1x1', widths={[200, 400]}, sizes='(max-width: 767px) 96px, 280px') once the portrait is shot — 08 §5.6 */}
+  <div class="placeholder-photo gc-photo flex aspect-square items-center justify-center rounded-lg bg-line text-muted" role="img" aria-label={alt}>
+    <Icon name="camera" size={24} />
+  </div>
+
+  <H class="gc-name t-h3 m-0 [overflow-wrap:anywhere]">
+    {p.name}{isVet && p.credentials ? <span>, {p.credentials}</span> : null}
+  </H>
+
+  <div class="gc-body flex min-w-0 flex-col gap-2">
+    {isVet ? (
+      p.regNo ? (
+        <span class="t-micro inline-flex min-h-6 w-max max-w-full items-center gap-1 rounded-pill bg-mint px-2 py-0.5 text-brand-deep">
+          <Icon name="shield-check" size={16} class="flex-none" /><span class="min-w-0 [overflow-wrap:anywhere]">Reg. No. {p.regNo}</span>
+        </span>
+      ) : null
+    ) : safetyLive ? (
+      <a href="/safety-hygiene/" class="gc-badge-link -my-2.5 inline-flex min-h-11 w-max items-center no-underline">
+        <span class="t-micro inline-flex h-6 items-center gap-1 rounded-pill bg-mint px-2 text-brand-deep">
+          <Icon name="shield-check" size={16} class="flex-none" />Background-verified<Icon name="check" size={14} class="flex-none" />
+        </span>
+      </a>
+    ) : (
+      <span class="t-micro inline-flex h-6 w-max items-center gap-1 rounded-pill bg-mint px-2 text-brand-deep">
+        <Icon name="shield-check" size={16} class="flex-none" />Background-verified<Icon name="check" size={14} class="flex-none" />
+      </span>
+    )}
+
+    {meta ? <p class="m-0 text-sm text-slate">{meta}</p> : null}
+
+    {full && p.languages?.length ? <p class="m-0 text-sm text-slate">Speaks: {p.languages.join(' · ')}</p> : null}
+    {full && p.line ? <p class="m-0 text-sm text-ink">{p.line}</p> : null}
+    {full && counterLabel && p.count ? (
+      <p class="m-0 text-sm text-slate"><span class="t-price text-base text-ink">{p.count.toLocaleString('en-IN')}</span> {counterLabel}</p>
+    ) : null}
+  </div>
+</article>
+
+<style>
+  /* Base: horizontal card — 96px photo left, name beside it; badge + details run full card width below, so the
+     24px badge never squeezes (it is wider than the text column on a 320–360px phone). ≥ md: vertical card. */
+  .gc { display: grid; grid-template-columns: 96px minmax(0, 1fr); align-items: center; gap: 12px 16px; }
+  .gc-photo { width: 96px; }
+  .gc-body { grid-column: 1 / -1; }
+  @media (min-width: 768px) {
+    .gc { display: flex; flex-direction: column; align-items: stretch; gap: 12px; }
+    .gc-photo { width: 100%; }
+  }
+  /* Badge link: 24px visual chip, 44px hit area (08 §7.3 — same trick as the compact header Book button). */
+  .gc-badge-link:hover > span { background: color-mix(in srgb, var(--color-brand) 12%, var(--color-mint)); }
+</style>

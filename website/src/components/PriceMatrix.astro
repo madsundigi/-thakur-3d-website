@@ -1,0 +1,260 @@
+---
+// Price matrix (08-DESIGN-SYSTEM §4.8; data = the 06-CONVERSION-PLAYBOOK §5.2 canonical matrix + flat-price lines).
+// Real <table>, sticky first column; below md it scrolls sideways behind a right-edge fade, from md up it fits without
+// scroll (08 §4.8). Zero JS. Every ₹ figure comes from src/data/pricing.json via src/lib/pricing.ts.
+// Book links → /book/?service=<id>&size=<size>&src=<source> (07 §2 row 5).
+// Order (08 §4.8 / 06 §5.4): table → R1 + R2 directly under it → flat-price lines → <slot/> (extra page lines).
+// Flat-only (matrix={false}): flat-price lines → R1 + R2 → <slot/>. The section heading (H2) belongs to the page.
+import { R1, R2 } from '../data/content';
+import { isLive } from '../data/routes';
+import {
+  bookHref, matrixColumns, matrixRows, priceLines, priceParts, requireService,
+  type PriceLine, type PriceLineSet,
+} from '../lib/pricing';
+
+interface Props {
+  /** Render the dog-grooming size matrix (default true). false = flat-price list only (cat/walking/vet pages). */
+  matrix?: boolean;
+  /** Flat-price lines: a verbatim set name from pricing.ts, or custom lines built with the pricing helpers. */
+  lines?: PriceLineSet | PriceLine[];
+  /** `src` on every Book link (09 §2d canonical values). 07 §2 row 5 + template SP-4: "pricing_row". */
+  source?: string;
+  /** Matrix Book links: 'row' = one row-end Book per size (08 §4.8, pricing.md PR-3, template SP-4), 'none'.
+   *  (No per-price Book: Chromium does not scroll a partly visible link into view on Tab, so a Book under every price
+   *  inside the scroller ends up with a clipped focus ring — 08 §7.2.) */
+  bookLinks?: 'row' | 'none';
+  /** Service a row-end Book preselects (default: the pricing.json badge service — Full Groom, "Most booked"). */
+  bookService?: string;
+  /** <caption> text (08: sr-only "Dog grooming prices by size, in rupees"; /pricing/ uses its keyword caption). */
+  caption?: string;
+  showCaption?: boolean;
+  /** R1 + R2 reassurance lines (06 §9) — mandatory under every price table; set false only when a sibling block shows them. */
+  reassure?: boolean;
+  /** Replace R2 (dog-walking.md SP-4 "R2 adapted"). */
+  r2?: string;
+  /** On a sand/mint band: hairline border instead of shadow (08 §3.3 — never both). */
+  onTint?: boolean;
+  id?: string;
+  class?: string;
+}
+
+const {
+  matrix = true,
+  lines,
+  source = 'pricing_row',
+  bookLinks = 'row',
+  bookService,
+  caption = 'Dog grooming prices by size, in rupees',
+  showCaption = false,
+  reassure = true,
+  r2 = R2,
+  onTint = false,
+  id,
+  class: cls = '',
+} = Astro.props;
+
+const canBook = isLive('/book/');
+const columns = matrix ? matrixColumns() : [];
+const rows = matrix ? matrixRows(source) : [];
+const featured = columns.find((c) => c.badge)?.id;
+const rowService = matrix ? requireService(bookService ?? featured ?? columns[0].id) : undefined;
+const rowBook = matrix && canBook && bookLinks === 'row' && rowService;
+
+const flat: (PriceLine & { link?: string })[] = (typeof lines === 'string' ? priceLines(lines) : lines ?? []).map((l) => ({
+  ...l,
+  link: l.href ?? (canBook && l.service ? bookHref({ service: l.service, size: l.size, src: source }) : undefined),
+}));
+const anyLink = flat.some((l) => l.link); // rows without a Book link keep a spacer so prices stay aligned
+const surface = onTint ? 'border border-line' : 'shadow-1';
+---
+<div id={id} class:list={['pm', cls]}>
+  {matrix ? (
+    <div class:list={['rounded-lg bg-paper', surface]}>
+      <div class="pm-scroll rounded-lg" role="region" aria-label={caption} tabindex="0">
+        <table class="pm-table w-full border-collapse text-left">
+          <caption class:list={[showCaption ? 'pm-caption' : 'sr-only']}>{caption}</caption>
+          <thead>
+            <tr class="bg-mint text-brand-deep">
+              <th scope="col" class="t-h4">Size</th>
+              <th scope="col" class="t-h4">Weight</th>
+              <th scope="col" class="t-h4">Example breeds <span class="block text-sm font-normal">(Ludhiana favourites)</span></th>
+              {columns.map((c) => (
+                <th scope="col" class:list={['t-h4', { 'is-featured': c.id === featured }]}>
+                  {c.label}
+                  {c.badge ? <span class="t-micro mt-1 flex h-6 w-max items-center rounded-pill bg-cta px-2 text-ink">{c.badge}</span> : null}
+                </th>
+              ))}
+              {rowBook ? <th scope="col"><span class="sr-only">Book</span></th> : null}
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((r) => (
+              <tr>
+                <th scope="row" class="font-semibold text-ink">{r.label}</th>
+                <td class="whitespace-nowrap text-ink">{r.kg}</td>
+                <td class="pm-breeds text-sm text-slate">{r.examples}</td>
+                {r.cells.map((c) => (
+                  <td class:list={['pm-price', { 'is-featured': c.serviceId === featured }]}>
+                    <span class="t-price text-2xl leading-tight">{c.price}</span>
+                  </td>
+                ))}
+                {rowBook ? (
+                  <td class="pm-book-cell">
+                    <a href={bookHref({ service: rowService.id, size: r.size, src: source })} class="pm-book">
+                      Book<span class="sr-only"> {rowService.label}, {r.label} dog</span>
+                    </a>
+                  </td>
+                ) : null}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  ) : null}
+
+  {matrix && reassure ? (
+    <div class="mt-3 space-y-1">
+      <p class="m-0 text-sm text-slate">{R1}</p>
+      <p class="m-0 text-sm font-semibold text-ink">{r2}</p>
+    </div>
+  ) : null}
+
+  {flat.length ? (
+    <dl class:list={['pm-lines m-0 max-w-[720px] rounded-lg bg-paper px-4 lg:px-6', surface, matrix ? 'mt-6' : '']}>
+      {flat.map((l) => (
+        <div class="pm-line">
+          <dt class="pm-line-label">
+            <span class="font-semibold text-ink">{l.label}</span>
+            {l.note ? <span class="block text-sm text-slate">{l.note}</span> : null}
+          </dt>
+          <dd class="pm-line-price m-0">
+            <span class="text-ink">
+              {priceParts(l.price).map((p) => (p.figure ? <span class="t-price text-xl">{p.text}</span> : <span>{p.text}</span>))}
+            </span>
+            {l.link ? (
+              <a href={l.link} class="pm-book pm-line-book">
+                Book<span class="sr-only"> {l.label}</span>
+              </a>
+            ) : anyLink ? <span class="pm-line-book" aria-hidden="true"></span> : null}
+          </dd>
+        </div>
+      ))}
+    </dl>
+  ) : null}
+
+  {!matrix && reassure ? (
+    <div class="mt-3 space-y-1">
+      <p class="m-0 text-sm text-slate">{R1}</p>
+      <p class="m-0 text-sm font-semibold text-ink">{r2}</p>
+    </div>
+  ) : null}
+
+  <slot />
+</div>
+
+<style>
+  /* Scroll container: horizontal scroll on narrow screens, one DOM (no stacked duplicate — 02 content parity). */
+  .pm-scroll {
+    position: relative; /* contains the sr-only (absolute) caption — else it escapes the scroller and widens the page */
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    /* Tab-scrolling parks a Book link clear of the sticky Size column (~95px at base). Kept small on purpose: when
+       link + scroll-margin is wider than what is left of a 320px scroller, Chromium stops scrolling it into view and
+       the focus ring is clipped at the edge (08 §7.2). */
+    scroll-padding-inline: 96px 0;
+  }
+  .pm-scroll:focus-visible { outline-offset: -2px; }
+  .pm-table { min-width: 640px; font-variant-numeric: tabular-nums; }
+  .pm-caption { caption-side: top; text-align: left; padding: 16px 16px 4px; font-weight: 600; }
+
+  .pm-table th,
+  .pm-table td { padding: 12px 16px; vertical-align: middle; height: 52px; }
+  .pm-table thead th { vertical-align: bottom; }
+
+  /* Rows: paper / sand-50 zebra (08 §4.8). Opaque mix, so the sticky column can inherit it without see-through. */
+  .pm-table tbody tr { --pm-row: var(--color-paper); background: var(--pm-row); border-top: 1px solid var(--color-line); }
+  .pm-table tbody tr:nth-child(even) { --pm-row: color-mix(in srgb, var(--color-sand) 50%, var(--color-paper)); }
+  /* Hero-service emphasis: Full Groom column cells sand. */
+  .pm-table td.is-featured { background: var(--color-sand); }
+
+  /* Sticky first column (z-10 per 08 §3.6) with a hairline edge so scrolled content reads as passing under it. */
+  .pm-table thead th:first-child,
+  .pm-table tbody th[scope='row'] {
+    position: sticky;
+    left: 0;
+    z-index: 10;
+    box-shadow: inset -1px 0 0 var(--color-line);
+  }
+  .pm-table thead th:first-child { background: var(--color-mint); }
+  .pm-table tbody th[scope='row'] { background: var(--pm-row); }
+
+  .pm-price { white-space: nowrap; }
+  .pm-book-cell { text-align: right; }
+
+  /* Book links: secondary-button skin (08 §4.1) at table scale; 44px target (08 §7.3). Amber stays the page's one primary. */
+  .pm-book {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: var(--tap-min);
+    min-width: var(--tap-min);
+    padding: 0 16px;
+    border: 1.5px solid var(--color-brand);
+    border-radius: var(--radius-md);
+    background: var(--color-paper);
+    color: var(--color-brand);
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background-color var(--dur-1) ease-out;
+    /* 2px outline + 2px offset (08 §7.2) + 4px air: the whole ring lands inside the scroller when Tab scrolls to it. */
+    scroll-margin-inline: 8px;
+  }
+  .pm-book:hover { background: var(--color-mint); }
+
+  /* Flat-price lines: a simple 2-column list (label | price + Book), wrapping to 2 lines on narrow screens. */
+  .pm-line {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px 16px;
+    min-height: 52px;
+    padding: 12px 0;
+    border-top: 1px solid var(--color-line);
+  }
+  .pm-line:first-child { border-top: 0; }
+  .pm-line-label { flex: 1 1 8rem; }
+  .pm-line-price { display: flex; flex: 0 1 auto; align-items: center; gap: 12px; margin-left: auto; text-align: right; }
+  .pm-line-book { flex: none; width: 4.75rem; padding: 0; }
+
+  /* Base (< md) — the table scrolls sideways. A right-edge fade signals "scroll for more"; the last column carries
+     40px of right padding so that, scrolled to the end, only padding sits under the fade. The breeds column keeps
+     a readable width (the table scrolls anyway). Row-end Book links keep ≥ 12px of cell padding to the scroller's
+     bottom edge and ≥ 16px (40px at base) to its right edge, so their ring clears the 16px corner radius (08 §7.2). */
+  .pm-scroll {
+    -webkit-mask-image: linear-gradient(to right, black calc(100% - 32px), transparent);
+    mask-image: linear-gradient(to right, black calc(100% - 32px), transparent);
+  }
+  /* Keyboard users: never let the fade sit over a focused Book link (08 §7.2 — focus never obscured). */
+  .pm-scroll:focus-within { -webkit-mask-image: none; mask-image: none; }
+  .pm-table tr > :last-child { padding-right: 40px; }
+  .pm-breeds { min-width: 11rem; }
+
+  /* ≥ md the table fits without scroll (08 §4.8 Responsive): no fade and no trailing fade padding, the breeds column
+     and long headers wrap, cells tighten to 8px sides (16px at the table's outer edges). Measured at 768: the row-end
+     Book variant needs 685px (min-content) of the 736px content width; scrollWidth = clientWidth. */
+  @media (min-width: 768px) {
+    .pm-scroll { -webkit-mask-image: none; mask-image: none; }
+    .pm-table th,
+    .pm-table td { padding-left: 8px; padding-right: 8px; }
+    .pm-table tr > :first-child { padding-left: 16px; }
+    .pm-table tr > :last-child { padding-right: 16px; }
+    .pm-breeds { min-width: 0; }
+  }
+  @media (min-width: 1024px) {
+    .pm-table th,
+    .pm-table td { padding-left: 16px; padding-right: 16px; }
+  }
+</style>

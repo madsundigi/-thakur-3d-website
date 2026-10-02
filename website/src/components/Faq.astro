@@ -1,19 +1,24 @@
 ---
-// FAQ accordion (08-DESIGN-SYSTEM §4.13) — zero JS <details>. Entries come from src/data/faq.json (blueprints/faq.md §2).
+// FAQ accordion (08-DESIGN-SYSTEM §4.13) — zero JS <details>. Entries come from src/data/faq.json via src/lib/faq.ts
+// (blueprints/faq.md §2), the same source the FAQPage JSON-LD uses, so visible text and markup can never drift.
+// `headingId` keeps ids unique when a page renders several accordions (the /faq/ categories); the default slot
+// renders between the H2 and the questions (e.g. the /faq/ category's one-line link). In-answer links render only
+// while their target page is live (src/data/routes.ts) and never point at the current page.
 import Icon from './icons/Icon.astro';
-import faq from '../data/faq.json';
+import { answerParts, faqByIds, faqFor } from '../lib/faq';
 
-interface Props { page: string; heading: string; ids?: string[] }
-const { page, heading, ids } = Astro.props;
-const items = ids ? ids.map((id) => faq.find((f) => f.id === id)).filter(Boolean) : faq.filter((f) => f.pages.includes(page));
+interface Props { page: string; heading: string; ids?: string[]; headingId?: string }
+const { page, heading, ids, headingId = 'faq-heading' } = Astro.props;
+const items = ids ? faqByIds(ids) : faqFor(page);
 ---
-<section aria-labelledby="faq-heading">
-  <h2 id="faq-heading" class="t-h2">{heading}</h2>
+<section aria-labelledby={headingId}>
+  <h2 id={headingId} class="t-h2">{heading}</h2>
+  <slot />
   <div class="mt-4 border-t border-line">
     {items.map((f) => (
       <details class="faq">
-        <summary><h3 class="t-h3 m-0">{f!.q}</h3><span class="faq-icon"><Icon name="plus" size={20} /></span></summary>
-        <div class="faq-body"><p class="m-0">{f!.a}</p></div>
+        <summary><h3 class="t-h3 m-0">{f.q}</h3><span class="faq-icon"><Icon name="plus" size={20} /></span></summary>
+        <div class="faq-body"><p class="m-0">{answerParts(f, page).map((p) => (p.href ? <a href={p.href} class="prose-link">{p.text}</a> : p.text))}</p></div>
       </details>
     ))}
   </div>

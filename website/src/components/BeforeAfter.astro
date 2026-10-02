@@ -1,0 +1,57 @@
+---
+// Before/after pair (08-DESIGN-SYSTEM §4.12, format §5.3; rules 06-CONVERSION-PLAYBOOK §4.3). Static side-by-side —
+// NO slider (needs JS; banned). Two square frames (left = before, right = after, 8px gap, never stacked), corner chips
+// "Before" / "After", [FILL:DOMAIN] watermark on the after frame, mandatory caption
+// "{Pet name} · {Breed} · {Service} · {Locality}". Both frames carry full alt text (08 §5.4) — the caption is no substitute.
+// Grids of pairs: base 1-col · md 2-col (e.g. <ul class="grid list-none gap-6 p-0 md:grid-cols-2">). Real, consented
+// pairs only (src/data/reviews.ts beforeAfterPairs) — blocks are omitted until enough exist (SP-5 ≥ 2, home H-7 ≥ 3).
+import Icon from './icons/Icon.astro';
+import { isLive } from '../data/routes';
+import { site } from '../data/site';
+import { pairServiceLabel, type BeforeAfterPair } from '../data/reviews';
+
+interface Props {
+  pair: BeforeAfterPair;
+  /** Link the service name in the caption to its money page (reviews.md RV-5) — rendered only while that page is live. */
+  serviceHref?: string;
+  class?: string;
+}
+
+const { pair: p, serviceHref, class: cls = '' } = Astro.props;
+const service = pairServiceLabel(p);
+const altService = p.altService ?? service.toLowerCase();
+const beforeAlt = `${p.breed} before ${altService} at home in ${p.locality}, Ludhiana`;
+const afterAlt = `${p.breed} after ${altService} at home in ${p.locality}, Ludhiana`;
+// Caption locality links its area page once that page is live (template SP-5).
+const areaPath = `/ludhiana/areas/${p.locality.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}/`;
+const frames = [
+  { key: 'before', label: 'Before', name: p.before, alt: beforeAlt },
+  { key: 'after', label: 'After', name: p.after, alt: afterAlt },
+];
+---
+<figure class:list={['ba m-0', cls]}>
+  <div class="grid grid-cols-2 gap-2">
+    {frames.map((f) => (
+      <div class="relative">
+        {/* TODO: swap to Photo.astro (name={f.name}, alt={f.alt}, ratio='1x1', widths={[360, 600, 900]}, sizes='(max-width: 767px) 50vw, 420px') — 08 §5.6 */}
+        <div class="placeholder-photo flex aspect-square w-full items-center justify-center rounded-md bg-line text-muted" role="img" aria-label={f.alt}>
+          <Icon name="camera" size={24} />
+        </div>
+        <span
+          aria-hidden="true"
+          class:list={[
+            't-micro absolute left-2 top-2 inline-flex h-6 items-center rounded-pill px-2',
+            f.key === 'before' ? 'bg-paper/90 text-slate' : 'bg-cta text-ink',
+          ]}
+        >{f.label}</span>
+        {f.key === 'after' ? <span aria-hidden="true" class="t-micro absolute bottom-2 right-2 normal-case text-white/70">{site.domain}</span> : null}
+      </div>
+    ))}
+  </div>
+  <figcaption class="mt-2 text-sm text-slate">
+    {p.pet} · {p.breed} ·{' '}
+    {serviceHref && isLive(serviceHref) ? <a href={serviceHref} class="prose-link">{service}</a> : service}
+    {' · '}
+    {isLive(areaPath) ? <a href={areaPath} class="prose-link">{p.locality}</a> : p.locality}
+  </figcaption>
+</figure>

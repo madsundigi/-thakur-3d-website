@@ -1,0 +1,92 @@
+---
+// Review card (08-DESIGN-SYSTEM §4.11; display rules 06-CONVERSION-PLAYBOOK §4.4). Plain HTML — NO Review /
+// AggregateRating schema, ever (04 §2.0.4). Anatomy: ① star row (aria-hidden) + sr-only "Rated 5 out of 5 on Google"
+// (08 §1.5 stars exception — the stars never appear without their text twin) ② quote, upright inside quotation marks,
+// 4-line ceiling ③ owner first name · locality (brand) · Pet (Breed) ④ service chip (price-chip style, no price)
+// ⑤ month-year. Optional: "Google review" label + our owner reply (reviews.md RV-4). Never a carousel.
+// Grid: base 1-col · md 2-up · lg 3-up (e.g. <ul class="grid list-none gap-4 p-0 md:grid-cols-2 lg:grid-cols-3 lg:gap-6">).
+// Data: src/data/reviews.ts (pickReviews / reviewsReady — render REVIEWS_EMPTY_STATE until real reviews exist).
+// A [FILL:REVIEW_n] seed renders as its bare token only — no stars, rating text, chip or date (06 §4.4: never show a
+// rating GBP doesn't back). Owner reply: a nested reply block with NO heading — neither 06 nor reviews.md RV-4 words a
+// label yet; pass `replyLabel` once the plan does.
+import starSvg from 'lucide-static/icons/star.svg?raw';
+import { isSeedReview, monthYear, reviewServiceLabel, type ReviewSlot } from '../data/reviews';
+
+interface Props {
+  review: ReviewSlot;
+  /** Card sits on a sand band → paper card + hairline border (08 §4.11). Default: sand card on paper, border-free. */
+  onSand?: boolean;
+  /** Show the "Google review" label (reviews.md RV-4). Ignored on a seed — it is not a Google review yet. */
+  showSource?: boolean;
+  /** Visible label over the owner reply — wording must come from the plan (reviews.md RV-4); none by default. */
+  replyLabel?: string;
+  class?: string;
+}
+
+const { review, onSand = false, showSource = false, replyLabel, class: cls = '' } = Astro.props;
+const r = isSeedReview(review) ? null : review;
+// Lucide `star`, filled for earned stars (16px, amber), outline for the rest — stroke 1.5 like every icon (08 §6.1).
+const starPath = /<path d="([^"]+)"/.exec(starSvg)?.[1] ?? '';
+const stars = r ? [1, 2, 3, 4, 5].map((n) => n <= r.rating) : [];
+const pet = r?.pet ? `${r.pet}${r.breed ? ` (${r.breed})` : ''}` : r?.breed ?? '';
+---
+<figure
+  class:list={[
+    'rc m-0 flex h-full flex-col gap-3 rounded-lg p-4 lg:p-6',
+    onSand ? 'border border-line bg-paper' : 'bg-sand',
+    cls,
+  ]}
+>
+  {r ? (
+    <div class="flex gap-0.5 text-cta" aria-hidden="true">
+      {stars.map((on) => (
+        <svg viewBox="0 0 24 24" width="16" height="16" fill={on ? 'currentColor' : 'none'} stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+          <path d={starPath} />
+        </svg>
+      ))}
+    </div>
+  ) : null}
+  {r ? <span class="sr-only">Rated {r.rating} out of 5 on Google</span> : null}
+
+  <blockquote class="m-0">
+    <p class="rc-quote m-0 text-ink">“{review.quote}”</p>
+  </blockquote>
+
+  {r ? (
+    <figcaption class="mt-auto flex flex-col gap-3">
+      <p class="m-0 text-sm">
+        <span class="font-semibold text-ink">{r.name}</span>
+        {r.locality ? <span class="text-slate"> · </span> : null}
+        {r.locality ? <span class="font-medium text-brand">{r.locality}</span> : null}
+        {pet ? <span class="text-slate"> · {pet}</span> : null}
+      </p>
+      <p class="m-0 flex flex-wrap items-center justify-between gap-2">
+        <span class:list={['inline-flex h-8 items-center rounded-pill px-3 text-sm font-semibold text-ink', onSand ? 'bg-sand' : 'bg-paper']}>
+          {reviewServiceLabel(r)}
+        </span>
+        <span class="t-micro text-slate">
+          {showSource ? 'Google review · ' : null}<time datetime={r.date}>{monthYear(r.date)}</time>
+        </span>
+      </p>
+      {r.ownerReply ? (
+        <div class:list={['rc-reply rounded-md p-3 text-sm', onSand ? 'bg-sand' : 'bg-paper']}>
+          {replyLabel ? <p class="m-0 mb-1 font-semibold text-ink">{replyLabel}</p> : null}
+          <p class="m-0 text-slate">{r.ownerReply}</p>
+        </div>
+      ) : null}
+    </figcaption>
+  ) : null}
+</figure>
+
+<style>
+  /* Quote: 2–3 lines expected, 4-line ceiling (08 §4.11) — trimmed with "…", never reworded. */
+  .rc-quote {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+    line-clamp: 4;
+    overflow: hidden;
+  }
+  /* The owner reply reads as a reply nested under the review, not as a second review: inset + brand rule. */
+  .rc-reply { margin-left: 12px; border-left: 2px solid var(--color-brand); }
+</style>

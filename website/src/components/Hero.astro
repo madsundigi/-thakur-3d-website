@@ -1,0 +1,135 @@
+---
+// Hero (08-DESIGN-SYSTEM §4.6; formula + copy 06-CONVERSION-PLAYBOOK §2; template SP-1, home H-1, area AP-1).
+// DOM order = 08 §4.6 anatomy: eyebrow · H1 · subhead · (Hinglish support line) · CTA row · chip row · photo · R3.
+// Base: one column in that order, so the photo sits straight under the chips (fold law, 08 §4.6 / 02 P150).
+// ≥ md: 7fr/5fr grid. The photo fills the right column; the R3 line is placed directly under the CTAs and the chips
+// under it (CSS grid areas). Only non-focusable items move, so the tab order still follows the DOM.
+// The photo is the LCP: eager + fetchpriority high here. Its <head> preload (04 §5.2.2) is a second call the PAGE
+// makes, as a direct child of <Base>, with the same name:
+//   <Photo slot="head" preload preset="hero" name="golden-retriever-bath-home-ludhiana.jpg" />
+// That needs <slot name="head" /> inside <head> in layouts/Base.astro. Until Base has it, Astro drops the slotted
+// preload without an error.
+import Button from './Button.astro';
+import Chip from './Chip.astro';
+import Photo from './Photo.astro';
+import PawMark from './icons/PawMark.astro';
+import { R3, TRUST_CHIPS } from '../data/content';
+
+type Variant = 'primary' | 'whatsapp' | 'secondary' | 'ghost' | 'on-dark';
+interface Cta {
+  label: string;
+  href: string;
+  /** Default: 'whatsapp' for wa.me links, else 'primary' (primary CTA) / 'secondary' (secondary CTA).
+   *  'whatsapp' is honoured only on a wa.me link (08 §1.4 rule 2). A /book/ link always renders amber. */
+  variant?: Variant;
+  /** 09 §2d source value, e.g. 'hero_home' or 'hero_dog-grooming' (also put it in the /book/?src= param). */
+  source: string;
+}
+interface Props {
+  eyebrow?: string;
+  h1: string;
+  subhead: string;
+  /** Optional Hinglish support line (00 §3.1: site.taglineHinglish), shown under the subhead. */
+  hinglish?: string;
+  primary: Cta;
+  secondary?: Cta;
+  /** First chip, price style: built from pricing helpers, e.g. SERVICE_PRICE_CHIP[path] or LOWEST_PRICE_CHIP. */
+  priceChip?: string;
+  /** Trust chips: default = the 06 §2.1 standard set. Pass the page's 06 §2.3 override set where it has one. */
+  trustChips?: readonly string[];
+  /** Hero photo: planned 08 §5.2 filename + 08 §5.4 alt. Omit for a compact text-only hero (e.g. /pricing/). */
+  photo?: { name: string; alt: string; position?: string };
+  /** Reply-time line. Default R3 (06 §9); false hides it. */
+  reply?: string | false;
+}
+
+const {
+  eyebrow, h1, subhead, hinglish, primary, secondary, priceChip,
+  trustChips = TRUST_CHIPS, photo, reply = R3,
+} = Astro.props;
+
+// WhatsApp green is for wa.me actions only (08 §1.4 rule 2). A 'whatsapp' variant on any other link (e.g. the
+// "Book on WhatsApp" → /book/ hero CTA) falls back to the slot's default: amber primary or outline secondary.
+const variantOf = (cta: Cta, fallback: Variant): Variant => {
+  const isWa = cta.href.includes('wa.me');
+  if (cta.variant === 'whatsapp' && !isWa) return fallback;
+  return cta.variant ?? (isWa ? 'whatsapp' : fallback);
+};
+const hasChips = !!priceChip || trustChips.length > 0;
+// Hero padding 64 → 96 at lg (08 §3.1). The base top is 16px, not 64: every px above the photo counts against the
+// 360×640 fold law (02 P150, a launch blocker).
+const wrap = 'hero-grid mx-auto max-w-[1200px] px-4 pb-16 pt-4 md:pt-16 lg:px-6 lg:py-24';
+---
+<section aria-labelledby="hero-heading" class="hero">
+  <div class:list={[wrap, photo ? 'has-photo' : '']}>
+    <div class="hero-copy min-w-0">
+      {eyebrow ? <p class="t-micro m-0 text-brand">{eyebrow}</p> : null}
+      <h1 id="hero-heading" class:list={['t-display m-0', eyebrow ? 'mt-2' : '']}>{h1}</h1>
+      <p class="t-body-lg measure m-0 mt-3 text-slate">{subhead}</p>
+      {hinglish ? <p class="m-0 mt-2 text-sm font-medium text-brand-deep">{hinglish}</p> : null}
+      <div class="mt-4 flex flex-col gap-2 md:mt-5 md:flex-row md:flex-wrap md:gap-3">
+        <Button href={primary.href} variant={variantOf(primary, 'primary')} source={primary.source} full>{primary.label}</Button>
+        {secondary ? (
+          <Button href={secondary.href} variant={variantOf(secondary, 'secondary')} source={secondary.source} full>{secondary.label}</Button>
+        ) : null}
+      </div>
+    </div>
+
+    {hasChips ? (
+      <ul class="hero-chips chip-row m-0 mt-2 min-w-0 list-none p-0 md:mt-4">
+        {priceChip ? <li><Chip kind="price" label={priceChip} /></li> : null}
+        {trustChips.map((t) => <li><Chip kind="trust" label={t} /></li>)}
+      </ul>
+    ) : null}
+
+    {photo ? (
+      <div class="hero-photo relative mt-4 min-w-0 md:mt-0">
+        <PawMark size={160} class="pointer-events-none absolute -bottom-12 -left-12 hidden rotate-[-12deg] text-brand opacity-5 md:block" />
+        <Photo
+          name={photo.name}
+          alt={photo.alt}
+          preset="hero"
+          position={photo.position}
+          eager
+          class="relative block aspect-[16/10] h-auto w-full rounded-lg object-cover md:aspect-[4/3] md:rounded-xl md:shadow-1"
+        />
+      </div>
+    ) : null}
+
+    {reply ? <p class="hero-reply m-0 mt-3 text-sm text-slate md:mt-2">{reply}</p> : null}
+  </div>
+</section>
+
+<style>
+  .hero-grid { display: grid; grid-template-columns: minmax(0, 1fr); }
+
+  /* Base: the chip row is one horizontal scroll-snap line with an edge fade (08 §4.6); ≥ md it wraps (global .chip-row). */
+  .hero-chips {
+    padding-right: 32px; /* lets the last chip scroll clear of the 32px fade */
+    -webkit-mask-image: linear-gradient(to right, black calc(100% - 32px), transparent);
+    mask-image: linear-gradient(to right, black calc(100% - 32px), transparent);
+  }
+
+  @media (min-width: 768px) {
+    .hero-chips { padding-right: 0; -webkit-mask-image: none; mask-image: none; }
+
+    /* Text-only hero: R3 moves up under the CTAs (08 §4.6 ⑦ "under CTAs"), chips follow. */
+    .hero-grid { grid-template-areas: 'copy' 'reply' 'chips'; }
+    .hero-copy { grid-area: copy; }
+    .hero-reply { grid-area: reply; }
+    .hero-chips { grid-area: chips; }
+
+    /* With a photo: 7fr/5fr (08 §4.6). The photo spans every row of the right column. The 1fr rows above and below
+       centre the left-column group against it, and collapse to 0 when the text is taller. */
+    .hero-grid.has-photo {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+      grid-template-rows: 1fr auto auto auto 1fr;
+      grid-template-areas: '. photo' 'copy photo' 'reply photo' 'chips photo' '. photo';
+      column-gap: 40px;
+    }
+    .hero-photo { grid-area: photo; align-self: center; }
+  }
+  @media (min-width: 1024px) {
+    .hero-grid.has-photo { column-gap: 48px; }
+  }
+</style>

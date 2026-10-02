@@ -1,0 +1,67 @@
+---
+// CTA band (08-DESIGN-SYSTEM §4.16): the page-end conversion block on every money page (06 §3.1 "repeat at page
+// end"; template SP-12, area AP-11, home H-12). Full-bleed brand-dark: place it as a direct child of <main>, outside
+// any max-width wrapper. Base: stacked + centred. ≥ md: text left, buttons right.
+// Heading: the page's R8 line (r8() in src/data/content.ts) or its blueprint line.
+import Button from './Button.astro';
+import PawMark from './icons/PawMark.astro';
+import { R3 } from '../data/content';
+
+type Variant = 'primary' | 'whatsapp' | 'secondary' | 'ghost' | 'on-dark';
+interface Cta {
+  label: string;
+  href: string;
+  /** Default: 'whatsapp' for wa.me links, else 'primary' (primary) / 'on-dark' (secondary). 'whatsapp' is honoured
+   *  only on a wa.me link (08 §1.4 rule 2). */
+  variant?: Variant;
+  /** 09 §2d source value, e.g. 'service_full-groom' (money pages, 07 §2 row 4) or 'hero_home'. */
+  source: string;
+}
+interface Props {
+  heading: string;
+  /** Support line (body-lg, mint), e.g. the SP-12 line "Fixed prices from {inr(…)} · no advance payment · photo update
+   *  after the groom." — build any price with src/lib/pricing.ts helpers. */
+  support?: string;
+  /** Usually [Book on WhatsApp]: the wa.me link with the page prefill (07 §5). */
+  primary: Cta;
+  /** Usually [Call [FILL:PHONE]] → telHref(), rendered in the on-dark outline style. */
+  secondary?: Cta;
+  /** Reply-time line. Default R3 (06 §9); false hides it. */
+  reply?: string | false;
+  /** id for the h2 (aria-labelledby). Change it only if a page renders two bands. */
+  id?: string;
+}
+
+const { heading, support, primary, secondary, reply = R3, id = 'cta-band-heading' } = Astro.props;
+// WhatsApp green is for wa.me actions only (08 §1.4 rule 2): a 'whatsapp' variant on any other link (e.g. /book/)
+// falls back to the slot's default, amber primary or on-dark outline.
+const variantOf = (cta: Cta, fallback: Variant): Variant => {
+  const isWa = cta.href.includes('wa.me');
+  if (cta.variant === 'whatsapp' && !isWa) return fallback;
+  return cta.variant ?? (isWa ? 'whatsapp' : fallback);
+};
+---
+<section aria-labelledby={id} class="on-dark relative overflow-hidden bg-brand-dark text-white">
+  {/* Watermark top-right: as far as possible from the footer's bottom-right paw (08 §6.3: one watermark per viewport). */}
+  <PawMark size={200} class="pointer-events-none absolute -right-12 -top-12 rotate-[-12deg] text-mint opacity-[0.08]" />
+  <div class="relative mx-auto flex max-w-[1200px] flex-col items-center gap-8 px-4 py-12 text-center md:flex-row md:items-center md:justify-between md:text-left lg:px-6 lg:py-20">
+    <div class="measure min-w-0">
+      <h2 id={id} class="t-h2 m-0 text-white">{heading}</h2>
+      {support ? <p class="t-body-lg m-0 mt-3 text-mint">{support}</p> : null}
+    </div>
+    <div class="flex w-full flex-none flex-col items-stretch gap-3 md:w-auto md:items-end">
+      <div class="flex flex-col gap-3 md:flex-row">
+        <Button href={primary.href} variant={variantOf(primary, 'primary')} source={primary.source} full>{primary.label}</Button>
+        {secondary ? (
+          <Button href={secondary.href} variant={variantOf(secondary, 'on-dark')} source={secondary.source} full>{secondary.label}</Button>
+        ) : null}
+      </div>
+      {reply ? <p class="m-0 text-sm text-mint md:text-right">{reply}</p> : null}
+    </div>
+  </div>
+</section>
+
+<style>
+  /* global.css colours h2 ink outside any layer, which would beat the text-white utility, so set it here (08 §1.4 rule 8). */
+  h2 { color: var(--color-white); }
+</style>
