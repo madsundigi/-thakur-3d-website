@@ -1,5 +1,9 @@
 # Pet Care at Your Doorstep — Ludhiana Launch Strategy
 
+> **Next step of this project:** the Phase-1 website planning system lives in
+> [`../website-plan/`](../website-plan/00-MASTER-PLAN.md) — brand **PetDoorStep**,
+> start at `00-MASTER-PLAN.md`.
+
 A business strategy & feasibility report for an on-demand doorstep **pet-care
 services** venture (grooming, bathing, dog walking, vet-at-home and more)
 launching in **Ludhiana, Punjab, India**. Working brand used in the report:
