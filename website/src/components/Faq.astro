@@ -1,0 +1,20 @@
+---
+// FAQ accordion (08-DESIGN-SYSTEM §4.13) — zero JS <details>. Entries come from src/data/faq.json (blueprints/faq.md §2).
+import Icon from './icons/Icon.astro';
+import faq from '../data/faq.json';
+
+interface Props { page: string; heading: string; ids?: string[] }
+const { page, heading, ids } = Astro.props;
+const items = ids ? ids.map((id) => faq.find((f) => f.id === id)).filter(Boolean) : faq.filter((f) => f.pages.includes(page));
+---
+<section aria-labelledby="faq-heading">
+  <h2 id="faq-heading" class="t-h2">{heading}</h2>
+  <div class="mt-4 border-t border-line">
+    {items.map((f) => (
+      <details class="faq">
+        <summary><h3 class="t-h3 m-0">{f!.q}</h3><span class="faq-icon"><Icon name="plus" size={20} /></span></summary>
+        <div class="faq-body"><p class="m-0">{f!.a}</p></div>
+      </details>
+    ))}
+  </div>
+</section>

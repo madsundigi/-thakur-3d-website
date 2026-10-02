@@ -24,13 +24,14 @@ Every route into the widget carries a `source` value (query param `src` on links
 
 | # | Entry point | Where it appears | Visible copy (verbatim) | Behaviour | `source` value |
 |---|---|---|---|---|---|
-| 1 | Sticky bottom bar (mobile only, <1024px) | Every page except while widget is open and on `/thank-you/` | 3 buttons: `WhatsApp` · `Book Now` (largest, centre) · `Call`. On service pages the Book button shows the live from-price, e.g. `Full Groom from ₹1,199 · Book` | `Book Now` → `/book/?src=sticky_bar` (plus `&service=<id>` on service pages). WhatsApp = static wa.me link with page-specific prefill. Call = `tel:[FILL:PHONE]` | `sticky_bar` |
+| 1 | Sticky bottom bar (mobile only, <768px — per `06` §3.3 / `08` §4.5) | Every page except `/book/` (widget page) and `/thank-you/` | 3 buttons, left → right: `Call` · `WhatsApp` · `Book Now` (largest, right). On service pages the Book button shows the live from-price, e.g. `Full Groom from ₹1,199 · Book` | `Book Now` → `/book/?src=sticky_bar` (plus `&service=<id>` on service pages). WhatsApp = static wa.me link with page-specific prefill. Call = `tel:[FILL:PHONE]` | `sticky_bar` |
 | 2 | Header `Book Now` button (desktop ≥1024px) | Site-wide header per `01-SITEMAP.md` §2 nav | `Book Now` | → `/book/?src=header` | `header` |
 | 3 | Hero CTAs | `/` and every money page hero | Primary: `See prices & book`. Secondary: `WhatsApp us` | Primary → `/book/?src=hero_<page-slug>` (home = `hero_home`, e.g. `hero_dog-grooming`). Secondary = wa.me with page prefill | `hero_<page-slug>` |
 | 4 | Service-page body CTAs | After the price table and at page end on each `/ludhiana/<service>/` page | `Book <Service> — from ₹<from-price>` (price from `pricing.json`) | → `/book/?service=<id>&src=service_<id>` | `service_<id>` |
 | 5 | Pricing table rows | `/pricing/` — each service×size cell row ends in a `Book` link | `Book` | → `/book/?service=<id>&size=<small|medium|large>&src=pricing_row` — preselects service and size; user still starts at Step 1 (area) | `pricing_row` |
 | 6 | `/book/` page itself | Direct visits, GBP link, Instagram bio | Page H1 per `blueprints/book.md` | Widget mounts `client:visible` at top of content | `book_page` |
 | 7 | Exit-intent nudge (desktop only, once per session) | Any page except `/book/`, `/thank-you/`, legal pages | Headline: `Before you go — your dog's grooming price in 10 seconds.` Body: `See the exact ₹ price for your pet's size and book in under a minute. Slot confirmed on WhatsApp within 10 minutes.` Buttons: `See prices & book` / `No thanks` | Modal triggered on `mouseleave` through top viewport edge, only if: viewport ≥1024px AND `(pointer:fine)` AND ≥20s on page AND `sessionStorage.pds_exit_shown` unset AND no booking submitted this device (`localStorage.pds_last_booking` unset). Sets `pds_exit_shown=1` on show (shown once per session whether dismissed or clicked). CTA → `/book/?src=exit_nudge`. Esc, overlay click and `No thanks` all close it | `exit_nudge` |
+| 8 | Desktop WhatsApp float (`08` §4.17) | Every page ≥768px except `/book/` and `/thank-you/` | WhatsApp glyph, label `Chat on WhatsApp` | Static wa.me link with page prefill (no widget) | `float_desktop` |
 
 **Prefill query params accepted by the widget:** `service` (must match a `pricing.json` service id), `size` (`small|medium|large`), `src`. Invalid values are silently ignored. Prefills select the matching card/chip but never skip a step.
 
@@ -109,10 +110,10 @@ Card order and price chips (chip text derived from `pricing.json` by the rules i
 
 | Field | Input type | Options / rules |
 |---|---|---|
-| Date | horizontal strip of 7 date chips | Next 7 days. **Today is included only if the device time is before 15:00**; otherwise the strip starts tomorrow (still 7 chips). Chip format: `Today` / `Tomorrow` / `Sat 04 Oct`. Walking plans relabel the field `Start date` |
-| Time window | 3 radio chips | `Morning 9–12` · `Afternoon 12–3` · `Evening 3–6` (fits service hours Mon–Sun 9:00–19:00, last booking 17:30, per `00` §3.1). When `Today` is selected, a window is disabled (greyed, not removed) if the current time is past that window's start (past 9:00 disables Morning, past 12:00 disables Afternoon; Evening stays because Today itself disappears at 15:00). Disabled-chip helper text: `Too soon for today — pick another window or day.` |
+| Date | horizontal strip of 7 date chips | Next 7 days. **Today is included only if the device time is before 15:00**; otherwise the strip starts tomorrow (still 7 chips). Chip format: `Today` / `Tomorrow` / `Sat 04 Oct`. Walking plans relabel the field `Start date` and **always start tomorrow** (the first walk follows a meet-and-greet) |
+| Time window | 3 radio chips | `Morning 9–12` · `Afternoon 12–3` · `Evening 3–6` (fits service hours Mon–Sun 9:00–19:00, last booking 17:30, per `00` §3.1). When `Today` is selected, a window is disabled (greyed, not removed) if the current time is past that window's start (past 9:00 disables Morning, past 12:00 disables Afternoon; Evening stays because Today itself disappears at 15:00). Disabled-chip helper text: `Too soon for today — pick another window or day.` **Dog walking uses its own windows** matching the walk hours in `00` §3.2: `Morning walks 6:00–9:30` · `Evening walks 17:30–20:30`; the twice-daily plan shows one fixed chip `Morning + evening walks` |
 
-- Honesty line, always visible on this step (verbatim): **"Your slot is confirmed on WhatsApp within 10 minutes (9:00–19:00)."**
+- Honesty line, always visible on this step (verbatim): **"Your slot is confirmed on WhatsApp within 10 minutes (9:00–19:00)."** After 19:00 it becomes **"Received after 7 pm? We confirm by 9:15 next morning."**; before 09:00, **"Received before 9 am? We confirm by 9:15 this morning."**
 - Validation: date required → **"Please pick a day for the visit."** Window required → **"Please pick a time window."** If a selected window becomes invalid (user left the tab open past the cutoff), on Next show: **"That window just closed for today — please pick another."**
 
 ### Step 5 — Contact
@@ -120,7 +121,7 @@ Card order and price chips (chip text derived from `pricing.json` by the rules i
 | Field | Input type | Options / rules |
 |---|---|---|
 | Your name | text, required, max 60, `autocomplete="name"` | — |
-| Mobile number | `type="tel"`, `inputmode="numeric"`, `autocomplete="tel"`, max 14 raw chars | Normalise before validating: strip spaces/dashes/parentheses; strip leading `+91` or `91` (when 12 digits) or `0` (when 11 digits). Then must match **`^[6-9]\d{9}$`** |
+| Mobile number | `type="tel"`, `inputmode="numeric"`, `autocomplete="tel"`, max 16 raw chars (fits `+91 98765 43210`) | Normalise before validating: strip spaces/dashes/parentheses; strip leading `+91` or `91` (when 12 digits) or `0` (when 11 digits). Then must match **`^[6-9]\d{9}$`** |
 | Anything we should know? | textarea, optional, max 300 chars, 3 rows | Placeholder: `Skin issues, anxious pet, gate / society entry instructions…` |
 | WhatsApp consent | checkbox, **checked by default**, required | Label (verbatim): `Confirm my booking on WhatsApp at this number. We never spam or share your number.` |
 
@@ -266,6 +267,7 @@ Number formatting: Indian grouping with comma (`1899` → `₹1,899`) via `toLoc
    Name: {name}
    Price shown: {price_shown}
    Note: {first_groom=="Yes, first time" ? "First groom. " : ""}{coat flags joined ", "}{". " + user note}
+   Offer: FIRSTGROOM (first groom)   ← only when the FIRSTGROOM offer applies (06 §7.1: first booking on this device + Full Groom or Premium Spa)
    Source: website ({source})
    ```
 
@@ -301,7 +303,7 @@ Number formatting: Indian grouping with comma (`1899` → `₹1,899`) via `toLoc
 | **JS disabled / island failed** | `/book/` contains a `<noscript>` block (and the same block is server-rendered below the widget mount until hydration): `Book directly on WhatsApp:` + static `wa.me/[FILL:WHATSAPP_NUMBER]?text=` prefill `Hi PetDoorStep! I want to book a service. My area: ___ . My pet: ___` + `tel:[FILL:PHONE]` link + link to `/pricing/`. Independent of the widget, header and footer always carry static wa.me and tel links on every page (zero-JS anchors) |
 | **WhatsApp not installed** | Handled natively by `wa.me`: on phones it opens the app or the install/web page; on desktop it falls through to WhatsApp Web. No custom detection code. The review screen's `tel:` line is the human fallback |
 | **Out-of-area lead** | Waitlist path (§3 Step 1): stored with `lead_type=waitlist`, fires `out_of_area_lead`, inline success, no `/thank-you/` redirect |
-| **Abusive input** | Hard caps enforced on input and re-checked before compose: name 60 · breed 40 · note 300 · waitlist area 60 · phone 14 raw chars. Control characters stripped; message always built via `encodeURIComponent`; Apps Script re-truncates every cell to 300 chars server-side. No HTML is ever rendered from user input |
+| **Abusive input** | Hard caps enforced on input and re-checked before compose: name 60 · breed 40 · note 300 · waitlist area 60 · phone 16 raw chars. Control characters stripped; message always built via `encodeURIComponent`; Apps Script re-truncates every cell to 300 chars server-side. No HTML is ever rendered from user input |
 | **Clock edge** | `Today` chip and window cutoffs (§3 Step 4) are recomputed on step entry and on Next-validation, so a stale open tab cannot submit an impossible window |
 | **Slow network** | Events and storage are fire-and-forget with `keepalive: true`; WhatsApp opens immediately — the lead is never lost because the message itself contains everything |
 

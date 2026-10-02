@@ -1,0 +1,60 @@
+---
+// /thank-you/ — blueprint: website-plan/blueprints/book.md §B. noindex, excluded from the sitemap,
+// fires thank_you_view exactly once per load with a ref (09 §2a, §3.3).
+import Base from '../layouts/Base.astro';
+import Button from '../components/Button.astro';
+import { T1, T3 } from '../data/content';
+import { isLive } from '../data/routes';
+import { site, telHref, waHref, WA_DEFAULT_TEXT } from '../data/site';
+---
+<Base
+  title="Booking Request Received – Thank You | PetDoorStep"
+  description="Your PetDoorStep booking request is on WhatsApp. We confirm your exact slot within 10 minutes, 9:00–19:00."
+  path="/thank-you/"
+  noindex
+  hideStickyBar
+  hideWaFloat
+>
+  <div class="mx-auto max-w-[640px] px-4 py-12 lg:px-6">
+    <h1 class="t-h1">{T1}</h1>
+    <p id="ty-ref" class="mt-4 hidden rounded-md bg-sand px-4 py-3 text-lg" data-testid="ty-ref">
+      Your booking reference: <strong class="tabular-nums" id="ty-ref-value"></strong>
+    </p>
+    <p class="mt-4">
+      We'll confirm your exact slot within 10 minutes (9:00–19:00). Meanwhile, save our number — {site.whatsapp} — so you never miss our updates.
+    </p>
+    <p id="ty-offer" class="mt-3 hidden rounded-sm bg-mint px-3 py-2 text-brand-deep" data-testid="ty-offer">{T3}</p>
+
+    <h2 class="t-h2 mt-10">What happens next</h2>
+    <ol class="mt-3 list-decimal space-y-2 pl-6">
+      <li>We confirm your slot on WhatsApp.</li>
+      <li>You get your groomer's name and photo before the visit.</li>
+      <li>Pay by UPI or cash after the service — no advance payment.</li>
+    </ol>
+
+    <p class="mt-8 text-sm text-slate">
+      WhatsApp didn't open? No problem — message us directly at{' '}
+      <a href={waHref(WA_DEFAULT_TEXT)} data-source="book_page" target="_blank" rel="noopener" class="prose-link">{site.whatsapp}</a>{' '}
+      or call <a href={telHref()} data-source="book_page" class="prose-link">{site.phone}</a>.
+    </p>
+
+    <div class="mt-6 flex flex-wrap gap-3">
+      <Button href={telHref()} variant="secondary" source="book_page">Save our number</Button>
+      {isLive('/offers/') ? <Button href="/offers/" variant="ghost">Groom Club — 15% off every month</Button> : null}
+    </div>
+  </div>
+
+  <script is:inline>
+    // Runs after DOMContentLoaded so window.track (defined at the end of <body> by Base.astro) exists.
+    document.addEventListener('DOMContentLoaded', function () {
+      var q = new URLSearchParams(location.search);
+      var ref = q.get('ref') || '';
+      var service = q.get('service') || '';
+      if (!/^PDS-\d{8}-[23456789ABCDEFGHJKMNPQRSTUVWXYZ]{4}$/.test(ref)) return; // hide, never show "undefined"
+      document.getElementById('ty-ref-value').textContent = ref;
+      document.getElementById('ty-ref').classList.remove('hidden');
+      try { if (localStorage.getItem('pds_first_offer') === ref) document.getElementById('ty-offer').classList.remove('hidden'); } catch (e) {}
+      if (window.track) window.track('thank_you_view', { ref: ref, service: service.replace(/[^a-z0-9-]/g, '').slice(0, 40) });
+    });
+  </script>
+</Base>

@@ -1,0 +1,17 @@
+---
+// Logo lockup (08-DESIGN-SYSTEM §6.4): white paw on a brand rounded square + "PetDoorStep" in Fraunces 600.
+// Links home only once "/" is live (P074 — no links to unbuilt pages).
+import PawMark from './icons/PawMark.astro';
+import { isLive } from '../data/routes';
+
+interface Props { variant?: 'light' | 'dark' }
+const { variant = 'light' } = Astro.props;
+const dark = variant === 'dark';
+const Tag = isLive('/') ? 'a' : 'span';
+---
+<Tag href={isLive('/') ? '/' : undefined} class="inline-flex min-h-11 items-center gap-2 no-underline" aria-label={isLive('/') ? 'PetDoorStep home' : undefined}>
+  <span class:list={['inline-flex h-9 w-9 items-center justify-center rounded-[8px]', dark ? 'bg-mint text-brand-dark' : 'bg-brand text-white']}>
+    <PawMark size={24} />
+  </span>
+  <span class:list={['font-display text-[1.375rem] font-semibold leading-none', dark ? 'text-mint' : 'text-ink']}>PetDoorStep</span>
+</Tag>

@@ -1,0 +1,28 @@
+---
+// Breadcrumb (08-DESIGN-SYSTEM §4.18). Items link only when their page is live; current item is never a link.
+import Icon from './icons/Icon.astro';
+import { isLive } from '../data/routes';
+
+interface Item { label: string; path: string }
+interface Props { items: Item[] } // last item = current page
+const { items } = Astro.props;
+---
+<nav aria-label="Breadcrumb" class="mx-auto max-w-[1200px] px-4 py-3 lg:px-6">
+  <ol class="m-0 flex list-none flex-wrap items-center gap-1 p-0 text-sm text-slate">
+    {items.map((it, i) => {
+      const last = i === items.length - 1;
+      return (
+        <li class="flex items-center gap-1">
+          {last ? (
+            <span class="font-medium text-ink" aria-current="page">{it.label}</span>
+          ) : isLive(it.path) ? (
+            <a href={it.path} class="text-slate no-underline hover:underline">{it.label}</a>
+          ) : (
+            <span>{it.label}</span>
+          )}
+          {!last ? <span class="text-muted"><Icon name="chevron-right" size={14} /></span> : null}
+        </li>
+      );
+    })}
+  </ol>
+</nav>

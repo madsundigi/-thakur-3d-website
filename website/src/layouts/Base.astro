@@ -1,0 +1,109 @@
+---
+// Base layout — head rules 04-TECHNICAL-SEO §1.3/§1.7/§3/§4, landmarks + skip link 08 §7.5, analytics 09 §3.1.
+import '../styles/global.css';
+import frauncesWoff2 from '../assets/fonts/fraunces-latin-wght-normal.woff2?url';
+import interWoff2 from '../assets/fonts/inter-latin-wght-normal.woff2?url';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import StickyBar from '../components/StickyBar.astro';
+import WaFloat from '../components/WaFloat.astro';
+import { site, WA_DEFAULT_TEXT } from '../data/site';
+
+interface Props {
+  title: string;
+  description: string;
+  path: string; // canonical path, always with trailing slash
+  noindex?: boolean;
+  hideStickyBar?: boolean;
+  hideWaFloat?: boolean;
+  waText?: string; // page-specific WhatsApp prefill (07 §2 row 1)
+  stickyBookHref?: string;
+  stickyBookLabel?: string;
+  jsonLd?: object[];
+  ogImage?: string;
+}
+
+const {
+  title, description, path, noindex = false, hideStickyBar = false, hideWaFloat = false,
+  waText = WA_DEFAULT_TEXT, stickyBookHref, stickyBookLabel, jsonLd = [], ogImage = '/og/default.png',
+} = Astro.props;
+
+const canonical = new URL(path, Astro.site).href;
+const ogImageUrl = new URL(ogImage, Astro.site).href;
+// Preview deploys must never index (04 §1.7): Cloudflare Pages sets CF_PAGES_BRANCH at build time.
+const branch = (globalThis as { process?: { env?: Record<string, string | undefined> } }).process?.env?.CF_PAGES_BRANCH;
+const isPreview = !!branch && branch !== 'main';
+const robots = noindex || isPreview ? 'noindex' : null;
+---
+<!doctype html>
+<html lang="en-IN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {robots ? <meta name="robots" content={robots} /> : <link rel="canonical" href={canonical} />}
+    <link rel="preload" href={frauncesWoff2} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={interWoff2} as="font" type="font/woff2" crossorigin />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content="#0e7c72" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:locale" content="en_IN" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    {jsonLd.map((block) => <script type="application/ld+json" set:html={JSON.stringify(block)} />)}
+  </head>
+  <body class:list={[{ 'no-sticky-bar': hideStickyBar }]}>
+    <a href="#main" class="skip-link">Skip to content</a>
+    <Header current={path} waText={waText} />
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+    <Footer />
+    {!hideStickyBar ? <StickyBar waText={waText} bookHref={stickyBookHref} bookLabel={stickyBookLabel} /> : null}
+    {!hideWaFloat ? <WaFloat waText={waText} /> : null}
+
+    <script is:inline define:vars={{ GA4_ID: site.ga4Id, DOMAIN: site.domain }}>
+      /* PetDoorStep analytics bootstrap — 09-ANALYTICS-TRACKING §3.1. The ONLY third-party script. */
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { window.dataLayer.push(arguments); }
+      gtag('js', new Date());
+      gtag('config', GA4_ID);
+      var PDS_LIVE = location.hostname === DOMAIN;
+      /* track(): THE event helper. Dev/preview: logs, sends nothing (GA library never loads). */
+      window.track = function (name, params) {
+        try {
+          var p = Object.assign({ page_path: location.pathname }, params || {});
+          if (!PDS_LIVE) { console.debug('[track]', name, p); }
+          gtag('event', name, p);
+        } catch (e) { /* analytics must never break the page */ }
+      };
+      if (PDS_LIVE) window.addEventListener('load', function () {
+        var s = document.createElement('script');
+        s.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA4_ID;
+        s.async = true; s.fetchPriority = 'low';
+        document.head.appendChild(s);
+      });
+      /* Delegated CTA tracking — zero per-button JS anywhere else. */
+      document.addEventListener('click', function (e) {
+        var a = e.target && e.target.closest ? e.target.closest('a, [data-track]') : null;
+        if (!a || a.hasAttribute('data-track-off')) return;
+        var src = a.getAttribute('data-source') || 'unlabelled';
+        if (a.hasAttribute('data-track')) { window.track(a.getAttribute('data-track'), { source: src }); return; }
+        var href = a.getAttribute('href') || '';
+        if (href.indexOf('wa.me') > -1 || href.indexOf('api.whatsapp.com') > -1) window.track('whatsapp_click', { source: src });
+        else if (href.indexOf('tel:') === 0) window.track('call_click', { source: src });
+        else if (href.indexOf('instagram.com') > -1) window.track('ig_click', { source: src });
+      });
+    </script>
+  </body>
+</html>

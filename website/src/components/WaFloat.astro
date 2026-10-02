@@ -1,0 +1,17 @@
+---
+// Desktop WhatsApp float (08-DESIGN-SYSTEM §4.17) — ≥ 768px only; source "float_desktop" (08 §0.4).
+import BrandIcon from './icons/BrandIcon.astro';
+import { waHref } from '../data/site';
+interface Props { waText: string }
+const { waText } = Astro.props;
+---
+<a
+  href={waHref(waText)}
+  data-source="float_desktop"
+  target="_blank"
+  rel="noopener"
+  aria-label="Chat with PetDoorStep on WhatsApp"
+  class="fixed bottom-6 right-6 z-40 hidden h-14 w-14 items-center justify-center rounded-pill bg-wa text-ink shadow-3 transition-transform duration-[120ms] hover:scale-105 hover:bg-wa-hover md:flex"
+>
+  <BrandIcon name="whatsapp" size={28} />
+</a>

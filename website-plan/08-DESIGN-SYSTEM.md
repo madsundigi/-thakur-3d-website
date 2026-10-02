@@ -17,7 +17,7 @@ grep -rl 'placeholder-' website/dist 2>/dev/null                     # must retu
 1. **Sticky-bar breakpoint & button order** — `06` §3.3 (the behaviour owner) says visible **< 768px**, order **Call | WhatsApp | Book Now**; `07` §2 row 1 says "< 1024px" and a different order. **08 renders per `06` §3.3.** Update `07` §2 row 1 to match on its next edit.
 2. **Fonts** — `04` §1.3 names Nunito as the *default until 08 says otherwise*. **This file says otherwise:** display = Fraunces (§2). Per `04` §1.3's own swap clause, replace the package name in the `04` §1.1 install command and §1.3 table; every loading rule in `04` §1.3 (preload, swap, fontpie, 2-file/200 KB cap) stays unchanged.
 3. **Body bottom padding 64px (`04` §5.2.4) vs bar height 56px (`06` §3.3)** — not a conflict: 56px bar + 8px clearance = the reserved 64px. Both stand.
-4. **Desktop WhatsApp floating button (§4.17)** is a new CTA entry point not yet in `07` §2's registry. Its `source` value is **`float_desktop`** — append it to the `07` §2 table on that file's next edit.
+4. **Desktop WhatsApp floating button (§4.17)** is a CTA entry point with `source` value **`float_desktop`** — now row 8 of the `07` §2 table and listed in `09` §2d.
 5. **Dark mode: not built.** The site ships light-only at launch; `prefers-color-scheme` is ignored (a marketing site with photo-led content; revisit only via a Decision Log entry in `00` §11).
 
 ---
@@ -326,7 +326,7 @@ All pill radius, Inter 600; heights: badge 24px (micro type), chip 32px, input-c
 - **Visibility:** fixed bottom, **< 768px only**; hidden on `/thank-you/` and while the widget is open (the widget page `/book/` omits the bar entirely — its own confirm button is the action).
 - **Geometry:** height 56px + `env(safe-area-inset-bottom)` padding; `bg-paper`, 1px `border-t-line`, shadow-2 (upward), z-40. Grid `1fr 1fr 1.4fr`, 8px gaps, 8px side padding; every target ≥ 48px.
 - **Buttons (left → right per `06`):** **Call** — `tel:[FILL:PHONE]`, paper fill, brand icon (phone 20px) + label "Call" (13px Inter 600 brand) stacked 2px apart · **WhatsApp** — `bg-wa`, ink glyph + "WhatsApp" label, page-specific wa.me prefill (`07` §2 row 1) · **Book Now** — `bg-cta text-ink`, boldest; label on service pages carries the live from-price: "Book · from ₹1,199" (one line, 14px, price tabular-nums; from `pricing.json`).
-- Events `cta_call` / `cta_whatsapp` / `cta_book` per `09-ANALYTICS-TRACKING.md`; targets per `07` §2 row 1.
+- Events per `09-ANALYTICS-TRACKING.md` §2 (its registry wins): `call_click` / `whatsapp_click` with `source: sticky_bar`; Book Now is tracked by the widget's `booking_started` with `source: sticky_bar`. Targets per `07` §2 row 1.
 
 ### 4.6 Hero — `Hero.astro` (formula + copy owned by `06` §2)
 

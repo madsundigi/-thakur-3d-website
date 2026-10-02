@@ -1,0 +1,67 @@
+---
+// Header + nav (08-DESIGN-SYSTEM §4.3). Nav items per 01-SITEMAP §2.1, each shown ONLY once its page is live.
+// Zero JS: CSS hover/focus-within dropdown, CSS checkbox hamburger.
+import Logo from './Logo.astro';
+import Button from './Button.astro';
+import Icon from './icons/Icon.astro';
+import { isLive, liveRoutes } from '../data/routes';
+import { waHref, WA_DEFAULT_TEXT } from '../data/site';
+
+interface Props { current: string; waText?: string }
+const { current, waText = WA_DEFAULT_TEXT } = Astro.props;
+
+const services = liveRoutes('service').filter((r) => r.path !== '/ludhiana/');
+const top = [
+  { path: '/', label: 'Home' },
+  { path: '/pricing/', label: 'Pricing' },
+  { path: '/how-it-works/', label: 'How it works' },
+  { path: '/reviews/', label: 'Reviews' },
+].filter((i) => isLive(i.path));
+const linkCls = 'inline-flex min-h-11 items-center px-2 text-[0.9375rem] font-medium text-ink no-underline hover:text-brand hover:underline underline-offset-[6px]';
+---
+<header class="sticky top-0 z-30 h-[var(--header-h)] border-b border-line bg-paper">
+  <div class="mx-auto flex h-full max-w-[1200px] items-center justify-between gap-4 px-4 lg:px-6">
+    <Logo />
+
+    <nav aria-label="Main" class="hidden lg:block">
+      <ul class="m-0 flex list-none items-center gap-2 p-0">
+        {top.filter((i) => i.path === '/').map((i) => (
+          <li><a href={i.path} class={linkCls} aria-current={current === i.path ? 'page' : undefined}>{i.label}</a></li>
+        ))}
+        {services.length ? (
+          <li class="has-dropdown relative">
+            <button type="button" class={`${linkCls} cursor-pointer bg-transparent`} aria-haspopup="true">Services</button>
+            <ul class="dropdown absolute left-0 top-full z-20 m-0 min-w-64 list-none rounded-md bg-paper p-2 shadow-2">
+              {services.map((s) => (
+                <li><a href={s.path} class="flex min-h-11 items-center rounded-sm px-3 text-ink no-underline hover:bg-mint" aria-current={current === s.path ? 'page' : undefined}>{s.label}</a></li>
+              ))}
+            </ul>
+          </li>
+        ) : null}
+        {top.filter((i) => i.path !== '/').map((i) => (
+          <li><a href={i.path} class={linkCls} aria-current={current === i.path ? 'page' : undefined}>{i.label}</a></li>
+        ))}
+        <li class="ml-2"><Button href="/book/?src=header" variant="primary">Book Now</Button></li>
+      </ul>
+    </nav>
+
+    <div class="flex items-center gap-2 lg:hidden">
+      <a href="/book/?src=header" class="inline-flex h-10 items-center whitespace-nowrap rounded-md bg-cta px-4 text-[0.9375rem] font-semibold text-ink no-underline hover:bg-cta-hover">Book Now</a>
+      <input type="checkbox" id="nav-toggle" class="peer sr-only" aria-label="Open menu" />
+      <label for="nav-toggle" class="inline-flex h-11 w-11 cursor-pointer items-center justify-center text-ink peer-focus-visible:outline-2 peer-focus-visible:outline-brand">
+        <span class="icon-menu"><Icon name="menu" size={24} /></span>
+        <span class="icon-close"><Icon name="x" size={24} /></span>
+        <span class="sr-only">Menu</span>
+      </label>
+      <label for="nav-toggle" class="nav-scrim fixed inset-0 top-[var(--header-h)] z-40 bg-ink/40" aria-hidden="true"></label>
+      <nav aria-label="Mobile" class="nav-panel fixed bottom-0 right-0 top-[var(--header-h)] z-50 flex w-[min(320px,85vw)] flex-col gap-1 overflow-y-auto bg-paper p-4 shadow-3">
+        {[...top, ...services].map((i) => (
+          <a href={i.path} class="flex min-h-11 items-center border-b border-line text-ink no-underline">{i.label}</a>
+        ))}
+        <div class="mt-4">
+          <Button href={waHref(waText)} variant="whatsapp" source="header" full>WhatsApp us</Button>
+        </div>
+      </nav>
+    </div>
+  </div>
+</header>

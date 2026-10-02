@@ -1,0 +1,20 @@
+---
+// Steps strip (08-DESIGN-SYSTEM §4.9) — the 4 booking steps verbatim from 04-TECHNICAL-SEO §2.8.
+import { bookingSteps } from '../data/content';
+interface Props { heading: string; anchors?: boolean }
+const { heading, anchors = false } = Astro.props;
+---
+<section aria-labelledby="steps-heading">
+  <h2 id="steps-heading" class="t-h2">{heading}</h2>
+  <ol class="mt-4 grid list-none gap-4 p-0 md:grid-cols-4">
+    {bookingSteps.map((s, i) => (
+      <li id={anchors ? `step-${i + 1}` : undefined} class="flex gap-3 md:flex-col">
+        <span class="flex h-10 w-10 flex-none items-center justify-center rounded-pill bg-brand font-bold text-white">{i + 1}</span>
+        <span>
+          <h3 class="t-h3 m-0">{s.name}</h3>
+          <p class="m-0 mt-1 text-sm text-slate">{s.text}</p>
+        </span>
+      </li>
+    ))}
+  </ol>
+</section>

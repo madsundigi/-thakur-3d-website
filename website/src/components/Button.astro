@@ -1,0 +1,40 @@
+---
+// Button (08-DESIGN-SYSTEM §4.1). Every wa.me / tel: button carries data-source (09 §3.2).
+import Icon from './icons/Icon.astro';
+import BrandIcon from './icons/BrandIcon.astro';
+
+interface Props {
+  href: string;
+  variant?: 'primary' | 'whatsapp' | 'secondary' | 'ghost' | 'on-dark';
+  source?: string;
+  full?: boolean;
+  external?: boolean;
+  class?: string;
+}
+const { href, variant = 'primary', source, full = false, external = false, class: cls = '' } = Astro.props;
+const isWa = href.includes('wa.me');
+const isTel = href.startsWith('tel:');
+const styles: Record<string, string> = {
+  primary: 'bg-cta text-ink hover:bg-cta-hover hover:shadow-1',
+  whatsapp: 'bg-wa text-ink hover:bg-wa-hover',
+  secondary: 'bg-paper text-brand border-[1.5px] border-brand hover:bg-mint',
+  ghost: 'text-brand underline underline-offset-[3px] hover:text-brand-deep px-0',
+  'on-dark': 'bg-transparent text-white border-[1.5px] border-white hover:bg-white/10',
+};
+---
+<a
+  href={href}
+  data-source={source}
+  target={external || isWa ? '_blank' : undefined}
+  rel={external || isWa ? 'noopener' : undefined}
+  class:list={[
+    'inline-flex min-h-12 items-center justify-center gap-2 rounded-md px-6 text-base font-semibold no-underline transition-colors duration-[120ms] active:translate-y-px',
+    full ? 'w-full md:w-auto' : '',
+    styles[variant],
+    cls,
+  ]}
+>
+  {isWa ? <BrandIcon name="whatsapp" size={20} /> : null}
+  {isTel ? <Icon name="phone" size={20} /> : null}
+  <slot />
+</a>

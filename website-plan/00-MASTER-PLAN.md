@@ -146,24 +146,26 @@ multi-city stage (they then link down to each city version).
 
 ## 6 · Build waves & progress tracker
 
-> Tick `[x]` + date when done. A page is "done" only when it passes the
+> Tick `[x]` + date when done. `[~]` = built, not yet audited. A page is "done" only when it passes the
 > `02-SEO-PARAMETERS.md` audit at **all Launch-blocker items** and its blueprint is fully implemented.
 
-> **Planning status (2026-10-02):** every page in `01-SITEMAP.md` is `blueprinted`. Next session starts Wave 0.
+> **Status (2026-10-02):** Wave 0 code done — `website/` scaffold, design system, layout chrome, booking widget,
+> `/book/`, `/thank-you/`, 404 (built, audit pending). Wave 0 owner tasks (domain, WhatsApp, GA4/GSC, GBP) are Sunny's.
+> Next: Wave 1 content pages.
 
 ### Wave 0 — Foundations (before any page)
 - [ ] Buy domain (petdoorstep.in; also .com if free) → update `[FILL:DOMAIN]` everywhere
 - [ ] WhatsApp Business account on `[FILL:WHATSAPP_NUMBER]` (catalogue + quick replies)
-- [ ] Scaffold Astro project in `website/` per `04-TECHNICAL-SEO.md` + `08-DESIGN-SYSTEM.md`
+- [x] Scaffold Astro project in `website/` per `04-TECHNICAL-SEO.md` + `08-DESIGN-SYSTEM.md` — 2026-10-02
 - [ ] GA4 property + Google Search Console + events per `09-ANALYTICS-TRACKING.md`
 - [ ] Google Business Profile (SAB) per `05-LOCAL-SEO.md`
-- [ ] Booking widget built per `07-BOOKING-SPEC.md` (works standalone before pages)
+- [x] Booking widget built per `07-BOOKING-SPEC.md` (works standalone before pages) — 2026-10-02 (55/55 browser checks pass; storage + WhatsApp go live once the `[FILL]` values arrive)
 
 ### Wave 1 — Launch set (site goes live when ALL ticked)
 - [ ] `/` home · [ ] `/ludhiana/dog-grooming/` · [ ] `/ludhiana/cat-grooming/`
 - [ ] `/ludhiana/dog-walking/` · [ ] `/ludhiana/vet-at-home/`
-- [ ] `/pricing/` · [ ] `/book/` · [ ] `/about/` · [ ] `/contact/`
-- [ ] `/how-it-works/` · [ ] `/faq/` · [ ] `/thank-you/`
+- [ ] `/pricing/` · [~] `/book/` (built, audit pending) · [ ] `/about/` · [ ] `/contact/`
+- [ ] `/how-it-works/` · [ ] `/faq/` · [~] `/thank-you/` (built, audit pending)
 - [ ] `/privacy-policy/` · [ ] `/terms/`
 
 ### Wave 2 — Depth (weeks 2–6 after launch)
@@ -237,4 +239,5 @@ templated-text-only city pages (doorway risk) — file 11 defines the minimum un
 | 2026-10-02 | Page-specific sections (breed tables, season tables, schedules) live as H3 sub-sections inside the nearest template block — never as new blocks | Session |
 | 2026-10-02 | Area titles now include "Ludhiana" (`02` P013 launch-blocker); `02` P016 updated to allow the planned `{keyword} – {hook} \| PetDoorStep` pattern | Session |
 | 2026-10-02 | One FAQ source (`src/data/faq.json`) renders every page's FAQs and FAQPage markup | Session |
+| 2026-10-02 | Wave 0 build: spec conflicts resolved — sticky bar <768px, order Call · WhatsApp · Book Now (`06`/`08` win over `07`); `09` event names win over `08` `cta_*`; nav items render only when live (Reviews hidden until `/reviews/`); area breadcrumb has no "Areas" level; walks get their own time windows and start tomorrow; FIRSTGROOM line added to the WhatsApp message; phone cap 14→16 chars | Session |
 | 2026-10-02 | DRAFT facts added to §3 for Sunny to confirm: walk duration/hours + heat rule, trial-week definition, cat package inclusions, no travel charge in Ludhiana, reschedule/cancel rule, "not offered in Phase 1" list | Session |

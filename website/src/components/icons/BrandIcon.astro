@@ -1,0 +1,15 @@
+---
+// Filled brand glyphs from simple-icons (CC0) — the 08 §6.2 exception: WhatsApp (+ Instagram, which Lucide dropped).
+import { siInstagram, siWhatsapp } from 'simple-icons';
+
+interface Props {
+  name: 'whatsapp' | 'instagram';
+  size?: number;
+  class?: string;
+}
+const { name, size = 20, class: cls = '' } = Astro.props;
+const path = name === 'whatsapp' ? siWhatsapp.path : siInstagram.path;
+---
+<svg viewBox="0 0 24 24" width={size} height={size} fill="currentColor" aria-hidden="true" focusable="false" class={cls}>
+  <path d={path} />
+</svg>

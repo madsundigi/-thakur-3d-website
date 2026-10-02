@@ -1,0 +1,30 @@
+[
+  {
+    "id": "book-1",
+    "category": "booking",
+    "q": "Can I get a slot today?",
+    "a": "Often, yes. Booking before 15:00 lets you pick today; we then confirm the earliest free slot on WhatsApp within 10 minutes. Grooming and vet visits run 9:00–19:00 (last booking 17:30); dog walks start from 6:00.",
+    "pages": ["/book/", "/faq/"]
+  },
+  {
+    "id": "book-2",
+    "category": "booking",
+    "q": "How fast do you confirm my booking?",
+    "a": "Within 10 minutes between 9:00 and 19:00 — a real person replies on WhatsApp with your exact slot and your groomer's name and photo. Bookings sent after 19:00 are confirmed first thing from 9:00.",
+    "pages": ["/book/"]
+  },
+  {
+    "id": "book-3",
+    "category": "booking",
+    "q": "Can I reschedule or cancel?",
+    "a": "Yes, free until 2 hours before your confirmed slot — just reply on WhatsApp. Since we never take advance payment, there's nothing to refund. Full terms are on our refund & cancellation policy page.",
+    "pages": ["/book/", "/faq/"]
+  },
+  {
+    "id": "book-4",
+    "category": "booking",
+    "q": "Do I need to pay anything now?",
+    "a": "No. Booking is free and no payment is taken online. You pay by UPI or cash after the service, at exactly the price confirmed on WhatsApp.",
+    "pages": ["/book/"]
+  }
+]

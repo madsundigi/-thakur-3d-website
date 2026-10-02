@@ -51,10 +51,10 @@ variant) + BreadcrumbList** (`04-TECHNICAL-SEO.md` §2.9).
 ## 2 · The blocks
 
 ### AP-0 · Breadcrumb
-- Visible: `Home › Ludhiana › Areas › {Area}`. "Ludhiana" links `/ludhiana/` once the hub is live (plain text before);
-  "Areas" links `/ludhiana/#areas` (the hub's area grid) once live, plain text before.
-- Schema: BreadcrumbList with **3 items** — Home (`/`), Ludhiana (`/ludhiana/`), {Area} (this URL). "Areas" has no
-  standalone URL, so it is visible-only.
+- Visible: `Home › Ludhiana › {Area}` (no "Areas" level — `08` §4.18). "Ludhiana" links `/ludhiana/` once the hub is
+  live (plain text before).
+- Schema: BreadcrumbList with **3 items** — Home (`/`), Ludhiana (`/ludhiana/`), {Area} (this URL) — matching the
+  visible trail exactly.
 
 ### AP-1 · Hero
 - **Eyebrow:** the area's value proposition from the §4 data table (e.g. *Our most-booked area*), ≤ 30 chars.

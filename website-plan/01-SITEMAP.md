@@ -10,9 +10,9 @@
 | URL | Page | Wave | Primary keyword target | Blueprint | Schema | Status |
 |---|---|---|---|---|---|---|
 | `/` | Home | 1 | pet grooming at home ludhiana · pet care services ludhiana | `blueprints/home.md` | LocalBusiness + WebSite + FAQPage | blueprinted |
-| `/book/` | Book a service (widget host) | 1 | book dog grooming at home ludhiana | `blueprints/book.md` | BreadcrumbList (indexable; thin-safe content per blueprint) | blueprinted |
+| `/book/` | Book a service (widget host) | 1 | book dog grooming at home ludhiana | `blueprints/book.md` | BreadcrumbList (indexable; thin-safe content per blueprint) | built (Wave 0; audit pending) |
 | `/pricing/` | Price list | 1 | dog grooming price ludhiana · pet grooming charges | `blueprints/pricing.md` | OfferCatalog + FAQPage + BreadcrumbList | blueprinted |
-| `/thank-you/` | Booking confirmation | 1 | — (**noindex**) | in `book.md` | — | blueprinted |
+| `/thank-you/` | Booking confirmation | 1 | — (**noindex**) | in `book.md` | — | built (Wave 0; audit pending) |
 
 ### Money pages — city-service silo
 | URL | Page | Wave | Primary keyword target | Blueprint | Schema | Status |
@@ -73,12 +73,12 @@ All Wave 2 · all from `blueprints/_TEMPLATE-area-page.md` · Schema: Service + 
 
 ## 2 · Internal-linking rules (the silo glue)
 
-1. **Header nav:** Home · Services (dropdown: all live money pages) · Pricing · How it works · Reviews · Book Now (button). Until `/reviews/` is live, "Reviews" links to `[FILL:GBP_LINK]` in a new tab (`blueprints/reviews.md`).
+1. **Header nav:** Home · Services (dropdown: all live money pages) · Pricing · How it works · Reviews · Book Now (button). Every nav item renders only once its page is live (`08` §4.3) — so "Reviews" is hidden until `/reviews/` ships; the footer ★ line links `[FILL:GBP_LINK]` meanwhile.
 2. **Every money page links to:** `/pricing/` + `/book/` + 2–3 sibling services + 3 nearest area pages + 1–2 supporting blog posts.
 3. **Every area page links to:** all 4+ core money pages (with area-contextual anchor text) + `/book/`.
 4. **Every blog post links to:** exactly the money page(s) named in `10-CONTENT-CALENDAR.md` (BOFU anchor in first half of post) + 2 related posts.
 5. **Footer (site-wide):** all services, top 5 areas, trust pages, legal, NAP block (per `05-LOCAL-SEO.md`).
-6. **Breadcrumbs** on every page below home: `Home › Ludhiana › {Service}` / `Home › Ludhiana › Areas › {Area}` — with BreadcrumbList schema.
+6. **Breadcrumbs** on every page below home: `Home › Ludhiana › {Service}` / `Home › Ludhiana › {Area}` (no "Areas" level, per `08` §4.18) — with BreadcrumbList schema.
 7. Anchor text: descriptive + varied ("dog grooming at home in Sarabha Nagar"), never bare "click here".
 
 ## 3 · Future (expansion preview — do NOT build yet; triggers in `11-EXPANSION-PLAYBOOK.md`)

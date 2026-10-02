@@ -1,0 +1,90 @@
+---
+// /book/ — blueprint: website-plan/blueprints/book.md §A. Widget spec: 07-BOOKING-SPEC.md.
+import { siWhatsapp } from 'simple-icons';
+import Base from '../layouts/Base.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import Button from '../components/Button.astro';
+import Faq from '../components/Faq.astro';
+import PromiseBand from '../components/PromiseBand.astro';
+import Icon from '../components/icons/Icon.astro';
+import BookingWidget from '../components/booking/BookingWidget.tsx';
+import { R1, R2, R3, R5, R7 } from '../data/content';
+import { isLive } from '../data/routes';
+import { site, telHref, waHref, WA_DEFAULT_TEXT } from '../data/site';
+import { breadcrumbLd } from '../lib/schema';
+
+const crumbs = [{ label: 'Home', path: '/' }, { label: 'Book', path: '/book/' }];
+const next = [
+  'WhatsApp opens with your booking pre-filled — just press send.',
+  "We confirm your exact slot within 10 minutes (9:00–19:00), with your groomer's name and photo.",
+  'Your background-verified groomer arrives with a sealed, sanitised kit.',
+  'Pay by UPI or cash after the service — and get a photo update.',
+];
+---
+<Base
+  title="Book Dog Grooming at Home in Ludhiana | PetDoorStep"
+  description="Book dog grooming at home in Ludhiana, plus cat grooming, walking or a vet visit. Fixed prices, no advance payment — confirm on WhatsApp in 2 minutes."
+  path="/book/"
+  hideStickyBar
+  hideWaFloat
+  jsonLd={[breadcrumbLd(crumbs, Astro.site)]}
+>
+  <Breadcrumb items={crumbs} />
+
+  <div class="mx-auto max-w-[760px] px-4 pb-16 lg:px-6">
+    <header class="mb-4">
+      <h1 class="t-h1">Book Dog Grooming &amp; Pet Care at Home in Ludhiana</h1>
+      <p class="m-0 mt-2 text-slate">{R5}</p>
+      <p class="m-0 mt-1 text-sm text-slate">Grooming karwani hai? 2 minute mein book karo.</p>
+    </header>
+
+    <BookingWidget client:visible waPath={siWhatsapp.path} />
+
+    <p class="mt-4 text-sm text-slate" data-testid="fallback-links">
+      Prefer to message directly?{' '}
+      <a href={waHref(WA_DEFAULT_TEXT)} data-source="noscript_block" target="_blank" rel="noopener" class="prose-link">Book directly on WhatsApp</a>{' '}
+      or call <a href={telHref()} data-source="noscript_block" class="prose-link">{site.phone}</a>.
+      {isLive('/pricing/') ? <>See every price on the <a href="/pricing/" class="prose-link">price list</a>.</> : null}
+    </p>
+    <noscript>
+      <p class="mt-2 rounded-md bg-sand p-3">
+        Book directly on WhatsApp:{' '}
+        <a href={waHref(WA_DEFAULT_TEXT)} data-source="noscript_block" class="prose-link">open WhatsApp</a> ·{' '}
+        <a href={telHref()} data-source="noscript_block" class="prose-link">call {site.phone}</a>
+      </p>
+    </noscript>
+
+    <ul class="mt-8 grid list-none gap-3 p-0 md:grid-cols-2" aria-label="Booking reassurance">
+      {[R1, R2, R3, R7].map((line) => (
+        <li class="flex items-start gap-2 text-sm text-ink">
+          <span class="mt-0.5 flex-none text-brand"><Icon name="check-circle-2" size={20} /></span>{line}
+        </li>
+      ))}
+    </ul>
+
+    <section aria-labelledby="next-heading" class="mt-12">
+      <h2 id="next-heading" class="t-h2">Confirm on WhatsApp — here's what happens next</h2>
+      <ol class="mt-4 grid list-none gap-4 p-0">
+        {next.map((line, i) => (
+          <li class="flex gap-3">
+            <span class="flex h-10 w-10 flex-none items-center justify-center rounded-pill bg-brand font-bold text-white">{i + 1}</span>
+            <p class="m-0 pt-2">{line}</p>
+          </li>
+        ))}
+      </ol>
+      <p class="mt-4 text-slate">
+        Prefer to book pet grooming online without WhatsApp? Call <a href={telHref()} data-source="book_page" class="prose-link">{site.phone}</a>{' '}
+        and we'll set up your dog grooming appointment on the phone.
+      </p>
+    </section>
+
+    <div class="mt-12"><PromiseBand /></div>
+
+    <div class="mt-12"><Faq page="/book/" heading="Booking questions" /></div>
+
+    <div class="mt-10 flex flex-wrap gap-3">
+      <Button href={waHref(WA_DEFAULT_TEXT)} variant="whatsapp" source="book_page">WhatsApp us</Button>
+      <Button href={telHref()} variant="secondary" source="book_page">Call {site.phone}</Button>
+    </div>
+  </div>
+</Base>

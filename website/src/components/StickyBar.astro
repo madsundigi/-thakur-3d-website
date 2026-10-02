@@ -1,0 +1,23 @@
+---
+// Sticky mobile action bar (06-CONVERSION-PLAYBOOK §3.3 behaviour/labels; 08-DESIGN-SYSTEM §4.5 skin).
+// < 768px only. Order: Call | WhatsApp | Book Now (1fr 1fr 1.4fr). Events via the delegated listener (09 §3.1).
+import Icon from './icons/Icon.astro';
+import BrandIcon from './icons/BrandIcon.astro';
+import { telHref, waHref } from '../data/site';
+
+interface Props { waText: string; bookHref?: string; bookLabel?: string }
+const { waText, bookHref = '/book/?src=sticky_bar', bookLabel = 'Book Now' } = Astro.props;
+---
+<nav aria-label="Quick actions" class="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-paper pb-[env(safe-area-inset-bottom)] shadow-2 md:hidden">
+  <div class="grid h-[var(--bar-h)] grid-cols-[1fr_1fr_1.4fr] gap-2 px-2 py-1">
+    <a href={telHref()} data-source="sticky_bar" class="flex min-h-12 flex-col items-center justify-center gap-0.5 rounded-md text-brand no-underline">
+      <Icon name="phone" size={20} /><span class="text-[0.8125rem] font-semibold">Call</span>
+    </a>
+    <a href={waHref(waText)} data-source="sticky_bar" target="_blank" rel="noopener" class="flex min-h-12 flex-col items-center justify-center gap-0.5 rounded-md bg-wa text-ink no-underline">
+      <BrandIcon name="whatsapp" size={20} /><span class="text-[0.8125rem] font-semibold">WhatsApp</span>
+    </a>
+    <a href={bookHref} class="flex min-h-12 items-center justify-center rounded-md bg-cta px-2 text-center text-sm font-bold tabular-nums text-ink no-underline">
+      {bookLabel}
+    </a>
+  </div>
+</nav>

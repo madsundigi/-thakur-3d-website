@@ -1,0 +1,26 @@
+---
+// 404 — copy final per website-plan/04-TECHNICAL-SEO.md §1.6. Lists only pages that are live (P074).
+import Base from '../layouts/Base.astro';
+import Button from '../components/Button.astro';
+import { isLive } from '../data/routes';
+import { waHref, WA_DEFAULT_TEXT } from '../data/site';
+
+const links = [
+  { label: 'Dog Grooming at Home', path: '/ludhiana/dog-grooming/' },
+  { label: 'Cat Grooming at Home', path: '/ludhiana/cat-grooming/' },
+  { label: 'Dog Walking', path: '/ludhiana/dog-walking/' },
+  { label: 'Vet at Home', path: '/ludhiana/vet-at-home/' },
+  { label: 'Price List', path: '/pricing/' },
+  { label: 'Book a Service', path: '/book/' },
+].filter((l) => isLive(l.path));
+---
+<Base title="Page not found | PetDoorStep" description="This page doesn't exist or has moved." path="/404/" noindex>
+  <div class="mx-auto max-w-[640px] px-4 py-16 lg:px-6">
+    <h1 class="t-h1">This page wandered off the leash</h1>
+    <p class="mt-4">The page you're looking for doesn't exist or has moved. No worries — everything PetDoorStep does in Ludhiana is one tap away:</p>
+    <ul class="mt-4 list-disc space-y-1 pl-6">
+      {links.map((l) => <li><a href={l.path} class="prose-link">{l.label}</a></li>)}
+    </ul>
+    <div class="mt-8"><Button href={waHref(WA_DEFAULT_TEXT)} variant="whatsapp" source="not_found">Book on WhatsApp</Button></div>
+  </div>
+</Base>

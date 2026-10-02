@@ -1,0 +1,23 @@
+---
+// The PetDoorStep Promise strip (06-CONVERSION-PLAYBOOK §4.1; template SP-8). Gated points render only when confirmed.
+import Icon from './icons/Icon.astro';
+import { MEDICAL_LINE, policy, promisePoints } from '../data/content';
+import { isLive } from '../data/routes';
+
+interface Props { medical?: boolean }
+const { medical = false } = Astro.props;
+const points = promisePoints.filter((p) => !p.gated || policy[p.gated]);
+---
+<section aria-labelledby="promise-heading" class="rounded-lg bg-mint p-4 md:p-6">
+  <h2 id="promise-heading" class="t-h2">The PetDoorStep Promise</h2>
+  <ul class="mt-4 grid list-none grid-cols-2 gap-3 p-0 lg:grid-cols-5">
+    {points.map((p) => (
+      <li class="flex items-start gap-2 text-brand-deep">
+        <span class="mt-0.5 flex-none"><Icon name={p.icon} size={20} /></span>
+        <span class="text-sm font-semibold text-ink">{p.label}</span>
+      </li>
+    ))}
+  </ul>
+  {medical ? <p class="mt-3 text-sm font-semibold text-brand-deep">{MEDICAL_LINE}</p> : null}
+  {isLive('/safety-hygiene/') ? <p class="mt-3 text-sm"><a href="/safety-hygiene/" class="prose-link">Read the full Promise</a></p> : null}
+</section>

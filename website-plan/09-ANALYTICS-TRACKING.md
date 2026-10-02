@@ -75,7 +75,7 @@ Admin → Custom definitions → Create custom dimension, all **Event** scope, d
 
 (9 of the 50 allowed. `page_path` is **not** registered — GA4's built-in `page_location` covers it. `percent_scrolled` is built-in.)
 
-**Canonical `source` values** — the only values that may appear in a `source` param: the `src` entry-point values from `07-BOOKING-SPEC.md` §2 (`sticky_bar`, `header`, `hero_<page-slug>`, `service_<id>`, `pricing_row`, `book_page`, `exit_nudge`) plus these anchor locations defined here: `confirm_button` (widget confirm, per 07) · `review_screen` (tel link on review, per 07) · `footer` · `contact_page` · `noscript_block` · `about_page` · `reviews_page`. Anything else = a bug; the §3 snippet stamps `unlabelled` so misses are findable in GA4.
+**Canonical `source` values** — the only values that may appear in a `source` param: the `src` entry-point values from `07-BOOKING-SPEC.md` §2 (`sticky_bar`, `header`, `hero_<page-slug>`, `service_<id>`, `pricing_row`, `book_page`, `exit_nudge`, `float_desktop`) plus these anchor locations defined here: `confirm_button` (widget confirm, per 07) · `review_screen` (tel link on review, per 07) · `footer` · `contact_page` · `noscript_block` · `about_page` · `reviews_page` · `not_found` (404 page CTAs). Anything else = a bug; the §3 snippet stamps `unlabelled` so misses are findable in GA4.
 
 **Funnel report (build once, Explore → Funnel exploration, name `Booking funnel`):** steps = ① `booking_started` ② `booking_step_completed` where `step=1` ③ `step=2` ④ `step=3` ⑤ `step=4` ⑥ `step=5` ⑦ `step=6` ⑧ `booking_submitted`; breakdown dimension `source`. This is where the §8 funnel % is read.
 

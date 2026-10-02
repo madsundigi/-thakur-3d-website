@@ -8,8 +8,8 @@
 |---|---|---|---|
 | `/reviews/` | 2 — publish only once ≥ 10 real Google reviews exist | BreadcrumbList only | blueprinted |
 
-**Until this page is live,** the header-nav "Reviews" item (`01-SITEMAP.md` §2.1) links to `[FILL:GBP_LINK]` in a new
-tab, so the nav never points at a missing page.
+**Until this page is live,** the header-nav "Reviews" item is not rendered at all (`08` §4.3 live-only nav), so the nav
+never points at a missing page; the footer ★ line links `[FILL:GBP_LINK]` meanwhile.
 
 ## 1 · Head
 
@@ -42,4 +42,4 @@ tab, so the nav never points at a missing page.
 
 - [ ] ≥ 10 real Google reviews exist; every card quoted verbatim with a matching Google review
 - [ ] Zero Review/AggregateRating markup (validate with the Rich Results Test — expect none)
-- [ ] Nav "Reviews" switched from `[FILL:GBP_LINK]` to `/reviews/` on publish day
+- [ ] `/reviews/` set to `live` in `website/src/data/routes.ts` on publish day (this makes the nav + footer links appear)
