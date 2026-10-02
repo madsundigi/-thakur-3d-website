@@ -21,7 +21,7 @@
 ## 1 · Head
 
 - **Title** (50): `Vet at Home in Ludhiana – ₹699 Visit | PetDoorStep`
-- **Meta** (143): `Vet at home in Ludhiana: a registered vet examines your pet at your door. Consult ₹699, medicines at MRP. Slots 9am–7pm daily. Book on WhatsApp.`
+- **Meta** (144): `Vet at home in Ludhiana: a registered vet examines your pet at your door. Consult ₹699, medicines at MRP. Slots 9am–7pm daily. Book on WhatsApp.`
 - **H1:** `Vet at Home in Ludhiana`
 
 ## 2 · Keyword → block assignment

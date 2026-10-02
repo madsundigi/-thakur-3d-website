@@ -149,6 +149,8 @@ multi-city stage (they then link down to each city version).
 > Tick `[x]` + date when done. A page is "done" only when it passes the
 > `02-SEO-PARAMETERS.md` audit at **all Launch-blocker items** and its blueprint is fully implemented.
 
+> **Planning status (2026-10-02):** every page in `01-SITEMAP.md` is `blueprinted`. Next session starts Wave 0.
+
 ### Wave 0 — Foundations (before any page)
 - [ ] Buy domain (petdoorstep.in; also .com if free) → update `[FILL:DOMAIN]` everywhere
 - [ ] WhatsApp Business account on `[FILL:WHATSAPP_NUMBER]` (catalogue + quick replies)
@@ -188,8 +190,18 @@ Pets are "family members", never "animals" in customer-facing copy.
 ## 8 · Placeholder policy
 
 Unknown real-world values use bracketed tokens — grep-able, impossible to ship accidentally:
-`[FILL:DOMAIN]` `[FILL:WHATSAPP_NUMBER]` `[FILL:PHONE]` `[FILL:EMAIL]` `[FILL:INSTAGRAM]`
-`[FILL:GBP_LINK]` `[FILL:FOUNDER_PHOTO]` `[FILL:VET_PARTNER_NAME]` `[FILL:REVIEW_*]`
+| Group | Tokens (owner fills) |
+|---|---|
+| Identity & contact | `DOMAIN` `WHATSAPP_NUMBER` `PHONE` `EMAIL` `INSTAGRAM` `BASE_ADDRESS` (registration only — never displayed) |
+| Google & tracking | `GBP_LINK` `GBP_REVIEW_LINK` `GOOGLE_RATING` `REVIEW_COUNT` `OPENING_DATE` `GA4_ID` `SHEETS_WEBHOOK` `WEB3FORMS_KEY` |
+| People | `FOUNDER_PHOTO` `FOUNDER_STORY_DETAILS` `AUTHOR_NAME` `GROOMER_n_NAME` `WALKER_n_NAME` `VET_PARTNER_NAME` `VET_REG_NO` `VET_PARTNER_TERMS` `PAY_RANGES` |
+| Trust & safety ops | `DISINFECTANT_PRODUCT` `POLICE_VERIFICATION_STATUS` `INSURANCE_STATUS` `EMERGENCY_VET_LIST` (verify by phone) |
+| Local proof | `REVIEW_n` `REVIEW_{SLUG}_n` `LANDMARKS_{SLUG}` `PINCODES_{SLUG}` |
+| Offers | `SEASONAL_OFFER` (only while a real dated offer is live) |
+| Examples inside `02` | `REVIEW_5` `CASE_NOTE_1` `VISIT_COUNT` — illustrative, never built |
+| Expansion only (`11`) | `OPS_LEAD_NAME` + `*_JAL` tokens — not part of the Ludhiana build |
+
+All tokens are written `[FILL:NAME]`.
 **Launch gate:** `grep -r "FILL:" website/` must return zero results before go-live.
 No other vagueness is allowed in these files — every spec must be concrete enough to build from.
 
@@ -220,3 +232,9 @@ templated-text-only city pages (doorway risk) — file 11 defines the minimum un
 | 2026-09-30 | Strategy report approved: web-first launch, Ludhiana | Sunny |
 | 2026-10-02 | D1–D8 locked (Astro, WhatsApp booking, EN+Hinglish, brand **PetDoorStep**) | Sunny |
 | 2026-10-02 | Planning system (this folder) created | Session |
+| 2026-10-02 | All 18 page blueprints + 3 templates complete; consistency pass run (see below) | Session |
+| 2026-10-02 | **H1 rule:** a page's H1 must contain its primary keyword verbatim; where `03` §3 and `06` §2.3 disagreed, the passing variant was chosen and both files aligned to the page blueprint (blueprint wins on conflict) | Session |
+| 2026-10-02 | Page-specific sections (breed tables, season tables, schedules) live as H3 sub-sections inside the nearest template block — never as new blocks | Session |
+| 2026-10-02 | Area titles now include "Ludhiana" (`02` P013 launch-blocker); `02` P016 updated to allow the planned `{keyword} – {hook} \| PetDoorStep` pattern | Session |
+| 2026-10-02 | One FAQ source (`src/data/faq.json`) renders every page's FAQs and FAQPage markup | Session |
+| 2026-10-02 | DRAFT facts added to §3 for Sunny to confirm: walk duration/hours + heat rule, trial-week definition, cat package inclusions, no travel charge in Ludhiana, reschedule/cancel rule, "not offered in Phase 1" list | Session |

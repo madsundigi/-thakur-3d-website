@@ -42,7 +42,7 @@
 | P013 | Geo term in every local title | "Ludhiana" (or the area name + Ludhiana) appears in the title of every service/area/hub page. Area example (52 chars): `Dog Groomer in Sarabha Nagar, Ludhiana \| PetDoorStep`. | [Launch-blocker] |
 | P014 | Brand suffix pattern | `\| PetDoorStep` is the final segment on every page except home; home may lead with brand: `PetDoorStep — Pet Grooming & Care at Home in Ludhiana` (53 chars). | [Important] |
 | P015 | Title–H1 intent match | Title and H1 target the same query (same primary keyword, wording may differ); divergent intent = fail (it triggers Google rewrites). | [Important] |
-| P016 | No stuffing, caps, emoji | Max 2 segments, exactly one separator type (`\|` or `–`); no comma-separated keyword lists, no ALL-CAPS words, no emoji/★/✓. | [Launch-blocker] |
+| P016 | No stuffing, caps, emoji | At most 3 segments in the fixed pattern `{keyword phrase} – {one hook} \| PetDoorStep` (one en dash, one pipe; home is brand-led: `PetDoorStep — {keyword phrase}`); no comma-separated keyword lists, no ALL-CAPS words, no emoji/★/✓. | [Launch-blocker] |
 | P017 | One concrete click-trigger | Title contains exactly one truthful differentiator where it fits in budget: a §3.2 from-price (`From ₹599`), "at Home", or "Verified Groomers". Never two. | [Important] |
 
 ### C · Meta description (P018–P024)

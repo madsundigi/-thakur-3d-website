@@ -70,7 +70,7 @@ variant) + BreadcrumbList** (`04-TECHNICAL-SEO.md` §2.9).
 ### AP-2 · Local intro — H2 "Doorstep pet care in {Area}"
 Write ≥ 150 words that could only be about this locality. Required ingredients (all true, all specific):
 1. Housing mix and what it means for a visit (kothis with verandahs vs apartment societies with lifts and gate passes).
-2. The 2–3 landmarks our team uses for directions — from the §4 data table + `[FILL:LANDMARKS_{slug}]` (Sunny fills
+2. The 2–3 landmarks our team uses for directions — from the §4 data table + `[FILL:LANDMARKS_{SLUG}]` (Sunny fills
    from local knowledge; never guess a landmark).
 3. Breeds our team actually sees here (from the lead sheet, `07-BOOKING-SPEC.md` §5 — filter by area).
 4. Where walkers walk (real parks/lanes) — only on pages where walking is booked in that area.
@@ -145,7 +145,7 @@ in {Area}." + [Book on WhatsApp] + [Call [FILL:PHONE]].
 
 | Slot | Rule |
 |---|---|
-| Title | `03-KEYWORD-MAP.md` §3 area formula: `Pet Grooming & Vet at Home in {Area} \| PetDoorStep` — counts in §4 (all ≤ 60) |
+| Title | `Pet Grooming & Vet in {Area}, Ludhiana \| PetDoorStep` ("on" for road names) — carries "Ludhiana" per `02-SEO-PARAMETERS.md` P013; counts in §4 (all 50–60) |
 | Meta (≤ 155) | `PetDoorStep brings grooming, walking and vet visits to homes in {Area} — {local line}. From ₹599, fixed prices. Book on WhatsApp.` — local line per §4 |
 | H1 | `Pet Grooming at Home in {Area}, Ludhiana` |
 | Primary keyword | `pet grooming {area} ludhiana` — Title (contained), H1, AP-2 first sentence |
@@ -161,18 +161,18 @@ Title counts include ` | PetDoorStep`. Hooks come from `03-KEYWORD-MAP.md` §4 S
 
 | Area (slug) | Title (chars) | Eyebrow / value proposition | Meta local line | Known anchors (verified in research) | Adjacent (AP-9) | Also serving |
 |---|---|---|---|---|---|---|
-| Sarabha Nagar (`sarabha-nagar`) | Pet Grooming & Vet at Home in Sarabha Nagar \| PetDoorStep (57) | Our most-booked area | B-Block market to Kipps side | B-Block market, Kipps market side; highest pet-spend locality (Zigly flagship here) | BRS Nagar · Kitchlu Nagar · Pakhowal Road | — |
-| BRS Nagar (`brs-nagar`) | Pet Grooming & Vet at Home in BRS Nagar \| PetDoorStep (53) | Every block, every week | kothis and societies across all blocks | Contested area (thePetNest lists it) — go deepest on proof | Sarabha Nagar · Ferozepur Road · South City | — |
-| Model Town (`model-town`) | Pet Grooming & Vet at Home in Model Town \| PetDoorStep (54) | Ludhiana's pet-parent hub | home grooming without the salon queue | Densest pet-business cluster in the city | Civil Lines · Dugri · Kitchlu Nagar | — |
-| Civil Lines (`civil-lines`) | Pet Grooming & Vet at Home in Civil Lines \| PetDoorStep (55) | Calm visits for busy homes | professional households, flexible slots | Adjacent Tagore Nagar | Model Town · Kitchlu Nagar · Haibowal Kalan | Shastri Nagar · Moti Nagar · Tagore Nagar |
-| Dugri (`dugri`) | Pet Grooming & Vet at Home in Dugri \| PetDoorStep (49) | Phase 1 to Phase 3, covered | all three phases | Large residential catchment, Phases 1–3 | Model Town · South City · Pakhowal Road | Urban Estate Phase 2 |
-| Pakhowal Road (`pakhowal-road`) | Pet Grooming & Vet on Pakhowal Road \| PetDoorStep (51) | First doorstep groomers here | along the whole Pakhowal Road corridor | Affluent corridor; no dedicated local pet business found | Sarabha Nagar · South City · Dugri | — |
-| South City (`south-city`) | Pet Grooming & Vet at Home in South City \| PetDoorStep (54) | Society-friendly visits | gated societies, gate-pass ready | Gated-society catchment beside Pakhowal Road | Dugri · Pakhowal Road · BRS Nagar | Basant Avenue |
-| Ferozepur Road (`ferozepur-road`) | Pet Grooming & Vet on Ferozepur Road \| PetDoorStep (52) | Condos to kothis, covered | condos and homes along Ferozepur Road | Arterial corridor; Gurdev Nagar adjoining | BRS Nagar · Sarabha Nagar · South City | Gurdev Nagar |
-| Haibowal Kalan (`haibowal-kalan`) | Pet Grooming & Vet at Home in Haibowal Kalan \| PetDoorStep (57) | Bath & Brush from ₹599 | Jassian Road side and beyond | Jassian Road | Civil Lines · Kitchlu Nagar · Ferozepur Road | Salem Tabri |
-| Kitchlu Nagar (`kitchlu-nagar`) | Pet Grooming & Vet at Home in Kitchlu Nagar \| PetDoorStep (56) | Next door to PAU | homes near PAU Gate | Near PAU Gate; PAU-campus households | Sarabha Nagar · Civil Lines · Model Town | — |
+| Sarabha Nagar (`sarabha-nagar`) | Pet Grooming & Vet in Sarabha Nagar, Ludhiana \| PetDoorStep (59) | Our most-booked area | B-Block market to Kipps side | B-Block market, Kipps market side; highest pet-spend locality (Zigly flagship here) | BRS Nagar · Kitchlu Nagar · Pakhowal Road | — |
+| BRS Nagar (`brs-nagar`) | Pet Grooming & Vet in BRS Nagar, Ludhiana \| PetDoorStep (55) | Every block, every week | kothis and societies across all blocks | Contested area (thePetNest lists it) — go deepest on proof | Sarabha Nagar · Ferozepur Road · South City | — |
+| Model Town (`model-town`) | Pet Grooming & Vet in Model Town, Ludhiana \| PetDoorStep (56) | Ludhiana's pet-parent hub | home grooming without the salon queue | Densest pet-business cluster in the city | Civil Lines · Dugri · Kitchlu Nagar | — |
+| Civil Lines (`civil-lines`) | Pet Grooming & Vet in Civil Lines, Ludhiana \| PetDoorStep (57) | Calm visits for busy homes | professional households, flexible slots | Adjacent Tagore Nagar | Model Town · Kitchlu Nagar · Haibowal Kalan | Shastri Nagar · Moti Nagar · Tagore Nagar |
+| Dugri (`dugri`) | Pet Grooming & Vet in Dugri, Ludhiana \| PetDoorStep (51) | Phase 1 to Phase 3, covered | all three phases | Large residential catchment, Phases 1–3 | Model Town · South City · Pakhowal Road | Urban Estate Phase 2 |
+| Pakhowal Road (`pakhowal-road`) | Pet Grooming & Vet on Pakhowal Road, Ludhiana \| PetDoorStep (59) | First doorstep groomers here | along the whole Pakhowal Road corridor | Affluent corridor; no dedicated local pet business found | Sarabha Nagar · South City · Dugri | — |
+| South City (`south-city`) | Pet Grooming & Vet in South City, Ludhiana \| PetDoorStep (56) | Society-friendly visits | gated societies, gate-pass ready | Gated-society catchment beside Pakhowal Road | Dugri · Pakhowal Road · BRS Nagar | Basant Avenue |
+| Ferozepur Road (`ferozepur-road`) | Pet Grooming & Vet on Ferozepur Road, Ludhiana \| PetDoorStep (60) | Condos to kothis, covered | condos and homes along Ferozepur Road | Arterial corridor; Gurdev Nagar adjoining | BRS Nagar · Sarabha Nagar · South City | Gurdev Nagar |
+| Haibowal Kalan (`haibowal-kalan`) | Pet Grooming & Vet in Haibowal Kalan, Ludhiana \| PetDoorStep (60) | Bath & Brush from ₹599 | Jassian Road side and beyond | Jassian Road | Civil Lines · Kitchlu Nagar · Ferozepur Road | Salem Tabri |
+| Kitchlu Nagar (`kitchlu-nagar`) | Pet Grooming & Vet in Kitchlu Nagar, Ludhiana \| PetDoorStep (59) | Next door to PAU | homes near PAU Gate | Near PAU Gate; PAU-campus households | Sarabha Nagar · Civil Lines · Model Town | — |
 
-Road localities use "on" (`03-KEYWORD-MAP.md` §3). Each area's `[FILL:LANDMARKS_{slug}]` = 2–3 landmarks Sunny confirms.
+Road localities use "on" (`03-KEYWORD-MAP.md` §3). Each area's `[FILL:LANDMARKS_{SLUG}]` = 2–3 landmarks Sunny confirms.
 
 ---
 

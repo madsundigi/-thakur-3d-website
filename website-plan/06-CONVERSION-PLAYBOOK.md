@@ -78,13 +78,13 @@ All CTA pairs follow §3. Prices from 00 §3.2 only. Hero photo briefs are in ea
 - Trust chips: `✔ Fixed verified walker` · `✔ GPS + photo after every walk` · `✔ Fixed monthly price` · `✔ Background-verified`.
 
 **`/ludhiana/vet-at-home/`**
-- H1: **Vet Home Visit in Ludhiana — ₹699 Consultation at Your Door**
+- H1: **Vet at Home in Ludhiana** (eyebrow: *Vet home visit, Ludhiana* — final per `blueprints/vet-at-home.md`)
 - Subhead: "A registered veterinarian examines your pet at home — no stressful clinic trip. ₹699 consult; medicines and vaccines at MRP, bill shown to you."
 - CTA: [Book Vet on WhatsApp] + [Call [FILL:PHONE]]
 - Trust chips: `✔ Registered veterinarians only` · `✔ Medicines at MRP — bill shown` · `✔ Fixed visit fee ₹699` · `✔ Mon–Sun 9:00–19:00`.
 
 **`/ludhiana/dog-vaccination/`**
-- H1: **Dog Vaccination at Home in Ludhiana — ₹199 + Vaccine MRP**
+- H1: **Dog Vaccination at Home in Ludhiana** (price lives in the chip + subhead — final per `blueprints/dog-vaccination.md`)
 - Subhead: "Registered vet, cold-chain carried vaccine, done in your living room — with a reminder calendar so you never miss a due date."
 - CTA: [Book Vaccination on WhatsApp] + [Call [FILL:PHONE]]
 - Trust chips: `✔ Registered veterinarians only` · `✔ Vaccine at MRP — wrapper shown` · `✔ ₹199 fixed service fee` · `✔ Free reminder calendar`.
@@ -258,7 +258,7 @@ All offers live on `/offers/` and are echoed on relevant service pages. Every of
 - Display copy: "New here? **₹200 off your first groom** + a free nail-trim visit on us. Code **FIRSTGROOM** — applied automatically when you book."
 
 ### 7.2 Referral — "Friends with benefits (the pet kind)"
-- **₹150 off for you, ₹150 off for them.** Your friend quotes your name/number on their first booking; both discounts apply to the next service each. No cap on referrals, one discount per booking.
+- **₹150 off for you, ₹150 off for them.** Your friend quotes your name/number on their first booking; you get ₹150 off your next service, they get ₹150 off their first. No cap on referrals. **One discount per booking — the larger applies:** if the friend's first booking is a Full Groom or Premium Spa, FIRSTGROOM's ₹200 replaces their ₹150 (you still get yours). Same rule on `/offers/`.
 - Display copy: "Love your groomer? Share them. Your friend gets ₹150 off their first groom, you get ₹150 off your next one."
 
 ### 7.3 Groom Club (the retention product — 00 §3.2)
