@@ -436,15 +436,21 @@ export type MoneyPage =
   | 'tick-flea-treatment'
   | 'puppy-grooming';
 
-/** Price chip on a ServiceCard (home H-3, hub grid, SP-11 "Pet parents also book"): "from ₹599", "₹699 flat", … */
-export function cardPriceChip(page: MoneyPage): string {
+/**
+ * Price chip on a ServiceCard (home H-3, hub grid, SP-11 "Pet parents also book"): "from ₹599", "₹699 flat", …
+ * `page` = the service the card links to; `onPage` = the page the card is rendered on, for the one card whose chip a
+ * blueprint words per page: Tick & Flea reads "₹699 · ₹399 add-on" on home H-3 and dog-/cat-grooming SP-11, but a bare
+ * "₹699" on vet-at-home SP-11 (no groom to add it to there). Pass `onPage` on every money page's SP-11 cards.
+ */
+export function cardPriceChip(page: MoneyPage, onPage?: MoneyPage | 'home' | 'ludhiana' | 'pricing'): string {
   switch (page) {
     case 'dog-grooming': return `from ${fromPrice(DOG_GROOM_IDS)}`;
     case 'cat-grooming': return `from ${fromPrice('cat-grooming')}`;
     case 'dog-walking': return `${planPrice('dog-walking', 'walk-1x')}/month`;
     case 'vet-at-home': return flatPrice('vet-visit');
     case 'dog-vaccination': return `${flatPrice('vaccination')} + MRP`;
-    case 'tick-flea-treatment': return `${flatPrice('tick-flea')} · ${addonPrice()} add-on`;
+    case 'tick-flea-treatment':
+      return onPage === 'vet-at-home' ? flatPrice('tick-flea') : `${flatPrice('tick-flea')} · ${addonPrice()} add-on`;
     case 'puppy-grooming': return `${flatPrice('puppy-intro')} flat`;
   }
 }

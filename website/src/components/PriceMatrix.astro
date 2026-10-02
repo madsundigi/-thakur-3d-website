@@ -1,7 +1,8 @@
 ---
 // Price matrix (08-DESIGN-SYSTEM §4.8; data = the 06-CONVERSION-PLAYBOOK §5.2 canonical matrix + flat-price lines).
-// Real <table>, sticky first column, right-edge fade while it can scroll (< lg), zero JS. Every ₹ figure comes from
-// src/data/pricing.json via src/lib/pricing.ts. Book links → /book/?service=<id>&size=<size>&src=<source> (07 §2 row 5).
+// Real <table>, sticky first column; below md it scrolls sideways behind a right-edge fade, from md up it fits without
+// scroll (08 §4.8). Zero JS. Every ₹ figure comes from src/data/pricing.json via src/lib/pricing.ts.
+// Book links → /book/?service=<id>&size=<size>&src=<source> (07 §2 row 5).
 // Order (08 §4.8 / 06 §5.4): table → R1 + R2 directly under it → flat-price lines → <slot/> (extra page lines).
 // Flat-only (matrix={false}): flat-price lines → R1 + R2 → <slot/>. The section heading (H2) belongs to the page.
 import { R1, R2 } from '../data/content';
@@ -18,8 +19,10 @@ interface Props {
   lines?: PriceLineSet | PriceLine[];
   /** `src` on every Book link (09 §2d canonical values). 07 §2 row 5 + template SP-4: "pricing_row". */
   source?: string;
-  /** Matrix Book links: 'row' = one row-end Book per size (08 §4.8), 'cell' = a Book under every price, 'none'. */
-  bookLinks?: 'row' | 'cell' | 'none';
+  /** Matrix Book links: 'row' = one row-end Book per size (08 §4.8, pricing.md PR-3, template SP-4), 'none'.
+   *  (No per-price Book: Chromium does not scroll a partly visible link into view on Tab, so a Book under every price
+   *  inside the scroller ends up with a clipped focus ring — 08 §7.2.) */
+  bookLinks?: 'row' | 'none';
   /** Service a row-end Book preselects (default: the pricing.json badge service — Full Groom, "Most booked"). */
   bookService?: string;
   /** <caption> text (08: sr-only "Dog grooming prices by size, in rupees"; /pricing/ uses its keyword caption). */
@@ -56,7 +59,6 @@ const rows = matrix ? matrixRows(source) : [];
 const featured = columns.find((c) => c.badge)?.id;
 const rowService = matrix ? requireService(bookService ?? featured ?? columns[0].id) : undefined;
 const rowBook = matrix && canBook && bookLinks === 'row' && rowService;
-const cellBook = matrix && canBook && bookLinks === 'cell';
 
 const flat: (PriceLine & { link?: string })[] = (typeof lines === 'string' ? priceLines(lines) : lines ?? []).map((l) => ({
   ...l,
@@ -91,14 +93,9 @@ const surface = onTint ? 'border border-line' : 'shadow-1';
                 <th scope="row" class="font-semibold text-ink">{r.label}</th>
                 <td class="whitespace-nowrap text-ink">{r.kg}</td>
                 <td class="pm-breeds text-sm text-slate">{r.examples}</td>
-                {r.cells.map((c, i) => (
+                {r.cells.map((c) => (
                   <td class:list={['pm-price', { 'is-featured': c.serviceId === featured }]}>
                     <span class="t-price text-2xl leading-tight">{c.price}</span>
-                    {cellBook ? (
-                      <a href={c.href} class="pm-book mt-2">
-                        Book<span class="sr-only"> {columns[i].service}, {r.label} dog</span>
-                      </a>
-                    ) : null}
                   </td>
                 ))}
                 {rowBook ? (
@@ -162,8 +159,10 @@ const surface = onTint ? 'border border-line' : 'shadow-1';
     position: relative; /* contains the sr-only (absolute) caption — else it escapes the scroller and widens the page */
     overflow-x: auto;
     overscroll-behavior-x: contain;
-    /* keep focused Book links clear of the sticky Size column and the right-edge fade */
-    scroll-padding-inline: 96px 48px;
+    /* Tab-scrolling parks a Book link clear of the sticky Size column (~95px at base). Kept small on purpose: when
+       link + scroll-margin is wider than what is left of a 320px scroller, Chromium stops scrolling it into view and
+       the focus ring is clipped at the edge (08 §7.2). */
+    scroll-padding-inline: 96px 0;
   }
   .pm-scroll:focus-visible { outline-offset: -2px; }
   .pm-table { min-width: 640px; font-variant-numeric: tabular-nums; }
@@ -190,7 +189,6 @@ const surface = onTint ? 'border border-line' : 'shadow-1';
   .pm-table thead th:first-child { background: var(--color-mint); }
   .pm-table tbody th[scope='row'] { background: var(--pm-row); }
 
-  .pm-breeds { min-width: 11rem; }
   .pm-price { white-space: nowrap; }
   .pm-book-cell { text-align: right; }
 
@@ -210,9 +208,10 @@ const surface = onTint ? 'border border-line' : 'shadow-1';
     text-decoration: none;
     white-space: nowrap;
     transition: background-color var(--dur-1) ease-out;
+    /* 2px outline + 2px offset (08 §7.2) + 4px air: the whole ring lands inside the scroller when Tab scrolls to it. */
+    scroll-margin-inline: 8px;
   }
   .pm-book:hover { background: var(--color-mint); }
-  .pm-price .pm-book { display: flex; width: max-content; }
 
   /* Flat-price lines: a simple 2-column list (label | price + Book), wrapping to 2 lines on narrow screens. */
   .pm-line {
@@ -230,27 +229,32 @@ const surface = onTint ? 'border border-line' : 'shadow-1';
   .pm-line-price { display: flex; flex: 0 1 auto; align-items: center; gap: 12px; margin-left: auto; text-align: right; }
   .pm-line-book { flex: none; width: 4.75rem; padding: 0; }
 
-  /* Right-edge fade signals "scroll for more" while the table can scroll. The last column carries enough right
-     padding that, scrolled to the end, only padding sits under the fade. With the row-end Book column the table needs
-     ~860px, so the fade stays on through md (768–1023, where it may still scroll a little) and goes at lg, where the
-     table always fits. */
+  /* Base (< md) — the table scrolls sideways. A right-edge fade signals "scroll for more"; the last column carries
+     40px of right padding so that, scrolled to the end, only padding sits under the fade. The breeds column keeps
+     a readable width (the table scrolls anyway). Row-end Book links keep ≥ 12px of cell padding to the scroller's
+     bottom edge and ≥ 16px (40px at base) to its right edge, so their ring clears the 16px corner radius (08 §7.2). */
   .pm-scroll {
     -webkit-mask-image: linear-gradient(to right, black calc(100% - 32px), transparent);
     mask-image: linear-gradient(to right, black calc(100% - 32px), transparent);
   }
   /* Keyboard users: never let the fade sit over a focused Book link (08 §7.2 — focus never obscured). */
   .pm-scroll:focus-within { -webkit-mask-image: none; mask-image: none; }
-  .pm-book { scroll-margin-inline: 48px; }
   .pm-table tr > :last-child { padding-right: 40px; }
+  .pm-breeds { min-width: 11rem; }
+
+  /* ≥ md the table fits without scroll (08 §4.8 Responsive): no fade and no trailing fade padding, the breeds column
+     and long headers wrap, cells tighten to 8px sides (16px at the table's outer edges). Measured at 768: the row-end
+     Book variant needs 685px (min-content) of the 736px content width; scrollWidth = clientWidth. */
   @media (min-width: 768px) {
-    .pm-table th,
-    .pm-table td { padding-left: 12px; padding-right: 12px; }
-    .pm-table tr > :last-child { padding-right: 40px; }
-  }
-  @media (min-width: 1024px) {
     .pm-scroll { -webkit-mask-image: none; mask-image: none; }
     .pm-table th,
-    .pm-table td { padding-left: 16px; padding-right: 16px; }
+    .pm-table td { padding-left: 8px; padding-right: 8px; }
+    .pm-table tr > :first-child { padding-left: 16px; }
     .pm-table tr > :last-child { padding-right: 16px; }
+    .pm-breeds { min-width: 0; }
+  }
+  @media (min-width: 1024px) {
+    .pm-table th,
+    .pm-table td { padding-left: 16px; padding-right: 16px; }
   }
 </style>

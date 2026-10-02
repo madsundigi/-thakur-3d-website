@@ -44,7 +44,7 @@ const frames = [
             f.key === 'before' ? 'bg-paper/90 text-slate' : 'bg-cta text-ink',
           ]}
         >{f.label}</span>
-        {f.key === 'after' ? <span aria-hidden="true" class="ba-mark t-micro absolute bottom-2 right-2 normal-case text-white/70">{site.domain}</span> : null}
+        {f.key === 'after' ? <span aria-hidden="true" class="t-micro absolute bottom-2 right-2 normal-case text-white/70">{site.domain}</span> : null}
       </div>
     ))}
   </div>
@@ -55,8 +55,3 @@ const frames = [
     {isLive(areaPath) ? <a href={areaPath} class="prose-link">{p.locality}</a> : p.locality}
   </figcaption>
 </figure>
-
-<style>
-  /* Watermark legibility on bright photos — a soft ink-tinted halo, not a box (text over photos: chips + watermark only). */
-  .ba-mark { letter-spacing: 0.04em; text-shadow: 0 1px 2px rgb(21 36 42 / 0.45); }
-</style>
