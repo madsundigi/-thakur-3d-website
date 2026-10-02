@@ -67,15 +67,18 @@ Change a fact → change it here first, then propagate.
 | Cat Grooming — Bath & Brush / Full | ₹899 / ₹1,399 flat | | | Calm-handling trained |
 | Tick & Flea Treatment | add-on ₹399 · standalone ₹699 | | | Seasonal spike pre-monsoon |
 | Nail Trim + Ear Clean visit | ₹299 | | | Quick visit / add-on |
-| Dog Walking — 1 walk/day | ₹2,999 / month | | | Fixed walker, GPS + photo update |
-| Dog Walking — 2 walks/day | ₹4,999 / month | | | |
-| Walking Trial Week | ₹699 | | | Converts to monthly |
+| Dog Walking — 1 walk/day | ₹2,999 / month | | | Fixed walker, ~30-min walk, GPS + photo update |
+| Dog Walking — 2 walks/day | ₹4,999 / month | | | ~30 min each, morning + evening |
+| Walking Trial Week | ₹699 | | | 7 walks (1/day, ~30 min); converts to monthly |
 | Vet Home Visit (consult) | ₹699 + medicines/vaccines at MRP | | | Partner registered vet only |
 | Vaccination at Home | ₹199 service fee + vaccine MRP | | | With reminder calendar |
 | Deworming Visit | ₹499 incl. standard dewormer | | | |
 | **Groom Club** subscription | 1 Full Groom/month at **15% off** + free nail-trim visit + priority slots | | | THE retention product |
 
 Size guide used everywhere: **Small** < 10 kg · **Medium** 10–25 kg · **Large** > 25 kg.
+
+**Travel charge:** none anywhere within Ludhiana city — the listed price is the full price (DRAFT, confirm together with this menu).
+**Not offered in Phase 1** (never imply otherwise in copy): single one-off walks, online/video vet consults, 24×7 or emergency care, boarding, training, supplies.
 
 ### 3.3 Service areas (launch set — these become area pages)
 Sarabha Nagar · BRS Nagar · Model Town · Civil Lines · Dugri · Pakhowal Road ·
