@@ -79,6 +79,7 @@ Change a fact → change it here first, then propagate.
 Size guide used everywhere: **Small** < 10 kg · **Medium** 10–25 kg · **Large** > 25 kg.
 
 **Travel charge:** none anywhere within Ludhiana city — the listed price is the full price (DRAFT, confirm together with this menu).
+**Reschedule / cancel:** free until 2 hours before the confirmed slot — just reply on WhatsApp. No advance payment is ever taken, so there is nothing to refund (DRAFT — `/refund-policy/` mirrors this exactly).
 **Not offered in Phase 1** (never imply otherwise in copy): single one-off walks, online/video vet consults, 24×7 or emergency care, boarding, training, supplies.
 
 ### 3.3 Service areas (launch set — these become area pages)
