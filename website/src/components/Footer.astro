@@ -74,3 +74,10 @@ const year = new Date().getFullYear();
     </div>
   </div>
 </footer>
+
+<style>
+  /* Column titles: global.css sets h2 colour (ink) and font (Fraunces) outside any layer, which beats the text-white
+     and font-body utilities and leaves the titles near-invisible on brand-dark — set both here, as CtaBand does for
+     its heading colour (08 §1.4 rule 8). */
+  h2 { color: var(--color-white); font-family: var(--font-body); }
+</style>

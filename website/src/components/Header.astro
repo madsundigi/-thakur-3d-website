@@ -19,6 +19,9 @@ const top = [
 ].filter((i) => isLive(i.path));
 const linkCls = 'inline-flex min-h-11 items-center px-2 text-[0.9375rem] font-medium text-ink no-underline hover:text-brand hover:underline underline-offset-[6px]';
 ---
+{/* Mobile row at 360px (08 §4.3): logo (20px wordmark below lg) + Book Now (12px sides) + 44px menu label, which sits
+     10px into the right gutter so its 24px icon lines up with the 16px gutter edge. Fits the 328px row with ~4px spare,
+     so the page never scrolls sideways. */}
 <header class="sticky top-0 z-30 h-[var(--header-h)] border-b border-line bg-paper">
   <div class="mx-auto flex h-full max-w-[1200px] items-center justify-between gap-4 px-4 lg:px-6">
     <Logo />
@@ -46,9 +49,9 @@ const linkCls = 'inline-flex min-h-11 items-center px-2 text-[0.9375rem] font-me
     </nav>
 
     <div class="flex items-center gap-2 lg:hidden">
-      <a href="/book/?src=header" class="inline-flex h-10 items-center whitespace-nowrap rounded-md bg-cta px-4 text-[0.9375rem] font-semibold text-ink no-underline hover:bg-cta-hover">Book Now</a>
+      <a href="/book/?src=header" class="inline-flex h-10 items-center whitespace-nowrap rounded-md bg-cta px-3 text-[0.9375rem] font-semibold text-ink no-underline hover:bg-cta-hover">Book Now</a>
       <input type="checkbox" id="nav-toggle" class="peer sr-only" aria-label="Open menu" />
-      <label for="nav-toggle" class="inline-flex h-11 w-11 cursor-pointer items-center justify-center text-ink peer-focus-visible:outline-2 peer-focus-visible:outline-brand">
+      <label for="nav-toggle" class="-mr-2.5 inline-flex h-11 w-11 cursor-pointer items-center justify-center text-ink peer-focus-visible:outline-2 peer-focus-visible:outline-brand">
         <span class="icon-menu"><Icon name="menu" size={24} /></span>
         <span class="icon-close"><Icon name="x" size={24} /></span>
         <span class="sr-only">Menu</span>

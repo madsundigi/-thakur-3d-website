@@ -8,6 +8,13 @@ export const FIRSTGROOM = {
   validDays: 45,
 } as const;
 
+/** Referral (06 §7.2, blueprints/offers.md OF-3): ₹150 off the referrer's next service + ₹150 off the friend's first.
+ *  One discount per booking — on a first Full Groom / Premium Spa the friend gets FIRSTGROOM's larger amount instead. */
+export const REFERRAL = {
+  youGet: 150,
+  friendGets: 150,
+} as const;
+
 /** A booking qualifies when it's the first on this device and the service is a qualifying groom. */
 export const qualifiesForFirstGroom = (serviceId: string | null, priorBookings: number): boolean =>
   priorBookings === 0 && !!serviceId && (FIRSTGROOM.services as readonly string[]).includes(serviceId);

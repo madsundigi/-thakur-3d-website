@@ -1,6 +1,7 @@
 ---
 // Base layout — head rules 04-TECHNICAL-SEO §1.3/§1.7/§3/§4, landmarks + skip link 08 §7.5, analytics 09 §3.1.
 import '../styles/global.css';
+import tokensCss from '../styles/global.css?raw';
 import frauncesWoff2 from '../assets/fonts/fraunces-latin-wght-normal.woff2?url';
 import interWoff2 from '../assets/fonts/inter-latin-wght-normal.woff2?url';
 import Header from '../components/Header.astro';
@@ -34,6 +35,10 @@ const ogImageUrl = new URL(ogImage, Astro.site).href;
 const branch = (globalThis as { process?: { env?: Record<string, string | undefined> } }).process?.env?.CF_PAGES_BRANCH;
 const isPreview = !!branch && branch !== 'main';
 const robots = noindex || isPreview ? 'noindex' : null;
+// theme-color needs a literal colour, so read --color-brand from the token file instead of repeating its hex here
+// (08 §0 hex gate: no raw hex in .astro outside global.css and icons/).
+const themeColor = /--color-brand:\s*(#[0-9a-f]{3,8})\s*;/i.exec(tokensCss)?.[1];
+if (!themeColor) throw new Error('Base.astro: --color-brand not found in styles/global.css');
 ---
 <!doctype html>
 <html lang="en-IN">
@@ -49,7 +54,7 @@ const robots = noindex || isPreview ? 'noindex' : null;
     <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
-    <meta name="theme-color" content="#0e7c72" />
+    <meta name="theme-color" content={themeColor} />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={site.name} />
     <meta property="og:locale" content="en_IN" />
@@ -61,6 +66,8 @@ const robots = noindex || isPreview ? 'noindex' : null;
     <meta property="og:image:height" content="630" />
     <meta name="twitter:card" content="summary_large_image" />
     {jsonLd.map((block) => <script type="application/ld+json" set:html={JSON.stringify(block)} />)}
+    {/* Page-supplied head content, e.g. the hero <Photo slot="head" preload …> (04 §1.4 / §5.2.2). */}
+    <slot name="head" />
   </head>
   <body class:list={[{ 'no-sticky-bar': hideStickyBar }]}>
     <a href="#main" class="skip-link">Skip to content</a>

@@ -1,7 +1,7 @@
 // Price gates (07-BOOKING-SPEC §4): (1) no ₹ literal in .astro/.tsx components — prices come from pricing.json;
 // (2) no hard-coded ₹ amount in .ts/.js copy under src/ (comments ignored; pricing.json and lib/pricing.ts, the
 // formatter, are the only places a rupee figure may be typed); (3) every ₹ figure inside faq.json questions and
-// answers matches a price in pricing.json (or a defined offer in src/data/offers.ts).
+// answers matches a price in pricing.json (or a defined offer amount in src/data/offers.ts: FIRSTGROOM, REFERRAL).
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, sep } from 'node:path';
 
@@ -87,11 +87,15 @@ for (const s of pricing.services) {
   if (p.type === 'flat' || p.type === 'flat_plus') { allowed.add(p.price); if (p.addonPrice) allowed.add(p.addonPrice); }
   if (p.type === 'plans') p.plans.forEach((x) => allowed.add(x.price));
 }
-// Defined offer amounts (src/data/offers.ts) — e.g. FIRSTGROOM's ₹200 off.
+// Defined offer amounts (src/data/offers.ts) — FIRSTGROOM's ₹200 `off:` and REFERRAL's ₹150 `youGet:` / `friendGets:`.
 const offersSrc = readFileSync('src/data/offers.ts', 'utf8');
-const offerAmounts = [...offersSrc.matchAll(/\boff:\s*(\d+)/g)].map((m) => Number(m[1]));
-if (!offerAmounts.length) { failed = true; console.log('check:prices — could not read the FIRSTGROOM amount (`off:`) from src/data/offers.ts'); }
-offerAmounts.forEach((v) => allowed.add(v));
+const offerAmount = (key, name) => {
+  const hits = [...offersSrc.matchAll(new RegExp(`\\b${key}:\\s*(\\d+)`, 'g'))].map((m) => Number(m[1]));
+  if (!hits.length) { failed = true; console.log(`check:prices — could not read the ${name} amount (\`${key}:\`) from src/data/offers.ts`); }
+  return hits;
+};
+[...offerAmount('off', 'FIRSTGROOM'), ...offerAmount('youGet', 'REFERRAL'), ...offerAmount('friendGets', 'REFERRAL')]
+  .forEach((v) => allowed.add(v));
 
 for (const e of JSON.parse(readFileSync('src/data/faq.json', 'utf8'))) {
   for (const [field, text] of [['q', e.q], ['a', e.a]]) {

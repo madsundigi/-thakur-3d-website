@@ -16,6 +16,7 @@ export const site = {
   googleRating: '[FILL:GOOGLE_RATING]',
   reviewCount: '[FILL:REVIEW_COUNT]',
   ga4Id: '[FILL:GA4_ID]',
+  author: '[FILL:AUTHOR_NAME]', // blog byline ("By {author}, PetDoorStep") + BlogPosting author (00 §8 People)
   city: 'Ludhiana',
   region: 'Punjab',
   hours: {

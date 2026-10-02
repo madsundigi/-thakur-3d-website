@@ -4,7 +4,7 @@
 // Astro.site — the same base as the canonical (§3).
 // Use one <script> per page holding a single @graph (§2.0.1): `jsonLd={[schemaGraphLd({ type: 'pricing', crumbs }, Astro.site)]}`.
 import { bookingSteps } from '../data/content';
-import { FIRSTGROOM } from '../data/offers';
+import { FIRSTGROOM, REFERRAL } from '../data/offers';
 import { routeLabel, routes } from '../data/routes';
 import { instagramHref, isFilled, site as biz } from '../data/site';
 import { faqFor, type FaqEntry } from './faq';
@@ -353,10 +353,11 @@ function groomClubOffer(): JsonLd {
 
 // ---- §2.9 /offers/ — OfferCatalog scoped to the offers live today -------------------------------------------------
 
-/** An offer the /offers/ page shows whose amount is not (yet) in src/data/offers.ts — pass the page's visible copy,
- *  built with inr() from data, so markup and text stay identical (04 §2.0.3). */
+/** An /offers/ row as the page shows it (name + terms). Builders format every amount with inr() from offers.ts /
+ *  pricing.json; a page-supplied row (e.g. a seasonal offer) must be its visible copy, so markup and text stay
+ *  identical (04 §2.0.3). */
 export interface LiveOffer { name: string; description: string }
-export interface LiveOffers { referral: LiveOffer; seasonal?: LiveOffer }
+export interface LiveOffers { referral?: LiveOffer; seasonal?: LiveOffer }
 
 function offerNode(o: LiveOffer): JsonLd {
   // A row only for a real, live offer: never an empty or [FILL:SEASONAL_OFFER] placeholder (blueprints/offers.md OF-5).
@@ -378,11 +379,24 @@ export function firstGroomOffer(): LiveOffer {
   };
 }
 
+/** Referral (06 §7.2) — wording from blueprints/offers.md OF-3; amounts from offers.ts (REFERRAL, FIRSTGROOM). */
+export function referralOffer(): LiveOffer {
+  return {
+    name: `Refer a friend — ${inr(REFERRAL.youGet)} off for you, ${inr(REFERRAL.friendGets)} off for them`,
+    description:
+      `You get ${inr(REFERRAL.youGet)} off your next service; your friend gets ${inr(REFERRAL.friendGets)} off their first service. ` +
+      `If your friend's first booking is a Full Groom or Premium Spa, they get ${FIRSTGROOM.code}'s ${inr(FIRSTGROOM.off)} instead ` +
+      `(one discount per booking — the larger one applies); you still get your ${inr(REFERRAL.youGet)}. ` +
+      'Your friend mentions your name or number in their first WhatsApp booking. No limit on referrals.',
+  };
+}
+
 /** `/offers/` OfferCatalog (04 §2.9; blueprints/offers.md: "OfferCatalog (live offers only)"), rows in the page's
  *  block order: FIRSTGROOM (OF-2) · referral (OF-3) · Groom Club (OF-4) · seasonal (OF-5, only while a real dated
- *  offer is live — omit it otherwise, exactly as the page omits the section). The referral row is passed in because
- *  its amount is not in src/data/offers.ts yet; build it from the same values the OF-3 card renders. */
-export function offersCatalogLd(site: Site, live: LiveOffers): JsonLd {
+ *  offer is live — omit it otherwise, exactly as the page omits the section). The referral row defaults to
+ *  referralOffer(); pass `live.referral` only if the OF-3 card's visible copy differs, so markup and text stay
+ *  identical (04 §2.0.3). */
+export function offersCatalogLd(site: Site, live: LiveOffers = {}): JsonLd {
   return {
     '@context': CONTEXT,
     '@type': 'OfferCatalog',
@@ -392,7 +406,7 @@ export function offersCatalogLd(site: Site, live: LiveOffers): JsonLd {
     provider: ref(ldId.business(site)),
     itemListElement: [
       offerNode(firstGroomOffer()),
-      offerNode(live.referral),
+      offerNode(live.referral ?? referralOffer()),
       groomClubOffer(),
       ...(live.seasonal ? [offerNode(live.seasonal)] : []),
     ],
@@ -450,7 +464,8 @@ export interface BlogPostLdInput {
   description: string;
   date: string | Date;
   updated?: string | Date;
-  author: string;
+  /** Default: site.author (src/data/site.ts) — the same value the byline renders. */
+  author?: string;
   image: string;
   reviewer?: { name: string };
 }
@@ -475,7 +490,7 @@ export function blogPostingLd(post: BlogPostLdInput, site: Site): JsonLd {
     headline: post.title,
     description: post.description,
     image: absUrl(post.image, site),
-    author: { '@type': 'Person', name: post.author, url: absUrl('/about/', site) },
+    author: { '@type': 'Person', name: post.author ?? biz.author, url: absUrl('/about/', site) },
     publisher: ref(ldId.business(site)),
     datePublished: published,
     dateModified: post.updated ? isoDate(post.updated, 'updated') : published,
@@ -532,7 +547,7 @@ export type SchemaSpec =
   | { type: 'contact'; crumbs: Crumb[] }
   | { type: 'faq'; crumbs: Crumb[] }
   | { type: 'blog'; post: BlogPostLdInput; crumbs: Crumb[] }
-  | { type: 'offers'; live: LiveOffers; crumbs: Crumb[] }
+  | { type: 'offers'; live?: LiveOffers; crumbs: Crumb[] }
   | { type: 'breadcrumb-only'; crumbs: Crumb[] };
 
 export function schemaGraphLd(spec: SchemaSpec, site: Site): JsonLd {
