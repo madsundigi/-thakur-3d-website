@@ -70,7 +70,7 @@ Head (not a block): title/meta per `03-KEYWORD-MAP.md` §3 formulas · canonical
 - **Content formula.** One proof line + 3 `ReviewCard.astro` cards filtered to **this service** (fallback: nearest service, then any). Proof line verbatim: **"★ [FILL:GOOGLE_RATING] on Google · [FILL:REVIEW_COUNT]+ Ludhiana pet parents"**, linked to `[FILL:GBP_LINK]` (`06-CONVERSION-PLAYBOOK.md` §4.4). Card contents: quote 2–3 lines · first name · locality · pet + breed · service chip · month-year.
 - **Worked example.** `[FILL:REVIEW_1]` seed format: "Bruno hates car rides, so home grooming was a blessing. On time, polite, and the bathroom was left spotless. — Simran, Sarabha Nagar · Bruno (Golden Retriever) · Full Groom".
 - **Pre-launch empty state** (until 3 real reviews exist): render the single E6 string from `06-CONVERSION-PLAYBOOK.md` §9 instead of empty cards.
-- **Closing CTA row (`00` §11 E4, 2026-10-03):** the strip ends with a CTA row (the "after reviews" beat of `02` P153) carrying the page's body CTA from `07-BOOKING-SPEC.md` §2 row 4: `Book <Service> — from ₹<price>` (price rule as in SP-4) → `/book/?…&src=service_<id>`. It is part of SP-2, not a new block; SP-12 stays the page-end CTA.
+- **Closing CTA row (`00` §11 E4, 2026-10-03):** the strip ends with a CTA row (the "after reviews" beat of `02` P153) carrying the page's body CTA from `07-BOOKING-SPEC.md` §2 row 4: `Book <Service> — from ₹<price>` (price rule as in SP-4) → `/book/?…&src=service_<id>`. It is part of SP-2, not a new block; SP-12 stays the page-end CTA. Built: the row is the body CTA with reassurance line R2 beside it (`06-CONVERSION-PLAYBOOK.md` §9: R2 sits "beside booking CTA") — `src/layouts/ServicePage.astro`, decision W1L-9.
 - **SEO slots.** Locality names inside quotes are genuine local-signal text (P093-adjacent); never mark up stars/ratings in schema (`04-TECHNICAL-SEO.md` §2.0.4).
 - **Schema.** **None.** Plain HTML only — self-serving Review/aggregateRating is banned.
 - **Internal links.** Proof line → `[FILL:GBP_LINK]` (`rel="noopener"`, external).
@@ -165,7 +165,7 @@ Head (not a block): title/meta per `03-KEYWORD-MAP.md` §3 formulas · canonical
 ### SP-9 · Areas-served links block — `AreaCard.astro`
 
 - **Purpose.** Silo glue: money page → 3 area pages (`01-SITEMAP.md` §2.2) with locality-anchored text; also answers "do you come to my area?".
-- **Content formula.** Intro line: "We groom at homes across Ludhiana — these areas book {service} most:" + 3 `AreaCard`s from the **fixed assignment table below** + closing line listing the remaining §3.3 areas as plain text ("…and Civil Lines, Dugri, Pakhowal Road, Ferozepur Road, Haibowal Kalan, Kitchlu Nagar — all of Ludhiana served."). Anchor pattern: "{service} at home in {Area}" (`01-SITEMAP.md` §2.7). Cards for not-yet-live area pages render as plain text (`05-LOCAL-SEO.md` §6.10 staggered publishing).
+- **Content formula.** Intro line: "We groom at homes across Ludhiana — these areas book {service} most:" + 3 `AreaCard`s from the **fixed assignment table below** + closing line listing the remaining §3.3 areas as plain text ("…and Civil Lines, Dugri, Pakhowal Road, South City, Ferozepur Road, Haibowal Kalan, Kitchlu Nagar — all of Ludhiana served." — the 7 areas the page does not card, in `00-MASTER-PLAN.md` §3.3 order; built from `src/data/content.ts` AREA_SLUGS minus the page's three). Anchor pattern: "{service} at home in {Area}" (`01-SITEMAP.md` §2.7). Cards for not-yet-live area pages render as plain text (`05-LOCAL-SEO.md` §6.10 staggered publishing).
 
   **Fixed money-page → area assignment (every area linked from ≥ 2 money pages; change only via Decision log):**
 
@@ -208,6 +208,7 @@ Head (not a block): title/meta per `03-KEYWORD-MAP.md` §3 formulas · canonical
 - **Schema.** None.
 - **Internal links.** The 2–3 sibling links + 1–2 supporting blog posts (the posts that name this page as primary money page in `10-CONTENT-CALENDAR.md` §2.2 — rendered as text links under the cards once published; this completes `01-SITEMAP.md` §2.2).
 - **Mobile.** 1-col stack; 2–3-up ≥ md.
+- **Built addition.** The block ends with the page's "Last updated {d Month yyyy}" line (`02-SEO-PARAMETERS.md` P143), read from `src/data/lastmod.ts` — the same date as the sitemap `<lastmod>`; it renders only once the path has a date there (decision W1L-12).
 
 ### SP-12 · Final CTA band — `CtaBand.astro`
 

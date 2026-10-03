@@ -1,66 +1,103 @@
 ---
 // ServicePage — the shared money-page layout (/ludhiana/<service>/). Spec: website-plan/blueprints/
 // _TEMPLATE-service-page.md (block order SP-0…SP-13 is binding; this file owns it) + the page's own blueprint
-// (copy values). Decisions: website-plan/decisions/w1-layout.md. Zero client JS.
+// (copy values). Decisions and page-author notes: website-plan/decisions/w1-layout.md §2. Zero client JS.
 //
-// ── API ────────────────────────────────────────────────────────────────────────────────────────────────────────────
-// <ServicePage config={…}> with named slots. `config` holds only what differs per page; everything else comes from the
-// registries: MONEY_PAGES[path] (services.ts: chips, mid-page CTA, areas, OG image, card, WhatsApp prefill), faqFor(path)
-// (faq.json), stepsFor(slug) / SP6_LINES (content.ts), people.ts, reviews.ts, LASTMOD (lastmod.ts), routes.ts (isLive).
+// ── How a page uses it ───────────────────────────────────────────────────────────────────────────────────────────
+// <ServicePage config={…}> plus named slots. `config` holds only what differs per page — its blueprint's copy values,
+// verbatim. Everything else comes from the registries, so the page never repeats (or can contradict) them:
+//   MONEY_PAGES[path] (services.ts)  hero chips · body CTA label/href/source · 3 areas · OG image · SP-11 card · wa.me prefill
+//   faqFor(path) (faq.json)          the SP-10 questions = the FAQPage JSON-LD entries
+//   content.ts                       stepsFor(slug), SP6_LINES, R2, R4, r8(), AREA_SLUGS
+//   people.ts · reviews.ts           SP-7 cards + block copy · SP-2 reviews/empty state · SP-5 pairs/proof photos
+//   routes.ts (isLive) · lastmod.ts  every internal link · the "Last updated" line
+// Prices are never typed: the page's frontmatter builds its strings with pricing.ts helpers (fromPrice, priceRange,
+// flatPrice, planPrice, addonPrice, …) — `npm run check:prices` fails a typed ₹.
 //
-//   config.path         MoneyPath, e.g. '/ludhiana/dog-grooming/' — must be the page's own URL.
-//   config.title        <title>, blueprint §1 verbatim (prices from pricing.ts helpers).
-//   config.description  meta description, blueprint §1 verbatim.
-//   config.hero         { eyebrow, h1, subhead, subheadShort?, primaryLabel, secondary: 'prices' | 'call',
-//                         photo: { name, alt, position? }, notice? }. The primary target is fixed (00 §11 E1/D2):
-//                         /book/?src=hero_<slug>; dog-walking /book/?service=dog-walking&src=hero_dog-walking.
-//                         'prices' = [See exact prices] → #prices · 'call' = [Call [FILL:PHONE]] → tel:. Chips come from
-//                         MONEY_PAGES[path].heroChips. subheadShort / notice: see Hero.astro.
-//   config.sp3          { heading }                — SP-3 H2; the body is the `sp3` slot (section tone: paper).
-//   config.sp4          { heading, lines?, r2? }   — SP-4 H2 (section id="prices", tone: sand). No `lines` = the
-//                         dog-grooming size matrix; `lines` = a pricing.ts PriceLineSet (flat-price pages). `r2`
-//                         replaces R2 (dog-walking: WALK_PAYMENT_LINE).
-//   config.sp5?         { kind: 'pairs' | 'proof', heading? } — renders SP-5 from the data when enough exists:
-//                         'pairs' = ≥ 2 consented before/after pairs for the page's services (heading default
-//                         "Before & after: real Ludhiana grooms"); 'proof' = ≥ 1 consented proof photo (walking/vet,
-//                         heading required). Omitted otherwise (template SP-5: never stock, never placeholders).
-//   config.sp6?         { heading? }               — default "How it works — booked in under 2 minutes".
-//   config.sp7          { team: 'groomers' | 'walkers' | 'vet', heading?, line?, cardsHeading?, variant? } —
-//                         heading/line default to people.ts MEET_GROOMERS / MEET_WALKERS / MEET_VET; cardsHeading =
-//                         an H3 over the cards (dog-walking "Meet your walkers"); variant 'condensed' (default) | 'full'
-//                         (vet). Cards show only people already on the team; the vet card always renders (P046: the
-//                         launch gate must see an unfilled vet). The "How we hire" → /about/ link always renders
-//                         (isLive-gated) — /about/'s P068 inbound link.
-//   config.sp8?         { medical? }               — PromiseBand + the registered-vets line (vet / vaccination).
-//   config.sp9          { intro, prefix, heading? } — intro line; AreaCard anchor prefix ("Dog grooming at home in");
-//                         heading default "Areas we serve in Ludhiana". Cards = MONEY_PAGES[path].areas.
-//   config.sp10         { heading }                — FAQ H2. Questions = faqFor(path) — the same entries the FAQPage
-//                         JSON-LD lists (schemaGraphLd).
-//   config.sp11?        { siblings?, posts? }      — siblings default to the template SP-11 fixed set; posts =
-//                         [{ label, href }] from the blueprint, rendered only once live.
-//   config.sp12         { heading, support, primaryLabel? } — CtaBand: [Book on WhatsApp] (wa.me + page prefill) and
-//                         [Call [FILL:PHONE]], both source ctaband_<slug> (template SP-12, 07 §2 row 4, 09 §2d).
+// config — ServicePageConfig (exported below):
+//   path          MoneyPath — the page's own URL, e.g. '/ludhiana/cat-grooming/' (build error for anything else).
+//   title         <title>, blueprint §1 verbatim (₹ via pricing.ts).          description   meta description, §1 verbatim.
+//   hero          SP-1 { eyebrow, h1, subhead, subheadShort?, primaryLabel, secondary: 'prices' | 'call',
+//                 photo: { name, alt, position? }, notice? }
+//                 · primary: label from the blueprint, target fixed by 00 §11 E1/D2 — /book/?src=hero_<slug>; dog-walking
+//                   also preselects its plan (/book/?service=dog-walking&src=hero_dog-walking). Renders amber.
+//                 · secondary: 'prices' = [See exact prices] → #prices (the SP-4 section) · 'call' = [Call <phone>] → tel:.
+//                   Hidden below md (fold law); the sticky bar carries Call + WhatsApp there.
+//                 · chips are NOT a config field: MONEY_PAGES[path].heroChips (price chip first, then the trust set).
+//                 · notice: the vet emergency line (vet-at-home.md SP-1), rendered under the CTAs after R3, compact
+//                   below md — every word stays (W1L-6). Only vet-at-home passes it.
+//                 · subheadShort: a phone cut of the subhead; must be a prefix of `subhead` (build error otherwise). The
+//                   rest stays in the DOM, hidden below md (W1L-5). Use it only when the cut words repeat the chips.
+//   sp3           { heading } — the SP-3 H2 only; the body is the `sp3` slot (band: paper).
+//   sp4           { heading, lines?, r2? } — SP-4 H2; the section is id="prices" (band: sand). No `lines` = the
+//                 dog-grooming size matrix (PriceMatrix). `lines` = a pricing.ts PriceLineSet name ('cat-grooming',
+//                 'dog-walking', 'vet-at-home', 'dog-vaccination') → the flat-price list instead. `r2` replaces R2
+//                 (dog-walking: WALK_PAYMENT_LINE). R1 + R2, the mid-page CTA (MONEY_PAGES[path].cta — "Book <Service>
+//                 — <price>", source service_<id>) and the /pricing/ link are always rendered.
+//   sp5?          { kind: 'pairs' | 'proof', heading? } — SP-5 from reviews.ts, only when real consented photos exist:
+//                 'pairs' needs ≥ 2 before/after pairs for the page's services (heading default "Before & after: real
+//                 Ludhiana grooms"; breed anchor chips when ≥ 2 breeds); 'proof' needs ≥ 1 proof photo (walking / vet;
+//                 heading required). Otherwise the whole block is omitted (template SP-5: never stock, never placeholders).
+//   sp6?          { heading? } — default "How it works — booked in under 2 minutes". Steps = stepsFor(slug), the line
+//                 under them = SP6_LINES[slug]?.r4 ?? R4, then "See the full process" once /how-it-works/ is live.
+//   sp7           { team: 'groomers' | 'walkers' | 'vet', heading?, line?, cardsHeading?, variant? } — heading/line
+//                 default to people.ts MEET_GROOMERS / MEET_WALKERS / MEET_VET. Cards only for people already on the
+//                 team (honesty law) — so none render until someone is hired; the vet card always renders, [FILL] tokens
+//                 included (P046: the launch gate must see the unfilled vet). cardsHeading = an H3 over the cards
+//                 (dog-walking "Meet your walkers"); variant 'condensed' (default) | 'full' (vet). "How we hire" → /about/.
+//   sp8?          { medical? } — PromiseBand; medical: true appends the registered-vets line (vet / vaccination).
+//   sp9           { intro, prefix, heading? } — intro line (blueprint §2/§3 wording), AreaCard anchor prefix ("Dog
+//                 grooming at home in"), heading default "Areas we serve in Ludhiana". Cards = MONEY_PAGES[path].areas;
+//                 the other 00 §3.3 areas follow as plain text ("…and A, B, C — all of Ludhiana served.").
+//   sp10          { heading } — FAQ H2 ("<Service> at home — your questions"). Questions = faqFor(path).
+//   sp11?         { siblings?, posts? } — siblings default to the template SP-11 fixed sets (RELATED below); posts =
+//                 [{ label, href }] from the blueprint, rendered as text links under the cards only once live.
+//   sp12          { heading, support, primaryLabel? } — CtaBand: heading = r8(breed, area?, service?) from content.ts,
+//                 support line verbatim; [Book on WhatsApp] → wa.me with the page prefill and [Call <phone>], both
+//                 source ctaband_<slug>; R3 under them.
 //
 // Slots (all optional except sp3):
-//   sp3         SP-3 body under its H2 (lead-in, the InfoTable / CheckList, notes).
-//   sp4-lines   inside the price block, right under R1 + R2 (before the mid-page CTA) — e.g. an à-la-carte line.
-//   sp4-extra   end of SP-4, after the CTA and the /pricing/ link — H3 sub-sections (breed / season / coat tables,
-//               the vet emergency footer). The SP-4 band is sand: pass onTint to InfoTable / PriceMatrix there.
-//   sp5         replaces the data-driven SP-5 body (the section and its H2 stay); omit it to let config.sp5 decide.
-//   sp7-intro   between the SP-7 H2 and its supporting line (cat-grooming's three "why home" points).
-//   before-faq  its own band right before SP-10 — only for content a blueprint places there (00 §11: page-specific
-//               sections are H3s inside the nearest block; a new block needs a Decision-log entry).
+//   sp3           SP-3 body under its H2: the lead-in, then the ✓-grid — <InfoTable table={PACKAGE_TABLES[slug]} /> on
+//                 grooming pages, <CheckList items={…} /> (a ✓-list per package) on the others — then notes / photo.
+//                 Paper band: no onTint.
+//   sp4-lines     inside the price block, right under R1 + R2 and before the mid-page CTA — e.g. the à-la-carte line.
+//   sp4-extra     end of SP-4, after the CTA and the /pricing/ link — H3 sub-sections (breed / season / coat tables,
+//                 the vet emergency footer). Sand band: pass onTint to InfoTable / PriceMatrix there.
+//   sp5           replaces the data-driven SP-5 body (the section and its H2 stay). Omit it to let config.sp5 decide.
+//   sp7-intro     between the SP-7 H2 and its supporting line (cat-grooming's three "why home" points).
+//   before-faq    its own band right before SP-10 — only for content a blueprint places there (00 §11: page-specific
+//                 sections are H3s inside the nearest block; a new block needs a Decision-log entry).
 //
-// Minimal page:
-//   <ServicePage config={{ path: '/ludhiana/cat-grooming/', title, description,
-//       hero: { eyebrow, h1, subhead, primaryLabel: 'Book on WhatsApp', secondary: 'call', photo },
-//       sp3: { heading }, sp4: { heading, lines: 'cat-grooming' }, sp7: { team: 'groomers' },
-//       sp9: { intro, prefix: 'Cat grooming at home in' }, sp10: { heading }, sp12: { heading, support } }}>
-//     <Fragment slot="sp3"><InfoTable table={PACKAGE_TABLES['cat-grooming']} … /></Fragment>
+// Minimal page (the cat-grooming shape; every '…' is that blueprint's verbatim text):
+//   ---
+//   import ServicePage, { type ServicePageConfig } from '../../layouts/ServicePage.astro';
+//   import InfoTable from '../../components/InfoTable.astro';
+//   import { r8 } from '../../data/content';
+//   import { PACKAGE_TABLES } from '../../data/services';
+//   import { fromPrice } from '../../lib/pricing';
+//   const config: ServicePageConfig = {
+//     path: '/ludhiana/cat-grooming/',
+//     title: `Cat Grooming at Home in Ludhiana – From ${fromPrice('cat-grooming')} | PetDoorStep`,
+//     description: '…',
+//     hero: { eyebrow: '…', h1: 'Cat Grooming at Home in Ludhiana', subhead: `… from ${fromPrice('cat-grooming')} …`,
+//             primaryLabel: 'Book on WhatsApp', secondary: 'call', photo: { name: '….jpg', alt: '…' } },
+//     sp3: { heading: '…' }, sp4: { heading: '…', lines: 'cat-grooming' }, sp5: { kind: 'pairs' },
+//     sp7: { team: 'groomers' }, sp9: { intro: '…', prefix: 'Cat grooming at home in' }, sp10: { heading: '…' },
+//     sp12: { heading: r8('Persian'), support: `Fixed prices from ${fromPrice('cat-grooming')} · …` },
+//   };
+//   ---
+//   <ServicePage config={config}>
+//     <Fragment slot="sp3">
+//       <p class="measure m-0">…lead-in…</p>
+//       <InfoTable table={PACKAGE_TABLES['cat-grooming']} class="mt-4" />
+//     </Fragment>
 //   </ServicePage>
+// Page-specific pieces (a breed table, an à-la-carte line) are small components under
+// src/components/pages/<slug>/ passed into the slots — see src/pages/ludhiana/dog-grooming.astro.
 //
-// Blocks (DOM order, template §1): SP-0 Breadcrumb · SP-1 Hero · SP-2 reviews + E4 CTA row · SP-3 · SP-4 + mid-page
-// CTA · SP-5 · SP-6 · SP-7 · SP-8 · SP-9 · (before-faq) · SP-10 · SP-11 (+ "Last updated", P143) · SP-12 CtaBand.
+// Blocks (DOM order, template §1): SP-0 Breadcrumb · SP-1 Hero · SP-2 proof line + reviews (or the E6 empty state)
+// + the E4 CTA row (the body CTA with R2 beside it, 06 §9) · SP-3 · SP-4 + mid-page CTA · SP-5 · SP-6 · SP-7 · SP-8 ·
+// SP-9 · (before-faq) · SP-10 · SP-11 (+ "Last updated", P143 — only once LASTMOD has the path) · SP-12 CtaBand.
 // SP-13 (sticky bar, float) is Base chrome. Bands: hero paper, then sand / paper alternating from SP-2 (SP-3 always
 // paper, SP-4 always sand), so two adjacent sections never share a background (08 §1.4 rule 5); padding 48 → 80px at
 // lg (08 §3.1); content max 1200px, 16 → 24px gutters.

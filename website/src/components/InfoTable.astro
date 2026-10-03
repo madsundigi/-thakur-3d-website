@@ -57,7 +57,8 @@ interface Props {
   /** Package mode: header label overrides — by serviceId ({ 'premium-spa': 'Premium Spa (dog spa at home)' }) or by
    *  column position (array). */
   columnLabels?: ColumnText;
-  /** Package mode: header note overrides (second line), same keys — e.g. PR-4's Full Groom note. */
+  /** Package mode: header note overrides (second line), same keys — e.g. PR-4's Full Groom note. An empty string
+   *  removes the table's own note on this page (the dog page drops the /pricing/ keyword note this way). */
   columnNotes?: ColumnText;
   /** Package mode: label of the durations row (default 'Typical duration', template SP-3). */
   durationLabel?: string;
@@ -111,6 +112,21 @@ rows.forEach((r) => {
 });
 // A column holding any ✓/— is centred (header, marks and any text in it, e.g. the durations row).
 const centred = columns.map((_, i) => rows.some((r) => typeof r.cells[i] === 'boolean'));
+// Short-text columns — every text cell ≤ 16 characters ("Small", "every 4–6 weeks", a price with its saving in
+// brackets) — get no base floor: two short lines read fine, and a numeric table can then fit a phone (request
+// w1-pricing B-2; decisions/w1-layout.md §3). When the cells are numeric (they start with ₹, a digit, ~, <, > or a
+// sign: a ₹ figure, "6:00–8:00", "< 10 kg") they are also set on one line, so a figure never splits from its unit
+// (prices come from the pricing.ts helpers as ever — this file formats nothing). Word cells still wrap, so a
+// long-text column beside them (the breed table's "What we recommend") keeps its width at 360. The sticky row-label
+// column loses its floor at ≤ 12 characters ("Small", "Shih Tzu"), which keeps it under half of a 360px screen;
+// longer labels keep the 9.5rem floor ("Golden Retriever").
+const SHORT_CELL = 16;
+const SHORT_LABEL = 12;
+const NUMERIC = /^[₹\d~<>+±\-–]/;
+const isShort = (v: Cell | undefined): boolean => typeof v !== 'string' || v.length <= SHORT_CELL;
+const compact = columns.map((_, i) => !centred[i] && rows.some((r) => typeof r.cells[i] === 'string') && rows.every((r) => isShort(r.cells[i])));
+const numeric = columns.map((_, i) => compact[i] && rows.every((r) => typeof r.cells[i] !== 'string' || NUMERIC.test(r.cells[i])));
+const compactLabels = rows.length > 0 && rows.every((r) => r.label.length <= SHORT_LABEL);
 const hasNotes = footnotes.length > 0 || Astro.slots.has('default');
 ---
 <div id={id} class:list={['it', cls]}>
@@ -123,7 +139,7 @@ const hasNotes = footnotes.length > 0 || Astro.slots.has('default');
           {columns.map((c, i) => (
             <th scope="col" class:list={['t-h4', { 'it-c it-col-c': centred[i], 'it-col-sub': (c.sub?.length ?? 0) > 24, 'is-featured': c.featured }]}>
               {c.label}
-              {c.sub ? <span class="block text-sm font-normal">{priceParts(c.sub).map((p) => (p.figure ? <span class="t-price">{p.text}</span> : p.text))}</span> : null}
+              {c.sub ? <span class="it-sub block text-sm font-normal">{priceParts(c.sub).map((p) => (p.figure ? <span class="t-price">{p.text}</span> : p.text))}</span> : null}
               {c.badge ? <span class:list={['t-micro mt-1 flex h-6 w-max items-center rounded-pill bg-cta px-2 text-ink', { 'mx-auto': centred[i] }]}>{c.badge}</span> : null}
             </th>
           ))}
@@ -133,14 +149,14 @@ const hasNotes = footnotes.length > 0 || Astro.slots.has('default');
         {rows.map((r) => (
           <tr>
             {rowHeaders ? (
-              <th scope="row" class="it-label font-medium leading-snug text-ink">{r.label}</th>
+              <th scope="row" class:list={['font-medium leading-snug text-ink', compactLabels ? 'it-short' : 'it-label']}>{r.label}</th>
             ) : (
-              <td class="it-text text-sm text-ink">{r.label}</td>
+              <td class:list={['text-sm text-ink', compactLabels ? 'it-short' : 'it-text']}>{r.label}</td>
             )}
             {r.cells.map((cell, i) => (
               <td
                 class:list={[
-                  typeof cell === 'string' ? ['text-sm text-ink', centred[i] ? 'whitespace-nowrap' : 'it-text'] : '',
+                  typeof cell === 'string' ? ['text-sm text-ink', centred[i] ? 'whitespace-nowrap' : compact[i] ? ['it-short', { 'whitespace-nowrap': numeric[i] }] : 'it-text'] : '',
                   { 'it-c': centred[i], 'is-featured': columns[i].featured },
                 ]}
               >
@@ -171,10 +187,19 @@ const hasNotes = footnotes.length > 0 || Astro.slots.has('default');
   .it-wide { min-width: 640px; }
   .it-c { text-align: center; }
 
+  /* Header note: capped at 16rem so a long note wraps instead of widening its column (request w1-pricing B-1 —
+     measured on /pricing/ PR-4 at 1280, the Full Groom column took 481px of 1200 for its 62-character note);
+     centred under a centred column's label. */
+  .it-sub { max-width: 16rem; }
+  .it-c .it-sub { margin-inline: auto; }
+
+  /* Short-text cells and labels (B-2): no floor — the text's own width is the floor (numeric cells add nowrap). */
+  .it-short { min-width: 0; }
+
   /* Base (< md): column floors, so nothing collapses to one word per line — the table scrolls sideways instead (the
      floors include the cell padding). The sticky row-label column stays under half of a 360px screen and wraps; ✓
      columns fit a short header on ≤ 2 lines; a header with a long note (> 24 characters, e.g. PR-4's Full Groom
-     note) gets room for it; text cells stay readable. */
+     note) gets room for it; text cells stay readable. Short-text columns (.it-short above) carry no floor. */
   .it-label { min-width: 9.5rem; }
   .it-col-c { min-width: 7.5rem; }
   .it-col-sub { min-width: 11rem; }
