@@ -65,7 +65,7 @@ export const VET_LINE =
   'Registered veterinarians only. Medicines and vaccines are charged at printed MRP — the wrapper is shown to you.';
 
 /** PR-8 maths table (06 §7.3 figures, computed by groomClubPrices()) and the button label (06 §3.2 bank). `save`
- *  prefixes the saving under each club price — the blueprint's "₹1,019 (save ₹180)". */
+ *  prefixes the saving under each club price — the blueprint's "{club price} (save {saving})". */
 export const GROOM_CLUB = {
   caption: 'Groom Club price for one Full Groom a month, by dog size',
   rowHeader: 'Dog size',

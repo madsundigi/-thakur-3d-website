@@ -3,10 +3,10 @@
 //  · the pitch — GROOM_CLUB_PITCH, 06 §7.3 verbatim, every figure computed from pricing.json, with 06's bold on its
 //    title and on the three benefits;
 //  · the maths table — groomClubPrices(): one Full Groom at the club discount, rounded down to the rupee (pricing.md §6),
-//    laid out as the blueprint writes it, "Small ₹1,199 → ₹1,019 (save ₹180)": size · Full Groom · Groom Club price with
-//    its saving. Three columns fit a 360px screen without sideways scrolling, so the club price is never hidden behind
-//    the scroll. A plain <table> in the shared TableFrame (08 §4.8 wrapper); the club column is the featured sand. No
-//    strikethrough on the regular price (06 §7.4);
+//    laid out as the blueprint writes it ("Small {Full Groom price} → {club price} (save {saving})"): size · Full
+//    Groom · Groom Club price with its saving. Three columns fit a 360px screen without sideways scrolling, so the
+//    club price is never hidden behind the scroll. A plain <table> in the shared TableFrame (08 §4.8 wrapper); the club
+//    column is the featured sand. No strikethrough on the regular price (06 §7.4);
 //  · [Join Groom Club] — a wa.me link with the size-less prefill (groomClubWaText(): the club price depends on the
 //    size, so the message asks for it) and data-source "groomclub" (09 §2d).
 // ≥ lg: pitch left, table + button right (DOM order = reading order).
