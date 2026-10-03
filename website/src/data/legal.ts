@@ -330,7 +330,7 @@ export const CONSENT_TEXT: { title: string; body: string }[] = [
   },
   {
     title: 'Bookings & WhatsApp',
-    body: 'When you book, we store the details you enter (name, mobile number, area, pet details, preferred date and time, and any note) in our private records and use them only to handle that booking — confirming it on WhatsApp at the number you give us, arranging the visit and answering your messages about it. We never sell or share your number.',
+    body: 'When you book, we store the details you enter (name, mobile number, area, pet details, preferred date and time, and any note) in our private records and use them only to handle that booking — confirming it on WhatsApp, as you agree on the booking form, arranging the visit and answering your messages about it. We never sell or share your number.',
   },
   {
     title: 'Reminders, reviews & offers',
