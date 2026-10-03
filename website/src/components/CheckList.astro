@@ -1,0 +1,66 @@
+---
+// ✓-list package cards (06-CONVERSION-PLAYBOOK §5.3 "Every package card lists its ✓-inclusions"; template SP-3:
+// "Non-grooming pages replace the grid with a ✓-list per package") — dog-walking plans, vet visit types, vaccination,
+// tick & flea options, the puppy groom. Card: optional "Most booked" badge · h3 title · price line · ✓ items · note ·
+// optional CTA. Grid: 1 column at base, 2 from md (2+ cards), 3 from lg (3+ cards). Zero JS.
+// Prices are never typed: pass priceText built with src/lib/pricing.ts helpers; ₹ figures render in price type.
+// Per-card CTA: give the child slot="cta-1" for the first card, "cta-2" for the second, … (1-based).
+//   <CheckList items={plans}><Button slot="cta-3" href="/book/?service=dog-walking&src=service_dog-walking" …>…</Button></CheckList>
+import Chip from './Chip.astro';
+import Icon from './icons/Icon.astro';
+import { priceParts } from '../lib/pricing';
+
+interface Card {
+  /** Package name, e.g. '1 walk/day', 'Vet Home Visit'. */
+  title: string;
+  /** Price line from the pricing helpers, e.g. `${planPrice('dog-walking', 'walk-1x')}/month`. */
+  priceText: string;
+  /** The ✓-inclusions, verbatim from the page blueprint (facts from 00 §3.2 only). */
+  items: readonly string[];
+  /** Small slate line under the list, e.g. '~45 minutes with breaks'. */
+  note?: string;
+  /** Amber badge above the title — "Most booked" only (08 §1.4 rule 1). */
+  badge?: string;
+}
+interface Props {
+  items: readonly Card[];
+  /** Heading level of each card title (default 3 — under the section H2). */
+  level?: 2 | 3 | 4;
+  class?: string;
+}
+
+const { items, level = 3, class: cls = '' } = Astro.props;
+const H = `h${level}` as 'h2' | 'h3' | 'h4';
+const n = items.length;
+const ctas = await Promise.all(items.map((_, i) => (Astro.slots.has(`cta-${i + 1}`) ? Astro.slots.render(`cta-${i + 1}`) : '')));
+const priced = (text: string) => priceParts(text);
+---
+<ul
+  class:list={[
+    'm-0 grid list-none gap-4 p-0 lg:gap-6',
+    { 'md:grid-cols-2': n >= 2, 'lg:grid-cols-3': n >= 3, 'max-w-[36rem]': n === 1 },
+    cls,
+  ]}
+>
+  {items.map((card, i) => (
+    <li class="flex h-full min-w-0 flex-col rounded-lg border border-line bg-paper p-4 lg:p-6">
+      {card.badge ? <Chip kind="badge" label={card.badge} class="mb-2 self-start" /> : null}
+      <H class="t-h3 m-0">{card.title}</H>
+      <p class="m-0 mt-1 text-ink">
+        {priced(card.priceText).map((p) => (p.figure ? <span class="t-price text-xl">{p.text}</span> : <span>{p.text}</span>))}
+      </p>
+      <ul class="m-0 mt-3 list-none space-y-2 p-0">
+        {card.items.map((item) => (
+          <li class="flex items-start gap-2 text-sm text-ink">
+            <Icon name="check" size={20} class="flex-none text-brand" />
+            <span class="min-w-0">{priced(item).map((p) => (p.figure ? <span class="t-price">{p.text}</span> : p.text))}</span>
+          </li>
+        ))}
+      </ul>
+      {card.note ? (
+        <p class="m-0 mt-3 text-sm text-slate">{priced(card.note).map((p) => (p.figure ? <span class="t-price">{p.text}</span> : p.text))}</p>
+      ) : null}
+      {ctas[i] ? <div class="mt-auto pt-4"><Fragment set:html={ctas[i]} /></div> : null}
+    </li>
+  ))}
+</ul>

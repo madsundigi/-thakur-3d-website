@@ -1,0 +1,91 @@
+---
+// Table frame — the "PriceMatrix wrapper spec" (08-DESIGN-SYSTEM §4.8) shared by PriceMatrix.astro and InfoTable.astro
+// (template SP-3: "Real <table> with horizontal scroll + sticky first column (PriceMatrix wrapper spec)").
+// Renders the surface (radius-lg paper; shadow-1, or a hairline border on a sand/mint band — 08 §3.3, never both) and
+// a keyboard-focusable scroll region (role="region" + aria-label + tabindex="0", so the table can be scrolled without a
+// mouse — 08 §7.2, axe scrollable-region-focusable) around the slotted <table>. Zero JS.
+//
+// It owns every shared table rule. The <table> is the parent's own markup, so these rules reach it through :global()
+// under this component's scoped scroller:
+//   base  horizontal scroll, right-edge fade (dropped while focus is inside — focus is never obscured, 08 §7.2), the
+//         last column carries 40px right padding so only padding sits under the fade when scrolled to the end
+//   all   header row mint / brand-deep · cells 12px 16px, rows ≥ 52px · paper / sand-50 zebra · `td.is-featured`
+//         cells sand (hero-service column) · sticky first column (z-10, 08 §3.6) with a hairline edge
+//   ≥ md  no fade; cells tighten to 8px sides (16px at the table's outer edges); 16px sides again ≥ lg
+// Parent markup contract: <table class="… w-full border-collapse text-left">, an optional <caption class="tf-caption">
+// (visible) or class="sr-only", <thead> with <th scope="col">, <tbody> rows led by <th scope="row">.
+interface Props {
+  /** Accessible name of the scroll region — use the table's caption text. */
+  label: string;
+  /** The table sits on a sand or mint band: hairline border instead of shadow. */
+  onTint?: boolean;
+  class?: string;
+}
+
+const { label, onTint = false, class: cls = '' } = Astro.props;
+---
+<div class:list={['rounded-lg bg-paper', onTint ? 'border border-line' : 'shadow-1', cls]}>
+  <div class="tf-scroll rounded-lg" role="region" aria-label={label} tabindex="0">
+    <slot />
+  </div>
+</div>
+
+<style>
+  /* Scroll container: horizontal scroll on narrow screens, one DOM (no stacked duplicate — 02 content parity). */
+  .tf-scroll {
+    position: relative; /* contains an sr-only (absolute) caption — else it escapes the scroller and widens the page */
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+  }
+  .tf-scroll:focus-visible { outline-offset: -2px; }
+  .tf-scroll :global(table) { font-variant-numeric: tabular-nums; }
+  .tf-scroll :global(.tf-caption) { caption-side: top; text-align: left; padding: 16px 16px 4px; font-weight: 600; }
+
+  .tf-scroll :global(th),
+  .tf-scroll :global(td) { padding: 12px 16px; vertical-align: middle; height: 52px; }
+  .tf-scroll :global(thead th) { vertical-align: bottom; }
+
+  /* Header row (08 §4.8): mint fill, brand-deep h4 text. */
+  .tf-scroll :global(thead tr) { background: var(--color-mint); color: var(--color-brand-deep); }
+
+  /* Rows: paper / sand-50 zebra (08 §4.8). Opaque mix, so the sticky column can inherit it without see-through. */
+  .tf-scroll :global(tbody tr) { --tf-row: var(--color-paper); background: var(--tf-row); border-top: 1px solid var(--color-line); }
+  .tf-scroll :global(tbody tr:nth-child(even)) { --tf-row: color-mix(in srgb, var(--color-sand) 50%, var(--color-paper)); }
+  /* Hero-service emphasis (08 §4.8: the Full Groom column cells sand). */
+  .tf-scroll :global(td.is-featured) { background: var(--color-sand); }
+
+  /* Sticky first column (z-10 per 08 §3.6) with a hairline edge so scrolled content reads as passing under it. */
+  .tf-scroll :global(thead th:first-child),
+  .tf-scroll :global(tbody th[scope='row']) {
+    position: sticky;
+    left: 0;
+    z-index: 10;
+    box-shadow: inset -1px 0 0 var(--color-line);
+  }
+  .tf-scroll :global(thead th:first-child) { background: var(--color-mint); }
+  .tf-scroll :global(tbody th[scope='row']) { background: var(--tf-row); }
+
+  /* Base (< md) — a right-edge fade signals "scroll for more"; the last column carries 40px of right padding so
+     that, scrolled to the end, only padding sits under the fade. */
+  .tf-scroll {
+    -webkit-mask-image: linear-gradient(to right, black calc(100% - 32px), transparent);
+    mask-image: linear-gradient(to right, black calc(100% - 32px), transparent);
+  }
+  /* Keyboard users: never let the fade sit over a focused link inside the table (08 §7.2 — focus never obscured). */
+  .tf-scroll:focus-within { -webkit-mask-image: none; mask-image: none; }
+  .tf-scroll :global(tr > :last-child) { padding-right: 40px; }
+
+  /* ≥ md the table is meant to fit without scroll (08 §4.8 Responsive): no fade and no trailing fade padding, cells
+     tighten to 8px sides (16px at the table's outer edges). */
+  @media (min-width: 768px) {
+    .tf-scroll { -webkit-mask-image: none; mask-image: none; }
+    .tf-scroll :global(th),
+    .tf-scroll :global(td) { padding-left: 8px; padding-right: 8px; }
+    .tf-scroll :global(tr > :first-child) { padding-left: 16px; }
+    .tf-scroll :global(tr > :last-child) { padding-right: 16px; }
+  }
+  @media (min-width: 1024px) {
+    .tf-scroll :global(th),
+    .tf-scroll :global(td) { padding-left: 16px; padding-right: 16px; }
+  }
+</style>
