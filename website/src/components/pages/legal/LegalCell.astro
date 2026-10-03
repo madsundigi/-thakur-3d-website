@@ -1,0 +1,17 @@
+---
+// One cell of a <LegalTable> row. `head` = the row header (<th scope="row">: the card title below md). Every other
+// cell passes `label` = its column header, shown above the value below md and hidden from screen readers (they hear
+// the real column header). `span` joins cells (a row that only points to another section).
+interface Props {
+  head?: boolean;
+  label?: string;
+  span?: number;
+}
+const { head = false, label, span } = Astro.props;
+if (!head && !label) throw new Error('LegalCell: a data cell needs `label` (its column header, shown on phones)');
+---
+{head ? (
+  <th scope="row" role="rowheader"><slot /></th>
+) : (
+  <td role="cell" colspan={span}><span class="lt-label" aria-hidden="true">{label}</span><slot /></td>
+)}

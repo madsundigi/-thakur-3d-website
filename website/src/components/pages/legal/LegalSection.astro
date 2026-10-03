@@ -1,0 +1,19 @@
+---
+// One H2 block of a legal page (blueprints B19 PP-2…PP-14, B20 TM-2…TM-14). `entry` is the same object the on-page
+// contents list renders, so a heading and its contents link can never differ; its id is the fragment the list links
+// to (html { scroll-padding-top } in global.css lands it below the sticky header). No accessible name on the
+// <section>, so it stays a plain grouping element: the page keeps its usual landmarks and screen-reader users move
+// through the policy by its H2s.
+// Spacing (08 §3.1 steps): 48px between sections, 64px from lg; 16px between the blocks inside (space-y-4 works
+// through :where(), so a block may still add its own margin utility).
+import type { TocEntry } from './legal-page';
+
+interface Props {
+  entry: TocEntry;
+}
+const { entry } = Astro.props;
+---
+<section id={entry.id} class="mt-12 space-y-4 lg:mt-16">
+  <h2 class="t-h2 m-0">{entry.label}</h2>
+  <slot />
+</section>

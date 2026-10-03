@@ -1,0 +1,85 @@
+---
+// Legal-page table (blueprints B19 PP-3, PP-5, PP-6 · B20 TM-3): a real <table> whose rows are <LegalRow> +
+// <LegalCell> children. Zero JS, one DOM at every width (02 P110 parity):
+//   < md   each row is a card — the row header is its title and every cell carries a visible label (LegalCell's
+//          `label`, aria-hidden) — so long legal text reads top to bottom on a 360px phone with no sideways scroll.
+//   ≥ md   a classic table: mint header row (08 §4.8), hairline row rules, paper / sand-50 zebra.
+// The base layout changes `display` on the table parts, and some browsers then drop table semantics, so every part
+// carries its ARIA role explicitly (table · rowgroup · row · columnheader · rowheader · cell): screen readers keep
+// "column 3 of 4, Why" at every width, while the visual labels stay hidden from them.
+// Surface: shadow-1 on paper (08 §3.3), radius-lg.
+interface Props {
+  /** Accessible name of the table (visually hidden: the section's H2 names it on screen). */
+  caption: string;
+  /** Header labels; the first is the row-header column. */
+  columns: readonly string[];
+  /** Column widths from md, as percentages that add up to 100 (the default is the browser's auto layout). */
+  widths?: readonly number[];
+}
+
+const { caption, columns, widths } = Astro.props;
+if (widths) {
+  const sum = widths.reduce((a, b) => a + b, 0);
+  if (widths.length !== columns.length || Math.abs(sum - 100) > 0.5) {
+    throw new Error(`LegalTable "${caption}": widths must give one percentage per column and add up to 100 (got ${widths.join(' + ')} = ${sum})`);
+  }
+}
+---
+<div class="lt">
+  <table role="table">
+    <caption class="sr-only">{caption}</caption>
+    {widths ? <colgroup>{widths.map((w) => <col style={`width: ${w}%`} />)}</colgroup> : null}
+    <thead role="rowgroup">
+      <tr role="row">{columns.map((c) => <th scope="col" role="columnheader">{c}</th>)}</tr>
+    </thead>
+    <tbody role="rowgroup"><slot /></tbody>
+  </table>
+</div>
+
+<style>
+  .lt { position: relative; font-size: 0.875rem; line-height: 1.5; color: var(--color-ink); }
+  .lt table { width: 100%; border-collapse: collapse; text-align: left; }
+
+  /* ---- base (< md): one card per row ---- */
+  .lt table, .lt tbody, .lt :global(tr), .lt :global(th), .lt :global(td) { display: block; }
+  /* Column headers stay in the accessibility tree; each cell shows its own label instead. */
+  .lt thead {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden;
+    clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+  }
+  .lt tbody > :global(tr) {
+    padding: 12px 16px 16px; border-radius: var(--radius-lg); background: var(--color-paper); box-shadow: var(--shadow-1);
+  }
+  .lt tbody > :global(tr + tr) { margin-top: 12px; }
+  .lt tbody :global(th) { font-size: 1rem; line-height: 1.4; font-weight: 600; }
+  .lt tbody :global(td) { margin-top: 12px; }
+  .lt :global(.lt-label) {
+    display: block; margin-bottom: 4px; font-size: 0.8125rem; line-height: 1.4; font-weight: 600; color: var(--color-slate);
+  }
+  .lt :global(code) { overflow-wrap: anywhere; }
+  .lt :global(td ul) { margin: 0; padding-left: 1.25rem; list-style: disc; }
+  .lt :global(td li + li) { margin-top: 4px; }
+  .lt :global(td li)::marker { color: var(--color-brand); }
+  .lt :global(td p) { margin: 0; }
+  .lt :global(td p + p) { margin-top: 8px; }
+
+  /* ---- ≥ md: a classic table ---- */
+  @media (min-width: 768px) {
+    .lt { border-radius: var(--radius-lg); background: var(--color-paper); box-shadow: var(--shadow-1); overflow: hidden; }
+    .lt table { display: table; }
+    .lt thead {
+      display: table-header-group; position: static; width: auto; height: auto; margin: 0; overflow: visible;
+      clip: auto; white-space: normal;
+    }
+    .lt tbody { display: table-row-group; }
+    .lt :global(tr) { display: table-row; }
+    .lt :global(th), .lt :global(td) { display: table-cell; padding: 12px 16px; vertical-align: top; }
+    /* 08 §4.8 header row: mint fill, brand-deep h4 text. */
+    .lt thead th { background: var(--color-mint); color: var(--color-brand-deep); font-size: 1rem; line-height: 1.4; font-weight: 600; vertical-align: bottom; }
+    .lt tbody > :global(tr) { padding: 0; border-radius: 0; box-shadow: none; border-top: 1px solid var(--color-line); }
+    .lt tbody > :global(tr + tr) { margin-top: 0; }
+    .lt tbody > :global(tr:nth-child(even)) { background: color-mix(in srgb, var(--color-sand) 50%, var(--color-paper)); }
+    .lt tbody :global(td) { margin-top: 0; }
+    .lt :global(.lt-label) { display: none; }
+  }
+</style>

@@ -1,0 +1,261 @@
+---
+// /terms/ — blueprint: website-plan/blueprints/terms.md (B20), blocks TM-0…TM-14 in DOM order. Service terms,
+// including the pet-handling consent 01-SITEMAP asks for. Rules render verbatim from src/data/legal.ts SERVICE_RULES
+// (each id exactly once — checked below), IDENTITY tokens stay visible [FILL:*] (00 §8, E12), hours and contact
+// values come from src/data/site.ts, areas and the size guide from pricing.json, every offer amount from
+// src/data/offers.ts and the offer terms from src/data/content.ts (one wording site-wide: RESCHEDULE_TEXT,
+// FIRSTGROOM_TERMS, REFERRAL_TERMS, GROOM_CLUB_PITCH). No ₹ figure is typed here (07 §4). A lawyer reviews the
+// rendered page before launch (00 §9 item 7, D4). Indexable, BreadcrumbList only (04 §2.9). Zero JS.
+import LegalPage from '../components/pages/legal/LegalPage.astro';
+import LegalSection from '../components/pages/legal/LegalSection.astro';
+import LegalTable from '../components/pages/legal/LegalTable.astro';
+import LegalRow from '../components/pages/legal/LegalRow.astro';
+import LegalCell from '../components/pages/legal/LegalCell.astro';
+import ContactLink from '../components/pages/legal/ContactLink.astro';
+import Icon from '../components/icons/Icon.astro';
+import { IDENTITY, LAW, SERVICE_RULES } from '../data/legal';
+import { FIRSTGROOM_TERMS, GROOM_CLUB_PITCH, R3, REFERRAL_TERMS, RESCHEDULE_TEXT } from '../data/content';
+import { FIRSTGROOM } from '../data/offers';
+import { isLive, routeLabel } from '../data/routes';
+import { site, waHref } from '../data/site';
+import { prefillFor } from '../data/services';
+import { areas, inr, SIZES, sizeGuide } from '../lib/pricing';
+import { check, fillSiteTokens, listText, type TocEntry } from '../components/pages/legal/legal-page';
+
+const PATH = '/terms/';
+const SOURCE = 'terms_page'; // 09 §2d `<slug>_page`
+
+// ── Sections (the H2s and the on-page contents list) — headings = the blueprint's block names ────────────────────
+const S = {
+  offer: { id: 'what-we-offer', label: 'What we offer, and where' }, // TM-2
+  hours: { id: 'when-we-work', label: 'When we work' }, // TM-3
+  booking: { id: 'how-booking-works', label: 'How booking works' }, // TM-4
+  prices: { id: 'prices', label: 'Prices' }, // TM-5
+  payment: { id: 'payment', label: 'Payment' }, // TM-6
+  cancel: { id: 'rescheduling-and-cancelling', label: 'Rescheduling and cancelling' }, // TM-7
+  pet: { id: 'looking-after-your-pet', label: 'Looking after your pet' }, // TM-8
+  vet: { id: 'vet-visits-and-vaccinations', label: 'Vet visits and vaccinations' }, // TM-9
+  wrong: { id: 'if-something-goes-wrong', label: 'If something goes wrong' }, // TM-10
+  offers: { id: 'offers-and-groom-club', label: 'Offers and Groom Club' }, // TM-11
+  liability: { id: 'our-responsibility', label: 'Our responsibility' }, // TM-12
+  law: { id: 'governing-law-and-disputes', label: 'Governing law and disputes' }, // TM-13
+  changes: { id: 'changes-to-these-terms', label: 'Changes to these terms' }, // TM-14
+} satisfies Record<string, TocEntry>;
+
+// ── SERVICE_RULES: where each rule prints (blueprint terms.md, rule order as given). Every id exactly once. ─────────
+const RULES_IN = {
+  offer: ['waitlist'], // TM-2
+  booking: ['walking-start'], // TM-4
+  prices: ['add-ons-first', 'mats'], // TM-5
+  payment: ['pay-after'], // TM-6
+  pet: ['handling-consent', 'tell-us', 'adult-present', 'tap-and-plug', 'no-sedation', 'muzzle', 'stop-safely', 'products', 'puppy-age', 'walking-safety', 'photos'], // TM-8
+  vet: ['vet', 'not-emergency', 'mrp'], // TM-9
+} as const;
+const placed = Object.values(RULES_IN).flat() as string[];
+const ids = SERVICE_RULES.map((r) => r.id);
+check(placed.length === new Set(placed).size, `a SERVICE_RULES id is placed twice: ${placed.filter((id, i) => placed.indexOf(id) !== i).join(', ')}`);
+check(ids.every((id) => placed.includes(id)), `SERVICE_RULES id(s) not rendered on /terms/: ${ids.filter((id) => !placed.includes(id)).join(', ')}`);
+check(placed.every((id) => ids.includes(id)), `unknown SERVICE_RULES id(s): ${placed.filter((id) => !ids.includes(id)).join(', ')}`);
+/** The rule's text, verbatim; a site.ts value fills its token (not-emergency → site.emergencyVets, as faq.ts does). */
+const rule = (id: string): string => fillSiteTokens(SERVICE_RULES.find((r) => r.id === id)!.text);
+const rules = (block: keyof typeof RULES_IN): string[] => RULES_IN[block].map(rule);
+
+// ── TM-2 / TM-5: facts from pricing.json ────────────────────────────────────────────────────────────────────────────
+const sizesText = SIZES.map((s) => `${sizeGuide[s].label} ${sizeGuide[s].kg}`).join(', ');
+const pricingLive = isLive('/pricing/');
+const privacyLive = isLive('/privacy-policy/');
+
+// ── TM-3: rows = site.ts hours (00 §3.1) + the fog-day walk rule (dog-walking.md SP-4) + the WhatsApp reply time (D3)
+const hours = [
+  { what: 'Grooming and vet visits', when: site.hours.visits },
+  { what: 'Dog walks', when: site.hours.walks },
+  { what: 'Dog walks on December–January fog days', when: 'Morning walks move to 8:00–9:30.' },
+  { what: 'WhatsApp replies', when: `${R3} Messages sent after 19:00 are answered from 9:00.` },
+];
+
+
+---
+<LegalPage
+  title="Terms of Service – Pet Care at Your Doorstep | PetDoorStep"
+  description="Terms for booking PetDoorStep pet care at home in Ludhiana: WhatsApp confirmation, fixed prices, pay after the service, cancelling and pet safety rules."
+  path={PATH}
+  h1="Terms of Service — Booking, Visits and Payment"
+  toc={Object.values(S)}
+>
+  {/* TM-1 · intro */}
+  <Fragment slot="intro">
+    <p>
+      These terms apply whenever you book a PetDoorStep service, on this website or on WhatsApp. They are an agreement
+      between you and {IDENTITY.LEGAL_NAME} ("PetDoorStep", "we"). How we handle your personal data is explained in our{' '}
+      {privacyLive ? <a href="/privacy-policy/">{routeLabel('/privacy-policy/')}</a> : routeLabel('/privacy-policy/')}.
+    </p>
+  </Fragment>
+
+  {/* TM-2 · What we offer, and where */}
+  <LegalSection entry={S.offer}>
+    <div class="prose">
+      <p>
+        PetDoorStep is a doorstep service: our groomers, walkers and partner vet come to your home. There is no walk-in
+        centre. We serve all of {site.city}, and these {areas.length} areas get priority slots: {listText(areas)}.
+      </p>
+      <p>{rules('offer').join(' ')} Waitlist members get {inr(FIRSTGROOM.off)} off their first groom when we start in their city.</p>
+      <p>
+        We do not offer single one-off walks, online or video vet consultations, 24×7 or emergency care, boarding,
+        training or pet supplies.
+      </p>
+      {pricingLive ? <p><a href="/pricing/">Every service and price</a></p> : null}
+    </div>
+  </LegalSection>
+
+  {/* TM-3 · When we work */}
+  <LegalSection entry={S.hours}>
+    <LegalTable caption="When we work" columns={['What', 'When']} widths={[38, 62]}>
+      {hours.map((h) => (
+        <LegalRow>
+          <LegalCell head>{h.what}</LegalCell>
+          <LegalCell label="When">{h.when}</LegalCell>
+        </LegalRow>
+      ))}
+    </LegalTable>
+  </LegalSection>
+
+  {/* TM-4 · How booking works */}
+  <LegalSection entry={S.booking}>
+    <div class="prose">
+      <p>
+        A booking made on this website is a request until we confirm it on WhatsApp. The date and time window you
+        choose are your preference. We confirm the exact slot on WhatsApp within 10 minutes between 9:00 and 19:00. A
+        request sent after 19:00 is confirmed by 9:15 the next morning, and one sent before 9:00 by 9:15 that morning.
+        We do not show live slot availability, so a slot is yours once we confirm it.
+      </p>
+      {rules('booking').map((r) => <p>{r}</p>)}
+    </div>
+  </LegalSection>
+
+  {/* TM-5 · Prices */}
+  <LegalSection entry={S.prices}>
+    <div class="prose">
+      <p>
+        Every price is published on our {pricingLive ? <a href="/pricing/">price list</a> : 'price list'}, from the same
+        price file our booking form uses. The price we confirm on WhatsApp is the price you pay: no doorstep bargaining.
+        There is no travel charge anywhere in {site.city}. Dog grooming is priced by size: {sizesText}. If you are
+        unsure, choose the closer size; we confirm it on WhatsApp before the visit, never at your door.
+      </p>
+      {rules('prices').map((r) => <p>{r}</p>)}
+      <p>For medicines and vaccines, see <a href={`#${S.vet.id}`}>{S.vet.label}</a>.</p>
+    </div>
+  </LegalSection>
+
+  {/* TM-6 · Payment */}
+  <LegalSection entry={S.payment}>
+    <div class="prose">
+      {rules('payment').map((r) => <p>{r}</p>)}
+      <p>Groom Club members also pay per visit, after each groom.</p>
+    </div>
+  </LegalSection>
+
+  {/* TM-7 · Rescheduling and cancelling (RESCHEDULE_TEXT: the one wording of the 00 §3.2 rule) */}
+  <LegalSection entry={S.cancel}>
+    <div class="prose">
+      <p>{RESCHEDULE_TEXT}</p>
+      <ul>
+        <li><strong>Cancelling less than 2 hours before your slot:</strong> {IDENTITY.LATE_CANCEL_RULE}</li>
+        <li><strong>If nobody is home when we arrive:</strong> {IDENTITY.NO_SHOW_RULE}</li>
+      </ul>
+      <p>If heavy rain or dense fog means we need to shorten or move a walk, we tell you on WhatsApp first.</p>
+    </div>
+  </LegalSection>
+
+  {/* TM-8 · Looking after your pet (11 SERVICE_RULES, in the blueprint's order) */}
+  <LegalSection entry={S.pet}>
+    <div class="prose">
+      <p>Your pet's safety comes before finishing any service.</p>
+      <ul>{rules('pet').map((r) => <li>{r}</li>)}</ul>
+    </div>
+  </LegalSection>
+
+  {/* TM-9 · Vet visits and vaccinations (vet · not-emergency · mrp) */}
+  <LegalSection entry={S.vet}>
+    <div class="prose">
+      {RULES_IN.vet.map((id) => id === 'not-emergency' ? (
+        <p role="note" class="flex gap-3 rounded-lg bg-sand p-4">
+          <span class="mt-0.5 flex-none text-alert"><Icon name="alert-circle" size={20} /></span>
+          <span>{rule(id)}</span>
+        </p>
+      ) : (
+        <p>{rule(id)}</p>
+      ))}
+      <p>
+        A home visit suits check-ups, vaccinations, deworming, skin, ear and eye problems, tick and flea issues, mild
+        tummy upsets and follow-ups. Anything that needs X-rays, ultrasound, surgery, drips or intensive care needs a
+        clinic or hospital, and our vet will tell you so plainly. We do not offer online or video consultations.
+      </p>
+    </div>
+  </LegalSection>
+
+  {/* TM-10 · If something goes wrong (no promise on vet-check costs, refunds or touch-ups: TM-12 / policy gates) */}
+  <LegalSection entry={S.wrong}>
+    <div class="prose">
+      <p>
+        If anything goes wrong during a visit, we stop immediately, tell you on the spot and help you get a vet check
+        right away, from our partner vet or the nearest clinic.
+      </p>
+      <p>
+        Not happy with a service? Tell us on{' '}
+        <a href={waHref(prefillFor(PATH))} data-source={SOURCE} target="_blank" rel="noopener">WhatsApp</a> — a real person
+        reads every message. For a formal complaint, contact our Grievance Officer: {IDENTITY.GRIEVANCE_OFFICER_NAME},{' '}
+        <ContactLink kind="email" page={PATH} value={IDENTITY.GRIEVANCE_EMAIL} />,{' '}
+        <ContactLink kind="phone" page={PATH} value={IDENTITY.GRIEVANCE_PHONE} />.
+      </p>
+    </div>
+  </LegalSection>
+
+  {/* TM-11 · Offers and Groom Club (terms + amounts from content.ts / offers.ts / pricing.json) */}
+  <LegalSection entry={S.offers}>
+    <div class="prose">
+      <h3>{FIRSTGROOM.code}</h3>
+      <p>{FIRSTGROOM_TERMS}</p>
+      <p>
+        The booking form adds the code automatically to a first booking from your device, or you can type{' '}
+        {FIRSTGROOM.code} in your WhatsApp message.
+      </p>
+      <h3>Referral</h3>
+      <p>{REFERRAL_TERMS}</p>
+      <h3>Groom Club</h3>
+      <p>{GROOM_CLUB_PITCH.body}</p>
+      <h3>Other offers</h3>
+      <p>
+        Every other offer shows its full terms and its end date where it is advertised. Offers end on their stated date
+        or are extended with a new date.
+      </p>
+    </div>
+  </LegalSection>
+
+  {/* TM-12 · Our responsibility (the lawyer's text) */}
+  <LegalSection entry={S.liability}>
+    <div class="prose">
+      <p>{IDENTITY.LIABILITY_TERMS}</p>
+      <p>Nothing in these terms limits your rights under the {LAW.CONSUMER_ACT}.</p>
+    </div>
+  </LegalSection>
+
+  {/* TM-13 · Governing law and disputes */}
+  <LegalSection entry={S.law}>
+    <div class="prose">
+      <p>
+        These terms are governed by the laws of India. Any dispute is subject to the courts at {IDENTITY.JURISDICTION}.
+        Please raise any problem with us first (see <a href={`#${S.wrong.id}`}>{S.wrong.label}</a>).
+      </p>
+    </div>
+  </LegalSection>
+
+  {/* TM-14 · Changes to these terms + contact line */}
+  <LegalSection entry={S.changes}>
+    <div class="prose">
+      <p>When we change these terms, we update the effective date at the top of this page.</p>
+      <p>
+        WhatsApp <ContactLink kind="whatsapp" page={PATH} /> · email <ContactLink kind="email" page={PATH} />
+      </p>
+    </div>
+  </LegalSection>
+</LegalPage>
