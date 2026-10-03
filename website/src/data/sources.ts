@@ -53,7 +53,7 @@ export function isCanonicalSource(s: string | null | undefined): boolean {
   if (fixed.has(s)) return true;
   if (s.startsWith('hero_')) return slugs.has(s.slice(5));
   if (s.startsWith('ctaband_')) return slugs.has(s.slice(8));
-  if (s.startsWith('service_')) return ids.has(s.slice(8));
+  if (s.startsWith('service_')) return ids.has(s.slice(8)) || slugs.has(s.slice(8)); // `service_<page-slug>` when nothing is preselected (07 §2 row 4)
   if (s.endsWith('_page')) return slugs.has(s.slice(0, -5));
   return false;
 }

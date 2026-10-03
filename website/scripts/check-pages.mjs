@@ -310,9 +310,12 @@ function checkPage(path, file) {
   checkJsonLd(path, self, doc, body);
 
   // NAP (P088): one block per page; identity across pages is compared after the loop
+  // A page may render the block more than once (e.g. /contact/ body + footer) as long as every copy is identical.
   const nap = findAll(doc, (n) => n.tag === 'address' && attr(n, 'data-testid') === 'nap');
-  if (nap.length !== 1) R.fail(path, 'P088', nap.length ? `${nap.length} NAP blocks — exactly one <address data-testid="nap"> per page` : 'no <address data-testid="nap"> (footer NAP, 05 §4 / 08 §4.4)');
-  else info.nap = `${textOf(nap[0])} | ${findAll(nap[0], (n) => n.tag === 'a').map((a) => attr(a, 'href')).join(' ')}`;
+  const napKey = (el) => `${textOf(el)} | ${findAll(el, (n) => n.tag === 'a').map((a) => attr(a, 'href')).join(' ')}`;
+  if (!nap.length) R.fail(path, 'P088', 'no <address data-testid="nap"> (footer NAP, 05 §4 / 08 §4.4)');
+  else if (new Set(nap.map(napKey)).size > 1) R.fail(path, 'P088', `${nap.length} NAP blocks on the page differ — every copy must be byte-identical (05 §4)`);
+  else info.nap = napKey(nap[0]);
 
   return info;
 }

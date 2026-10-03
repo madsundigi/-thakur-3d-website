@@ -45,6 +45,7 @@ for (const f of srcFiles) {
   const lines = read(f).split('\n');
   scanned.set(f, lines);
   lines.forEach((line, i) => {
+    if (/^\s*(\/\/|\*|\/\*)/.test(line)) return; // comment lines are prose, not keys
     const at = `${rel(f)}:${i + 1}`;
     for (const m of line.matchAll(/(['"`])(pds_[A-Za-z0-9_]+)\1/g)) {
       const store = /sessionStorage/.test(line) && !/localStorage/.test(line) ? 'session' : /localStorage/.test(line) && !/sessionStorage/.test(line) ? 'local' : null;

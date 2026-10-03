@@ -24,12 +24,12 @@ export interface RouteEntry {
 
 export const routes: RouteEntry[] = [
   // core & conversion
-  { path: '/', label: 'Home', group: 'core', wave: 1, status: 'planned' },
+  { path: '/', label: 'Home', group: 'core', wave: 1, status: 'live' },
   { path: '/book/', label: 'Book a Service', group: 'core', wave: 1, status: 'live' },
-  { path: '/pricing/', label: 'Pricing', group: 'core', wave: 1, status: 'planned' },
+  { path: '/pricing/', label: 'Pricing', group: 'core', wave: 1, status: 'live' },
   // money pages
   { path: '/ludhiana/', label: 'Ludhiana', group: 'service', wave: 2, status: 'planned' },
-  { path: '/ludhiana/dog-grooming/', label: 'Dog Grooming at Home', group: 'service', wave: 1, status: 'planned' },
+  { path: '/ludhiana/dog-grooming/', label: 'Dog Grooming at Home', group: 'service', wave: 1, status: 'live' },
   { path: '/ludhiana/cat-grooming/', label: 'Cat Grooming at Home', group: 'service', wave: 1, status: 'planned' },
   { path: '/ludhiana/dog-walking/', label: 'Dog Walking', group: 'service', wave: 1, status: 'planned' },
   { path: '/ludhiana/vet-at-home/', label: 'Vet at Home', group: 'service', wave: 1, status: 'planned' },
@@ -37,17 +37,17 @@ export const routes: RouteEntry[] = [
   { path: '/ludhiana/tick-flea-treatment/', label: 'Tick & Flea Treatment', group: 'service', wave: 2, status: 'planned' },
   { path: '/ludhiana/puppy-grooming/', label: 'Puppy Grooming', group: 'service', wave: 2, status: 'planned' },
   // trust, info & supply
-  { path: '/how-it-works/', label: 'How it works', group: 'trust', wave: 1, status: 'planned' },
-  { path: '/about/', label: 'About', group: 'trust', wave: 1, status: 'planned' },
-  { path: '/contact/', label: 'Contact', group: 'trust', wave: 1, status: 'planned' },
-  { path: '/faq/', label: 'FAQ', group: 'trust', wave: 1, status: 'planned' },
+  { path: '/how-it-works/', label: 'How it works', group: 'trust', wave: 1, status: 'live' },
+  { path: '/about/', label: 'About', group: 'trust', wave: 1, status: 'live' },
+  { path: '/contact/', label: 'Contact', group: 'trust', wave: 1, status: 'live' },
+  { path: '/faq/', label: 'FAQ', group: 'trust', wave: 1, status: 'live' },
   { path: '/reviews/', label: 'Reviews', group: 'trust', wave: 2, status: 'planned' },
   { path: '/safety-hygiene/', label: 'Safety & Hygiene', group: 'trust', wave: 2, status: 'planned' },
   { path: '/offers/', label: 'Offers', group: 'trust', wave: 2, status: 'planned' },
   { path: '/join-as-groomer/', label: 'Join as Groomer', group: 'trust', wave: 2, status: 'planned' },
   // legal
-  { path: '/privacy-policy/', label: 'Privacy Policy', group: 'legal', wave: 1, status: 'planned' },
-  { path: '/terms/', label: 'Terms', group: 'legal', wave: 1, status: 'planned' },
+  { path: '/privacy-policy/', label: 'Privacy Policy', group: 'legal', wave: 1, status: 'live' },
+  { path: '/terms/', label: 'Terms', group: 'legal', wave: 1, status: 'live' },
   { path: '/refund-policy/', label: 'Refund Policy', group: 'legal', wave: 2, status: 'planned' },
   // areas (staggered publishing — 05-LOCAL-SEO §6.10)
   ...[
