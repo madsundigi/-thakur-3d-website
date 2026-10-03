@@ -163,8 +163,8 @@ No `streetAddress` — PetDoorStep is a SAB with a hidden base (00 §3.1); publi
   "url": "https://[FILL:DOMAIN]/",
   "telephone": "[FILL:PHONE]",
   "email": "[FILL:EMAIL]",
-  "image": "https://[FILL:DOMAIN]/og/default.png",
-  "logo": "https://[FILL:DOMAIN]/icon-512.png",
+  "image": "https://[FILL:DOMAIN]/og/petdoorstep-home.jpg",
+  "logo": "https://[FILL:DOMAIN]/images/petdoorstep-logo.png",
   "priceRange": "₹₹",
   "currenciesAccepted": "INR",
   "address": {
@@ -547,7 +547,7 @@ Emitted by the base layout from the same two values every page already defines (
 <meta property="og:url" content="https://[FILL:DOMAIN]/ludhiana/dog-grooming/" />  <!-- === rel=canonical -->
 <meta property="og:title" content="Dog Grooming at Home in Ludhiana – From ₹599" /> <!-- page <title> minus " | PetDoorStep" -->
 <meta property="og:description" content="…the page's meta description verbatim…" />
-<meta property="og:image" content="https://[FILL:DOMAIN]/og/dog-grooming.jpg" />  <!-- default.png until this file exists -->
+<meta property="og:image" content="https://[FILL:DOMAIN]/og/dog-grooming.jpg" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
 <meta property="og:image:alt" content="PetDoorStep — dog grooming at your home in Ludhiana, from ₹599" />
@@ -557,18 +557,18 @@ Emitted by the base layout from the same two values every page already defines (
 **Rules (every page):**
 - `og:title` = the page's `<title>` **without the trailing ` | PetDoorStep`** (home's brand-led title has no suffix and is used as is). It is therefore ≤ 60 chars (`02` P117).
 - `og:description` = the meta description verbatim · `og:url` = the canonical (§3.1).
-- `og:image` = the page's own file from the list below, else `/og/default.png`. `og:image:width`/`og:image:height` = 1200/630, and **`og:image:alt` is always present** (`02` P119): the alt listed for that file.
+- `og:image` = the page's own file from the list below, else `/og/petdoorstep-home.jpg`. `og:image:width`/`og:image:height` = 1200/630, and **`og:image:alt` is always present** (`02` P119): the alt listed for that file.
 
-**OG file list** (files live in `website/public/og/`, referenced with absolute URLs; a page switches to its own file in the commit that adds it):
+**OG file list** (files live in `website/public/og/`, rendered by `website/scripts/make-assets.mjs` from the `08` §5.6 template; the build fails if a page points at a missing file or a file whose price text is stale):
 
 | File | Status | Used by | `og:image:alt` |
 |---|---|---|---|
-| `default.png` | **ships** (rendered by `website/scripts/make-assets.mjs`: brand-dark, paw corner, wordmark + tagline) | every page without its own file; also the LocalBusiness `image` (§2.1) | `PetDoorStep — pet care at your doorstep in Ludhiana` |
-| `dog-grooming.jpg` | planned (Wave 1) | `/ludhiana/dog-grooming/` | `PetDoorStep — dog grooming at your home in Ludhiana, from ₹599` |
-| `cat-grooming.jpg` | planned (Wave 1) | `/ludhiana/cat-grooming/` | `PetDoorStep — cat grooming at your home in Ludhiana, from ₹899` |
-| `dog-walking.jpg` | planned (Wave 1) | `/ludhiana/dog-walking/` | `PetDoorStep — a daily dog walker in Ludhiana, from ₹2,999 a month` |
-| `vet-at-home.jpg` | planned (Wave 1) | `/ludhiana/vet-at-home/` | `PetDoorStep — a registered vet at your home in Ludhiana, ₹699 visit` |
-| `blog-default.jpg` | planned (Wave 2, with `/blog/`) | `/blog/` and posts without their own image | `PetDoorStep — pet care tips for Ludhiana` |
+| `petdoorstep-home.jpg` | **ships** | every page without its own file; also the LocalBusiness `image` (§2.1) | `PetDoorStep — pet care at your doorstep in Ludhiana` |
+| `dog-grooming.jpg` | **ships** | `/ludhiana/dog-grooming/` | `PetDoorStep — dog grooming at your home in Ludhiana, from ₹599` |
+| `cat-grooming.jpg` | **ships** | `/ludhiana/cat-grooming/` | `PetDoorStep — cat grooming at your home in Ludhiana, from ₹899` |
+| `dog-walking.jpg` | **ships** | `/ludhiana/dog-walking/` | `PetDoorStep — a daily dog walker in Ludhiana, from ₹2,999 a month` |
+| `vet-at-home.jpg` | **ships** | `/ludhiana/vet-at-home/` | `PetDoorStep — a registered vet at your home in Ludhiana, ₹699 visit` |
+| `blog-default.jpg` | **ships** (used from Wave 2, with `/blog/`) | `/blog/` and posts without their own image | `PetDoorStep — pet care tips for Ludhiana` |
 | `blog/<slug>.jpg` | Wave 3 | that post (§2.7 BlogPosting `image`) | the post's hero alt |
 
 Prices inside an alt come from `pricing.json` at build (the ₹-literal gate, `07` §4, applies to these strings too).
@@ -689,7 +689,7 @@ The scaffold task in 00 §6 Wave 0 is complete when all of these pass on the dep
 - [ ] 404 page live with §1.6 copy and real 404 status
 - [ ] `<SchemaGraph>` component renders §2 blocks per the §2.9 matrix; Rich Results Test + validator.schema.org: zero errors on every template
 - [ ] Canonicals self-referencing and equal to `og:url` on every page (§3/§4)
-- [ ] OG images per the §4 file list (`default.png` at minimum, plus each Wave-1 service file once made); `og:title` without the brand suffix and `og:image:alt` on every page; WhatsApp preview verified on a real phone (§4)
+- [ ] OG images per the §4 file list (all six ship; regenerate with `node scripts/make-assets.mjs` after any price change); `og:title` without the brand suffix and `og:image:alt` on every page; WhatsApp preview verified on a real phone (§4)
 - [ ] Lighthouse mobile ≥ 90 on `/` and `/ludhiana/dog-grooming/`; zero client JS outside `/book/` (§5)
 - [ ] `_redirects` in place; http/www variants 301 single-hop (§6)
 - [ ] Sitemap live, GSC + Bing verified, Wave-1 URLs submitted (§7)

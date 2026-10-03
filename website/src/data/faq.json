@@ -440,7 +440,7 @@
     "id": "dog-vaccination-5",
     "category": "vet",
     "q": "Do you remind me when the next dose is due?",
-    "a": "Yes, free. After every vaccination we add your pet's next due dates to our reminder calendar and WhatsApp you a week before each one, so boosters never slip.",
+    "a": "Yes, free. After every vaccination we add your pet's next due dates to our reminder calendar. Reply YES when we ask on WhatsApp, and we'll message you a week before each one, so boosters never slip.",
     "pages": ["/ludhiana/dog-vaccination/"]
   },
   {
@@ -462,7 +462,7 @@
     "id": "dog-vaccination-8",
     "category": "vet",
     "q": "Vaccination ghar pe ho jaati hai?",
-    "a": "Haan — registered vet ghar aakar vaccine lagata hai: ₹199 visit fee + vaccine MRP pe. Vial ka batch aur expiry aapko dikhaya jaata hai, aur next dose ka reminder WhatsApp pe aata hai.",
+    "a": "Haan — registered vet ghar aakar vaccine lagata hai: ₹199 visit fee + vaccine MRP pe. Vial ka batch aur expiry aapko dikhaya jaata hai, aur YES reply karne par next dose ka reminder WhatsApp pe aata hai.",
     "pages": ["/ludhiana/dog-vaccination/"]
   },
   {
