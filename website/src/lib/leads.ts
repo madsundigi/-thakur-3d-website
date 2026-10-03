@@ -13,11 +13,25 @@ const QUEUE_CAP = 10;
 
 const filled = (v: string) => !v.startsWith('[FILL:');
 
-export type LeadPayload = Record<string, string>;
+/** The leads-sheet header row in its exact order (07-BOOKING-SPEC §5a). This is the ONE column list: every payload is
+ *  built from it, so a lead can never carry a column the sheet lacks or miss one. New columns append only (07 §10). */
+export const LEAD_COLUMNS = [
+  'ts', 'ref', 'lead_type', 'source', 'page_url', 'service_id', 'service_label', 'plan', 'addon_tick_flea', 'pet_type',
+  'size', 'breed', 'first_groom', 'coat_matting', 'coat_ticks', 'coat_shedding', 'area', 'date_pref', 'window_pref',
+  'name', 'phone', 'note', 'price_shown', 'consent_whatsapp', 'ua',
+] as const;
+
+export type LeadColumn = (typeof LEAD_COLUMNS)[number];
+export type LeadPayload = Record<LeadColumn, string>;
+
+/** One sheet row in LEAD_COLUMNS order; a column without a value goes out as '' (waitlist rows leave most empty). */
+function leadRow(values: Partial<LeadPayload>): LeadPayload {
+  return Object.fromEntries(LEAD_COLUMNS.map((c) => [c, values[c] ?? ''])) as LeadPayload;
+}
 
 export function bookingPayload(s: BookingState): LeadPayload {
   const svc = getService(s.serviceId);
-  return {
+  return leadRow({
     ts: new Date().toISOString(),
     ref: s.ref ?? '',
     lead_type: 'booking',
@@ -43,11 +57,12 @@ export function bookingPayload(s: BookingState): LeadPayload {
     price_shown: priceShown(s),
     consent_whatsapp: s.consent ? 'yes' : 'no',
     ua: typeof navigator !== 'undefined' ? navigator.userAgent : '',
-  };
+  });
 }
 
+/** Waitlist rows fill only ts · ref · lead_type · source · area · name · phone (07 §5a). */
 export function waitlistPayload(s: BookingState, ref: string): LeadPayload {
-  return {
+  return leadRow({
     ts: new Date().toISOString(),
     ref,
     lead_type: 'waitlist',
@@ -55,7 +70,7 @@ export function waitlistPayload(s: BookingState, ref: string): LeadPayload {
     area: s.waitlist.areaText.trim(),
     name: s.waitlist.name.trim(),
     phone: s.waitlist.phone,
-  };
+  });
 }
 
 const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));

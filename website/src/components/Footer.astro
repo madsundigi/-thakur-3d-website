@@ -1,12 +1,12 @@
 ---
-// Footer (08-DESIGN-SYSTEM §4.4). NAP values verbatim from 05-LOCAL-SEO §4 via src/data/site.ts —
+// Footer (08-DESIGN-SYSTEM §4.4). The NAP block is <Nap /> (05-LOCAL-SEO §4 values verbatim, decision E9) —
 // identical crawlable text on every page; no street address ever (service-area business).
 import Logo from './Logo.astro';
+import Nap from './Nap.astro';
 import PawMark from './icons/PawMark.astro';
 import BrandIcon from './icons/BrandIcon.astro';
-import { isLive, liveRoutes, routes } from '../data/routes';
-import { areas } from '../lib/pricing';
-import { instagramHref, site, telHref, waHref, WA_DEFAULT_TEXT } from '../data/site';
+import { liveRoutes, routes } from '../data/routes';
+import { instagramHref, site, waHref, WA_DEFAULT_TEXT } from '../data/site';
 
 const services = liveRoutes('service').filter((r) => r.path !== '/ludhiana/');
 const TOP5 = ['sarabha-nagar', 'brs-nagar', 'model-town', 'dugri', 'south-city']; // 05 §2.4 / 08 §4.4
@@ -58,13 +58,7 @@ const year = new Date().getFullYear();
         </>
       ) : null}
       <h2 class="t-micro mt-6 font-body text-white">Contact</h2>
-      <address class="mt-3 text-sm not-italic leading-relaxed text-sand" data-testid="nap">
-        {site.name} · {site.city}, {site.region} — doorstep service across {areas.join(', ')}<br />
-        <a href={telHref()} data-source="footer" class="text-mint">{site.phone}</a> ·{' '}
-        WhatsApp <a href={waHref(WA_DEFAULT_TEXT)} data-source="footer" target="_blank" rel="noopener" class="text-mint">{site.whatsapp}</a> ·{' '}
-        <a href={`mailto:${site.email}`} class="text-mint">{site.email}</a><br />
-        {site.hours.visits}
-      </address>
+      <Nap source="footer" tone="dark" class="mt-3 text-sm leading-relaxed text-sand" />
     </div>
   </div>
   <div class="relative border-t border-white/15">

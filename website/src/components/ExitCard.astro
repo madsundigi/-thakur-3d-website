@@ -1,0 +1,67 @@
+---
+// Exit card — 07-BOOKING-SPEC §2 row 7 as amended by owner decision D1: a small NON-MODAL corner card on desktop.
+// Same trigger conditions and copy as 07; no backdrop, no overlay click; ≈ 400×210 px ≈ 11% of a 1024×768 viewport
+// (02 P107 caps banners at 15%). Esc and "No thanks" close it; focus moves into it on open and back on close.
+// Base.astro decides where it renders (never /book/, /thank-you/, legal pages or 404) and which variant.
+// The trigger is the ~30-line inline script below (data-pds="exit-card") — the only JS this component ships.
+interface Props { variant: 'grooming' | 'neutral' }
+const { variant } = Astro.props;
+
+const COPY = {
+  // 07 §2 row 7, verbatim.
+  grooming: {
+    title: "Before you go — your dog's grooming price in 10 seconds.",
+    body: "See the exact ₹ price for your pet's size and book in under a minute. Slot confirmed on WhatsApp within 10 minutes.",
+  },
+  // D1 neutral variant for the cat / walking / vet pages (06 voice; logged in website-plan/decisions/f2-chrome.md).
+  neutral: {
+    title: "Before you go — see your pet's price in 10 seconds.",
+    body: 'Pick a service, see the price upfront and book in under a minute. Slot confirmed on WhatsApp within 10 minutes.',
+  },
+} as const;
+const copy = COPY[variant];
+---
+<dialog
+  id="exit-card"
+  data-testid="exit-card"
+  data-variant={variant}
+  aria-labelledby="exit-card-title"
+  aria-describedby="exit-card-body"
+  class="fixed bottom-24 left-auto right-6 top-auto z-50 m-0 w-[400px] max-w-[calc(100vw-48px)] rounded-lg bg-paper p-5 text-ink shadow-3"
+>
+  <p id="exit-card-title" class="m-0 text-[1.0625rem] font-semibold leading-snug text-balance">{copy.title}</p>
+  <p id="exit-card-body" class="m-0 mt-2 text-sm text-pretty text-slate">{copy.body}</p>
+  <div class="mt-4 flex flex-wrap items-center gap-2">
+    <a href="/book/?src=exit_nudge" class="inline-flex min-h-11 items-center rounded-md bg-cta px-4 font-semibold text-ink no-underline hover:bg-cta-hover">See prices &amp; book</a>
+    <button type="button" data-exit-dismiss class="min-h-11 cursor-pointer px-3 font-semibold text-brand underline underline-offset-[3px] hover:text-brand-deep">No thanks</button>
+  </div>
+</dialog>
+<script is:inline data-pds="exit-card">
+  /* Exit card trigger — 07-BOOKING-SPEC §2 row 7 conditions; non-modal per owner decision D1. */
+  (function () {
+    var card = document.getElementById('exit-card');
+    if (!card || typeof card.show !== 'function') return;
+    var start = Date.now();
+    var opener = null;
+    function blocked() { /* once per session, never after a booking on this device */
+      try { return !!(sessionStorage.getItem('pds_exit_shown') || localStorage.getItem('pds_last_booking')); }
+      catch (e) { return true; } /* storage off: "once per session" can't be kept, so stay quiet */
+    }
+    function close() {
+      if (!card.open) return;
+      card.close();
+      if (opener && opener.focus && document.contains(opener)) opener.focus();
+      opener = null;
+    }
+    document.addEventListener('mouseout', function (e) {
+      if (e.relatedTarget || e.clientY > 0 || card.open) return; /* only when the pointer leaves through the top edge */
+      if (Date.now() - start < 20000 || !matchMedia('(min-width: 1024px) and (pointer: fine)').matches || blocked()) return;
+      try { sessionStorage.setItem('pds_exit_shown', '1'); } catch (err) { return; }
+      opener = document.activeElement;
+      card.show();
+      card.querySelector('a').focus();
+    });
+    card.querySelector('[data-exit-dismiss]').addEventListener('click', close);
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
+  })();
+</script>

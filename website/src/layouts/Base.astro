@@ -1,5 +1,10 @@
 ---
-// Base layout — head rules 04-TECHNICAL-SEO §1.3/§1.7/§3/§4, landmarks + skip link 08 §7.5, analytics 09 §3.1.
+// Base layout — head rules 04-TECHNICAL-SEO §1.3/§1.7/§3/§4, landmarks + skip link 08 §7.5, analytics 09 §3.1, exit
+// card 07 §2 row 7 + owner decision D1. The site's only inline scripts are tagged data-pds: "analytics" (here),
+// "exit-card" (ExitCard.astro) and "thank-you" (/thank-you/). Everything else is the BookingWidget island.
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
+import { cwd } from 'node:process';
 import '../styles/global.css';
 import tokensCss from '../styles/global.css?raw';
 import frauncesWoff2 from '../assets/fonts/fraunces-latin-wght-normal.woff2?url';
@@ -8,33 +13,70 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import StickyBar from '../components/StickyBar.astro';
 import WaFloat from '../components/WaFloat.astro';
+import ExitCard from '../components/ExitCard.astro';
 import { site, WA_DEFAULT_TEXT } from '../data/site';
+import { ogTitleFrom } from '../lib/format';
 
 interface Props {
   title: string;
   description: string;
-  path: string; // canonical path, always with trailing slash
+  /** The page's own URL path with trailing slash, e.g. '/book/' — canonical, og:url and the exit-card choice use it.
+   *  The build fails if it differs from the URL the page is actually served at (the 404 page excepted). */
+  path: string;
+  /** Share image, 1200×630 JPG in public/og/ (04 §4): '/og/dog-grooming.jpg' or just 'dog-grooming.jpg'.
+   *  Default /og/petdoorstep-home.jpg. The build fails if the file is not in public/. */
+  ogImage?: string;
+  /** og:image:alt (02 P119). Default: describes the default image, or repeats og:title for a page-supplied image. */
+  ogImageAlt?: string;
+  /** → <meta name="robots" content="noindex, follow"> and no canonical (04 §3.3, decision E7). */
   noindex?: boolean;
-  hideStickyBar?: boolean;
-  hideWaFloat?: boolean;
-  waText?: string; // page-specific WhatsApp prefill (07 §2 row 1)
+  /** Page-specific WhatsApp prefill for the header menu, sticky bar and float (07 §2 row 1). */
+  waText?: string;
   stickyBookHref?: string;
   stickyBookLabel?: string;
   jsonLd?: object[];
-  ogImage?: string;
+  hideStickyBar?: boolean;
+  hideWaFloat?: boolean;
+  /** Exit card variant (07 §2 row 7 + D1). Default by path: 'neutral' on the cat-grooming, dog-walking, vet-at-home and
+   *  dog-vaccination pages, 'grooming' elsewhere. Never rendered on /book/, /thank-you/, legal pages or the 404. */
+  exitCard?: 'grooming' | 'neutral' | false;
 }
 
 const {
-  title, description, path, noindex = false, hideStickyBar = false, hideWaFloat = false,
-  waText = WA_DEFAULT_TEXT, stickyBookHref, stickyBookLabel, jsonLd = [], ogImage = '/og/default.png',
+  title, description, path, ogImage, ogImageAlt, noindex = false, hideStickyBar = false, hideWaFloat = false,
+  waText = WA_DEFAULT_TEXT, stickyBookHref, stickyBookLabel, jsonLd = [], exitCard,
 } = Astro.props;
 
+// `path` drives the canonical and og:url; a page passing the wrong one would canonicalise to another URL (04 §3.1).
+if (import.meta.env.PROD && path !== '/404/' && Astro.url.pathname !== path) {
+  throw new Error(`Base.astro: path="${path}" but this page is served at "${Astro.url.pathname}" — pass the page's own path (04 §3.1).`);
+}
+
 const canonical = new URL(path, Astro.site).href;
-const ogImageUrl = new URL(ogImage, Astro.site).href;
 // Preview deploys must never index (04 §1.7): Cloudflare Pages sets CF_PAGES_BRANCH at build time.
 const branch = (globalThis as { process?: { env?: Record<string, string | undefined> } }).process?.env?.CF_PAGES_BRANCH;
 const isPreview = !!branch && branch !== 'main';
-const robots = noindex || isPreview ? 'noindex' : null;
+const robots = noindex || isPreview ? 'noindex, follow' : null; // E7: every noindex page keeps its links followed
+
+// OG / Twitter (04 §4): og:title = <title> minus " | PetDoorStep"; image + alt per page, brand image by default.
+const ogTitle = ogTitleFrom(title);
+const ogPath = !ogImage ? '/og/petdoorstep-home.jpg' : ogImage.includes('/') ? ogImage : `/og/${ogImage}`;
+const ogAlt = ogImageAlt ?? (ogImage ? ogTitle : `${site.name} — ${site.tagline} in ${site.city}`);
+// A share image missing from public/ means a blank WhatsApp preview (02 P118/P122) — fail the build instead. Checked
+// whenever the build runs from the project root (npm run build), where public/ is.
+const publicDir = join(cwd(), 'public');
+if (!/^https?:\/\//.test(ogPath) && existsSync(publicDir) && !existsSync(join(publicDir, ogPath))) {
+  throw new Error(`Base.astro: og:image "${ogPath}" (page ${path}) is not in public/ — use a 04 §4 image from public/og/ (scripts/make-assets.mjs renders them).`);
+}
+const ogImageUrl = new URL(ogPath, Astro.site).href;
+
+// Exit card: never where 07 §2 row 7 rules it out, whatever a page asks; D1's neutral copy on cat / walking / vet pages.
+const NO_EXIT_CARD = ['/book/', '/thank-you/', '/privacy-policy/', '/terms/', '/refund-policy/', '/404/'];
+const NEUTRAL_EXIT_CARD = ['/ludhiana/cat-grooming/', '/ludhiana/dog-walking/', '/ludhiana/vet-at-home/', '/ludhiana/dog-vaccination/'];
+const exitVariant = noindex || NO_EXIT_CARD.includes(path)
+  ? false
+  : exitCard ?? (NEUTRAL_EXIT_CARD.includes(path) ? 'neutral' : 'grooming');
+
 // theme-color needs a literal colour, so read --color-brand from the token file instead of repeating its hex here
 // (08 §0 hex gate: no raw hex in .astro outside global.css and icons/).
 const themeColor = /--color-brand:\s*(#[0-9a-f]{3,8})\s*;/i.exec(tokensCss)?.[1];
@@ -58,12 +100,13 @@ if (!themeColor) throw new Error('Base.astro: --color-brand not found in styles/
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={site.name} />
     <meta property="og:locale" content="en_IN" />
-    <meta property="og:title" content={title} />
+    <meta property="og:title" content={ogTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={ogImageUrl} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={ogAlt} />
     <meta name="twitter:card" content="summary_large_image" />
     {jsonLd.map((block) => <script type="application/ld+json" set:html={JSON.stringify(block)} />)}
     {/* Page-supplied head content, e.g. the hero <Photo slot="head" preload …> (04 §1.4 / §5.2.2). */}
@@ -78,8 +121,9 @@ if (!themeColor) throw new Error('Base.astro: --color-brand not found in styles/
     <Footer />
     {!hideStickyBar ? <StickyBar waText={waText} bookHref={stickyBookHref} bookLabel={stickyBookLabel} /> : null}
     {!hideWaFloat ? <WaFloat waText={waText} /> : null}
+    {exitVariant ? <ExitCard variant={exitVariant} /> : null}
 
-    <script is:inline define:vars={{ GA4_ID: site.ga4Id, DOMAIN: site.domain }}>
+    <script is:inline data-pds="analytics" define:vars={{ GA4_ID: site.ga4Id, DOMAIN: site.domain }}>
       /* PetDoorStep analytics bootstrap — 09-ANALYTICS-TRACKING §3.1. The ONLY third-party script. */
       window.dataLayer = window.dataLayer || [];
       function gtag() { window.dataLayer.push(arguments); }

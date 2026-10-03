@@ -1,0 +1,29 @@
+---
+// The NAP block — the ONE place the site writes Name · service area · phone · WhatsApp · email · hours as text, with
+// the 05-LOCAL-SEO §4 values verbatim (decision E9). The footer and any page that shows contact details render this
+// component, so the text is byte-identical everywhere and equals GBP character-for-character (02 P088/P089).
+// Service-area business: no street address, ever (05 §1). Values come from src/data/site.ts + pricing.json areas.
+import { areas } from '../lib/pricing';
+import { whatsappDisplay } from '../lib/format';
+import { site, telHref, waHref, WA_DEFAULT_TEXT } from '../data/site';
+
+interface Props {
+  /** 09 §2d data-source for the tel:/wa.me links — 'footer' (default) or 'contact_page'. */
+  source?: string;
+  /** 'dark' = footer (mint links on brand-dark) · 'light' = paper/sand/mint surfaces (brand links). */
+  tone?: 'dark' | 'light';
+  class?: string;
+}
+const { source = 'footer', tone = 'dark', class: cls = '' } = Astro.props;
+
+// 05 §4 "Service area" line, verbatim: "Ludhiana, Punjab, India — {the 10 areas} (full city served)".
+const serviceArea = `${site.city}, ${site.region}, India — ${areas.join(', ')} (full city served)`;
+const linkCls = tone === 'dark' ? 'text-mint underline-offset-[3px] hover:underline' : 'prose-link';
+---
+<address class:list={['not-italic', cls]} data-testid="nap">
+  {site.name} · {serviceArea}<br />
+  <a href={telHref()} data-source={source} class={linkCls}>{site.phone}</a> ·{' '}
+  WhatsApp <a href={waHref(WA_DEFAULT_TEXT)} data-source={source} target="_blank" rel="noopener" class={linkCls}>{whatsappDisplay(site.whatsapp)}</a> ·{' '}
+  <a href={`mailto:${site.email}`} class={linkCls}>{site.email}</a><br />
+  {site.hours.visits}
+</address>

@@ -1,5 +1,6 @@
 ---
-// Button (08-DESIGN-SYSTEM §4.1). Every wa.me / tel: button carries data-source (09 §3.2).
+// Button (08-DESIGN-SYSTEM §4.1). Every wa.me / tel: / Instagram button MUST carry `source` (09 §3.2 data-source, one of
+// the 09 §2d canonical values) — the build fails without it, so no click is ever tracked as "unlabelled".
 import Icon from './icons/Icon.astro';
 import BrandIcon from './icons/BrandIcon.astro';
 
@@ -12,8 +13,16 @@ interface Props {
   class?: string;
 }
 const { href, variant = 'primary', source, full = false, external = false, class: cls = '' } = Astro.props;
-const isWa = href.includes('wa.me');
+const isWa = href.includes('wa.me') || href.includes('api.whatsapp.com');
 const isTel = href.startsWith('tel:');
+const isIg = href.includes('instagram.com');
+if ((isWa || isTel || isIg) && !source) {
+  throw new Error(
+    `Button: "${href.slice(0, 60)}" is a ${isTel ? 'tel:' : isWa ? 'WhatsApp' : 'Instagram'} link without a \`source\` prop. ` +
+      'Pass one of the 09-ANALYTICS-TRACKING §2d canonical values (e.g. source="footer", "hero_dog-grooming") so the click is attributed.',
+  );
+}
+const newTab = external || isWa || isIg;
 const styles: Record<string, string> = {
   primary: 'bg-cta text-ink hover:bg-cta-hover hover:shadow-1',
   whatsapp: 'bg-wa text-ink hover:bg-wa-hover',
@@ -25,8 +34,8 @@ const styles: Record<string, string> = {
 <a
   href={href}
   data-source={source}
-  target={external || isWa ? '_blank' : undefined}
-  rel={external || isWa ? 'noopener' : undefined}
+  target={newTab ? '_blank' : undefined}
+  rel={newTab ? 'noopener' : undefined}
   class:list={[
     'inline-flex min-h-12 items-center justify-center gap-2 rounded-md px-6 text-base font-semibold no-underline transition-colors duration-[120ms] active:translate-y-px',
     full ? 'w-full md:w-auto' : '',

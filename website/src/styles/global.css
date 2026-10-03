@@ -103,7 +103,8 @@
 }
 @media (min-width: 1024px) { :root { --header-h: 72px; } }
 
-html { -webkit-text-size-adjust: 100%; }
+/* scroll-padding: in-page anchors (#step-1, FAQ ids) and focused fields land below the sticky header (08 §4.3) */
+html { -webkit-text-size-adjust: 100%; scroll-padding-top: calc(var(--header-h) + 16px); }
 body {
   font-family: var(--font-body);
   font-size: 1rem;
@@ -138,6 +139,30 @@ h4, .t-h4 { font-size: 1rem; line-height: 1.4; font-weight: 600; }
   text-underline-offset: 3px;
 }
 .prose-link:hover, main p a:hover, main li a:not([class]):hover { color: var(--color-brand-deep); }
+
+/* Long-form text (legal pages, /about/ story): <div class="prose"> around plain h2/h3/p/ul/ol/table. 08 §2.2 type
+   scale (the h-sizes above), 4px spacing steps (08 §3.1), §1.4 rule 7 links. In the components layer, so a utility
+   class on an element inside .prose still wins. */
+@layer components {
+  .prose { max-width: var(--measure); }
+  .prose > * + * { margin-top: 1rem; }
+  .prose :where(h2) { margin-top: 2.5rem; }
+  .prose :where(h3) { margin-top: 2rem; }
+  .prose :where(h4) { margin-top: 1.5rem; }
+  .prose :where(h2, h3, h4) + * { margin-top: 0.5rem; }
+  .prose > :first-child { margin-top: 0; }
+  .prose :where(ul, ol) { padding-left: 1.5rem; }
+  .prose :where(ul) { list-style: disc; }
+  .prose :where(ol) { list-style: decimal; }
+  .prose :where(li + li, li > ul, li > ol) { margin-top: 0.5rem; }
+  .prose :where(li)::marker { color: var(--color-brand); }
+  .prose :where(a) { color: var(--color-brand); text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 3px; }
+  .prose :where(a):hover { color: var(--color-brand-deep); }
+  .prose :where(strong) { font-weight: 600; }
+  .prose :where(table) { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+  .prose :where(th, td) { padding: 8px 12px 8px 0; border-bottom: 1px solid var(--color-line); text-align: left; vertical-align: top; }
+  .prose :where(th) { font-weight: 600; }
+}
 
 /* Focus visible everywhere — 08 §7.2 */
 :focus-visible { outline: 2px solid var(--color-brand); outline-offset: 2px; }

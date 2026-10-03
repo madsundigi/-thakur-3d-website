@@ -6,8 +6,15 @@
 // speciality / languages / line / photo — every one of them true. `count` only once the real number exists (06 §4.2.8).
 // Speciality examples from 06 §4.2: "Shih Tzu & Lhasa coats" · "anxious and senior dogs" · "Persian cat de-matting".
 
+import type { MoneyPage } from '../lib/pricing';
+
 export type PersonRole = 'groomer' | 'walker' | 'vet';
 export type Language = 'Punjabi' | 'Hindi' | 'English';
+
+/** What the team as a whole speaks — the about.md AB-7 line ("Our team speaks Punjabi, Hindi and English") and the
+ *  Service schema's availableLanguage (04 §2.2, built from this list in src/lib/schema.ts). List only what the team
+ *  truly covers today; remove a language here and both the page line and the markup follow. */
+export const TEAM_LANGUAGES: readonly Language[] = ['Punjabi', 'Hindi', 'English'];
 
 export interface Person {
   id: string; // stable key, e.g. "groomer-1"
@@ -16,6 +23,10 @@ export interface Person {
   photo?: string; // Photo.astro asset name once shot (1:1, branded apron + ID badge visible — 06 §4.2.1)
   years?: number; // real number only (06 §4.2.4)
   speciality?: string; // one line (06 §4.2.5)
+  /** A money page's own speciality line for this person, shown instead of `speciality` on that page's SP-7 cards —
+   *  only when it is true of them. Blueprint examples: cat-grooming "Persian cat de-matting" (cat-grooming.md SP-7),
+   *  puppy-grooming "Gentle with first-timers and nervous puppies" (puppy-grooming.md SP-7). Read it via specialityFor(). */
+  specialityOn?: Partial<Record<MoneyPage, string>>;
   languages?: Language[]; // only the ones they truly speak (06 §4.2.6)
   line?: string; // one human line, ≤ 20 words (06 §4.2.7)
   count?: number; // pets groomed (groomer) / walks done (walker) — only once real (06 §4.2.8)
@@ -52,6 +63,10 @@ export const team: Person[] = [...groomers, ...walkers, ...vets];
 
 /** True while the person's name is still a [FILL:*] token (they are not on the team yet). */
 export const isPlaceholder = (p: Person): boolean => p.name.includes('[FILL:');
+
+/** The speciality line a card shows on `page` (a money-page slug): that page's override, else the general one. */
+export const specialityFor = (p: Person, page?: MoneyPage): string | undefined =>
+  (page ? p.specialityOn?.[page] : undefined) ?? p.speciality;
 
 /** Photo alt text — blueprint wording (dog-grooming.md §4 SP-7, home.md H-8, about.md AB-6, vet-at-home.md §5). */
 export function personAlt(p: Person): string {

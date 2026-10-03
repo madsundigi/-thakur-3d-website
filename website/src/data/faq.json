@@ -4,7 +4,19 @@
     "category": "areas",
     "q": "Which areas of Ludhiana do you cover?",
     "a": "All of Ludhiana, with no travel charge. Our most-booked areas are Sarabha Nagar, BRS Nagar, Model Town, Civil Lines, Dugri, Pakhowal Road, South City, Ferozepur Road, Haibowal Kalan and Kitchlu Nagar — but if you're anywhere in the city, we'll come to you.",
-    "pages": ["/", "/faq/"]
+    "pages": ["/", "/faq/"],
+    "links": [
+      { "text": "Sarabha Nagar", "href": "/ludhiana/areas/sarabha-nagar/" },
+      { "text": "BRS Nagar", "href": "/ludhiana/areas/brs-nagar/" },
+      { "text": "Model Town", "href": "/ludhiana/areas/model-town/" },
+      { "text": "Civil Lines", "href": "/ludhiana/areas/civil-lines/" },
+      { "text": "Dugri", "href": "/ludhiana/areas/dugri/" },
+      { "text": "Pakhowal Road", "href": "/ludhiana/areas/pakhowal-road/" },
+      { "text": "South City", "href": "/ludhiana/areas/south-city/" },
+      { "text": "Ferozepur Road", "href": "/ludhiana/areas/ferozepur-road/" },
+      { "text": "Haibowal Kalan", "href": "/ludhiana/areas/haibowal-kalan/" },
+      { "text": "Kitchlu Nagar", "href": "/ludhiana/areas/kitchlu-nagar/" }
+    ]
   },
   {
     "id": "home-2",
@@ -94,8 +106,9 @@
     "id": "book-3",
     "category": "booking",
     "q": "Can I reschedule or cancel?",
-    "a": "Yes, free until 2 hours before your confirmed slot — just reply on WhatsApp. Since we never take advance payment, there's nothing to refund. Full terms are on our refund & cancellation policy page.",
-    "pages": ["/book/", "/faq/"]
+    "a": "Yes. Rescheduling or cancelling is free until 2 hours before your confirmed slot — just reply on WhatsApp. Since we never take advance payment, there's nothing to refund. Full details are on our terms page and our refund & cancellation policy page.",
+    "pages": ["/book/", "/faq/"],
+    "links": [{ "text": "terms page", "href": "/terms/" }, { "text": "refund & cancellation policy page", "href": "/refund-policy/" }]
   },
   {
     "id": "book-4",
@@ -108,7 +121,7 @@
     "id": "contact-1",
     "category": "booking",
     "q": "What's the fastest way to reach you?",
-    "a": "WhatsApp. A real person replies within 10 minutes between 9:00 and 19:00, every day. Calls work too — if we miss your call during a visit, we call back within 30 minutes.",
+    "a": "WhatsApp. A real person replies within 10 minutes between 9:00 and 19:00, every day.",
     "pages": ["/contact/"]
   },
   {
@@ -143,7 +156,7 @@
     "id": "how-it-works-3",
     "category": "booking",
     "q": "Can I reschedule?",
-    "a": "Yes, free until 2 hours before your confirmed slot — just reply on WhatsApp. There's no advance payment, so there's nothing to refund.",
+    "a": "Yes. Rescheduling or cancelling is free until 2 hours before your confirmed slot — just reply on WhatsApp. Since we never take advance payment, there's nothing to refund.",
     "pages": ["/how-it-works/"]
   },
   {
@@ -353,7 +366,7 @@
     "id": "vet-at-home-3",
     "category": "vet",
     "q": "Do you handle emergencies or come at night?",
-    "a": "No — we're not an emergency service; visits run 9:00–19:00 every day. If your pet has been hit by a vehicle, is bleeding heavily, having seizures, struggling to breathe, may have eaten poison, or has bloody diarrhoea, go to the nearest 24-hour veterinary hospital immediately — don't wait for a home visit.",
+    "a": "No — we're not an emergency service; visits run 9:00–19:00 every day. If your pet has been hit by a vehicle, is bleeding heavily, having seizures, struggling to breathe, may have eaten poison, or has bloody diarrhoea, go to the nearest 24-hour veterinary hospital immediately — don't wait for a home visit. Nearest 24-hour hospitals: [FILL:EMERGENCY_VET_LIST].",
     "pages": ["/ludhiana/vet-at-home/", "/faq/"]
   },
   {
