@@ -33,7 +33,7 @@ export const STORAGE_KEYS: StorageKey[] = [
   {
     key: 'pds_unsent_leads',
     store: 'localStorage',
-    purpose: 'Holds up to 10 booking or waitlist requests that could not reach us, so they can be sent again.',
+    purpose: 'Holds up to 10 booking or waitlist requests that could not reach us, with the details you entered, so they can be sent again.',
     lifetime: 'Until the request is delivered. We retry each time the booking form opens.',
   },
   // FIRSTGROOM applies to a first booking on this device only (06 §7.1; data/offers.ts qualifiesForFirstGroom).
@@ -269,7 +269,7 @@ export const RETENTION: { what: string; period: string }[] = [
   { what: 'Booking and waitlist records (leads sheet and backup emails)', period: IDENTITY.RETENTION_LEADS },
   { what: 'WhatsApp chats', period: IDENTITY.RETENTION_CHATS },
   { what: 'Photos of your pet', period: IDENTITY.RETENTION_PHOTOS },
-  { what: 'Google Analytics statistics', period: '14 months' }, // GA4_SETTINGS.dataRetentionMonths (09 §1)
+  { what: 'Detailed Google Analytics visit and event data', period: '14 months' }, // GA4_SETTINGS.dataRetentionMonths (09 §1)
   { what: 'Data saved on your own device', period: 'As listed for each item in the storage table' }, // STORAGE_KEYS
 ];
 
@@ -289,7 +289,7 @@ export const SERVICE_RULES: ServiceRule[] = [
   // safety-hygiene.md SH-5 (muzzles).
   { id: 'muzzle', text: 'A muzzle is used only with your consent, only a comfortable basket muzzle, only for reactive dogs, and it is never left on unattended.' },
   // safety-hygiene.md SH-5 ("Health first"; "If a pet is too stressed to continue safely, we stop").
-  { id: 'stop-safely', text: 'If your pet is too stressed to continue safely, or has an open wound, a skin infection or signs of illness, we stop rather than force it and suggest a vet visit.' },
+  { id: 'stop-safely', text: 'If your pet is too stressed to continue safely, we stop rather than force it. If we find an open wound, a skin infection or signs of illness, we stop and suggest a vet visit before grooming.' },
   // how-it-works.md HW-4 + FAQ #1.
   { id: 'adult-present', text: 'An adult must be at home for grooming and vet visits. For walks, the walker can collect your dog from a family member or at your society gate, as agreed on WhatsApp.' },
   // how-it-works.md HW-4; 06 §9 R4; template SP-10 FAQ #6.
