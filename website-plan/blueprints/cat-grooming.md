@@ -14,6 +14,36 @@
 - **Meta** (156): `Stress-free cat grooming at home in Ludhiana — no scary salon trips. Bath & Brush ₹899, Full Groom ₹1,399. Calm-handling trained groomers. Book on WhatsApp.`
 - **H1:** `Cat Grooming at Home in Ludhiana`
 
+## 1a · SERP intent check (`02` P040) — 2026-10-03
+
+Checked before the page was built, for the primary keyword in `01-SITEMAP.md` §1, **"cat grooming at home ludhiana"**,
+plus `03` §2.3's primary **"cat grooming ludhiana"**. Tool: the build session's web search (a standard and an extended
+pass per query). It uses a US-based index, not google.co.in on a Ludhiana phone, and it cannot show the map pack or ads —
+repeat the check on a phone in Ludhiana during the launch audit (`02` §5) and log it in the `09` §7 rank log.
+
+- **What ranks for "cat grooming at home ludhiana" (extended pass, in the order returned):**
+  1. thePetNest — "Pet Grooming Service at Home in Ludhiana" (dog-and-cat city-template service page,
+     thepetnest.com/pet-grooming/ludhiana); its snippet prices cat bath + basic grooming "starting at ₹899" (market
+     price mined from SERP snippets 2026-10; re-verify before publishing — it stays off the page, template §0 rule 5).
+     Its national thepetnest.com/pet-grooming page ranks beside it.
+  2. Urban Pets Grooming — "Pet Grooming In Ludhiana" (city-template service page, urbanpetsgrooming.in).
+  3. Petgroomly — "Pet grooming services at Home in Ludhiana" (city-template service page, petgroomly.com).
+  4. Petofy — "List of Pet Grooming Service Centre in Ludhiana" (directory).
+  5. Pupping — "Premium Pet Grooming, Ludhiana" (one local groomer's home page, pupping.in).
+  6. Pupkitt — "5 Best Pet Grooming Service Providers In Ludhiana" (listicle).
+  7. Other cities fill the rest of the page: Woofly "Dog & Cat Grooming at Home in Delhi", thePetNest Lucknow.
+- **The standard pass** for the same query returned no Ludhiana result at all — generic "cat grooming at home" tips
+  and UK mobile-cat-grooming listings. **"cat grooming ludhiana"** returned an ownpetz.com Ludhiana grooming
+  classifieds category with no active listings, a Salonist directory page for Moga, Vetic's Noida cat-grooming page
+  and its cat-grooming blog tag.
+- **Finding:** no dedicated Ludhiana cat-grooming page exists. Every Ludhiana result is a dog-first pet-grooming city
+  template that mentions cats in passing, a directory or a listicle; the only dedicated cat-grooming pages that rank
+  belong to other cities (Vetic Noida, Woofly Delhi). This confirms the header note above.
+- **Intent:** buyer. Local service pages rank, not articles, with packages and prices in the snippets. **The page
+  matches that format:** one city, one service, the flat prices in the hero, SP-3 and SP-4, the inclusions as a real
+  table, and the FAQ carrying the research long-tails ("why do cats hate salons", the Persian schedule) that today
+  return only national blogs.
+
 ## 2 · Keyword → block assignment
 
 | Keyword (03 §2.3) | Role | Lands in |
