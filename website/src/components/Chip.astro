@@ -18,10 +18,14 @@ interface Props {
   /** The chip sits on a sand or mint surface (sand band, ReviewCard, Promise band): price and trust chips switch to
    *  a paper fill so the pill stays visible (a sand chip on sand, or mint on mint, would disappear). */
   onTint?: boolean;
+  /** Price/trust chips only — tighter geometry below md: 8px sides, 4px icon gap, 13px text (the 08 §2.2 micro size,
+   *  normal case). Still 32px tall. Used by the hero chip row so the price chip AND the first trust chip both fit a
+   *  360px screen (website-plan/decisions/w1-layout.md, open issue O-1). From md up the chip is the standard one. */
+  dense?: boolean;
   class?: string;
 }
 
-const { kind, label, service, onTint = false, class: cls = '' } = Astro.props;
+const { kind, label, service, onTint = false, dense = false, class: cls = '' } = Astro.props;
 
 // The verified default is 06 §4.2's "Background-verified ✔". The ✔ is drawn as the check icon after the text (like
 // GroomerCard), not typed: Inter's Latin subset has no U+2714, so the glyph would fall back to a different face — or
@@ -49,6 +53,8 @@ const href = kind === 'verified' && isLive('/safety-hygiene/') ? '/safety-hygien
 const pill = [
   'inline-flex max-w-full items-center whitespace-nowrap rounded-pill font-semibold',
   isBadge ? 'h-6 gap-1 px-2 t-micro' : 'h-8 gap-2 px-3 text-sm',
+  // dense: 8 · 4 · 13px below md (4px scale + the micro size, 08 §2.2/§3.1); the standard 12 · 8 · 14px from md.
+  !isBadge && dense ? 'max-md:gap-1 max-md:px-2 max-md:text-[0.8125rem]' : '',
   skin[kind],
 ];
 ---
