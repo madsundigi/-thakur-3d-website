@@ -4,7 +4,7 @@
 import { FIRSTGROOM, ON_TIME_OFF, REFERRAL } from './offers';
 import { routes } from './routes';
 import {
-  cardPriceChip, flatPrice, fromPrice, groomClubPercent, groomClubPrices, groomClubSavingsRange, heroPriceChip, inr,
+  flatPrice, fromPrice, groomClubPercent, groomClubPrices, groomClubSavingsRange, inr,
   pricingData, sizeGuide, type MoneyPage, type Size,
 } from '../lib/pricing';
 
@@ -204,21 +204,6 @@ export const TRUST_CHIPS: readonly string[] = [
   'Photo update after every visit',
 ];
 
-// ── Price-chip strings — every figure read from pricing.json (07 §4: no ₹ literals) ──
-
-/** ServiceCard price chip per money page — the blueprints/home.md H-3 formats, keyed by route path.
- *  @deprecated Use MONEY_PAGES (src/data/services.ts) and cardPriceChip() (src/lib/pricing.ts). Kept only until
- *  ServiceCard.astro stops importing it. */
-export const SERVICE_PRICE_CHIP: Readonly<Record<string, string>> = Object.fromEntries(
-  routes
-    .filter((r) => r.group === 'service' && r.path !== '/ludhiana/')
-    .map((r) => [r.path, cardPriceChip(r.path.split('/')[2] as MoneyPage)]),
-);
-
-/** Hero price chip on home + the /ludhiana/ hub: "from" + the lowest fixed price on the menu (the Nail Trim + Ear Clean
- *  visit — T1 template §3 hub row; blueprints/home.md H-1).
- *  @deprecated Use heroPriceChip('home') from src/lib/pricing.ts. Kept only until its importers move. */
-export const LOWEST_PRICE_CHIP = heroPriceChip('home');
 
 // ── Area cards (08 §4.14) ──
 // oneLiner = the "Eyebrow / value proposition" column of blueprints/_TEMPLATE-area-page.md §4, verbatim (each area's

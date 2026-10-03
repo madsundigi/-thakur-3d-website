@@ -537,7 +537,7 @@ export function stickyBookLabel(page: MoneyPage): string {
   switch (page) {
     case 'dog-grooming':
     case 'cat-grooming': return `Book · ${cardPriceChip(page)}`;
-    case 'dog-walking': return `Trial week ${planPrice('dog-walking', 'walk-trial')} · Book`;
+    case 'dog-walking': return `Book trial · ${planPrice('dog-walking', 'walk-trial')}`; // fits one line at 360 px
     case 'vet-at-home': return `Book vet · ${flatPrice('vet-visit')}`;
     case 'dog-vaccination': return `Book · ${flatPrice('vaccination')} + MRP`;
     case 'tick-flea-treatment': return `Book · ${flatPrice('tick-flea')}`;

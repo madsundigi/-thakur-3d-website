@@ -50,7 +50,7 @@
 - **SP-9 Areas** — Dugri · South City · Pakhowal Road; intro "Searching for a dog walking service near me in Ludhiana? Our walkers know these neighbourhoods best:"
 - **SP-11 Related** — Dog Grooming (`from ₹599`) · Vet at Home (`₹699`). Blog links (once live): week-6 *How Much Does a Dog Walker Cost Per Month in India?* → `/blog/dog-walker-cost-india/` · week-20 *Dog Walking in Ludhiana Summers* → `/blog/dog-walking-summer-timings-ludhiana/`.
 - **SP-12** — "Your Labrador deserves a daily walk with a familiar face. Trial Week slots open this week across Ludhiana." Support: "₹699 for 7 walks · then ₹2,999/month · no advance payment."
-- **SP-13** — sticky label `Trial week ₹699 · Book`.
+- **SP-13** — sticky label `Book trial · ₹699` (shortened 2026-10-03: the longer label wrapped to two lines in the 360 px sticky bar).
 
 ## 4 · FAQ (SP-10 — 8 Q&As, mirrored in FAQPage markup)
 
