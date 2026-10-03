@@ -73,7 +73,7 @@ const section = 'mx-auto max-w-[1200px] px-4 py-12 lg:px-6 lg:py-20';
     <div class="mt-12 lg:mt-20">
       <Faq page={HIW_PATH} heading={HIW_FAQ.heading} />
       {isLive('/faq/') ? (
-        <p class="m-0 mt-6">{HIW_FAQ.more} <a href="/faq/">{HIW_FAQ.moreLink}</a></p>
+        <p class="m-0 mt-6">{HIW_FAQ.more} <a href="/faq/" class="hit">{HIW_FAQ.moreLink}</a></p>
       ) : null}
     </div>
   </div>
@@ -85,3 +85,11 @@ const section = 'mx-auto max-w-[1200px] px-4 py-12 lg:px-6 lg:py-20';
     secondary={{ label: 'WhatsApp us', href: waHref(prefillFor(HIW_PATH)), source: 'ctaband_how-it-works' }}
   />
 </Base>
+
+<style>
+  /* The HW-6 link into /faq/: a 44px touch target (08 §7.3) without moving anything (Breadcrumb's pattern) — an
+     inline-block (a wrapped inline link's containing block would collapse across lines) with an invisible ::before
+     reaching 10px above and 8px below its 26px line box (24px of space above the line, section padding below). */
+  .hit { position: relative; display: inline-block; }
+  .hit::before { content: ''; position: absolute; inset: -10px -4px -8px; }
+</style>
