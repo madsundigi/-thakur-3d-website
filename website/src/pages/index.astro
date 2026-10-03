@@ -78,10 +78,11 @@ const teamInPromiseBand = !pairs.length && !team.length;
   <Band><PriceTeaser /></Band>
 
   {/* H-6 The PetDoorStep Promise — a full-bleed mint strip. PromiseBand is a mint card (p-4 / md:p-6); on the mint band
-      its padding is pulled back so its text lines up with the other bands (no overflow: the pull never exceeds the
-      band's own 16px / 24px gutter). */}
-  <Band tone="mint">
-    <div class="-m-4 md:-mx-4 md:-my-6 lg:-mx-6"><PromiseBand /></div>
+      its padding is pulled back by the same amount, so its heading lines up with every other band's. From md to lg the
+      band gutter is 16px (08 §3.1) but the card pads 24px, so 8px of same-coloured card sits outside the viewport:
+      the band clips its x-overflow, and the page never scrolls sideways (test:site overflow check). */}
+  <Band tone="mint" class="overflow-x-clip">
+    <div class="-m-4 md:-m-6"><PromiseBand /></div>
     {teamInPromiseBand ? <TeamBlock people={team} class="mt-8" /> : null}
   </Band>
 

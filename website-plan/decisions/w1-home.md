@@ -20,7 +20,7 @@ lost or had to be synced.
 | W1H-06 | **H-7 omitted:** `beforeAfterPairs` is empty. The block renders by itself once ≥ 3 real, consented pairs exist: one pair per breed first (file order), then any other pair. H2 "Before & after: real Ludhiana grooms" (template SP-5) + the 06 §4.3 footer note. It sits in its own paper band, and H-8 then moves to a sand band. | home.md H-7 rule; 08 §5.1 (never stock or placeholders). Checked with a temporary local fixture (3 reviews, 4 pairs, 2 groomers), reverted and never committed: build, `check:pages` and `test:site` (axe, overflow, CLS, fold) all pass, and the band order stays paper/sand/mint alternating. | — |
 | W1H-07 | **H-5 details.** (a) The price-list link reads "See our full pet grooming price list". The blueprint gives it lowercase because it is an anchor phrase; here it is a standalone link, so it takes sentence case, and the 03 §2.1 long-tail is unchanged. (b) The vet tile shows "Vet visit ₹699" exactly as home.md says, matching the H-3 Vet at Home card chip (`cardPriceChip`). The "+ medicines at MRP" detail belongs to the vet page and its price lists. (c) Tile figures use 08 §2.2 price type at the 24 px matrix size. R1 + R2 sit directly under the tiles, styled as under PriceMatrix (08 §4.8). | Verbatim copy; 06 §5.4 (the two reassurance lines under every price display). | home.md §2 and H-5 updated to the sentence-case anchor |
 | W1H-08 | **og:image:alt = the 04 §4 file-list alt "PetDoorStep — pet care at your doorstep in Ludhiana"**, passed explicitly. Base's default alt prints "Pet care" with a capital P. | 04 §4: the alt listed for `petdoorstep-home.jpg`. | Base default (request R-2) |
-| W1H-09 | **Surface rhythm** (08 §1.4 rule 5): hero paper · H-2 sand · H-3 paper · H-4 sand · H-5 paper · **H-6 mint** (the trust strip) · [H-7 paper] · [H-8 sand] · H-9 paper · H-10 sand · H-11 paper · H-12 brand-dark, then the footer. No two adjacent bands share a background in any combination of the optional blocks. On the full-bleed mint band, PromiseBand's own card padding (p-4 / md:p-6) is pulled back with a negative-margin wrapper (−16 px; −24 px vertically from md and on all sides from lg), so its heading lines up with every other band. The pull never exceeds the band gutter, so there is no overflow (`scrollWidth` 360/768/1280 = viewport). From 768 to 1023 px a residual 8 px inset remains, because the gutter there is 16 px. | 08 §1.4 rule 5 names the "mint (trust strip)"; 08 §3.1 spacing (16 → 24 px gutter, 48 → 80 px band padding, 1200 px content). | PromiseBand could take a bare/full-bleed option (request R-4, optional) |
+| W1H-09 | **Surface rhythm** (08 §1.4 rule 5): hero paper · H-2 sand · H-3 paper · H-4 sand · H-5 paper · **H-6 mint** (the trust strip) · [H-7 paper] · [H-8 sand] · H-9 paper · H-10 sand · H-11 paper · H-12 brand-dark, then the brand-dark footer (rule 5 names exactly that ending). No two adjacent bands share a background in any combination of the optional blocks. On the full-bleed mint band, PromiseBand's own card padding (p-4 / md:p-6) is pulled back by the same amount (`-m-4 md:-m-6`), so its heading lines up with every other band's. From 768 to 1023 px the band gutter is 16 px (08 §3.1) while the card pads 24 px, so 8 px of same-coloured card falls outside the viewport on each side; the mint `Band` carries `overflow-x-clip`, so that never scrolls. **Measured (finisher, 2026-10-03):** every `main h2` left edge = 16 / 16 / 16 / 24 / 64 px at 360 / 768 / 1023 / 1024 / 1280, and `scrollWidth` = viewport at all five. (The first build pulled only 16 px at md, which left the Promise heading 8 px right of the others from 768 to 1023 — seen in the 768 screenshot and fixed here.) | 08 §1.4 rule 5 names the "mint (trust strip)"; 08 §3.1 spacing (gutter 16 → 24 px and card padding 16 → 24 px at 1024, 48 → 80 px band padding, 1200 px content). | PromiseBand could take a bare/full-bleed option or `lg:p-6` instead of `md:p-6` (request R-3, optional) |
 | W1H-10 | **home.md §5 H-3 alt row → the E5 shot alts** in `MONEY_PAGES[path].card.photo.alt` (e.g. "Groomer bathing a Golden Retriever on a verandah — dog grooming at home in Ludhiana"). | f2-data request D.8. 00 §11 E5. | home.md §5 updated (this stage owns it) |
 | W1H-11 | **Hero photo alt = home.md §5 verbatim**, "ghar baithe pet care — doorstep pet grooming at home in Ludhiana". It is not re-cut to the 08 §5.4 breed formula. | The blueprint wins over 08. It is also the 03 §5 row 12 Hinglish alt placement and the "doorstep pet care ludhiana" alt slot (home.md §2). It describes the shot truthfully (doorstep grooming at home in Ludhiana). If the real photo differs, update the alt in the same commit (E5). | — |
 | W1H-12 | **H-2 pre-launch** = the proof line (06 §4.4: links `[FILL:GBP_LINK]`, new tab, `rel="noopener"`; the ★ is `aria-hidden` next to its text twin, 08 §1.5) + the E6 string verbatim, whose URL renders as the GBP link. With ≥ 3 real reviews (`reviewsReady()`), 3 `ReviewCard`s replace E6, mixed across services (`pickReviews()`), as paper cards on the sand band (`onSand`). | Template SP-2 ("render the single E6 string … instead of empty cards"); 02 P055/P086. | — |
@@ -47,18 +47,29 @@ lost or had to be synced.
 | H-11 FAQ | Built: home-1 … home-6 = home.md §4 word for word, mirrored in FAQPage |
 | H-12 CTA band | Built (W1H-15) |
 
-## 3 · Verification (2026-10-03; build with `PUBLIC_PDS_PREVIEW_LIVE=wave1`)
+## 3 · Verification (2026-10-03; build with `PUBLIC_PDS_PREVIEW_LIVE=wave1`; finisher pass on `c999b5c` + `d085c90`)
 
-- `npm run build` ✓ · `check:prices` ✓ · `check:budgets` ✓ (home CSS 42,497 B ≤ 51,200; scripts = ld+json +
-  analytics + exit card; no island) · `check:pages --pages /` **0 FAIL**. The 11 WARNs are links to live Wave-1 pages
-  that other builders own and are not in this dist.
-- `test:site --pages / --port 4521` **0 FAIL**: no overflow at 360/768/1280, 0 console errors, 0 same-origin 4xx,
-  axe serious/critical 0, ld+json parses, CLS 0.000 at every width, fold law ✓, 11 tracked anchors fire with their
-  `data-source`, exit card ✓. The 1 WARN is LCP = the H1, because the hero is still the grey placeholder, which Chrome
-  ignores for LCP.
-- Own conformance script (all pass): title/meta/H1 = home.md §1 (53 / 150 / 43 chars); `@graph` = WebSite +
-  LocalBusiness + FAQPage, LocalBusiness `@id` `/#business`, no Review/aggregateRating; the 6 FAQ Q&As, in markup
-  and visible, = home.md §4 word for word; H2 sequence; hero CTA/chips/alt; the 7 cards' order and chips; the 10
-  areas' order; every verbatim line; 8 contextual internal links (P071 3–10); no `client:` or `<script>` in the
-  stage's sources; all `<img>` have width/height/alt; only the hero is eager.
-- Not run: Lighthouse (not installed in the sandbox). It is home.md §6's open ship check.
+- `npm run build` ✓ (4 pages in this worktree: `/`, `/book/`, `/thank-you/`, `/404.html`) · `check:prices` ✓ ·
+  `check:budgets --pages /` **0 FAIL, 0 WARN** (home CSS 42,421 B ≤ 51,200; 3 inline scripts = ld+json + analytics +
+  exit card, no island; 2 font preloads) · `check:pages --pages /` **0 FAIL, 11 WARN** — every WARN is P074 "links to
+  a live Wave-1 route which is not in this dist" (one per page another builder owns; requests I-2), plus the note that
+  15 `[FILL:*]` URLs are skipped (`check:fill` is their gate).
+- `test:site --pages / --port 4521` **0 FAIL, 1 WARN**: at 360 / 768 / 1280 no sideways scroll, 0 console errors,
+  0 failed same-origin requests, axe serious/critical 0, ld+json parses, CLS 0.000; fold law ✓ at 360×640 (with the
+  W1H-01 subhead); 11 tracked anchors fire with their `data-source`; exit card ✓ at 1280 and absent on `/book/`. The
+  WARN is P099: LCP = the H1 while the hero is the grey placeholder, which Chrome ignores (requests S-1).
+- Block-by-block walk of the built `dist/index.html` against home.md (finisher): head = §1 (title 53 / meta 150 / H1
+  43 chars; canonical + `og:url` `https://petdoorstep.in/`; `og:image` `/og/petdoorstep-home.jpg` 1200×630 with the
+  04 §4 alt) · one `@graph` = WebSite + LocalBusiness (`/#business`, 04 §2.1 field for field, `sameAs` held back until
+  filled) + FAQPage, no Review/AggregateRating · DOM order H-1 · H-2 · H-3 · H-4 · H-5 · H-6 (+ the H-8 line and
+  link) · H-9 · H-10 · H-11 · H-12, with H-7 and the H-8 cards omitted per their rules · every H2 = §3 · the 6 Q&As = §4
+  word for word, in markup and on the page · hero eyebrow / H1 / subhead / Hinglish line / CTAs + sources / chips / R3
+  / alt = H-1 · proof line (new tab, `rel="noopener"`) + E6 = H-2 · 7 cards in order with the H-3 chips, 4 linked + 3
+  "Coming soon" · the 4 steps = 04 §2.8, support line + "See the full process" = H-4 · 3 tiles + R1 + R2 + the
+  price-list link = H-5 · 4 Promise points, then the 06 §4.2 line + "How we hire" → `/about/` = H-6/H-8 · 10 areas in
+  order + the line = H-9 · both offer tiles with their full terms inline = H-10 · CTA band + R3 = H-12. Internal links
+  in `<main>`: 8 (P071 3–10), all live routes. 8 `<img>`, each with width / height / alt; only the hero eager +
+  preloaded. No `<script>` or `client:` in the stage's files. Sources: `hero_home` ×2, `ctaband_home` ×2.
+- Screenshots at 360 / 768 / 1280 reviewed segment by segment. The one defect found — the Promise heading 8 px right
+  of every other H2 from 768 to 1023 — is fixed in W1H-09; copy, order and chips are as specified at every width.
+- Not run: Lighthouse (not installed in the sandbox). It is home.md §6's open ship check, once the real photos land.
