@@ -1,23 +1,46 @@
 ---
-// The PetDoorStep Promise strip (06-CONVERSION-PLAYBOOK §4.1; template SP-8). Gated points render only when confirmed.
+// The PetDoorStep Promise (06-CONVERSION-PLAYBOOK §4.1; template SP-8). Gated points render only when confirmed.
+// variant 'strip' (default) = the 5-icon band every page carries, linking "Read the full Promise".
+// variant 'full' = the full block for /about/ (AB-4) and /safety-hygiene/ (SH-2): each label followed by its prose
+// `body` from src/data/content.ts — nothing extra renders for a point whose body is not written yet.
 import Icon from './icons/Icon.astro';
 import { MEDICAL_LINE, policy, promisePoints } from '../data/content';
 import { isLive } from '../data/routes';
 
-interface Props { medical?: boolean }
-const { medical = false } = Astro.props;
+interface Props { medical?: boolean; variant?: 'strip' | 'full' }
+const { medical = false, variant = 'strip' } = Astro.props;
 const points = promisePoints.filter((p) => !p.gated || policy[p.gated]);
+// `body` is optional on a point (06 §4.1 prose); read it without assuming the field exists yet.
+const bodyOf = (p: (typeof points)[number]): string | undefined => (p as { body?: string }).body;
 ---
-<section aria-labelledby="promise-heading" class="rounded-lg bg-mint p-4 md:p-6">
-  <h2 id="promise-heading" class="t-h2">The PetDoorStep Promise</h2>
-  <ul class="mt-4 grid list-none grid-cols-2 gap-3 p-0 lg:grid-cols-5">
-    {points.map((p) => (
-      <li class="flex items-start gap-2 text-brand-deep">
-        <span class="mt-0.5 flex-none"><Icon name={p.icon} size={20} /></span>
-        <span class="text-sm font-semibold text-ink">{p.label}</span>
-      </li>
-    ))}
-  </ul>
-  {medical ? <p class="mt-3 text-sm font-semibold text-brand-deep">{MEDICAL_LINE}</p> : null}
-  {isLive('/safety-hygiene/') ? <p class="mt-3 text-sm"><a href="/safety-hygiene/" class="prose-link">Read the full Promise</a></p> : null}
-</section>
+{variant === 'full' ? (
+  <section aria-labelledby="promise-heading" class="rounded-lg bg-mint p-4 md:p-6">
+    <h2 id="promise-heading" class="t-h2">The PetDoorStep Promise</h2>
+    <ol class="mt-4 grid list-none gap-4 p-0">
+      {points.map((p) => (
+        <li class="flex items-start gap-3">
+          <span class="mt-0.5 flex-none text-brand-deep"><Icon name={p.icon} size={24} /></span>
+          <div class="measure">
+            <p class="m-0 font-semibold text-ink">{p.label}</p>
+            {bodyOf(p) ? <p class="m-0 mt-1 text-ink">{bodyOf(p)}</p> : null}
+          </div>
+        </li>
+      ))}
+    </ol>
+    {medical ? <p class="mt-4 font-semibold text-brand-deep">{MEDICAL_LINE}</p> : null}
+  </section>
+) : (
+  <section aria-labelledby="promise-heading" class="rounded-lg bg-mint p-4 md:p-6">
+    <h2 id="promise-heading" class="t-h2">The PetDoorStep Promise</h2>
+    <ul class="mt-4 grid list-none grid-cols-2 gap-3 p-0 lg:grid-cols-5">
+      {points.map((p) => (
+        <li class="flex items-start gap-2 text-brand-deep">
+          <span class="mt-0.5 flex-none"><Icon name={p.icon} size={20} /></span>
+          <span class="text-sm font-semibold text-ink">{p.label}</span>
+        </li>
+      ))}
+    </ul>
+    {medical ? <p class="mt-3 text-sm font-semibold text-brand-deep">{MEDICAL_LINE}</p> : null}
+    {isLive('/safety-hygiene/') ? <p class="mt-3 text-sm"><a href="/safety-hygiene/" class="prose-link">Read the full Promise</a></p> : null}
+  </section>
+)}

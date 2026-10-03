@@ -15,10 +15,15 @@ mkdirSync(SHOTS, { recursive: true });
 let passed = 0; let failed = 0;
 const ok = (cond, msg) => { if (cond) { passed++; console.log(`  ✓ ${msg}`); } else { failed++; console.log(`  ✗ ${msg}`); } };
 
-const server = spawn('npx', ['astro', 'preview', '--port', String(PORT)], { stdio: 'pipe', env: { ...process.env, ASTRO_TELEMETRY_DISABLED: '1' } });
+// The preview runs in the foreground as our own child so `server.kill()` really stops it: `--ignore-lock` stops Astro 7
+// from auto-backgrounding it when an agent runs the suite (a detached daemon would outlive the run and hold the port).
+// astro.config.mjs sets vite.preview.strictPort, so a busy port fails loudly instead of drifting to another one.
+const server = spawn(process.execPath, ['node_modules/astro/bin/astro.mjs', 'preview', '--port', String(PORT), '--ignore-lock'],
+  { stdio: 'pipe', env: { ...process.env, ASTRO_TELEMETRY_DISABLED: '1' } });
 await new Promise((res, rej) => {
   const t = setTimeout(() => rej(new Error('preview server timeout')), 30000);
   server.stdout.on('data', (d) => { if (String(d).includes(String(PORT))) { clearTimeout(t); res(); } });
+  server.stderr.on('data', (d) => { if (/error|in use/i.test(String(d))) { clearTimeout(t); rej(new Error(`preview server: ${String(d).trim()}`)); } });
 });
 
 const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || undefined, args: ['--no-sandbox'] });
@@ -109,7 +114,7 @@ try {
     ok(page.url().includes(`ref=${ref}`) && page.url().includes('service=full-groom'), 'Redirected to /thank-you/ with ref + service');
     ok((await page.textContent('[data-testid=ty-ref]')).includes(ref), 'Thank-you page shows the booking reference');
     ok(await page.isVisible('[data-testid=ty-offer]'), 'Thank-you page shows the FIRSTGROOM line (true for this booking)');
-    ok(await page.$eval('meta[name=robots]', (m) => m.content) === 'noindex', '/thank-you/ is noindex');
+    ok(await page.$eval('meta[name=robots]', (m) => m.content) === 'noindex, follow', '/thank-you/ is noindex, follow');
     await page.screenshot({ path: `${SHOTS}/03-mobile-thank-you.png` });
 
     await page.waitForTimeout(300);

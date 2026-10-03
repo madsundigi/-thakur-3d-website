@@ -1,9 +1,14 @@
 // Step 5 — Contact (07-BOOKING-SPEC §3). Phone normalised + validated against ^[6-9]\d{9}$.
+// Consent line: 07 verbatim; owner decision D4 links its promise to /privacy-policy/ once that page is live.
+import { isLive } from '../../../data/routes';
 import { CAPS } from '../../../lib/validate';
 import { errId, FIELD_IDS, type StepProps } from '../types';
 import { FieldError, inputClass } from '../ui';
 
+const PRIVACY = '/privacy-policy/';
+
 export default function StepContact({ state, set, errors }: StepProps) {
+  const promise = 'We never spam or share your number.';
   return (
     <div className="space-y-4">
       <div>
@@ -31,7 +36,15 @@ export default function StepContact({ state, set, errors }: StepProps) {
         <label htmlFor={FIELD_IDS.consent} className="flex min-h-11 cursor-pointer items-start gap-3">
           <input id={FIELD_IDS.consent} data-field="consent" type="checkbox" className="mt-1 h-5 w-5 flex-none accent-brand"
             checked={state.consent} onChange={(e) => set({ consent: e.target.checked })} aria-describedby={errId('consent')} />
-          <span className="text-sm">Confirm my booking on WhatsApp at this number. We never spam or share your number.</span>
+          <span className="text-sm">
+            Confirm my booking on WhatsApp at this number.{' '}
+            {isLive(PRIVACY) ? (
+              <a href={PRIVACY} target="_blank" rel="noopener" data-testid="consent-privacy"
+                className="text-brand underline decoration-[1.5px] underline-offset-[3px] hover:text-brand-deep">
+                {promise}<span className="sr-only"> (Privacy Policy, opens in a new tab)</span>
+              </a>
+            ) : promise}
+          </span>
         </label>
         <FieldError id={errId('consent')} message={errors.consent} />
       </div>

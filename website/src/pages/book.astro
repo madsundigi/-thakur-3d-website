@@ -53,6 +53,12 @@ const next = [
         <a href={telHref()} data-source="noscript_block" class="prose-link">call {site.phone}</a>
       </p>
     </noscript>
+    {isLive('/privacy-policy/') ? (
+      <p class="mt-2 text-sm text-slate" data-testid="privacy-line">
+        We use your details only to confirm and deliver your booking. Reminders or offers come only if you reply YES on
+        WhatsApp. <a href="/privacy-policy/" target="_blank" rel="noopener" class="prose-link">Read our Privacy Policy</a>.
+      </p>
+    ) : null}
 
     <ul class="mt-8 grid list-none gap-3 p-0 md:grid-cols-2" aria-label="Booking reassurance">
       {[R1, R2, R3, R7].map((line) => (
