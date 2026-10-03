@@ -120,13 +120,13 @@ As built (2026-10-03, stage w1-hiw-faq):
   My pet: ___" · [Call [FILL:PHONE]] → `tel:` · both `data-source="ctaband_faq"` · R3 reply line.
 - **JSON-LD**: one `@graph` = FAQPage (all 28 entries, in §3 order, verbatim) + BreadcrumbList (`04` §2.9).
 
-## 6 · Ship checks
+## 6 · Ship checks (verified 2026-10-03, stage w1-hiw-faq — `decisions/w1-hiw-faq.md` §3)
 
-- [ ] `faq.json` exists; every page's FAQ renders from it (no FAQ text hard-coded in any page)
-- [ ] All 28 entries present; FAQPage markup on `/faq/` lists all 28, verbatim
-- [ ] CI check: ₹ figures in answers match `pricing.json`
-- [ ] `faq-s3` contains no cost promise (policy gate, `safety-hygiene.md` SH-7)
-- [ ] Title and H1 exactly as §1 (title 59, meta 155 with no double quotes, H1 40); both carry *pet grooming at home
+- [x] `faq.json` exists; every page's FAQ renders from it (no FAQ text hard-coded in any page) — these two pages; site-wide at the `--all` audit
+- [x] All 28 entries present; FAQPage markup on `/faq/` lists all 28, verbatim
+- [x] CI check: ₹ figures in answers match `pricing.json`
+- [x] `faq-s3` contains no cost promise (policy gate, `safety-hygiene.md` SH-7)
+- [x] Title and H1 exactly as §1 (title 59, meta 155 with no double quotes, H1 40); both carry *pet grooming at home
       questions* verbatim (`02` P012/P026); the H1 appears on no other page (P027)
-- [ ] Every jump-link resolves to a category H2 on the page; category links render only for live targets (P074)
-- [ ] At least one other indexable page links here from its `<main>` (`02` P068): `/how-it-works/` HW-6 does
+- [x] Every jump-link resolves to a category H2 on the page; category links render only for live targets (P074)
+- [x] At least one other indexable page links here from its `<main>` (`02` P068): `/how-it-works/` HW-6 does

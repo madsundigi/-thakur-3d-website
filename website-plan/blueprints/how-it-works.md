@@ -51,6 +51,9 @@ As built (2026-10-03, stage w1-hiw-faq; decisions in `decisions/w1-hiw-faq.md`):
 - **HW-2** `StepsStrip.astro` with `anchors`: `li#step-1`…`li#step-4` are the HowTo step URLs; steps and markup read
   the same `bookingSteps` (`src/data/content.ts`), so text and schema cannot drift.
 - **HW-3 / HW-4** are numbered (HW-3) and ✓ (HW-4) lists with the wording above, verbatim.
+- **HW-5** is the shared `PromiseBand.astro` strip. It renders the 4 un-gated points while `policy.onTimeOr100Off`
+  (`src/data/content.ts`, `00` §3.4 POLICY GATE) is unconfirmed, and its "Read the full Promise" link once
+  `/safety-hygiene/` is live (Wave 2).
 - **HW-6** closing link exists because no other blueprint links `/faq/` from page content, and `02` P068
   (launch-blocker) needs one contextual inbound link per indexable page.
 - **HW-7** [Book Now] → `/book/?src=ctaband_how-it-works` (amber) · [WhatsApp us] → `wa.me` with
@@ -66,10 +69,10 @@ As built (2026-10-03, stage w1-hiw-faq; decisions in `decisions/w1-hiw-faq.md`):
 4. **Can I get the same groomer every time?** — Yes, on request — most pet parents prefer it, and pets relax faster with a familiar person. Groom Club members get it as standard, along with priority slots.
 5. **What if my pet gets stressed during the groom?** — We pause, comfort and take breaks — calm matters more than speed. If your pet is too stressed to continue safely, we stop rather than force it, and plan a gentler session together.
 
-## 4 · Ship checks
+## 4 · Ship checks (verified 2026-10-03, stage w1-hiw-faq — `decisions/w1-hiw-faq.md` §3)
 
-- [ ] HW-2 text = HowTo schema text, character-for-character; anchors resolve
-- [ ] Durations in FAQ #2 match `00-MASTER-PLAN.md` §3.2 and `06` §5.5
-- [ ] Reschedule wording identical to `book.md` FAQ #3 (both contain `RESCHEDULE_TEXT`; `src/lib/faq.ts` fails the build otherwise)
-- [ ] Title, meta and H1 exactly as §1 (title 57, meta 155 with no double quotes, H1 43); H1 on no other page (P027)
-- [ ] Hero H1, subhead and [Book Now] fully visible above the sticky bar at 360×640 (fold law, `08` §4.6)
+- [x] HW-2 text = HowTo schema text, character-for-character; anchors resolve
+- [x] Durations in FAQ #2 match `00-MASTER-PLAN.md` §3.2 and `06` §5.5
+- [x] Reschedule wording identical to `book.md` FAQ #3 (both contain `RESCHEDULE_TEXT`; `src/lib/faq.ts` fails the build otherwise)
+- [x] Title, meta and H1 exactly as §1 (title 57, meta 155 with no double quotes, H1 43); H1 on no other page (P027)
+- [x] Hero H1, subhead and [Book Now] fully visible above the sticky bar at 360×640 (fold law, `08` §4.6)
