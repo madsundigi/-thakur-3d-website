@@ -1,6 +1,7 @@
 # Decisions — stage w1-pricing (Wave 1, `/pricing/`)
 
-Branch `wave1/w1-pricing` (base `abf5c3b`, plus the f2-gates merge `ba52caa`). Files: `website/src/pages/pricing.astro`,
+Branch `wave1/w1-pricing` (base `abf5c3b`, plus the f2-gates merge `ba52caa` and the main merge `0a80a71` = `50f75c3`,
+gate scripts out of the Tailwind scan). Files: `website/src/pages/pricing.astro`,
 `website/src/data/pages/pricing.ts`, `website/src/components/pages/pricing/{PriceSection,SizeGuide,GroomClub,OffersStrip}.astro`,
 `website-plan/blueprints/pricing.md` (§2.1 only). Blueprint: `blueprints/pricing.md` (B06).
 
@@ -32,6 +33,7 @@ column names the doc that has to follow.
 | W1P-18 | **Size guide** (`SizeGuide.astro`): three cards from `SIZE_MATRIX`, the same rows PR-3 prints. Each card shows the size, the kg on its own line and the breeds. A decorative dog icon grows 20 → 24 → 28 px | At 768 an inline kg wrapped mid-value ("10–25 / kg"); a separate line keeps all three cards alike | — |
 | W1P-19 | **Head values** come from `data/pages/pricing.ts`: title + H1 verbatim, meta built with `fromPrice` / `planPrice` / `flatPrice` (the blueprint figures). The module fails the build if the title leaves 50–60, the meta leaves 120–158 or contains `"`, or the H1 leaves 20–70 | 02 P011/P019/P024/P026; 07 §4 (no ₹ typed) | — |
 | W1P-20 | **Tick & Flea offers**: the markup names "Tick & Flea add-on" and "Tick & Flea standalone". The page shows "Tick & Flea · add-on ₹399 / standalone ₹699", the same words in the same line, so each name is the label plus the word before its figure | F2-13 (data stage) built both from `TICK_FLEA_LINE`; accepted as the visible wording | — |
+| W1P-21 | **Finisher pass (2026-10-03, on the `50f75c3` merge): no change to the page files.** The rebuilt page was walked block by block against `pricing.md` §1/§3/§4/§5 and reviewed at 360/768/1280 (full-page slices, plus the PR-3 and PR-4 scrollers at mid-scroll and scrolled to their end). Everything renders as the blueprint writes it. The two things that could read better sit in the shared `PriceMatrix` flat list, which this stage does not own: at 360 six lines drop their price block to a second line, and the Tick & Flea price text breaks between "standalone" and its figure | The shared wrap rule is the same on the cat, walking and vet money pages; a page-local override would make `/pricing/` render its lines differently from them (06 §5.7). Filed with measurements as requests B-4 and B-5 | — |
 
 ## 2 · Copy written (not in any doc yet — sync verbatim)
 
@@ -41,15 +43,28 @@ column names the doc that has to follow.
   "Full Groom", "Groom Club price". The saving under each club price reads "save {saving}".
 - **PR-9 link** (only once `/offers/` is live): "See all offers".
 
-## 3 · Verification (2026-10-03, `PUBLIC_PDS_PREVIEW_LIVE=wave1` build)
+## 3 · Verification (2026-10-03, finisher run on `0a80a71`, `PUBLIC_PDS_PREVIEW_LIVE=wave1` build)
 
-- `npm run build` ✓ · `npm run check:prices` ✓ · `npm run check:pages -- --pages /pricing/` → 0 FAIL, 11 WARN (links to
-  Wave-1 pages built by other stages) · `npm run test:site -- --pages /pricing/ --port 4531` → 0 FAIL, 0 WARN
-  (overflow, console, HTTP, axe, ld+json, CLS 0.000 at 360/768/1280; fold ok; 11 tracked anchors; exit card ok).
-- Manual Playwright pass: page `scrollWidth` = viewport at 360/768/1280. At 360 the PR-3 and PR-4 tables scroll inside
-  their frames (shared design) and the PR-8 table fits. axe: 0 violations at any impact; the 5 "incomplete" items sit in
-  the shared header/footer. No console errors or warnings. One ld+json `@graph` (OfferCatalog + FAQPage +
-  BreadcrumbList). Every Offer price is printed on the page. 14 of the 16 Offer names appear verbatim; the two Tick &
-  Flea names follow W1P-20. Title 56 · meta 156 · H1 42, equal to `pricing.md` §1.
-- Keyboard walk: Tab order = visual order at 360 and 1280; the focus ring on table Book links is not clipped. One
-  site-wide finding is filed as request C-1: the sticky bar can hide a focused element at the bottom edge.
+- `npm run build` ✓ (4 pages) · `npm run check:prices` ✓ · `npm run check:pages -- --pages /pricing/` → **0 FAIL, 11 WARN**
+  (all P074 "links to a live Wave-1 route not in this dist": `/`, the four money pages, `/how-it-works/`, `/about/`,
+  `/contact/`, `/faq/`, `/privacy-policy/`, `/terms/` — header/footer links to pages other stages build) ·
+  `npm run check:budgets -- --pages /pricing/` → **0 FAIL, 0 WARN** (CSS 44,659 B of 51,200; 3 scripts = ld+json +
+  analytics + exit card; 2 font preloads) · `npm run test:site -- --pages /pricing/ --port 4531` → **0 FAIL, 0 WARN**
+  (overflow, console, HTTP, axe and ld+json ok, CLS 0.000 at 360/768/1280; fold ok; 11 tracked anchors; exit card ok
+  on `/pricing/`, absent on `/book/`).
+- Blueprint walk on the built HTML: title 56 · meta 156 · H1 42, equal to §1; PR-0 … PR-12 in DOM order with the §3
+  wording and figures; the 5 FAQs equal §4 and `faq.json`; one `@graph` = OfferCatalog (16 Offers in the 04 §2.5 order
+  and names, every price visible — the three dog packages as min/max of the PR-3 matrix, Groom Club unpriced) +
+  FAQPage (5) + BreadcrumbList (Home › Pricing). 20 links in `<main>`: 17 `/book/` (3 matrix rows with
+  `service=full-groom&size=<size>&src=pricing_row`, 14 flat lines with `service=<id>&src=pricing_row`), 3 wa.me
+  (`hero_pricing`, `groomclub`, `ctaband_pricing`); every `data-source` canonical. 1,113 visible words in `<main>`.
+- Playwright measurements (own scripts, not committed): page `scrollWidth` = viewport at 360/768/1280. At 360 the
+  PR-3 scroller is 867 px in 328 and PR-4 593 in 326 — both scroll inside their frames with the sticky first column
+  and the right-edge fade; PR-8 fits (326/326). At 768 and 1280 every table fits (PR-4 Full Groom column 280 / 481 px,
+  request B-1). axe-core: 0 violations at any impact at all three sizes; the "incomplete" items (colour-contrast ×4,
+  form-field-multiple-labels ×1) sit in the shared header/footer. Console clean.
+- Keyboard walk: Tab order = DOM order at 360 (28 stops in `<main>`) and 1280 (29); the three scroll regions take
+  focus. The "Book Nail Trim + Ear Clean visit" link still lands under the sticky bar at 360 (y 596–640): request C-1,
+  site-wide.
+- Screenshots reviewed at 360/768/1280 (`scratchpad/wave1/w1-pricing/{final,scrolls}`): no visual defect in this
+  stage's files (W1P-21).
