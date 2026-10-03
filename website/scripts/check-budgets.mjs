@@ -40,7 +40,7 @@ const BOOK = '/book/';
 
 const rawText = (n) => n.children.filter((c) => c.type === 'text').map((c) => c.value).join('');
 const kb = (b) => `${(b / 1024).toFixed(1)} KB`;
-const relW = (f) => relative(WEBSITE, f);
+const relW = (f) => { const r = relative(WEBSITE, f); return r.startsWith('..') ? f : r; }; // website-relative, absolute when outside
 /** Same-origin URL → dist file (null when external or unparseable). */
 function distFileOf(url, base) {
   let u;

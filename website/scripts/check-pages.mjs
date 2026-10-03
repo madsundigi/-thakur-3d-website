@@ -40,7 +40,7 @@ const routes = await loadRoutes(loadTs);
 const sources = await loadTs('src/data/sources.ts');
 const isCanonicalSource = typeof sources.mod?.isCanonicalSource === 'function' ? sources.mod.isCanonicalSource : null;
 const bpMap = blueprintMap();
-const relDist = (f) => relative(WEBSITE, f);
+const relDist = (f) => { const r = relative(WEBSITE, f); return r.startsWith('..') ? f : r; }; // website-relative, absolute when outside
 const cp = (s) => [...s].length; // length in code points (02 §1: count characters, not UTF-16 units)
 
 R.info(`${targets.length} page(s) ${ALL ? '(--all: every page in dist/)' : `(--pages ${targets.join(',')})`} · site ${SITE ?? '?'} · routes.ts: ${

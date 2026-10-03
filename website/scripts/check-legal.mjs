@@ -48,7 +48,8 @@ for (const f of srcFiles) {
     const at = `${rel(f)}:${i + 1}`;
     for (const m of line.matchAll(/(['"`])(pds_[A-Za-z0-9_]+)\1/g)) {
       const store = /sessionStorage/.test(line) && !/localStorage/.test(line) ? 'session' : /localStorage/.test(line) && !/sessionStorage/.test(line) ? 'local' : null;
-      used.set(m[2], [...(used.get(m[2]) ?? []), { at, store }]);
+      const refs = used.get(m[2]) ?? [];
+      if (!refs.some((r) => r.at === at)) used.set(m[2], [...refs, { at, store }]);
     }
     if (/(['"`])pds_[A-Za-z0-9_]*\$\{|(['"])pds_[A-Za-z0-9_]*\2\s*\+/.test(line)) R.warn(at, 'P051', 'storage key built at runtime — list every key it can produce in legal.ts STORAGE_KEYS');
   });
