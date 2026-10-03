@@ -96,7 +96,9 @@ async function startServer() {
     const t = setTimeout(() => reject(new Error(`astro preview did not report ${BASE}/ within 30 s:\n${out.slice(-800)}`)), 30_000);
     const onData = (d) => {
       out += String(d).replace(/\x1b\[[0-9;]*m/g, ''); // strip ANSI colours (Vite bolds the port)
-      if (out.includes(`http://localhost:${PORT}/`)) { clearTimeout(t); resolve(); }
+      if (out.includes(`http://localhost:${PORT}/`)) { clearTimeout(t); resolve(); return; }
+      const moved = /http:\/\/localhost:(\d+)\//.exec(out);
+      if (moved) { clearTimeout(t); stopServer(); reject(new Error(`port ${PORT} is busy (astro preview moved to ${moved[1]}) — free it or pass --port <n>`)); }
     };
     server.stdout.on('data', onData);
     server.stderr.on('data', onData);
