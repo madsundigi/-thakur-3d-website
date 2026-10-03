@@ -1,12 +1,14 @@
 ---
-// One /contact/ CO-2 card (blueprints/contact.md): icon + h3 channel name, then the action (default slot — a Button
+// One /contact/ CO-2 card (blueprints/contact.md): icon + channel name, then the action (default slot — a Button
 // whose visible text is the number / address / handle itself) and an optional small note. Zero JS. Card on paper:
-// shadow, no border (08 §3.3).
+// shadow, no border (08 §3.3). The channel name is a <p> in h3 type, not an <h3>: 02 P032 keeps card labels out of
+// h-tags and forbids two consecutive headings with no body text between them (the CO-2 H2 would be followed by
+// four of them). The Button's sr-only prefix ("WhatsApp", "Call", …) already names the channel for screen readers.
 import BrandIcon from '../../icons/BrandIcon.astro';
 import Icon from '../../icons/Icon.astro';
 
 interface Props {
-  /** Channel name, rendered as the card's h3 (under the CO-2 H2). */
+  /** Channel name (WhatsApp · Call · Email · Instagram), shown in h3 type under the CO-2 H2. */
   title: string;
   icon: 'whatsapp' | 'phone' | 'mail' | 'instagram';
   /** Small slate line under the action, e.g. the email reply time (contact.md CO-2 ③). */
@@ -19,7 +21,7 @@ const { title, icon, note } = Astro.props;
     <span class="flex h-10 w-10 flex-none items-center justify-center rounded-pill bg-mint text-brand-deep">
       {icon === 'whatsapp' ? <BrandIcon name="whatsapp" size={20} /> : <Icon name={icon} size={20} />}
     </span>
-    <h3 class="t-h3 m-0">{title}</h3>
+    <p class="t-h3 m-0">{title}</p>
   </div>
   <div class="w-full min-w-0 [overflow-wrap:anywhere]">
     <slot />

@@ -38,12 +38,12 @@ and the google.co.in order were not visible. Re-check the query on a phone in Lu
 |---|---|---|
 | CO-0 | Breadcrumb | `Home › Contact` |
 | CO-1 | Header | H1 · line "A real person replies on WhatsApp within 10 minutes, 9:00–19:00, every day." (confirmed fact, `00` §3.1, D3) |
-| CO-2 | **Contact cards** (H2 "WhatsApp, call or email PetDoorStep") | ① **WhatsApp** (primary, green): `[FILL:WHATSAPP_NUMBER]` → `wa.me/[FILL:WHATSAPP_NUMBER]?text=Hi%20PetDoorStep%2C%20I%20have%20a%20question` · ② **Call**: `[FILL:PHONE]` → `tel:` · ③ **Email**: `[FILL:EMAIL]` → `mailto:` — "replies within one working day" · ④ **Instagram**: `[FILL:INSTAGRAM]` |
-| CO-3 | **NAP block** | Visible version of `05` §4: Name · Phone · WhatsApp · Email · Website · "Doorstep service — we come to you. There is no walk-in centre." · Service area line. **Never show `[FILL:BASE_ADDRESS]`** (service-area business) |
+| CO-2 | **Contact cards** (H2 "WhatsApp, call or email PetDoorStep") | ① **WhatsApp** (primary, green): `[FILL:WHATSAPP_NUMBER]` → `wa.me/[FILL:WHATSAPP_NUMBER]?text=Hi%20PetDoorStep%2C%20I%20have%20a%20question` · ② **Call**: `[FILL:PHONE]` → `tel:` · ③ **Email**: `[FILL:EMAIL]` → `mailto:` — "replies within one working day" (set as its own line, "Replies within one working day.") · ④ **Instagram**: `[FILL:INSTAGRAM]`. The channel names are card labels, not h-tags (`02` P032); the number / address / handle is the button's visible text (2026-10-03, `decisions/w1-about-contact.md` W1AC-12) |
+| CO-3 | **NAP block** | Visible version of `05` §4: Name · Phone · WhatsApp · Email · Website · "Doorstep service — we come to you. There is no walk-in centre." · Service area line. **Never show `[FILL:BASE_ADDRESS]`** (service-area business). Rendered as `<Nap source="contact_page" tone="light" />` — the footer's component, so the text is byte-identical by construction (E9; `requests/f2-chrome.md` 5) — followed by the doorstep line and "Website: https://[FILL:DOMAIN]/", the two `05` §4 fields `Nap` does not print (W1AC-13) |
 | CO-4 | **Hours** (H2) | Table: Grooming & vet visits — Mon–Sun 9:00–19:00 (last booking 17:30) · Dog walks — 6:00–9:30 and 17:30–20:30 (Apr–Jun: before 8:00 / after 19:00) · WhatsApp replies — 9:00–19:00; messages after 19:00 are answered from 9:00 |
 | CO-5 | **Where we come** (H2) | "All of Ludhiana — no travel charge." + the 10 `00` §3.3 areas, each linked to its area page once live (plain text before) |
-| CO-6 | Quick links | "Ready to book?" → `/book/` · "Prices" → `/pricing/` · "How it works" → `/how-it-works/` |
-| CO-7 | FAQ (3 Q&As, plain HTML — no FAQPage on this page) | see §3 |
+| CO-6 | Quick links | "Ready to book?" → `/book/?src=contact_page` (`07` §2: every route into the widget carries its source) · "Prices" → `/pricing/` · "How it works" → `/how-it-works/` · "Privacy Policy" → `/privacy-policy/` (added 2026-10-03: the legal page's contextual in-body inbound link — footer links do not count for `02` P068, `requests/f2-gates.md` 11; W1AC-16). Each renders only while its target is live (P074) |
+| CO-7 | FAQ (3 Q&As, plain HTML — no FAQPage on this page) | see §3. H2 "Contacting PetDoorStep — your questions" (written 2026-10-03 on the template SP-10 "{topic} — your questions" pattern; W1AC-17) |
 
 ## 3 · FAQ
 
@@ -60,4 +60,9 @@ and the google.co.in order were not visible. Re-check the query on a phone in Lu
 - [ ] Title, meta and H1 exactly as §1 (P010–P027 counted: title 53, meta 143 with no double quotes, H1 39); the
       H1 appears on no other page (P027)
 - [ ] No map at launch: `02` P098 (Important) is deferred (`00` §11 E8). Record it in the page audit as an open
-      Important item with an owner and a fix date (`02` §1.2)
+      Important item with an owner and a fix date (`02` §1.2) — logged as W1AC-18; owner + date requested from Sunny
+      (`requests/w1-about-contact.md`)
+- [x] Built 2026-10-03 (`wave1/w1-about-contact`, `decisions/w1-about-contact.md`): every block above in DOM order;
+      `check:budgets` / `test:site` green. `check:pages` P088 counts two `<address data-testid="nap">` blocks on this
+      page (CO-3 + footer, both `Nap.astro`, verified byte-identical) and FAILs on the count alone — gate change
+      requested (`requests/w1-about-contact.md` 2)
