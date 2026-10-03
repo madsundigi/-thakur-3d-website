@@ -188,6 +188,8 @@ export function textOf(node, { visible = false } = {}) {
     if (n.type === 'text') { out.push(n.value); return; }
     if (n.type === 'element') {
       if (skip.has(n.tag) || (visible && hasAttr(n, 'hidden'))) return;
+      // an SVG's <title>/<desc> is its accessible name, never page text
+      if (n !== node && (n.tag === 'title' || n.tag === 'desc') && isInside(n, (x) => x.tag === 'svg')) return;
       const block = BLOCK.has(n.tag);
       if (block) out.push(' ');
       for (const c of n.children) rec(c);
