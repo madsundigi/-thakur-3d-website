@@ -36,7 +36,7 @@
 
 ## 3 · Block values (only where this page adds to the template)
 
-- **SP-1 Hero** — template worked example verbatim, except eyebrow = *Doorstep dog grooming*. Chips: `from ₹599` + standard 4.
+- **SP-1 Hero** — template worked example verbatim, except eyebrow = *Doorstep dog grooming*. Primary [Book on WhatsApp] → `/book/?src=hero_dog-grooming` (`00` §11 E1). Chips: `from ₹599` + standard 4.
 - **SP-3 Package table** — template worked table verbatim. Lead-in (above table, 2 sentences): "**Looking for a dog parlour in Ludhiana? We bring the parlour home.** No grooming van needed — your groomer carries a complete kit to your verandah, balcony or bathroom, and every dog grooming home service in Ludhiana is priced before we arrive."
 - **SP-4 Price matrix** — template worked matrix verbatim, then two additions inside the block:
   - **À-la-carte line:** "Just nails? **Nail Trim + Ear Clean visit ₹299.** Ticks? Add **Tick & Flea treatment for ₹399** to any groom." (links `/ludhiana/tick-flea-treatment/`)

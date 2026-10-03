@@ -132,7 +132,7 @@ Question bank to adapt (each answer must be locality-true):
 
 ### AP-10 · Book in {Area}
 - Booking widget island mounted with `area={slug}` preset (Step 1 pre-selected, user can change) — `07-BOOKING-SPEC.md`
-  §8 island rules; `src=area_{slug}`.
+  §8 island rules; `src={slug}_page`, e.g. `sarabha-nagar_page` (the `<slug>_page` pattern, `09` §2d).
 - Fallback link always present (no-JS): `https://wa.me/[FILL:WHATSAPP_NUMBER]?text=Hi%20PetDoorStep%2C%20I%20want%20pet%20grooming%20at%20home%20in%20{Area-URL-encoded}`.
 
 ### AP-11 · Final CTA band

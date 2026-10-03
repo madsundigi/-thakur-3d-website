@@ -33,7 +33,7 @@
 
 ## 3 · Block values
 
-- **SP-1 Hero** (`06-CONVERSION-PLAYBOOK.md` §2.3): eyebrow *Cat grooming at home* · H1 above · subhead "Calm-handling trained groomers for your cat — no car ride, no strange salon smells. Bath & Brush ₹899 · Full Groom ₹1,399, flat price for all cats." · CTAs [Book on WhatsApp] + [Call [FILL:PHONE]] · chips `from ₹899` + standard set with chip 4 swapped to `✔ Calm-handling trained for cats`.
+- **SP-1 Hero** (`06-CONVERSION-PLAYBOOK.md` §2.3): eyebrow *Cat grooming at home* · H1 above · subhead "Calm-handling trained groomers for your cat — no car ride, no strange salon smells. Bath & Brush ₹899 · Full Groom ₹1,399, flat price for all cats." · CTAs [Book on WhatsApp] → `/book/?src=hero_cat-grooming` (`00` §11 E1; amber, `08` §1.4) + [Call [FILL:PHONE]] · chips `from ₹899` + standard set with chip 4 swapped to `✔ Calm-handling trained for cats`.
 - **SP-3 Package table** (inclusions from `00-MASTER-PLAN.md` §3.2 cat row):
 
   | Included | Cat Bath & Brush ₹899 | Cat Full Groom ₹1,399 |
@@ -84,7 +84,7 @@ In-answer links: #4 → week-16 post (once live) · #5 → `/ludhiana/tick-flea-
 
 | Slot | Shot | Alt text |
 |---|---|---|
-| Hero | Groomer brushing a Persian cat on a sofa, owner beside | Persian cat being brushed during cat grooming at home in Ludhiana |
+| Hero | Calm-handling cat groom, the cat sitting on a towel at home (`08` §5.2 shot 5, `cat-grooming-at-home-ludhiana.jpg`) | Cat sitting calmly on a towel during cat grooming at home in Ludhiana (name the breed, e.g. Persian, once the photo shows it) |
 | SP-3 | Cat in a shallow lukewarm bath, groomer's hands steadying it | billi ko nehlana — gentle cat bath at home in Ludhiana |
 | SP-5 | Persian before/after (data file) | Persian cat before/after full groom at home in {Area}, Ludhiana |
 

@@ -37,7 +37,7 @@
 
 - **SP-1 Hero** (`06` §2.3): eyebrow *Puppies, dogs & cats* · subhead "Registered vet, cold-chain carried vaccine, done in your living room — with a reminder calendar so you never miss a due date." · CTAs [Book Vaccination on WhatsApp] + [Call [FILL:PHONE]] · chips `₹199 + MRP` + `✔ Registered veterinarians only` · `✔ Vaccine at MRP — wrapper shown` · `✔ ₹199 fixed service fee` · `✔ Free reminder calendar`.
 - **SP-3 What's included (✓-lists)** — lead-in "Dog vaccination in Ludhiana without the clinic queue — or the clinic germs." 
-  - **Vaccination at Home — ₹199 + vaccine at MRP:** ✓ registered vet ✓ vaccine carried in a temperature-controlled box ✓ batch number and expiry shown before the injection ✓ 15-minute observation after the shot ✓ entry in your pet's vaccination card, signed with the vet's registration number ✓ free reminder a week before every next dose
+  - **Vaccination at Home — ₹199 + vaccine at MRP:** ✓ registered vet ✓ vaccine carried in a temperature-controlled box ✓ batch number and expiry shown before the injection ✓ 15-minute observation after the shot ✓ entry in your pet's vaccination card, signed with the vet's registration number ✓ free WhatsApp reminder a week before every next dose, once you reply YES (`00` §11 D4)
   - **H3 "Deworming Visit — ₹499":** ✓ standard dewormer included ✓ dose by weight (pet weighed first). With a vaccination in the same visit: ₹199 + vaccine MRP + ₹499 — just the list prices added, nothing extra.
 - **SP-4 Prices** — H2 per §2; flat list `Vaccination service fee ₹199 + vaccine at printed MRP · Deworming Visit ₹499` + R1 + R2. Then:
   - **H3 "Puppy course"** (India standard — vet sign-off required):
@@ -67,10 +67,10 @@
 2. **Are vaccines given at home as safe as at a clinic?** — Yes, when the cold chain is kept. Our vet carries vaccines in a temperature-controlled box from licensed suppliers, shows you the batch number and expiry, and watches your pet for 15 minutes after the injection — exactly as a clinic would. Home is also calmer, with no sick animals in a waiting room.
 3. **What is the puppy vaccination schedule in India?** — 6 weeks: Puppy DP · 8–9 weeks: DHPPiL · 12 weeks: DHPPiL booster · 14–16 weeks: anti-rabies, with boosters as your vet advises · then DHPPiL and rabies boosters every year for life. Your vet confirms exact dates for your puppy's vaccine brand.
 4. **Is rabies vaccination compulsory in India?** — In practice, yes: most Indian cities require it for municipal pet registration, and you'll need proof for boarding, travel and after any bite incident. The first dose is usually given at 14–16 weeks, followed by boosters as your vet advises — typically every year.
-5. **Do you remind me when the next dose is due?** — Yes, free. After every vaccination we add your pet's next due dates to our reminder calendar and WhatsApp you a week before each one, so boosters never slip.
+5. **Do you remind me when the next dose is due?** — Yes, free. After every vaccination we add your pet's next due dates to our reminder calendar. Reply YES when we ask on WhatsApp, and we'll message you a week before each one, so boosters never slip.
 6. **Do you vaccinate cats too?** — Yes. Kittens get Tricat from 8–9 weeks with a booster at 12 weeks, then anti-rabies from 14–16 weeks and yearly boosters. It's the same ₹199 fee plus vaccine MRP, and cats are usually far calmer vaccinated at home.
 7. **Can you deworm my dog in the same visit?** — Yes. A Deworming Visit is ₹499 with a standard dewormer included; booked together with a vaccination you pay ₹199 + vaccine MRP + ₹499. The dose depends on weight, so the vet weighs your pet first.
-8. **Vaccination ghar pe ho jaati hai?** — Haan — registered vet ghar aakar vaccine lagata hai: ₹199 visit fee + vaccine MRP pe. Vial ka batch aur expiry aapko dikhaya jaata hai, aur next dose ka reminder WhatsApp pe aata hai.
+8. **Vaccination ghar pe ho jaati hai?** — Haan — registered vet ghar aakar vaccine lagata hai: ₹199 visit fee + vaccine MRP pe. Vial ka batch aur expiry aapko dikhaya jaata hai, aur YES reply karne par next dose ka reminder WhatsApp pe aata hai.
 
 In-answer links: #3 → week-2 post (once live) · #7 → `/ludhiana/vet-at-home/` · #1 → `/pricing/`.
 
@@ -78,7 +78,7 @@ In-answer links: #3 → week-2 post (once live) · #7 → `/ludhiana/vet-at-home
 
 | Slot | Shot | Alt text |
 |---|---|---|
-| Hero | Vet showing a vaccine vial to the owner, puppy on the owner's lap | Vet showing a vaccine vial before dog vaccination at home in Ludhiana |
+| Hero | Vet examining a Pomeranian at home, vaccine cold box visible (`08` §5.2 shot 10, vaccination crop of `vet-home-visit-pomeranian-ludhiana.jpg`; `00` §11 E5) | Vet with a vaccine cold box examining a Pomeranian before dog vaccination at home in Ludhiana |
 | SP-3 | Cold-chain box opened at the door | Temperature-controlled vaccine box carried by a vet in Ludhiana |
 | SP-4 | Filled vaccination card (pet name blurred) | Signed dog vaccination card with next due dates, Ludhiana |
 

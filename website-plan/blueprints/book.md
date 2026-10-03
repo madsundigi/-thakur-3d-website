@@ -7,7 +7,7 @@
 | URL | Wave | Indexing | Schema | Status |
 |---|---|---|---|---|
 | `/book/` | 1 | indexable (thin-safe content below the widget) | BreadcrumbList | blueprinted |
-| `/thank-you/` | 1 | `noindex` (`04-TECHNICAL-SEO.md` §3); excluded from sitemap | none | blueprinted |
+| `/thank-you/` | 1 | `noindex, follow` (`04-TECHNICAL-SEO.md` §3.3); excluded from sitemap | none | blueprinted |
 
 ---
 
@@ -59,7 +59,7 @@ Sticky bar: hidden while the widget is open (`06` §3.3); exit-intent nudge neve
 ### B1 · Head
 
 - **Title** (50): `Booking Request Received – Thank You | PetDoorStep`
-- `<meta name="robots" content="noindex">` · no canonical needed · excluded from `@astrojs/sitemap` (filter)
+- `<meta name="robots" content="noindex, follow">` (`02` P128, `00` §11 E7) · no canonical needed · excluded from `@astrojs/sitemap` (only live routes are listed, `04` §7.1)
 
 ### B2 · Content (DOM order)
 
@@ -80,5 +80,5 @@ Sticky bar: hidden while the widget is open (`06` §3.3); exit-intent nudge neve
 
 - [ ] `/book/` widget Step 1 visible at 360×640 without scrolling; works with `?service=full-groom&size=medium&src=pricing_row`
 - [ ] JS disabled: BK-7 links still visible and working
-- [ ] `/thank-you/` is `noindex`, absent from the sitemap, and fires `thank_you_view` exactly once per load with a `ref`
+- [ ] `/thank-you/` is `noindex, follow`, absent from the sitemap, and fires `thank_you_view` exactly once per load with a `ref`
 - [ ] Reschedule wording identical on `/book/` FAQ #3, `/refund-policy/` and `00-MASTER-PLAN.md` §3.2
