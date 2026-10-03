@@ -200,11 +200,13 @@ Review recency is a top-5 local ranking factor. This is an always-on engine buil
 
 ### 3.1 The ask-flow (after EVERY completed service — grooms, walks milestone, vet visits)
 
+**YES rule (`00` §11 D4, 2026-10-03):** a review request on WhatsApp goes **only** to a customer who has replied YES to the opt-in ask (`06` §9 W6; date in the leads-sheet `opt_in` column, `09` §5). The opt-in is asked of **every** customer in the same words, before the service and regardless of how it goes, so restricting WhatsApp asks to opted-in customers is not gating (§3.6). The verbal ask and the QR card (step 1) are for everyone.
+
 | Step | When | What happens |
 |---|---|---|
-| 1. Verbal ask | T+0, at job close-out | Groomer's script (memorise): *"If you were happy with how {pet_name}'s groom went, a Google review really helps a small local team like ours. You'll get a WhatsApp link in a few minutes — it takes 30 seconds."* Verbal ask + promised link is the highest-converting combo. Groomer also shows the QR card (§3.3). |
-| 2. WhatsApp ask | T+30–60 min | Template A (EN) or A-H (Hinglish) below, sent from WhatsApp Business — same message to **every** customer, no sentiment filtering. |
-| 3. Single nudge | T+3 days, only if no review AND no complaint | Template B. **One nudge maximum, ever.** |
+| 1. Verbal ask | T+0, at job close-out | Groomer's script (memorise): *"If you were happy with how {pet_name}'s groom went, a Google review really helps a small local team like ours. You'll get a WhatsApp link in a few minutes — it takes 30 seconds."* (Say the WhatsApp line only to customers who replied YES; to others: *"The card has a QR code — it takes 30 seconds."*) Verbal ask + promised link is the highest-converting combo. Groomer also shows the QR card (§3.3). |
+| 2. WhatsApp ask | T+30–60 min | Template A (EN) or A-H (Hinglish) below, sent from WhatsApp Business — same message to **every opted-in (YES) customer**, no sentiment filtering. |
+| 3. Single nudge | T+3 days, only if no review AND no complaint, and only to opted-in (YES) customers | Template B. **One nudge maximum, ever.** |
 | 4. Thank-you | Within 24 h of the review appearing | Template C on WhatsApp + the public reply (§3.4). |
 | Complaint at any point | Immediately | Service-recovery flow: founder callback same day, free re-visit if justified. This is allowed — what's prohibited is making the *review ask* conditional on sentiment. |
 
@@ -279,7 +281,7 @@ For monthly walking clients: ask at the end of the Trial Week and again at the e
 ### 3.6 ⚠️ NEVER do this (review policy — enforced, penalties include losing ALL reviews)
 
 - **No incentives, ever.** No discount, free add-on, Groom Club perk or gift for a review — positive or otherwise.
-- **No gating.** Never ask only happy-seeming customers, never route unhappy ones to a private form while happy ones get the Google link. Same ask, every customer.
+- **No gating.** Never ask only happy-seeming customers, never route unhappy ones to a private form while happy ones get the Google link. Same ask, every customer: the verbal ask and QR card for everyone, the WhatsApp ask for everyone who replied YES to the opt-in (asked of all customers before the service, §3.1, `00` §11 D4).
 - **No fake reviews.** No reviews from staff, family, swapped with other businesses, or purchased. No posting from office devices/IP on customers' behalf.
 - **No keyword scripting.** You may ask "what service did we do and how did it go?" (which naturally elicits service + locality words) — you may not tell customers what to write.
 - One nudge maximum; never pressure.
@@ -288,7 +290,7 @@ For monthly walking clients: ask at the end of the Trial Week and again at the e
 
 ## 4 · NAP — the canonical block
 
-The single source for Name–Address–Phone. **Copy-paste character-for-character into every listing, the site footer, email signatures and print.** Any change: update `00-MASTER-PLAN.md` §3.1 first, then GBP, then the P1 citations within one week, then the rest.
+The single source for Name–Address–Phone (the NAP owner, `00` §11 E9: `02` P088's footer example and `08` §4.4 render this block). **Copy-paste character-for-character into every listing, the site footer, email signatures and print.** Any change: update `00-MASTER-PLAN.md` §3.1 first, then GBP, then the P1 citations within one week, then the rest.
 
 ```
 Name:     PetDoorStep
@@ -414,7 +416,7 @@ Target: **one executed initiative per month** (§8). Five real Ludhiana links be
 ### Weekly (90–120 min total)
 - [ ] **Mon:** publish 1 GBP post from the §2.4 rotation; mirror to Instagram/Facebook.
 - [ ] **Mon:** upload the week's 3–5 best job photos (consent logged) per §2.3.
-- [ ] **Daily (ops-embedded):** review-ask WhatsApp fires for every completed job (§3.1); T+3d nudges go out; groomers capture 2 photos/visit.
+- [ ] **Daily (ops-embedded):** review-ask WhatsApp fires for every completed job whose customer replied YES (§3.1, `00` §11 D4); T+3d nudges go out to the same group; groomers capture 2 photos/visit.
 - [ ] **Daily:** reply to new reviews within SLA (§3.4: ≤3★ same day, others ≤48 h); answer GBP Q&A and chat within hours (missed-chat <5%).
 - [ ] **Fri:** check GBP for "Google updated your info" auto-edits and revert wrong ones — especially any un-hiding of the address (silent killer for SABs).
 

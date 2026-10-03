@@ -41,7 +41,7 @@
 | PR-5 | **Cat, puppy & quick visits** | H2 **"Cat grooming charges & quick visits"** · rows: Cat Bath & Brush ₹899 · Cat Full Groom ₹1,399 · Puppy Intro Groom (8 weeks–6 months) ₹699 · Nail Trim + Ear Clean visit ₹299 · Tick & Flea add-on ₹399 / standalone ₹699 — each with `Book` link |
 | PR-6 | **Dog walking** | H2 **"Dog walking charges in Ludhiana"** · 1 walk/day ₹2,999/month · 2 walks/day ₹4,999/month · Trial Week (7 walks) ₹699 · line "Monthly plans are paid at month-end by UPI or cash — no advance." |
 | PR-7 | **Vet & vaccination** | H2 **"Vet home visit fee & vaccination cost"** · Vet visit ₹699 + medicines at MRP · Vaccination ₹199 + vaccine at MRP · Deworming ₹499 (dewormer included) · line "Registered veterinarians only. Medicines and vaccines are charged at printed MRP — the wrapper is shown to you." |
-| PR-8 | **Groom Club** | H2 **"Groom Club — 15% off every monthly Full Groom"** · pitch verbatim from `06` §7.3 · maths table: Small ₹1,199 → **₹1,019** (save ₹180) · Medium ₹1,499 → **₹1,274** (save ₹225) · Large ₹1,899 → **₹1,614** (save ₹285) · [Join Groom Club] → WhatsApp prefill |
+| PR-8 | **Groom Club** | H2 **"Groom Club — 15% off every monthly Full Groom"** · pitch verbatim from `06` §7.3 · maths table: Small ₹1,199 → **₹1,019** (save ₹180) · Medium ₹1,499 → **₹1,274** (save ₹225) · Large ₹1,899 → **₹1,614** (save ₹285) · [Join Groom Club] → WhatsApp prefill (`data-source="groomclub"`, `09` §2d) |
 | PR-9 | Offers strip | FIRSTGROOM + referral one-liners (`06` §7.1–7.2) → `/offers/` |
 | PR-10 | **Why fixed prices** | H2 **"Why our prices are fixed"** · 3 short paragraphs: (1) "Quote-on-arrival is how pet parents get overcharged — so we publish every price by size." (2) "The only possible addition is a clearly flagged add-on, like de-matting a severely matted coat — quoted on WhatsApp before we start, never after." (3) "No travel charge anywhere in Ludhiana, and no advance payment — you pay after the service." |
 | PR-11 | FAQ (5 Q&As, §4) | FAQPage markup |
@@ -58,7 +58,7 @@
 ## 5 · Schema notes
 
 OfferCatalog per `04-TECHNICAL-SEO.md` §2.5 — one Offer per visible price, `priceCurrency` INR, names identical to the
-table labels. Vet/vaccination offers state the fee only (MRP items are not priced in schema). FAQPage mirrors §4.
+table labels (this rule wins over older names, `00` §11 E6; `04` §2.5 now lists exactly these labels). Vet/vaccination offers state the fee only (MRP items are not priced in schema). FAQPage mirrors §4.
 
 ## 6 · Ship checks
 

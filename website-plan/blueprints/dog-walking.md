@@ -31,7 +31,7 @@
 
 ## 3 · Block values
 
-- **SP-1 Hero** (`06` §2.3): eyebrow *Daily dog walking* · subhead "The same fixed, verified walker every day, with GPS route and photo update after every walk. Try a full week for ₹699 before you commit." · CTAs [Start ₹699 Trial Week] (wa.me prefill per `07-BOOKING-SPEC.md` §5) + [Call [FILL:PHONE]] · chips `₹699 trial week` + `✔ Fixed verified walker` · `✔ GPS + photo after every walk` · `✔ Fixed monthly price` · `✔ Background-verified`.
+- **SP-1 Hero** (`06` §2.3): eyebrow *Daily dog walking* · subhead "The same fixed, verified walker every day, with GPS route and photo update after every walk. Try a full week for ₹699 before you commit." · CTAs [Start ₹699 Trial Week] → the booking form `/book/?service=dog-walking&src=hero_dog-walking`, which preselects Trial Week, the widget's default dog-walking plan (`00` §11 D2, 2026-10-03; `07` §2 row 3 — not a wa.me link) + [Call [FILL:PHONE]] (hidden below `md`, `08` §4.6) · chips `₹699 trial week` + `✔ Fixed verified walker` · `✔ GPS + photo after every walk` · `✔ Fixed monthly price` · `✔ Background-verified`.
 - **SP-3 Plans (✓-lists)** — H2 "What every walk includes"; lead-in: "Dog walking in Ludhiana, done like a routine your dog can trust."
   - **1 walk/day — ₹2,999/month:** ✓ ~30-minute walk every day ✓ the same fixed walker ✓ GPS route shared after the walk ✓ photo update + short walk note (pee/poop/water/mood) on WhatsApp ✓ water carried on every walk
   - **2 walks/day — ₹4,999/month:** ✓ everything above, morning **and** evening (~30 min each)
@@ -67,7 +67,7 @@
 
 | Slot | Shot | Alt text |
 |---|---|---|
-| Hero | Walker with a Labrador on a leafy Ludhiana lane, early morning | Labrador on a morning walk with a PetDoorStep dog walker in Ludhiana |
+| Hero | Walker with a Beagle on a leash in a neighbourhood park (`08` §5.2 shot 9, `dog-walker-beagle-park-ludhiana.jpg`) | Beagle on a leash walk with a PetDoorStep dog walker in a neighbourhood park in Ludhiana |
 | SP-3 | Phone showing a real walk update (route + photo) | WhatsApp walk update with GPS route and photo from a dog walker in Ludhiana |
 | SP-5 | Real update photos (data file) | {Breed} on a morning walk in {Area}, Ludhiana |
 

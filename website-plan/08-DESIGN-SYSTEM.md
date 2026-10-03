@@ -14,7 +14,7 @@ grep -rl 'placeholder-' website/dist 2>/dev/null                     # must retu
 ```
 
 **Cross-file reconciliation notes (recorded here so nobody "fixes" the wrong file):**
-1. **Sticky-bar breakpoint & button order** — `06` §3.3 (the behaviour owner) says visible **< 768px**, order **Call | WhatsApp | Book Now**; `07` §2 row 1 says "< 1024px" and a different order. **08 renders per `06` §3.3.** Update `07` §2 row 1 to match on its next edit.
+1. **Sticky-bar breakpoint & button order** — `06` §3.3 (the behaviour owner) says visible **< 768px**, order **Call | WhatsApp | Book Now**. **08 renders per `06` §3.3**, and `07` §2 row 1 now says the same (resolved in the Wave 0 build, `00` §11 2026-10-02).
 2. **Fonts** — `04` §1.3 names Nunito as the *default until 08 says otherwise*. **This file says otherwise:** display = Fraunces (§2). Per `04` §1.3's own swap clause, replace the package name in the `04` §1.1 install command and §1.3 table; every loading rule in `04` §1.3 (preload, swap, fontpie, 2-file/200 KB cap) stays unchanged.
 3. **Body bottom padding 64px (`04` §5.2.4) vs bar height 56px (`06` §3.3)** — not a conflict: 56px bar + 8px clearance = the reserved 64px. Both stand.
 4. **Desktop WhatsApp floating button (§4.17)** is a CTA entry point with `source` value **`float_desktop`** — now row 8 of the `07` §2 table and listed in `09` §2d.
@@ -211,7 +211,7 @@ Usage in markup: `bg-brand`, `text-ink`, `border-line`, `bg-cta hover:bg-cta-hov
 | `h3` | `1.1875rem` (19px), `1.25rem` (20px) ≥ 1024 | 1.3 | Inter 600 | 0 | Card titles, FAQ questions, widget step titles |
 | `h4` | `1rem` (16px) | 1.4 | Inter 600 | 0 | Footer column titles, table headers |
 | `body` | `1rem` (16px) | 1.65 | Inter 400 | 0 | Paragraphs, FAQ answers, inputs (16px stops iOS zoom-on-focus) |
-| `body-lg` | `1.125rem` (18px) | 1.6 | Inter 400 | 0 | Hero subhead, CTA-band line |
+| `body-lg` | `1.125rem` (18px) | 1.6 | Inter 400 | 0 | Hero subhead (≥ md; base uses `body`, §4.6 fold law), CTA-band line |
 | `small` | `0.875rem` (14px) | 1.5 | Inter 400/500 | 0 | Meta rows, captions, reassurance lines, breadcrumbs |
 | `micro` | `0.8125rem` (13px) | 1.4 | Inter 600 | +0.08em, uppercase | Eyebrow lines, badge text, footer legal |
 | `price` | `1.25rem` (20px) card / `1.5rem` (24px) matrix | 1.2 | Inter 700, `font-variant-numeric: tabular-nums` | 0 | Every ₹ figure |
@@ -244,7 +244,7 @@ Allowed steps (px): **4 · 8 · 12 · 16 · 20 · 24 · 32 · 40 · 48 · 64 · 
 |---|---|---|
 | 1 | `--shadow-1` | Resting cards on paper, price-matrix wrapper |
 | 2 | `--shadow-2` | Card hover, sticky bar, sticky header, price ribbon |
-| 3 | `--shadow-3` | Floating WhatsApp button, exit-nudge modal (`07` §2 row 7) |
+| 3 | `--shadow-3` | Floating WhatsApp button, exit card (`07` §2 row 7; non-modal, §4.17a) |
 
 Cards on sand/mint use `border: 1px solid var(--color-line)` instead of shadow (shadows on tinted surfaces look muddy). Never both shadow and border on the same element.
 
@@ -269,13 +269,13 @@ No other media queries are permitted (except `prefers-reduced-motion`, §7.4, an
 
 ### 3.6 Z-index scale (fixed, no ad-hoc values)
 
-`0` content · `10` sticky table first-column · `20` dropdown panel · `30` sticky header · `40` sticky mobile bar + WhatsApp float · `50` exit-nudge modal + mobile nav overlay.
+`0` content · `10` sticky table first-column · `20` dropdown panel · `30` sticky header · `40` sticky mobile bar + WhatsApp float · `50` exit card (§4.17a) + mobile nav overlay.
 
 ---
 
 ## 4 · Component inventory
 
-Conventions: one `.astro` file per component in `src/components/` (names given per component) · **zero JS in all of them** — the only React island is the booking widget (`04` §5.3, `07` §8); nav, accordion, dropdown and table are CSS-only · every interactive target ≥ `var(--tap-min)` 44px (48px in the sticky bar per `06` §3.3) · all copy comes from `06` / page blueprints — this section specifies *form*, not words (sample strings below are from `06` and shown for fit only).
+Conventions: one `.astro` file per component in `src/components/` (names given per component) · **zero JS in all of them** — the only React island is the booking widget (`04` §5.3, `07` §8), and the only inline scripts are the three `data-pds` exceptions in §8.1 (one of them is the exit card's, §4.17a); nav, accordion, dropdown and table are CSS-only · every interactive target ≥ `var(--tap-min)` 44px (48px in the sticky bar per `06` §3.3) · all copy comes from `06` / page blueprints — this section specifies *form*, not words (sample strings below are from `06` and shown for fit only).
 
 ### 4.1 Buttons — `Button.astro` (variants via prop)
 
@@ -331,7 +331,7 @@ All pill radius, Inter 600; heights: badge 24px (micro type), chip 32px, input-c
 ### 4.6 Hero — `Hero.astro` (formula + copy owned by `06` §2)
 
 - **Anatomy (DOM order):** ① eyebrow (micro, brand) ② H1 (`display` type) ③ subhead (body-lg, slate) ④ CTA row: `whatsapp` or `primary` + `secondary` per the page's `06` §2.3 block ⑤ trust-chip row (the `06` §2.1 set) ⑥ photo (§5) ⑦ R3 reply-time line (small, slate, under CTAs).
-- **Base (< md):** single column; chips are a horizontal scroll-snap row (one line, 32px chips, `overflow-x: auto`, no scrollbar styling hacks — `scrollbar-width: none` + edge-fade mask); photo 16:10, full-bleed to gutters, radius-lg. **Fold law (`02` P150):** at 360×640 the H1, subhead, primary CTA, ≥ 1 trust chip and the photo's top ≥ 160px must all be visible — verified per template in DevTools responsive mode before launch.
+- **Base (< md):** single column; chips are a horizontal scroll-snap row (one line, 32px chips, `overflow-x: auto`, no scrollbar styling hacks — `scrollbar-width: none` + edge-fade mask); photo 16:10, full-bleed to gutters, radius-lg. **Fold law (`02` P150; `00` §11 E3, 2026-10-03):** at 360×640 the H1, subhead, primary CTA and ≥ 1 trust chip must be fully visible **above the sticky bar** (§4.5, 56px + safe area), and the top ≥ 160px of the hero photo must be visible above it too — verified per template in DevTools responsive mode before launch. To make that fit, below `md`: every secondary hero CTA and the eyebrow are hidden (CSS only: they stay in the DOM, so `02` P110 parity holds); the subhead uses `body` size instead of `body-lg`; the breadcrumb (§4.18) uses `py-2`. A page that still fails becomes an explicit P150 exception for Sunny to decide, logged in `00` §11. It never ships silently.
 - **≥ md:** 2 columns `7fr 5fr`, photo right at 4:3, radius-xl, shadow-1; chips wrap 2×2; paw motif (§6.4) behind the photo corner at 5% brand opacity.
 - Photo is the LCP: eager + `fetchpriority="high"` + preload per `04` §5.2.2; never text over it.
 
@@ -397,10 +397,20 @@ All pill radius, Inter 600; heights: badge 24px (micro type), chip 32px, input-c
 - **Spec:** fixed `right: 24px; bottom: 24px`, 56px circle, `bg-wa`, **ink glyph 28px** (§1.4 rule 3), shadow-3, z-40; hover `bg-wa-hover` + `scale(1.05)` (none under reduced motion); `aria-label="Chat with PetDoorStep on WhatsApp"`.
 - **Behaviour:** static `<a>` to `wa.me/[FILL:WHATSAPP_NUMBER]` with the current page's prefill from `07`; fires `whatsapp_click` with `source: float_desktop` (registry note §0.4).
 
+### 4.17a Exit card — desktop only (behaviour + copy owned by `07` §2 row 7; `00` §11 D1, 2026-10-03)
+
+- **What it is:** a small **non-modal** card in a bottom corner of the window, never a dialog over a dimmed page. **No backdrop, no scrim**: the page behind stays visible, scrollable and clickable.
+- **Size (`02` P107, launch-blocker):** ≤ **15% of the viewport** at every size where it can appear (from 1024px wide, `07` §2 row 7). It never covers the header, the H1 or the WhatsApp float (§4.17); the two corner elements must not overlap.
+- **Skin:** paper surface, `radius-lg`, `shadow-3` (§3.3), z-50 (§3.6). The booking button is the amber `primary` variant (§1.4 rule 1: a booking-flow CTA) → `/book/?src=exit_nudge`; "No thanks" is a quieter text button. Focus ring per §7.2.
+- **Closing:** Esc and "No thanks". There is no overlay, so there is no overlay click.
+- **Copy:** `07` §2 row 7 strings. On `/ludhiana/cat-grooming/`, `/ludhiana/dog-walking/` and `/ludhiana/vet-at-home/` a neutral variant without dog-grooming wording, worded in the Wave-1 chrome build.
+- **Motion:** opacity/transform only, ≤ 200ms (§3.5); none under reduced motion (§7.4).
+- **JS:** its small inline script is one of the three `data-pds` exceptions in §8.1.
+
 ### 4.18 Breadcrumb — `Breadcrumb.astro` (every page below home; trail per `01` §2.6, 3-item decision per `04` §2.4)
 
 - **Markup:** `<nav aria-label="Breadcrumb"><ol>` — Home → Ludhiana → {Page} (areas: Home → Ludhiana → {Area}; no "Areas" level). Links slate underline-on-hover; separators chevron-right 14px muted `aria-hidden`; current item ink 500, `aria-current="page"`, not a link. "Ludhiana" stays plain text until `/ludhiana/` ships in Wave 2 (`04` §2.4) — the BreadcrumbList schema still carries its URL.
-- **Spec:** small type, 12px vertical padding, sits directly under the header above the hero; wraps on base (no truncation needed at 3 items).
+- **Spec:** small type, 12px vertical padding (8px, `py-2`, below `md`: §4.6 fold law), sits directly under the header above the hero; wraps on base (no truncation needed at 3 items).
 
 ### 4.19 Booking-widget skin (behaviour, steps, copy = `07`; these tokens close its open references)
 
@@ -426,7 +436,9 @@ All pill radius, Inter 600; heights: badge 24px (micro type), chip 32px, input-c
 4. No human faces without explicit consent; no house numbers/nameplates in frame (`05` §2.3).
 5. **Until the launch shoot delivers:** dev builds use grey 4:3/1:1 SVG placeholders named `placeholder-*.svg` — the §0 grep gate blocks shipping them. Never "temporary" stock.
 
-### 5.2 Launch shot list — one half-day shoot, 12 shots (consent + model releases on the day; these map 1:1 to `05` §2.3's GBP day-one set where noted)
+### 5.2 Launch shot list — one half-day shoot, 14 shots (consent + model releases on the day; these map 1:1 to `05` §2.3's GBP day-one set where noted)
+
+Page alt text follows this list (`00` §11 E5, 2026-10-03): a hero's alt describes the shot named here (walking = Beagle, vet = Pomeranian, cat = on a towel), per the §5.4 formula. If the real photo shows a different breed or place, update the page's alt in the same commit.
 
 | # | Shot | Used on | Source filename (`02` P058: lowercase, hyphens, 3–6 words) |
 |---|---|---|---|
@@ -442,6 +454,8 @@ All pill radius, Inter 600; heights: badge 24px (micro type), chip 32px, input-c
 | 10 | Vet examining a Pomeranian at home, vaccine cold box visible | `/ludhiana/vet-at-home/` + `/ludhiana/dog-vaccination/` heroes, GBP #10 | `vet-home-visit-pomeranian-ludhiana.jpg` |
 | 11 | Nail-trim close-up, clipper + paw | Nail service row, `/ludhiana/dog-grooming/` body | `dog-nail-trim-at-home.jpg` |
 | 12 | Team group shot with founder, branded tees | `/about/`, GBP #11, `[FILL:FOUNDER_PHOTO]` crop | `petdoorstep-team-founder-ludhiana.jpg` |
+| 13 | Groomer on the floor with a puppy at its first groom, towel and treat in hand | Home services grid: Puppy Grooming card (`ServiceCard`, 4:3) | `puppy-first-groom-at-home-ludhiana.jpg` |
+| 14 | Groomer checking a dog for ticks at home (ears and neck parted, tick tool in hand) | Home services grid: Tick & Flea card (`ServiceCard`, 4:3) | `dog-tick-check-at-home-ludhiana.jpg` |
 
 Shot 1 doubles as the OG photo source; shots 6/7 start the before/after library — every subsequent visit adds pairs per the `05` §2.3 ongoing cadence (2 photos/visit, consent logged).
 
@@ -482,7 +496,7 @@ Pattern: `{subject-or-breed}-{service-or-action}-{qualifier}-{locality?}-ludhian
 | Before/after frame | 1:1 | `[360, 600, 900]` | `(max-width: 767px) 50vw, 420px` | ≤ 80 KB |
 | Groomer photo | 1:1 | `[200, 400]` | `96px` base / `280px` card | ≤ 40 KB |
 
-All via `<Picture formats={['avif','webp']}>`, explicit width/height, lazy below fold, hero eager + preloaded — exactly `04` §1.4/§5.2. OG images are separate static JPGs per `04` §4; their visual template: `bg-brand-dark`, paw motif 10% mint top-right, headline Fraunces 600 white 64px (≤ 2 lines), 6px amber rule under it, bottom row = logo lockup (mint) + from-price in sand — produced once per the `04` §4 list of 6.
+All via `<Picture formats={['avif','webp']}>`, explicit width/height, lazy below fold, hero eager + preloaded — exactly `04` §1.4/§5.2. OG images are separate static 1200×630 files per the `04` §4 file list (`/og/default.png` ships today; per-page files follow); their visual template: `bg-brand-dark`, paw motif 10% mint top-right, headline Fraunces 600 white 64px (≤ 2 lines), 6px amber rule under it, bottom row = logo lockup (mint) + from-price in sand (the brand default carries the tagline instead of a price).
 
 ---
 
@@ -568,7 +582,7 @@ Master asset `src/components/icons/PawMark.astro` — four toe pads over one mai
 | Asset | Budget (this file — the working target) | Relation to `04`/`02` ceiling | Enforced by |
 |---|---|---|---|
 | CSS | **≤ 50 KB** compiled single stylesheet, pre-compression (expect ~25 KB purged Tailwind; inlined into `<head>` when ≤ 10 KB gz per `04` §5.2.5) | — (08 is the owner) | CI size check below |
-| JS | **0 KB on every page**; `/book/` booking island **≤ 90 KB gzipped** incl. React runtime | `04` §5.1/§5.3 hard cap is 100 KB — the 90 KB working budget means the cap is never grazed; breaching 90 triggers the pre-approved Preact swap (`04` §5.3) **before** shipping | `04` §5.3 grep/CI gates + `gzip -c dist/_astro/*.js \| wc -c` |
+| JS | **0 KB of bundled JS on every page**; `/book/` booking island **≤ 90 KB gzipped** incl. React runtime. **Inline-script exceptions** (`00` §11 2026-10-03; same list as `04` §5.3): exactly three small inline scripts may ship, each tagged with a `data-pds` attribute so the CI gate can allow-list them: ① the analytics bootstrap in the base layout (`09` §3.1), ② the exit card (§4.17a, `07` §2 row 7), ③ the `/thank-you/` script (`09` §3.3). Any other inline `<script>` fails the gate | `04` §5.1/§5.3 hard cap is 100 KB — the 90 KB working budget means the cap is never grazed; breaching 90 triggers the pre-approved Preact swap (`04` §5.3) **before** shipping | `04` §5.3 grep/CI gates + `gzip -c dist/_astro/*.js \| wc -c` |
 | Hero image | **≤ 120 KB** (largest served variant) | `04` §1.4 / `02` P062 ceiling is 150 KB — 08 tightens it; 120 KB is comfortably achievable at 1200w AVIF | §5.6 table + Lighthouse |
 | Content images | ≤ 100 KB each; ≤ 60 KB cards; page image payload ≤ 1 MB | = `04` §1.4 | §5.6 table |
 | Fonts | 2 WOFF2 files, **≤ 160 KB total target** | `04` §1.3 cap 200 KB | build output check |
@@ -598,8 +612,8 @@ npm run build
 - [ ] Fraunces + Inter self-hosted, preloaded, fontpie fallbacks in place; zero `fonts.googleapis.com` requests (`04` §8)
 - [ ] Every §4 component built as a zero-JS `.astro` file with the specified states; keyboard walk-through per §7.8 passes
 - [ ] Sticky bar reserves body padding (CLS ≈ 0 verified in Lighthouse), hides ≥ 768px; WA float appears ≥ 768px
-- [ ] Launch shoot done; 12 shots in `src/assets/` under §5.5 names; zero `placeholder-*` files in `dist`
-- [ ] Favicon set + GBP logo exported from §6.4 artwork; OG template images per §5.6/`04` §4
+- [ ] Launch shoot done; 14 shots in `src/assets/photos/` under the §5.2 names; zero `placeholder-*` files in `dist`
+- [ ] Favicon set + GBP logo exported from §6.4 artwork; OG images per §5.6 and the `04` §4 file list
 - [ ] §8.1 budgets green in CI on `/` and `/ludhiana/dog-grooming/`; Lighthouse mobile ≥ 90 both
 
 ---

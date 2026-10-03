@@ -18,7 +18,7 @@
 |---|---|---|---|
 | SP-0 | Breadcrumb | `Breadcrumb.astro` | Always |
 | SP-1 | Hero | `Hero.astro` | Always |
-| SP-2 | Social-proof strip | `ReviewCard.astro` ×3 + proof line | Always (empty state pre-launch) |
+| SP-2 | Social-proof strip | `ReviewCard.astro` ×3 + proof line + closing CTA row (`00` §11 E4) | Always (empty state pre-launch) |
 | SP-3 | What's-included package table | custom table (PriceMatrix styling) | Grooming pages; others use a package list |
 | SP-4 | Price matrix by size + mid-page CTA | `PriceMatrix.astro` + `Button.astro` | Always (flat-price list where no size matrix) |
 | SP-5 | Before/after gallery | `BeforeAfter.astro` ×2–4 | Grooming pages; walking/vet swap to proof-photo row |
@@ -54,15 +54,15 @@ Head (not a block): title/meta per `03-KEYWORD-MAP.md` §3 formulas · canonical
   1. **Eyebrow** (micro, brand): service category or tagline, ≤ 30 chars.
   2. **H1** = `03-KEYWORD-MAP.md` §3 money-page formula **`{Service} at Home in Ludhiana`** (pattern P2/P3 from `06-CONVERSION-PLAYBOOK.md` §2.2); primary keyword in the first 5 words (P026).
   3. **Subhead** = benefit + the page's from-prices + the fixed-price promise, ≤ 200 chars — copy verbatim from the page's `06-CONVERSION-PLAYBOOK.md` §2.3 ready-hero block.
-  4. **Dual CTA:** labels from the page's §2.3 block (bank: `06-CONVERSION-PLAYBOOK.md` §3.2); behaviour, target and `src` code per `07-BOOKING-SPEC.md` §2 row 3 (primary → `/book/?src=hero_<page-slug>` or wa.me prefill per that table; secondary = Call or in-page price anchor).
+  4. **Dual CTA:** labels from the page's §2.3 block (bank: `06-CONVERSION-PLAYBOOK.md` §3.2); behaviour, target and `src` code per `07-BOOKING-SPEC.md` §2 row 3: the primary always links to `/book/?src=hero_<page-slug>` (`00` §11 E1; dog walking adds `service=dog-walking` so Trial Week is preselected, D2) and renders amber even when its label says "WhatsApp" (`08` §1.4 rule 2); the secondary = Call or the in-page price anchor, hidden below `md` (fold law, Mobile below).
   5. **Chip row:** one **from-₹ price chip** first (`Chip.astro` price style, value from `pricing.json` — e.g. `from ₹599`; flat-price pages show the flat figure, e.g. `₹699 flat`), followed by the **4 trust chips** — the `06-CONVERSION-PLAYBOOK.md` §2.1 standard set verbatim, unless the page's §2.3 block overrides chips (cat/walking/vet/vaccination/puppy pages do).
   6. **Photo** + 7. **R3 reply-time line** ("A real person replies on WhatsApp within 10 minutes, 9:00–19:00.").
-- **Worked example (`/ludhiana/dog-grooming/`).** Eyebrow: *Pet care at your doorstep*. H1: **Dog Grooming at Home in Ludhiana**. Subhead: "One trained groomer, your verandah or balcony, 60–90 calm minutes. Bath & Brush from ₹599 · Full Groom from ₹1,199 — exact price fixed before we arrive." CTAs: [Book on WhatsApp] + [See exact prices] (anchor `#prices`). Chips: `from ₹599` + standard 4. Title tag: `Dog Grooming at Home in Ludhiana – From ₹599 | PetDoorStep` (58). Meta: the `03-KEYWORD-MAP.md` §3 worked row verbatim.
+- **Worked example (`/ludhiana/dog-grooming/`).** Eyebrow: *Pet care at your doorstep*. H1: **Dog Grooming at Home in Ludhiana**. Subhead: "One trained groomer, your verandah or balcony, 60–90 calm minutes. Bath & Brush from ₹599 · Full Groom from ₹1,199 — exact price fixed before we arrive." CTAs: [Book on WhatsApp] → `/book/?src=hero_dog-grooming` + [See exact prices] (anchor `#prices`). Chips: `from ₹599` + standard 4. Title tag: `Dog Grooming at Home in Ludhiana – From ₹599 | PetDoorStep` (58). Meta: the `03-KEYWORD-MAP.md` §3 worked row verbatim.
 - **Image spec.** Real groomer + real pet at a real Ludhiana home (`06-CONVERSION-PLAYBOOK.md` §2.1; shot list `08-DESIGN-SYSTEM.md` §5.2). 16:10 base / 4:3 ≥ md, widths [400, 800, 1200], ≤ 120 KB largest, `<Picture>` AVIF/WebP, **eager + `fetchpriority="high"` + preloaded** (it is the LCP). Alt per `08-DESIGN-SYSTEM.md` §5.4 formula, e.g. "Golden Retriever being bathed at home in Sarabha Nagar, Ludhiana".
 - **SEO slots.** Primary keyword: H1 + first 100 words (the subhead counts) per `03-KEYWORD-MAP.md` §2 legend; one secondary in the eyebrow only if natural.
 - **Schema.** None of its own; H1/prices must match the Service node (`04-TECHNICAL-SEO.md` §2.0.3).
 - **Internal links.** Secondary CTA may anchor to `#prices`; no other links in the hero.
-- **Mobile.** Single column; chip row = horizontal scroll-snap line; fold law: H1, subhead, primary CTA, ≥ 1 chip and top 160 px of photo visible at 360×640 (P150 — verify in DevTools before launch).
+- **Mobile.** Single column; chip row = horizontal scroll-snap line. **Fold law (P150; `00` §11 E3; `08` §4.6):** at 360×640, the H1, subhead, primary CTA and ≥ 1 trust chip are fully visible above the sticky bar, and the top ≥ 160 px of the hero photo is visible above it too — verify in DevTools before launch. Below `md`: the secondary CTA and the eyebrow are hidden (CSS only, still in the DOM), the subhead uses body size, the breadcrumb uses `py-2`. A page that still fails is an explicit P150 exception for Sunny to decide (logged in `00` §11), never a silent ship.
 
 ### SP-2 · Social-proof strip
 
@@ -70,6 +70,7 @@ Head (not a block): title/meta per `03-KEYWORD-MAP.md` §3 formulas · canonical
 - **Content formula.** One proof line + 3 `ReviewCard.astro` cards filtered to **this service** (fallback: nearest service, then any). Proof line verbatim: **"★ [FILL:GOOGLE_RATING] on Google · [FILL:REVIEW_COUNT]+ Ludhiana pet parents"**, linked to `[FILL:GBP_LINK]` (`06-CONVERSION-PLAYBOOK.md` §4.4). Card contents: quote 2–3 lines · first name · locality · pet + breed · service chip · month-year.
 - **Worked example.** `[FILL:REVIEW_1]` seed format: "Bruno hates car rides, so home grooming was a blessing. On time, polite, and the bathroom was left spotless. — Simran, Sarabha Nagar · Bruno (Golden Retriever) · Full Groom".
 - **Pre-launch empty state** (until 3 real reviews exist): render the single E6 string from `06-CONVERSION-PLAYBOOK.md` §9 instead of empty cards.
+- **Closing CTA row (`00` §11 E4, 2026-10-03):** the strip ends with a CTA row (the "after reviews" beat of `02` P153) carrying the page's body CTA from `07-BOOKING-SPEC.md` §2 row 4: `Book <Service> — from ₹<price>` (price rule as in SP-4) → `/book/?…&src=service_<id>`. It is part of SP-2, not a new block; SP-12 stays the page-end CTA.
 - **SEO slots.** Locality names inside quotes are genuine local-signal text (P093-adjacent); never mark up stars/ratings in schema (`04-TECHNICAL-SEO.md` §2.0.4).
 - **Schema.** **None.** Plain HTML only — self-serving Review/aggregateRating is banned.
 - **Internal links.** Proof line → `[FILL:GBP_LINK]` (`rel="noopener"`, external).
@@ -104,7 +105,7 @@ Head (not a block): title/meta per `03-KEYWORD-MAP.md` §3 formulas · canonical
 ### SP-4 · Price matrix by size + mid-page CTA — `PriceMatrix.astro`
 
 - **Purpose.** Self-serve quote in 10 seconds; owns every "price/charges" keyword; pre-qualifies WhatsApp chats.
-- **Content formula.** `id="prices"`. The **canonical matrix from `06-CONVERSION-PLAYBOOK.md` §5.2 verbatim** (sizes, kg, breed examples, 9 prices), each row ending in `Book` → `/book/?service=<id>&size=<small|medium|large>&src=pricing_row` (`07-BOOKING-SPEC.md` §2 row 5). Directly beneath: reassurance lines R1 + R2 verbatim. Then the **mid-page CTA** per `07-BOOKING-SPEC.md` §2 row 4: `Book <Service> — from ₹<from-price>` → `/book/?service=<id>&src=service_<id>`.
+- **Content formula.** `id="prices"`. The **canonical matrix from `06-CONVERSION-PLAYBOOK.md` §5.2 verbatim** (sizes, kg, breed examples, 9 prices), each row ending in `Book` → `/book/?service=<id>&size=<small|medium|large>&src=pricing_row` (`07-BOOKING-SPEC.md` §2 row 5). Directly beneath: reassurance lines R1 + R2 verbatim. Then the **mid-page CTA** per `07-BOOKING-SPEC.md` §2 row 4: `Book <Service> — from ₹<price>` → `/book/?service=<id>&src=service_<id>`. **Price rule (`00` §11 E2):** ₹<price> is the price of the service or plan the link preselects (dog walking preselects Trial Week, so its CTA shows that plan's price); when the link preselects nothing (`/book/?src=service_<page-slug>`), it is the page's lowest price. Every figure comes from `pricing.json`.
 - **Worked example (`/ludhiana/dog-grooming/`):**
 
   | Size | Weight | Example breeds (Ludhiana favourites) | Bath & Brush | Full Groom | Premium Spa |
@@ -211,7 +212,7 @@ Head (not a block): title/meta per `03-KEYWORD-MAP.md` §3 formulas · canonical
 ### SP-12 · Final CTA band — `CtaBand.astro`
 
 - **Purpose.** Catch readiness at scroll end (CTA rhythm P153: after hero, after prices, after reviews, at page end).
-- **Content formula.** H2 per `06-CONVERSION-PLAYBOOK.md` §9 R8 pattern: "Your {breed} deserves a stress-free {service} at home. Slots this week in {area}." (breed/area = the page's top examples, static text) + support line + [Book on WhatsApp] (page prefill per `07-BOOKING-SPEC.md` §5) + [Call [FILL:PHONE]] (on-dark) + R3 reply-time line.
+- **Content formula.** H2 per `06-CONVERSION-PLAYBOOK.md` §9 R8 pattern: "Your {breed} deserves a stress-free {service} at home. Slots this week in {area}." (breed/area = the page's top examples, static text) + support line + [Book on WhatsApp] (page prefill per `07-BOOKING-SPEC.md` §5; `data-source="ctaband_<page-slug>"`, `09` §2d) + [Call [FILL:PHONE]] (on-dark, same source) + R3 reply-time line. This is the page-end CTA (`00` §11 E4).
 - **Worked example.** "Your Labrador deserves a stress-free groom at home. Slots this week across Ludhiana." Support: "Fixed prices from ₹599 · no advance payment · photo update after the groom."
 - **SEO slots.** None targeted — conversion block; keep keyword-natural.
 - **Schema / Internal links.** None / the two CTAs only.
@@ -220,7 +221,7 @@ Head (not a block): title/meta per `03-KEYWORD-MAP.md` §3 formulas · canonical
 ### SP-13 · Sticky mobile bar + desktop float (site-wide chrome)
 
 - **Purpose.** Keep Call/WhatsApp/Book in the thumb zone at every decision moment.
-- **Spec.** `StickyBar.astro` < 768 px: `Call | WhatsApp | Book Now`, with the service-page variant label **"Book · from ₹{from-price}"** from `pricing.json`; behaviour + targets + `src` per `07-BOOKING-SPEC.md` §2 row 1; skin per `08-DESIGN-SYSTEM.md` §4.5. Desktop ≥ 768 px: `WaFloat.astro` with this page's prefill. Hidden on `/thank-you/` and while the widget is open. Events `cta_call`/`cta_whatsapp`/`cta_book` per `09-ANALYTICS-TRACKING.md`.
+- **Spec.** `StickyBar.astro` < 768 px: `Call | WhatsApp | Book Now`, with the service-page variant label **"Book · from ₹{from-price}"** from `pricing.json`; behaviour + targets + `src` per `07-BOOKING-SPEC.md` §2 row 1; skin per `08-DESIGN-SYSTEM.md` §4.5. Desktop ≥ 768 px: `WaFloat.astro` with this page's prefill. Hidden on `/thank-you/` and while the widget is open. Events per the `09-ANALYTICS-TRACKING.md` §2 registry: `call_click` / `whatsapp_click` with `source: sticky_bar` (or `float_desktop`); Book is measured by the widget's `booking_started`.
 - **Worked example label.** `Book · from ₹599` on `/ludhiana/dog-grooming/`.
 - **Mobile.** 56 px + safe-area; 48 px targets; reserve layout space so it never causes CLS (P101).
 
@@ -233,7 +234,7 @@ Head (not a block): title/meta per `03-KEYWORD-MAP.md` §3 formulas · canonical
 3. **JSON-LD `@graph`:** Service (pattern `04-TECHNICAL-SEO.md` §2.2, offers = exactly the page's visible prices) + FAQPage (§2.3) + BreadcrumbList (§2.4). Validate per §2.0.6.
 4. **Word floor:** ≥ 800 words (P044), reached by answering more questions — never padding.
 5. **Internal-link quota** (P070): `/pricing/` + `/book/` + 2–3 siblings + 3 area pages + 1–2 blog posts — all satisfied by blocks SP-4/9/10/11 above; 3–10 contextual in-body links (P071).
-6. **OG/canonical** per `04-TECHNICAL-SEO.md` §3–§4 (og:image from the 6-image Phase-1 set).
+6. **OG/canonical** per `04-TECHNICAL-SEO.md` §3–§4 (og:image = the page's own file from the §4 OG file list, else `/og/default.png`; `og:title` without the brand suffix; `og:image:alt` always set).
 
 ---
 
@@ -265,8 +266,8 @@ The hub inherits this template with these substitutions (everything not named be
 - [ ] Meta description 120–158 chars, keyword + Ludhiana in first 100, one CTA + one trust fact (P019–P021)
 - [ ] Every ₹ figure identical to `00-MASTER-PLAN.md` §3.2 / `pricing.json` — hero chip, subhead, tables, FAQ, schema, sticky-bar label all match (P049; launch gate `00-MASTER-PLAN.md` §9.5)
 - [ ] Price matrix is a real `<table>` with R1 + R2 lines beneath (P156, P165)
-- [ ] 4 trust chips + from-₹ chip in hero; fold test passed at 360×640 (P150, P155)
-- [ ] CTA rhythm: hero → after matrix → after FAQ/reviews → CtaBand; one primary per viewport (P151/P153); all CTAs carry correct `src` per `07-BOOKING-SPEC.md` §2
+- [ ] 4 trust chips + from-₹ chip in hero; fold test passed at 360×640 above the sticky bar (SP-1 Mobile, P150, P155), or Sunny's P150 exception logged in `00` §11
+- [ ] CTA rhythm: hero → CTA row after SP-2 reviews (E4) → mid-page CTA after the matrix → CtaBand; one primary per viewport (P151/P153); all CTAs carry correct `src` per `07-BOOKING-SPEC.md` §2 and `09` §2d
 - [ ] 6–8 FAQ Q&As visible and mirrored verbatim in FAQPage markup (P160; `04-TECHNICAL-SEO.md` §2.0.3)
 - [ ] Link quota filled: `/pricing/` + `/book/` + fixed siblings (SP-11) + fixed 3 areas (SP-9) + 1–2 calendar-named blog posts (P070); zero "click here" anchors (P069); zero links to unpublished URLs (render as text until live — P074)
 - [ ] Schema `@graph` (Service + FAQPage + BreadcrumbList; hub: Breadcrumb + WebPage) passes Rich Results Test + validator.schema.org with zero errors (P087); **no Review/aggregateRating anywhere**

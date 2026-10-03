@@ -35,7 +35,7 @@ Rules: `id` = `{source-blueprint}-{number}` (e.g. `cat-grooming-2`, `home-4`); `
 source blueprint; ₹ figures inside answers are checked against `pricing.json` in CI (any mismatch fails the build).
 Pages with FAQPage markup (`04-TECHNICAL-SEO.md` §2.9) generate it from their entries; others render plain HTML.
 
-## 3 · The `/faq/` page — 27 questions in 6 categories
+## 3 · The `/faq/` page — 28 questions in 6 categories
 
 Each category is an H2 with a one-line link to its money page; each question an H3 in a `Faq.astro` accordion.
 
@@ -66,6 +66,6 @@ FAQ-0 breadcrumb `Home › FAQ` · FAQ-1 H1 + "Can't find your question? WhatsAp
 ## 6 · Ship checks
 
 - [ ] `faq.json` exists; every page's FAQ renders from it (no FAQ text hard-coded in any page)
-- [ ] All 27 entries present; FAQPage markup on `/faq/` lists all 27, verbatim
+- [ ] All 28 entries present; FAQPage markup on `/faq/` lists all 28, verbatim
 - [ ] CI check: ₹ figures in answers match `pricing.json`
 - [ ] `faq-s3` contains no cost promise (policy gate, `safety-hygiene.md` SH-7)

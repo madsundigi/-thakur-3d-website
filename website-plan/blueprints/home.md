@@ -61,7 +61,7 @@
 | Slot | Shot | Alt text |
 |---|---|---|
 | H-1 hero | Groomer with a Golden Retriever on a Ludhiana verandah, owner smiling | ghar baithe pet care — doorstep pet grooming at home in Ludhiana |
-| H-3 cards | One real photo per service (shot list `08` §5.2) | "{Service} at home in Ludhiana" |
+| H-3 cards | One real photo per service (shot list `08` §5.2; Puppy Grooming card = shot 13 `puppy-first-groom-at-home-ludhiana.jpg`, Tick & Flea card = shot 14 `dog-tick-check-at-home-ludhiana.jpg`) | "{Service} at home in Ludhiana" |
 | H-8 | Groomer portraits | "{First name}, background-verified PetDoorStep groomer" |
 
 ## 6 · Ship checks

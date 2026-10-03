@@ -21,7 +21,7 @@
 - Offer: **₹200 off your first Full Groom or Premium Spa Groom + a free Nail Trim + Ear Clean visit (₹299 value)** between grooms, redeemable within 45 days of the first visit.
 - How: the booking form adds FIRSTGROOM automatically for first-timers (`07-BOOKING-SPEC.md`), or type it in your WhatsApp message.
 - Terms: one use per household · applies to Full Groom or Premium Spa only · not combinable with another discount on the same booking.
-- CTA: [Get ₹200 off — first groom] → `/book/?service=full-groom&src=offers`
+- CTA: [Get ₹200 off — first groom] → `/book/?service=full-groom&src=offers_page` (`<slug>_page` pattern, `09` §2d)
 
 **OF-3 · Refer a friend** (card) — "Friends with benefits (the pet kind)"
 - **You get ₹150 off your next service; your friend gets ₹150 off their first service.**
@@ -40,7 +40,7 @@
 
 - Worked example: "A Medium dog on Groom Club for a year: 12 Full Grooms at ₹1,274 saves **₹2,700**, plus **12 free nail-trim visits** (worth ₹299 each)."
 - Terms: one Full Groom a month · free Nail Trim + Ear Clean visit between grooms · priority weekend slots · same groomer on request · pay per visit after the service (UPI or cash) · cancel anytime on WhatsApp.
-- CTA: [Join Groom Club] → WhatsApp prefill "Hi PetDoorStep, I want to join Groom Club for my {size} dog."
+- CTA: [Join Groom Club] → WhatsApp prefill "Hi PetDoorStep, I want to join Groom Club for my {size} dog." (`data-source="groomclub"`, `09` §2d)
 
 **OF-5 · Seasonal offers** — rendered **only while a real, dated offer is live**: `[FILL:SEASONAL_OFFER]` with name, exact saving, start and end dates, terms. When none is live, the section is omitted entirely (no "coming soon").
 

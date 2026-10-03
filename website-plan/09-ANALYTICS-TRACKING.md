@@ -47,6 +47,8 @@ Related files: event producers + `src` entry-point values → `07-BOOKING-SPEC.m
 | `out_of_area_lead` | Waitlist submit succeeds validation | `area_text`, `source` |
 | `thank_you_view` | `/thank-you/` page load with a `ref` param (GA4 key event — backup conversion) | `ref`, `service` |
 
+*Param hygiene (`00` §11 E10, mirrored under the `07` §7 table): `area` and `area_text` are sent with every digit removed and cut to 30 characters, so a phone or house number typed into an area field never reaches GA4.*
+
 ### 2b · Site-wide events (producer: GA4 automatic + the §3 shared snippet)
 
 | Event | Fired when | Params |
@@ -75,7 +77,17 @@ Admin → Custom definitions → Create custom dimension, all **Event** scope, d
 
 (9 of the 50 allowed. `page_path` is **not** registered — GA4's built-in `page_location` covers it. `percent_scrolled` is built-in.)
 
-**Canonical `source` values** — the only values that may appear in a `source` param: the `src` entry-point values from `07-BOOKING-SPEC.md` §2 (`sticky_bar`, `header`, `hero_<page-slug>`, `service_<id>`, `pricing_row`, `book_page`, `exit_nudge`, `float_desktop`) plus these anchor locations defined here: `confirm_button` (widget confirm, per 07) · `review_screen` (tel link on review, per 07) · `footer` · `contact_page` · `noscript_block` · `about_page` · `reviews_page` · `not_found` (404 page CTAs). Anything else = a bug; the §3 snippet stamps `unlabelled` so misses are findable in GA4.
+**Canonical `source` values** (`00` §11, 2026-10-03) — the only values that may appear in a `source` param (and in a `src` query param):
+
+| Kind | Values | Where |
+|---|---|---|
+| Fixed (12) | `sticky_bar` · `header` · `pricing_row` · `book_page` · `exit_nudge` · `float_desktop` · `confirm_button` · `review_screen` · `footer` · `noscript_block` · `not_found` · `groomclub` | `07` §2 rows 1, 2, 5, 6, 7, 8 · widget confirm button and the review-screen `tel:` link (`07` §3) · site footer · `/book/` no-JS block (`07` §6) · 404 page CTAs · every "Join Groom Club" CTA (`06` §7.3, `pricing.md` PR-8, `offers.md` OF-4) |
+| Pattern `hero_<slug>` | e.g. `hero_home`, `hero_dog-grooming`, `hero_pricing` | Hero CTAs (`07` §2 row 3) |
+| Pattern `service_<id>` | e.g. `service_full-groom`, `service_dog-walking` | Body CTA rows of a money page (`07` §2 row 4): `<id>` is the preselected `pricing.json` service id, or the page slug when the link preselects nothing |
+| Pattern `ctaband_<slug>` | e.g. `ctaband_dog-grooming`, `ctaband_about` | The page-end `CtaBand` (template SP-12 and every blueprint's final CTA band) |
+| Pattern `<slug>_page` | e.g. `contact_page`, `about_page`, `reviews_page`, `offers_page`, `privacy-policy_page`, `sarabha-nagar_page`, `<post-slug>_page` | Any other in-page anchor on that page: contact cards, legal-page contact lines, an area page's booking widget, a blog post's in-body CTA |
+
+`<slug>` is the page's last URL segment (`home` for `/`). Anything else = a bug; the §3 snippet stamps `unlabelled` so misses are findable in GA4. The widget ignores a `src` longer than 40 characters or with characters outside `[a-z0-9_-]` (`BookingWidget.tsx` `SRC_PATTERN`), so shorten the slug part of a long value.
 
 **Funnel report (build once, Explore → Funnel exploration, name `Booking funnel`):** steps = ① `booking_started` ② `booking_step_completed` where `step=1` ③ `step=2` ④ `step=3` ⑤ `step=4` ⑥ `step=5` ⑦ `step=6` ⑧ `booking_submitted`; breakdown dimension `source`. This is where the §8 funnel % is read.
 
@@ -85,7 +97,7 @@ Admin → Custom definitions → Create custom dimension, all **Event** scope, d
 
 ### 3.1 The shared analytics snippet (the whole implementation)
 
-Lives **once**, at the end of `<body>` in the site-wide base layout (`src/layouts/Base.astro` — naming per `08-DESIGN-SYSTEM.md`). ≈1.4 KB. The only other inline script on the site is the exit nudge (`07-BOOKING-SPEC.md` §8).
+Lives **once**, at the end of `<body>` in the site-wide base layout (`src/layouts/Base.astro` — naming per `08-DESIGN-SYSTEM.md`). ≈1.4 KB. It is one of exactly three inline scripts on the site, each tagged with a `data-pds` attribute so the CI gate can allow-list them: this bootstrap, the exit card (`07-BOOKING-SPEC.md` §2 row 7, §8) and the `/thank-you/` script (§3.3). Same list in `08` §8.1 and `04` §5.3.
 
 ```html
 <script is:inline>
@@ -188,7 +200,7 @@ Rules: **all values lowercase**, hyphen-separated, no spaces. UTMs go **only on 
 | GBP posts (per `05-LOCAL-SEO.md` §2 templates) | post-specific locked URL | `gbp` | `organic` | `post_<topic>` (`post_groomclub`, `post_beforeafter`, `post_tickseason`, `post_vetathome`, `post_area`) |
 | Instagram bio link | `https://[FILL:DOMAIN]/book/` | `instagram` | `social` | `ig_bio` |
 | Instagram story/post swipe-links | page being promoted | `instagram` | `social` | `ig_<topic>_<yyyymm>` e.g. `ig_groomclub_202611` |
-| WhatsApp status / broadcast list | `/offers/` (or the promoted page) | `whatsapp` | `social` | `wa_status_<yyyymm>` |
+| WhatsApp status / broadcast list (broadcasts go only to customers who replied YES, `00` §11 D4) | `/offers/` (or the promoted page) | `whatsapp` | `social` | `wa_status_<yyyymm>` |
 | Flyers + QR codes (society notice boards, vet partners, pet shops) | `https://[FILL:DOMAIN]/` (QR encodes the full UTM URL) | `flyer` | `offline` | `flyer_<area-slug>_<yyyymm>` e.g. `flyer_sarabha-nagar_202611` |
 
 Worked example (flyer QR target):
@@ -210,7 +222,7 @@ Where read: GA4 Reports → Acquisition → Traffic acquisition (session source/
 
    > *Last question — PetDoorStep ke baare mein aapko kahan se pata chala? 1️⃣ Google search · 2️⃣ Google Maps · 3️⃣ Instagram · 4️⃣ Friend/family · 5️⃣ Flyer/QR · 6️⃣ Other*
 
-   Log the reply in the leads sheet (`PetDoorStep Leads`, `07-BOOKING-SPEC.md` §5a) in a new column **`heard_from`**, appended after `ua` (07 §10 allows append-only column additions; never reorder). Allowed values: `google_search` · `google_maps` · `instagram` · `referral` · `flyer_qr` · `other`. Also append a `status` column (`confirmed` / `done` / `cancelled`), operator-maintained — it turns booking *requests* into counted completed jobs for §8.
+   Log the reply in the leads sheet (`PetDoorStep Leads`, `07-BOOKING-SPEC.md` §5a) in a new column **`heard_from`**, appended after `ua` (07 §10 allows append-only column additions; never reorder). Allowed values: `google_search` · `google_maps` · `instagram` · `referral` · `flyer_qr` · `other`. Also append a `status` column (`confirmed` / `done` / `cancelled`), operator-maintained — it turns booking *requests* into counted completed jobs for §8. Then an `opt_in` column: the date the customer replied YES to the opt-in ask (`06` §9 W6). Reminders, review requests, rebooking nudges, offers and broadcasts go only to rows with a date there; clear it the day the customer asks to stop (`00` §11 D4). The column list lives in `website/src/data/legal.ts` (`LEAD_COLUMNS` + `OPERATOR_COLUMNS`), which the privacy policy renders.
 4. Phone-call bookings (no form) get a manual row in the same sheet with `source=phone_direct`, plus the same `heard_from` question asked on the call.
 
 Monthly: tally `heard_from` into the §8 report. **Phase-2 upgrade path:** a separate virtual/SIM number printed **only on flyers** (never on the website, GBP or citations) would give true offline call attribution — Decision-Log item, not now.
@@ -352,12 +364,14 @@ Run on the first working day of each month, ~45 minutes. Lives in `website-plan/
 
 1. **What we run:** GA4 only. No remarketing, no Google Ads link, **Google Signals OFF**, no audience export, no heatmaps/session recording — locked for Phase 1; any change is a `00` §11 Decision-Log entry first.
 2. **IP handling:** GA4 does not log or store IP addresses (IP masking is default, built-in — the old `anonymize_ip` flag is a Universal-Analytics relic and is deliberately absent from the §3 snippet). State this plainly in the policy rather than claiming a config we didn't write.
-3. **Personal data:** collected only via the booking form with the required WhatsApp-consent checkbox (`07-BOOKING-SPEC.md` §3 Step 5), stored in the private leads sheet (07 §5a), used only to deliver the booked service. Deletion on request via `[FILL:EMAIL]` or WhatsApp — aligned with India's DPDP Act 2023 principles (consent, purpose limitation, erasure).
-4. **No cookie banner Phase 1:** the site sets only GA4 first-party cookies and the widget's own `localStorage` keys (`pds_*`, 07 §6); we target India, not the EU/UK. Revisit only if meaningful EU traffic appears in GA4 geography reports (Decision-Log item).
-5. **Paste-ready copy for `/privacy-policy/` (Analytics section — the page `01-SITEMAP.md` requires to mention lead data, WhatsApp and analytics):**
+3. **Personal data:** collected only via the booking form with the required WhatsApp-consent checkbox (`07-BOOKING-SPEC.md` §3 Step 5, which links to `/privacy-policy/`), stored in the private leads sheet (07 §5a), and used **only to handle that booking** — a legitimate use under the DPDP Act 2023, s.7(a) (`00` §11 D4). Reminders, review requests, rebooking nudges and offers go only to customers who replied YES on WhatsApp (`opt_in`, §5). Deletion on request via `[FILL:EMAIL]` or WhatsApp — aligned with the DPDP Act 2023 (purpose limitation, consent for anything else, erasure). The legal pages say this in full: `blueprints/privacy-policy.md`, data in `website/src/data/legal.ts`; a lawyer reviews them before launch (`00` §9 item 7).
+4. **No cookie banner Phase 1:** the site sets only GA4 first-party cookies (`_ga`, `_ga_<id>`, live domain only) and the booking form's own `pds_*` keys in `localStorage`/`sessionStorage` (full list: `STORAGE_KEYS` in `legal.ts`); we target India, not the EU/UK. Revisit only if meaningful EU traffic appears in GA4 geography reports (Decision-Log item). Whether GA4 cookies need consent under the DPDP Act is on the lawyer's review list (`privacy-policy.md` ship checks).
+5. **Paste-ready copy for `/privacy-policy/` (Analytics section — the page `01-SITEMAP.md` requires to mention lead data, WhatsApp and analytics).** Updated for `00` §11 D4 (2026-10-03). `website/src/data/legal.ts` carries these three paragraphs verbatim as `CONSENT_TEXT`, with `{whatsapp}`/`{email}` slots that the page fills from `src/data/site.ts`; keep the two identical. They render in `blueprints/privacy-policy.md` PP-4 and PP-7:
 
    > **Analytics.** We use Google Analytics 4 to understand how visitors use this website — pages viewed, buttons tapped, and how people found us. Google Analytics does not log or store your IP address, and we have switched off all advertising and remarketing features. We look at this data only in aggregate (for example, "how many people visited the pricing page"), never to identify you.
    >
-   > **Bookings & WhatsApp.** When you book, we store the details you enter (name, mobile number, area, pet details) in our private records so we can deliver the service, and — with the consent you tick on the form — confirm your booking on WhatsApp. We never sell or share your number, and we never message you beyond your bookings without asking first. To see or delete your data, WhatsApp us on [FILL:WHATSAPP_NUMBER] or email [FILL:EMAIL] — we action deletion requests within 7 days.
+   > **Bookings & WhatsApp.** When you book, we store the details you enter (name, mobile number, area, pet details, preferred date and time, and any note) in our private records and use them only to handle that booking — confirming it on WhatsApp, as you agree on the booking form, arranging the visit and answering your messages about it. We never sell or share your number.
+   >
+   > **Reminders, reviews & offers.** We send reminders, review requests, rebooking messages and offers on WhatsApp only after you reply YES, and they stop as soon as you tell us. To see, correct or delete your data, WhatsApp us on [FILL:WHATSAPP_NUMBER] or email [FILL:EMAIL] — we action deletion requests within 7 days.
 
-6. `/thank-you/` is `noindex` (`00` §5) and fires only `thank_you_view` — the `ref` param contains no personal data (format `PDS-<date>-<4 chars>`, 07 §5.1), so it is safe to send to GA4.
+6. `/thank-you/` is `noindex, follow` (`00` §5, `04` §3.3) and fires only `thank_you_view` — the `ref` param contains no personal data (format `PDS-<date>-<4 chars>`, 07 §5.1), so it is safe to send to GA4.

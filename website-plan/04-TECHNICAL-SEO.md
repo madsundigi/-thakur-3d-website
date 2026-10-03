@@ -38,10 +38,10 @@ export default defineConfig({
   build: { format: 'directory' },       // /pricing/ → /pricing/index.html
   integrations: [
     sitemap({
-      filter: (page) => !page.includes('/thank-you/'),   // §7.1 below
-      serialize(item) {
-        return item;                     // lastmod auto; see §7.1 for per-page lastmod
-      },
+      // §7.1 (00 §11 E7): only routes marked 'live' in src/data/routes.ts, so /thank-you/, the 404 page and
+      // unbuilt pages never appear; each with its real lastmod, never the build date. Helper names are illustrative.
+      filter: (page) => isLiveUrl(page),
+      serialize: (item) => withRealLastmod(item),
     }),
     react(),
   ],
@@ -113,7 +113,7 @@ Disallow: /thank-you/
 Sitemap: https://[FILL:DOMAIN]/sitemap-index.xml
 ```
 
-Mechanism note (so nobody "fixes" it wrongly later): `/thank-you/` carries `noindex` meta (§3.2) **and** is excluded from the sitemap (§7.1). The `Disallow` line saves crawl budget; the noindex is the real de-indexer. If GSC ever reports */thank-you/ "Indexed, though blocked by robots.txt"* (possible if someone external links to it), delete the `Disallow` line and let Googlebot read the `noindex` — then re-add nothing.
+Mechanism note (so nobody "fixes" it wrongly later): `/thank-you/` carries `noindex, follow` meta (§3.3) **and** is excluded from the sitemap (§7.1). The `Disallow` line saves crawl budget; the noindex is the real de-indexer. If GSC ever reports */thank-you/ "Indexed, though blocked by robots.txt"* (possible if someone external links to it), delete the `Disallow` line and let Googlebot read the `noindex` — then re-add nothing.
 
 ### 1.6 404 page
 
@@ -123,7 +123,7 @@ Mechanism note (so nobody "fixes" it wrongly later): `/thank-you/` carries `noin
 - Body: `The page you're looking for doesn't exist or has moved. No worries — everything PetDoorStep does in Ludhiana is one tap away:`
 - Link list (plain `<ul>`): Dog Grooming at Home → `/ludhiana/dog-grooming/` · Cat Grooming at Home → `/ludhiana/cat-grooming/` · Dog Walking → `/ludhiana/dog-walking/` · Vet at Home → `/ludhiana/vet-at-home/` · Price List → `/pricing/` · Book a Service → `/book/`
 - Primary CTA button: `Book on WhatsApp` → `wa.me` deep link per `07-BOOKING-SPEC.md`.
-- Meta: `<meta name="robots" content="noindex">`, title `Page not found | PetDoorStep`.
+- Meta: `<meta name="robots" content="noindex, follow">` (§3.3, `00` §11 E7), title `Page not found | PetDoorStep`.
 - Uses the standard layout (header/footer/NAP intact) — a lost visitor is still a lead.
 
 ### 1.7 Other scaffold obligations
@@ -145,7 +145,7 @@ Mechanism note (so nobody "fixes" it wrongly later): `/thank-you/` carries `noin
 2. **One entity, one `@id`:** the business node is always `https://[FILL:DOMAIN]/#business`. Every `provider`, `publisher`, `brand` reference points at that `@id` — never a second inline copy of the business.
 3. **Schema mirrors visible content, exactly** (`02` #110). Every price, hour, FAQ answer and breadcrumb in markup appears as readable text on the same page. Prices come from 00 §3.2 only; if 00 changes, schema and page change in the same commit.
 4. **Self-serving stars — Google's current rule:** since Sept 2019 (still in force in Google's Review Snippet docs as of 2026), `Review`/`aggregateRating` markup about the business itself on its own `LocalBusiness`/`Organization` earns **no stars and never will**. Do **NOT** mark up PetDoorStep testimonials with `Review`/`aggregateRating` anywhere on the site. Testimonials render as plain HTML content (name + locality + pet, per `06-CONVERSION-PLAYBOOK.md`), ideally quoting Google reviews verbatim with a link to `[FILL:GBP_LINK]`.
-5. **FAQ & HowTo rich results no longer display** for ordinary sites (FAQ restricted Aug 2023, HowTo removed Sept 2023). We ship both markups anyway — they cost nothing and feed AI/answer-engine extraction — but expect **zero** visual SERP treatment. Never pad FAQs to chase stars.
+5. **FAQ & HowTo rich results no longer display** for ordinary sites (FAQ restricted Aug 2023, HowTo removed Sept 2023). We ship both markups anyway — they cost nothing and feed AI/answer-engine extraction — but expect **zero** visual SERP treatment. Never pad FAQs to chase stars. One Q&A may be marked up both on its source page and on `/faq/`, since both pages show it visibly (one `faq.json` entry, `blueprints/faq.md` §2) — accepted (`00` §11 E8, 2026-10-03).
 6. **Validation gate (launch-blocker, `02` #109):** every template passes Google Rich Results Test *and* validator.schema.org with zero errors before launch, and re-validates after any template change (`02` #182).
 
 ### 2.1 (a) LocalBusiness — service-area business (home + `/contact/`)
@@ -163,8 +163,8 @@ No `streetAddress` — PetDoorStep is a SAB with a hidden base (00 §3.1); publi
   "url": "https://[FILL:DOMAIN]/",
   "telephone": "[FILL:PHONE]",
   "email": "[FILL:EMAIL]",
-  "image": "https://[FILL:DOMAIN]/og/petdoorstep-home.jpg",
-  "logo": "https://[FILL:DOMAIN]/images/petdoorstep-logo.png",
+  "image": "https://[FILL:DOMAIN]/og/default.png",
+  "logo": "https://[FILL:DOMAIN]/icon-512.png",
   "priceRange": "₹₹",
   "currenciesAccepted": "INR",
   "address": {
@@ -202,7 +202,7 @@ No `streetAddress` — PetDoorStep is a SAB with a hidden base (00 §3.1); publi
 }
 ```
 
-Maintenance: when Justdial/Sulekha/Facebook profiles go live (`05-LOCAL-SEO.md` §6), append their URLs to `sameAs`. `geo` is the Ludhiana city-centre coordinate — update to the (hidden) base locality's coordinate once GBP is verified, matching GBP exactly.
+`image` is the brand OG file from the §4 list and `logo` the 512 px mark square (`08` §6.4), both shipped files. Maintenance: when Justdial/Sulekha/Facebook profiles go live (`05-LOCAL-SEO.md` §6), append their URLs to `sameAs`. `geo` is the Ludhiana city-centre coordinate — update to the (hidden) base locality's coordinate once GBP is verified, matching GBP exactly.
 
 ### 2.2 (b) Service — worked example for `/ludhiana/dog-grooming/`
 
@@ -270,7 +270,7 @@ Same pattern for every money page (swap `name`, `serviceType`, `url`, `offers` r
 }
 ```
 
-Per-page `offers` mapping for the other money pages (all rows from 00 §3.2 — copy the structure above):
+Per-page `offers` mapping for the other money pages (all rows from 00 §3.2 — copy the structure above; the vet and cat rows stay as they are, `00` §11 E8):
 
 | Page | Offer rows (name → min/max or flat INR) |
 |---|---|
@@ -358,11 +358,11 @@ On every page below home, matching the visible breadcrumb trail (`01-SITEMAP.md`
 }
 ```
 
-Area-page variant: `Home › Ludhiana › Areas › Sarabha Nagar` (4 items; position 3 `name` "Areas" has no standalone page — use `item": "https://[FILL:DOMAIN]/ludhiana/"` for position 3 as well, or omit the "Areas" level entirely and use 3 items `Home › Ludhiana › Sarabha Nagar`. **Decision: 3 items, no "Areas" level** — breadcrumb and schema both skip it; simpler and every item is a real page.)
+Area-page variant: 3 items, `Home › Ludhiana › Sarabha Nagar`. There is no "Areas" level (no `/ludhiana/areas/` page exists), so the visible breadcrumb and the schema both skip it and every item is a real page (`01` §2.6, `08` §4.18).
 
 ### 2.5 (e) OfferCatalog — `/pricing/`
 
-Every row of 00 §3.2 appears (schema must mirror the visible full price table). Monthly and "+ MRP" services carry the qualifier in `name`/`description`, not in the number.
+Every row of 00 §3.2 appears (schema must mirror the visible full price table). **Each Offer `name` is the label the visitor sees on `/pricing/`** (`blueprints/pricing.md` §3 + §5: "names identical to the table labels" — `pricing.md` §5 wins over the older names here, `00` §11 E6, 2026-10-03). Context the label leaves out (dog vs cat, monthly, "+ MRP") goes in `description`, never in the number.
 
 ```json
 {
@@ -373,25 +373,27 @@ Every row of 00 §3.2 appears (schema must mirror the visible full price table).
   "url": "https://[FILL:DOMAIN]/pricing/",
   "provider": { "@id": "https://[FILL:DOMAIN]/#business" },
   "itemListElement": [
-    { "@type": "Offer", "name": "Bath & Brush (dog)", "description": "Small ₹599 · Medium ₹799 · Large ₹999. Bath, blow-dry, brush-out, nail trim, ear clean.", "priceCurrency": "INR", "priceSpecification": { "@type": "PriceSpecification", "minPrice": 599, "maxPrice": 999, "priceCurrency": "INR" } },
-    { "@type": "Offer", "name": "Full Groom (dog)", "description": "Small ₹1,199 · Medium ₹1,499 · Large ₹1,899. Bath & Brush plus haircut/styling, paw & sanitary trim.", "priceCurrency": "INR", "priceSpecification": { "@type": "PriceSpecification", "minPrice": 1199, "maxPrice": 1899, "priceCurrency": "INR" } },
-    { "@type": "Offer", "name": "Premium Spa Groom (dog)", "description": "Small ₹1,799 · Medium ₹2,199 · Large ₹2,799. Full Groom plus de-shed/de-mat, conditioning masque, perfume.", "priceCurrency": "INR", "priceSpecification": { "@type": "PriceSpecification", "minPrice": 1799, "maxPrice": 2799, "priceCurrency": "INR" } },
-    { "@type": "Offer", "name": "Puppy Intro Groom (under 6 months)", "price": "699", "priceCurrency": "INR" },
-    { "@type": "Offer", "name": "Cat Grooming — Bath & Brush", "price": "899", "priceCurrency": "INR" },
-    { "@type": "Offer", "name": "Cat Grooming — Full", "price": "1399", "priceCurrency": "INR" },
-    { "@type": "Offer", "name": "Tick & Flea Treatment — add-on with any groom", "price": "399", "priceCurrency": "INR" },
-    { "@type": "Offer", "name": "Tick & Flea Treatment — standalone visit", "price": "699", "priceCurrency": "INR" },
+    { "@type": "Offer", "name": "Bath & Brush", "description": "Dog grooming. Small ₹599 · Medium ₹799 · Large ₹999. Bath, blow-dry, brush-out, nail trim, ear clean.", "priceCurrency": "INR", "priceSpecification": { "@type": "PriceSpecification", "minPrice": 599, "maxPrice": 999, "priceCurrency": "INR" } },
+    { "@type": "Offer", "name": "Full Groom", "description": "Dog grooming. Small ₹1,199 · Medium ₹1,499 · Large ₹1,899. Bath & Brush plus haircut/styling, paw & sanitary trim.", "priceCurrency": "INR", "priceSpecification": { "@type": "PriceSpecification", "minPrice": 1199, "maxPrice": 1899, "priceCurrency": "INR" } },
+    { "@type": "Offer", "name": "Premium Spa", "description": "Dog grooming. Small ₹1,799 · Medium ₹2,199 · Large ₹2,799. Full Groom plus de-shed/de-mat, conditioning masque, perfume.", "priceCurrency": "INR", "priceSpecification": { "@type": "PriceSpecification", "minPrice": 1799, "maxPrice": 2799, "priceCurrency": "INR" } },
+    { "@type": "Offer", "name": "Cat Bath & Brush", "price": "899", "priceCurrency": "INR" },
+    { "@type": "Offer", "name": "Cat Full Groom", "price": "1399", "priceCurrency": "INR" },
+    { "@type": "Offer", "name": "Puppy Intro Groom (8 weeks–6 months)", "price": "699", "priceCurrency": "INR" },
     { "@type": "Offer", "name": "Nail Trim + Ear Clean visit", "price": "299", "priceCurrency": "INR" },
-    { "@type": "Offer", "name": "Dog Walking — 1 walk/day, monthly", "description": "Fixed walker, GPS + photo update after every walk.", "price": "2999", "priceCurrency": "INR" },
-    { "@type": "Offer", "name": "Dog Walking — 2 walks/day, monthly", "price": "4999", "priceCurrency": "INR" },
-    { "@type": "Offer", "name": "Dog Walking — Trial Week", "price": "699", "priceCurrency": "INR" },
-    { "@type": "Offer", "name": "Vet Home Visit (consultation)", "description": "Registered veterinarians only. Medicines/vaccines at MRP.", "price": "699", "priceCurrency": "INR" },
-    { "@type": "Offer", "name": "Vaccination at Home", "description": "₹199 service fee + vaccine at MRP, with reminder calendar.", "price": "199", "priceCurrency": "INR" },
-    { "@type": "Offer", "name": "Deworming Visit (standard dewormer included)", "price": "499", "priceCurrency": "INR" },
-    { "@type": "Offer", "name": "Groom Club monthly subscription", "description": "1 Full Groom per month at 15% off + free nail-trim visit + priority slots. Price depends on dog size — see Full Groom rates." }
+    { "@type": "Offer", "name": "Tick & Flea add-on", "description": "With any groom.", "price": "399", "priceCurrency": "INR" },
+    { "@type": "Offer", "name": "Tick & Flea standalone", "description": "Standalone visit.", "price": "699", "priceCurrency": "INR" },
+    { "@type": "Offer", "name": "1 walk/day", "description": "Dog walking, monthly plan. Fixed walker, GPS + photo update after every walk.", "price": "2999", "priceCurrency": "INR" },
+    { "@type": "Offer", "name": "2 walks/day", "description": "Dog walking, monthly plan.", "price": "4999", "priceCurrency": "INR" },
+    { "@type": "Offer", "name": "Trial Week (7 walks)", "description": "Dog walking.", "price": "699", "priceCurrency": "INR" },
+    { "@type": "Offer", "name": "Vet visit", "description": "Registered veterinarians only. Medicines at MRP.", "price": "699", "priceCurrency": "INR" },
+    { "@type": "Offer", "name": "Vaccination", "description": "₹199 service fee + vaccine at MRP, with reminder calendar.", "price": "199", "priceCurrency": "INR" },
+    { "@type": "Offer", "name": "Deworming", "description": "Dewormer included.", "price": "499", "priceCurrency": "INR" },
+    { "@type": "Offer", "name": "Groom Club", "description": "1 Full Groom per month at 15% off + free nail-trim visit + priority slots. Price depends on dog size — see Full Groom rates." }
   ]
 }
 ```
+
+Order follows the page (PR-3 matrix → PR-5 → PR-6 → PR-7 → PR-8). If a `/pricing/` label changes, change the `name` here in the same commit.
 
 No rich result is expected from OfferCatalog — it exists for entity/AI clarity and to bind the price list to the `#business` node. The `/pricing/` page also carries FAQPage (pattern §2.3) and BreadcrumbList (`Home › Pricing`).
 
@@ -520,7 +522,7 @@ Steps mirror the visible 4-step section and `07-BOOKING-SPEC.md`. (HowTo rich re
    ```
    Output is always the final form: `https`, lowercase, trailing slash. `og:url` uses the identical value (§4).
 2. **One origin.** `http://` → `https://` and `www.` → apex both 301 at the host/DNS level (Cloudflare rules), single hop. Decide apex vs `www` once at domain purchase — **apex** (`https://[FILL:DOMAIN]`) is the pick; `www` 301s to it.
-3. **`/thank-you/`:** `<meta name="robots" content="noindex, follow">` in its head + excluded from sitemap + robots `Disallow` (§1.5). It is the only noindexed real page.
+3. **Noindex pages emit `noindex, follow`** (`00` §11 E7): `/thank-you/` (`<meta name="robots" content="noindex, follow">` in its head + excluded from sitemap + robots `Disallow`, §1.5) and the 404 page (§1.6; never in the sitemap). `/thank-you/` is the only noindexed real page; preview deploys are handled by rule 7.
 4. **No parameterised or duplicate paths.** The static build has no query-string routing; `utm_*` params may arrive from GBP/ads but are never used in internal links (`02` #8) and the canonical strips them automatically (it is built from `pathname` only). No print pages, no tag archives, no date archives — they don't exist in the build.
 5. **Uppercase and non-slash variants:** host serves the canonical form; Cloudflare Pages 308s `/Pricing` style miscapitalisations to 404 — add a lowercase-redirect rule only if real inbound links with uppercase appear in GSC (don't pre-build it).
 6. **Blog pagination** (`/blog/` index, Wave 2):
@@ -538,23 +540,42 @@ Steps mirror the visible 4-step section and `07-BOOKING-SPEC.md`. (HowTo rich re
 Emitted by the base layout from the same two values every page already defines (`title`, `description` — written per `03-KEYWORD-MAP.md` / page blueprints). No page defines separate social copy; reuse keeps snippets and shares consistent.
 
 ```html
-<!-- Per page, in <head>; values shown for /ludhiana/dog-grooming/ -->
+<!-- Per page, in <head>; values shown for /ludhiana/dog-grooming/ once its own OG file exists -->
 <meta property="og:type" content="website" />            <!-- "article" on /blog/<slug>/ -->
 <meta property="og:site_name" content="PetDoorStep" />
 <meta property="og:locale" content="en_IN" />
 <meta property="og:url" content="https://[FILL:DOMAIN]/ludhiana/dog-grooming/" />  <!-- === rel=canonical -->
-<meta property="og:title" content="Dog Grooming at Home in Ludhiana – From ₹599" /> <!-- page <title> minus brand suffix, ≤60 chars -->
+<meta property="og:title" content="Dog Grooming at Home in Ludhiana – From ₹599" /> <!-- page <title> minus " | PetDoorStep" -->
 <meta property="og:description" content="…the page's meta description verbatim…" />
-<meta property="og:image" content="https://[FILL:DOMAIN]/og/dog-grooming.jpg" />
+<meta property="og:image" content="https://[FILL:DOMAIN]/og/dog-grooming.jpg" />  <!-- default.png until this file exists -->
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
 <meta property="og:image:alt" content="PetDoorStep — dog grooming at your home in Ludhiana, from ₹599" />
 <meta name="twitter:card" content="summary_large_image" />
 ```
 
+**Rules (every page):**
+- `og:title` = the page's `<title>` **without the trailing ` | PetDoorStep`** (home's brand-led title has no suffix and is used as is). It is therefore ≤ 60 chars (`02` P117).
+- `og:description` = the meta description verbatim · `og:url` = the canonical (§3.1).
+- `og:image` = the page's own file from the list below, else `/og/default.png`. `og:image:width`/`og:image:height` = 1200/630, and **`og:image:alt` is always present** (`02` P119): the alt listed for that file.
+
+**OG file list** (files live in `website/public/og/`, referenced with absolute URLs; a page switches to its own file in the commit that adds it):
+
+| File | Status | Used by | `og:image:alt` |
+|---|---|---|---|
+| `default.png` | **ships** (rendered by `website/scripts/make-assets.mjs`: brand-dark, paw corner, wordmark + tagline) | every page without its own file; also the LocalBusiness `image` (§2.1) | `PetDoorStep — pet care at your doorstep in Ludhiana` |
+| `dog-grooming.jpg` | planned (Wave 1) | `/ludhiana/dog-grooming/` | `PetDoorStep — dog grooming at your home in Ludhiana, from ₹599` |
+| `cat-grooming.jpg` | planned (Wave 1) | `/ludhiana/cat-grooming/` | `PetDoorStep — cat grooming at your home in Ludhiana, from ₹899` |
+| `dog-walking.jpg` | planned (Wave 1) | `/ludhiana/dog-walking/` | `PetDoorStep — a daily dog walker in Ludhiana, from ₹2,999 a month` |
+| `vet-at-home.jpg` | planned (Wave 1) | `/ludhiana/vet-at-home/` | `PetDoorStep — a registered vet at your home in Ludhiana, ₹699 visit` |
+| `blog-default.jpg` | planned (Wave 2, with `/blog/`) | `/blog/` and posts without their own image | `PetDoorStep — pet care tips for Ludhiana` |
+| `blog/<slug>.jpg` | Wave 3 | that post (§2.7 BlogPosting `image`) | the post's hero alt |
+
+Prices inside an alt come from `pricing.json` at build (the ₹-literal gate, `07` §4, applies to these strings too).
+
 **og:image production spec:**
-- Dimensions **1200×630** (1.91:1), JPG, **≤ 300 KB** (WhatsApp renders previews most reliably under ~600 KB; we stay well under). Absolute URLs, files live in `website/public/og/`.
-- Branded template designed once per `08-DESIGN-SYSTEM.md` (teal background, amber accent, logo, headline area). Phase 1 ships **6 static images** (no per-page generation yet): `petdoorstep-home.jpg` (brand + tagline), `dog-grooming.jpg`, `cat-grooming.jpg`, `dog-walking.jpg`, `vet-at-home.jpg` (each: service name + "at your home in Ludhiana" + from-price from 00 §3.2), `blog-default.jpg` (brand + "Pet care tips for Ludhiana"). Pages without a dedicated image use `petdoorstep-home.jpg`. Wave 2+: generate per-page images at build with `astro-og-canvas` using the same template.
+- Dimensions **1200×630** (1.91:1), PNG or JPG, **≤ 300 KB** (WhatsApp renders previews most reliably under ~600 KB; we stay well under). Absolute URLs, files live in `website/public/og/`.
+- Branded template designed once per `08-DESIGN-SYSTEM.md` §5.6 (teal background, amber accent, logo, headline area): service name + "at your home in Ludhiana" + from-price from 00 §3.2 on service files. No per-page generation yet. Wave 2+: generate per-page images at build with `astro-og-canvas` using the same template.
 - **WhatsApp preview test is a launch gate** (`02` #150): paste every Wave-1 URL into a WhatsApp chat on a real phone; image, title and description must render. WhatsApp caches previews — bust with `?v=2` on the og:image URL if a template changes.
 
 ---
@@ -597,7 +618,7 @@ Emitted by the base layout from the same two values every page already defines (
 - The **booking widget is the only React island**, loaded **only** on `/book/` with `client:load` (it is the page's purpose — no lazy hydration games there). Budget: ≤ 100 KB compressed including React runtime; if the widget outgrows this, swap React for Preact via `@astrojs/preact` (API-compatible) before shipping — decision pre-approved here.
 - Every other page's CTA is a plain `<a>` to `/book/` or a `wa.me` deep link (`07-BOOKING-SPEC.md`) — zero hydration.
 - CI check: after `npm run build`, `find dist -name '*.js' -path '*astro*'` must show client JS referenced only by `book/index.html`. Grep gate: `grep -rl 'client:' src/pages src/layouts src/components | grep -v Booking` must return nothing.
-- GA4 event snippets (WhatsApp/tel click tracking) are inline vanilla `<script>` of < 1 KB, not islands.
+- **Inline-script exceptions** (`00` §11 2026-10-03; same list as `08` §8.1 and `09` §3.1): exactly three small inline vanilla `<script>`s may ship, none of them an island, each tagged with a `data-pds` attribute so the CI gate can allow-list them: ① the analytics bootstrap with the WhatsApp/tel click tracking (`09` §3.1), ② the exit card (`07` §2 row 7), ③ the `/thank-you/` script (`09` §3.3). Any other inline `<script>` fails the gate.
 
 ---
 
@@ -641,10 +662,10 @@ Rules recorded now so launch day is mechanical: hreflang must be **bidirectional
 
 ### 7.1 Generation (build-time, automatic)
 
-- `@astrojs/sitemap` (configured in §1.2) emits `/sitemap-index.xml` → `/sitemap-0.xml` at every build. The `filter` excludes `/thank-you/`; 404 and non-page assets are never included. Result: only indexable, 200, canonical, trailing-slash URLs — exactly the `01-SITEMAP.md` inventory as pages go live.
+- `@astrojs/sitemap` (configured in §1.2) emits `/sitemap-index.xml` → `/sitemap-0.xml` at every build. **It lists only routes marked `live` in `src/data/routes.ts`** (`00` §11 E7, 2026-10-03): `/thank-you/`, the 404 page, non-page assets and every page not yet built never appear. Result: only indexable, 200, canonical, trailing-slash URLs — exactly the `01-SITEMAP.md` inventory as pages go live.
 - `robots.txt` already points at `https://[FILL:DOMAIN]/sitemap-index.xml` (§1.5).
-- **lastmod:** enable `lastmod` by passing real dates — service pages use their content file's last material edit date (maintained in frontmatter `updatedDate`, same field the visible "Last updated" line uses per `02` #175); blog posts use `updatedDate ?? publishDate`. Wire via the integration's `serialize` hook reading a build-time map exported from `src/data/lastmod.ts`. Never emit today's date for unchanged pages — fake freshness trains Google to ignore our lastmod.
-- Post-build sanity check (CI step): `grep -c '<loc>' dist/sitemap-0.xml` equals the live-page count; `grep 'thank-you' dist/sitemap-0.xml` returns nothing.
+- **lastmod (E7):** every listed route carries its **real** last-material-edit date — the same date as its visible "Last updated" line where the page shows one (`02` P143); blog posts use `updatedDate ?? publishDate`. The date is kept by hand with the route (in `src/data/routes.ts` or a build-time map read next to it) and wired through the integration's `serialize` hook. Never emit the build date or today's date for an unchanged page — fake freshness trains Google to ignore our lastmod. A route with no recorded date gets no `<lastmod>` rather than a made-up one.
+- Post-build sanity check (CI step): `grep -c '<loc>' dist/sitemap-0.xml` equals the number of live routes; `grep -E 'thank-you|404' dist/sitemap-0.xml` returns nothing.
 
 ### 7.2 GSC + Bing submission (Wave 0/launch day, step-by-step)
 
@@ -668,7 +689,7 @@ The scaffold task in 00 §6 Wave 0 is complete when all of these pass on the dep
 - [ ] 404 page live with §1.6 copy and real 404 status
 - [ ] `<SchemaGraph>` component renders §2 blocks per the §2.9 matrix; Rich Results Test + validator.schema.org: zero errors on every template
 - [ ] Canonicals self-referencing and equal to `og:url` on every page (§3/§4)
-- [ ] OG images present for all 6 Phase-1 templates; WhatsApp preview verified on a real phone (§4)
+- [ ] OG images per the §4 file list (`default.png` at minimum, plus each Wave-1 service file once made); `og:title` without the brand suffix and `og:image:alt` on every page; WhatsApp preview verified on a real phone (§4)
 - [ ] Lighthouse mobile ≥ 90 on `/` and `/ludhiana/dog-grooming/`; zero client JS outside `/book/` (§5)
 - [ ] `_redirects` in place; http/www variants 301 single-hop (§6)
 - [ ] Sitemap live, GSC + Bing verified, Wave-1 URLs submitted (§7)

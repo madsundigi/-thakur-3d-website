@@ -16,7 +16,8 @@
    routing line (SP-1 and FAQ #3) is mandatory.
 3. `[FILL:VET_PARTNER_NAME]` and `[FILL:VET_REG_NO]` must be real before this page ships — no anonymous vet.
 4. `[FILL:EMERGENCY_VET_LIST]` = 2 nearby 24-hour veterinary hospitals with phone numbers, **verified by calling them**
-   (candidate to check: the GADVASU teaching veterinary hospital, Ludhiana). Shown in FAQ #3 and the footer of SP-4.
+   (candidate to check: the GADVASU teaching veterinary hospital, Ludhiana). Shown in FAQ #3 (the token is part of
+   the answer text below, so `faq.json` entry `vet-at-home-3` carries it verbatim too) and the footer of SP-4.
 
 ## 1 · Head
 
@@ -41,7 +42,7 @@
 
 ## 3 · Block values
 
-- **SP-1 Hero** (`06` §2.3): eyebrow *Vet home visit, Ludhiana* · subhead "A registered veterinarian examines your pet at home — no stressful clinic trip. ₹699 consult; medicines and vaccines at MRP, bill shown to you." · CTAs [Book Vet on WhatsApp] + [Call [FILL:PHONE]] · chips `₹699 visit` + `✔ Registered veterinarians only` · `✔ Medicines at MRP — bill shown` · `✔ Fixed visit fee ₹699` · `✔ Mon–Sun 9:00–19:00`. Under the CTAs, after R3: **"Not for emergencies — for accidents, poisoning, seizures or heavy bleeding, go to the nearest 24-hour vet hospital now."**
+- **SP-1 Hero** (`06` §2.3): eyebrow *Vet home visit, Ludhiana* · subhead "A registered veterinarian examines your pet at home — no stressful clinic trip. ₹699 consult; medicines and vaccines at MRP, bill shown to you." · CTAs [Book Vet on WhatsApp] → `/book/?src=hero_vet-at-home` (`00` §11 E1; amber, `08` §1.4) + [Call [FILL:PHONE]] · chips `₹699 visit` + `✔ Registered veterinarians only` · `✔ Medicines at MRP — bill shown` · `✔ Fixed visit fee ₹699` · `✔ Mon–Sun 9:00–19:00`. Under the CTAs, after R3: **"Not for emergencies — for accidents, poisoning, seizures or heavy bleeding, go to the nearest 24-hour vet hospital now."**
 - **SP-3 Visit types (✓-lists)** — H2 per §2:
   - **Vet Home Visit — ₹699:** ✓ full examination by a registered vet (temperature, weight, heart & lungs, skin, ears, eyes, teeth) ✓ diagnosis and written prescription ✓ medicines or vaccines at printed MRP, wrapper and bill shown ✓ visit summary on WhatsApp ✓ typically 20–30 minutes
   - **Vaccination at Home — ₹199 + vaccine MRP:** ✓ cold-chain carried vaccine ✓ reminder calendar → full details on `/ludhiana/dog-vaccination/`
@@ -66,7 +67,7 @@
 
 1. **What does the ₹699 home visit include?** — A full examination at your home by a registered veterinarian — temperature, weight, heart and lungs, skin, ears, eyes and teeth — plus diagnosis, a written prescription and a summary on WhatsApp. It usually takes 20–30 minutes. Medicines or vaccines, if needed, are charged at printed MRP. Pay by UPI or cash after the visit.
 2. **Is the vet really registered?** — Yes. Every medical service is done by a registered veterinarian (BVSc & AH) — never by a groomer or assistant. Your vet's name, photo and registration number are shared on WhatsApp before the visit, and the same details appear on your prescription.
-3. **Do you handle emergencies or come at night?** — No — we're not an emergency service; visits run 9:00–19:00 every day. If your pet has been hit by a vehicle, is bleeding heavily, having seizures, struggling to breathe, may have eaten poison, or has bloody diarrhoea, go to the nearest 24-hour veterinary hospital immediately — don't wait for a home visit.
+3. **Do you handle emergencies or come at night?** — No — we're not an emergency service; visits run 9:00–19:00 every day. If your pet has been hit by a vehicle, is bleeding heavily, having seizures, struggling to breathe, may have eaten poison, or has bloody diarrhoea, go to the nearest 24-hour veterinary hospital immediately — don't wait for a home visit. Nearest 24-hour hospitals: [FILL:EMERGENCY_VET_LIST].
 4. **When is a clinic better than a home visit?** — Whenever equipment is needed: X-rays, ultrasound, surgery, drips or intensive care. Home visits are ideal for check-ups, vaccinations, deworming, skin and ear problems, tick and flea issues, mild tummy upsets and follow-ups. If our vet finds something that needs a clinic, they'll tell you plainly and suggest where to go.
 5. **Can the vet see my cat at home?** — Yes — and cats are often much calmer when the vet comes to them: no carrier, no car, no barking waiting room. The same ₹699 visit applies. Kitten vaccinations follow their own schedule, starting with Tricat at 8–9 weeks.
 6. **Can I get a same-day visit?** — Often, yes. Book before 15:00 and we offer the earliest free slot, which is frequently the same day; the exact time is confirmed on WhatsApp within 10 minutes (9:00–19:00). We never promise a time we can't keep.
@@ -79,7 +80,7 @@ In-answer links: #4 → week-14 post (once live) · #1 → `/pricing/` · #5 →
 
 | Slot | Shot | Alt text |
 |---|---|---|
-| Hero | Registered vet examining a Beagle in a living room, owner holding it | Vet examining a Beagle during a home visit in Ludhiana |
+| Hero | Registered vet examining a Pomeranian at home, vaccine cold box visible (`08` §5.2 shot 10, `vet-home-visit-pomeranian-ludhiana.jpg`) | Vet examining a Pomeranian during a home visit in Ludhiana |
 | SP-3 | Medicine pack with MRP visible being shown to the owner | Vet showing the medicine MRP to a pet parent during a home visit in Ludhiana |
 | SP-7 | Vet portrait with registration certificate | [FILL:VET_PARTNER_NAME], registered veterinarian for PetDoorStep in Ludhiana |
 
