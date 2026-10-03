@@ -29,6 +29,39 @@
 | which areas do you cover · is home grooming safe · best pet grooming service · pet grooming near me | L | H-11 FAQ #1–#4, #6 |
 | ghar baithe pet care (Hinglish) | — | H-1 support line + hero alt (the page's one Hinglish use) |
 
+### 2a · SERP-intent check (`02` P040) — 2026-10-03
+
+- **Query:** `pet grooming at home ludhiana` (the primary keyword, `01-SITEMAP.md` §1 / `03` §2.1). Checked 2026-10-03
+  with a web-search tool, before the page was written. That tool searches from the US, not from Ludhiana on
+  Google.co.in, so the map pack and any ads were not visible. Re-check once from a phone in Ludhiana and log it in the
+  `09` §7 rank log.
+- **What ranks (organic results, in the order returned):**
+  1. Mr n Mrs Pet: "Dog Grooming Services in Ludhiana At Your Doorstep" (city-template service page,
+     [mrnmrspet.com/dog-grooming-in-ludhiana](https://www.mrnmrspet.com/dog-grooming-in-ludhiana))
+  2. thePetNest: "Pet Grooming Service at Home in Ludhiana" (city-template service page,
+     [thepetnest.com/pet-grooming/ludhiana](https://thepetnest.com/pet-grooming/ludhiana)), plus its national
+     [/pet-grooming](https://thepetnest.com/pet-grooming) page
+  3. PetBacker: a single Ludhiana home-groomer listing (marketplace,
+     [petbacker.in](https://www.petbacker.in/india/pet-grooming/punjab/ludhiana/canine-cartel-home-groomer))
+  4. Urban Pets Grooming: "Pet Grooming In Ludhiana" (city-template service page,
+     [urbanpetsgrooming.in](https://urbanpetsgrooming.in/pet-grooming-in-ludhiana/))
+  5. Petgroomly: "Pet grooming services at Home in Ludhiana" (city-template service page,
+     [petgroomly.com](https://www.petgroomly.com/pet-grooming/ludhiana/))
+  6. An Instagram groomer profile ([instagram.com/petproindia](https://www.instagram.com/petproindia/))
+  7. Justdial category pages: "Top Dog Grooming Services At Home in Ludhiana near me"
+     ([link](https://www.justdial.com/Ludhiana/Dog-Grooming-Services-At-Home/nct-11576673)) and "Top Pet Grooming
+     Services in Ludhiana - Best Pet Spa near me" ([link](https://www.justdial.com/Ludhiana/Pet-Grooming-Services/nct-11002277))
+- **Intent:** BUYER, local and transactional. Google rewards one format: a single-city doorstep-service landing page
+  (service + "at home / at your doorstep" + Ludhiana in the title and H1) with a way to book, next to directory and
+  marketplace category pages. No listicle or blog post ranks. The local pack is a GBP play (`05`), not a page play
+  (`03` §1).
+- **How `/` matches:** it is the same format. Title and H1 carry "Pet Grooming … at Home in Ludhiana", the booking CTA
+  sits in the first screen (H-1), and the services grid routes to every service (H-3), as the ranking pages do. Per
+  the `03` §1 teardown (SERP snippets 2026-10; re-verify), the page goes further than those results with: fixed
+  published prices (H-5, plus the link to `/pricing/`), all 10 Ludhiana localities (H-9), the named PetDoorStep
+  Promise (H-6), and a 6-question FAQ with FAQPage markup (H-11). Justdial's "Best Pet Spa near me" title confirms the
+  pet-spa long-tail that the dog-grooming card carries (H-3).
+
 ## 3 · Blocks (DOM order — binding)
 
 | # | Block | Spec |
