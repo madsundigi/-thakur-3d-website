@@ -1,0 +1,58 @@
+---
+// /faq/ category jump-links (website-plan/blueprints/faq.md §5): one in-page link per category H2, labelled with the H2.
+// Base → md: a wrapping row of pill links (each ≥ 44px tall, 08 §7.3) in the secondary-button skin (08 §4.1), so they
+// read as actions. ≥ lg: a sticky column beside the questions, held below the sticky header. Targets land below the
+// header through the global scroll-padding-top (global.css). Zero JS.
+interface Props {
+  items: readonly { label: string; anchor: string }[];
+}
+const { items } = Astro.props;
+---
+<nav aria-label="FAQ categories" class="faq-nav">
+  <ul class="m-0 flex list-none flex-wrap gap-2 p-0">
+    {items.map((it) => (
+      <li><a href={`#${it.anchor}`} class="faq-nav-link">{it.label}</a></li>
+    ))}
+  </ul>
+</nav>
+
+<style>
+  .faq-nav-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--tap-min);
+    padding: 0 16px;
+    border: 1.5px solid var(--color-brand);
+    border-radius: var(--radius-pill);
+    background: var(--color-paper);
+    color: var(--color-brand);
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 1.3;
+    text-decoration: none;
+    transition: background-color var(--dur-1) ease-out;
+  }
+  .faq-nav-link:hover { background: var(--color-mint); }
+
+  @media (min-width: 1024px) {
+    .faq-nav {
+      position: sticky;
+      top: calc(var(--header-h) + 24px);
+      align-self: start;
+    }
+    .faq-nav ul { flex-direction: column; flex-wrap: nowrap; gap: 4px; }
+    /* A quiet list in the side column: no pill border; brand rule on hover/focus marks the target. */
+    .faq-nav-link {
+      display: flex;
+      width: 100%;
+      padding: 8px 12px;
+      border: 0;
+      border-left: 2px solid var(--color-line);
+      border-radius: 0;
+      color: var(--color-ink);
+      font-size: 0.9375rem;
+      font-weight: 500;
+    }
+    .faq-nav-link:hover { background: var(--color-mint); border-left-color: var(--color-brand); color: var(--color-brand-deep); }
+  }
+</style>

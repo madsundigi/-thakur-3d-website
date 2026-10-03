@@ -1,0 +1,31 @@
+---
+// HW-4 "What to prepare" (website-plan/blueprints/how-it-works.md): the ✓ checklist and its closing line, verbatim.
+// A paper card on the page's sand band (08 §3.3: cards on sand/mint take a line border, no shadow). The ✓ is the
+// Lucide check icon (Inter's Latin subset has no U+2713; same choice as InfoTable/CheckList). Base: one column;
+// ≥ md: two columns. Zero JS.
+import Icon from '../../icons/Icon.astro';
+
+interface Props {
+  heading: string;
+  items: readonly string[];
+  /** Closing line under the list ("We bring everything else — …"). */
+  line: string;
+  /** id of the h2 (aria-labelledby). */
+  headingId?: string;
+}
+const { heading, items, line, headingId = 'prepare-heading' } = Astro.props;
+---
+<section aria-labelledby={headingId}>
+  <h2 id={headingId} class="t-h2 m-0">{heading}</h2>
+  <div class="mt-6 rounded-lg border border-line bg-paper p-4 md:p-6">
+    <ul class="m-0 grid list-none gap-3 p-0 md:grid-cols-2 md:gap-x-8 md:gap-y-4">
+      {items.map((item) => (
+        <li class="flex items-start gap-3 text-ink">
+          <span class="mt-0.5 flex-none text-brand"><Icon name="check" size={20} /></span>
+          <span class="min-w-0">{item}</span>
+        </li>
+      ))}
+    </ul>
+    <p class="m-0 mt-4 border-t border-line pt-4 font-semibold text-brand-deep">{line}</p>
+  </div>
+</section>

@@ -1,0 +1,63 @@
+---
+// /faq/ — blueprint: website-plan/blueprints/faq.md (B11). Blocks in DOM order: FAQ-0 breadcrumb · FAQ-1 H1 + line ·
+// category jump-links · the 6 category sections (faq.md §3: 28 questions) · CTA band.
+// Every question, answer, category H2, one-line category link and the CTA heading come from src/data/faq.json via
+// src/lib/faq.ts — the same entries the FAQPage JSON-LD lists, so markup and visible text cannot differ (04 §2.0.3).
+// JSON-LD: one @graph = FAQPage (all 28) + BreadcrumbList (04 §2.9). Zero client JS.
+import Base from '../layouts/Base.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Faq from '../components/Faq.astro';
+import CategoryNav from '../components/pages/faq/CategoryNav.astro';
+import { FAQ_BOOK_PREFILL, FAQ_HEAD, FAQ_INTRO, FAQ_PAGE, FAQ_PATH } from '../data/pages/faq';
+import { isLive, routeLabel } from '../data/routes';
+import { prefillFor } from '../data/services';
+import { site, telHref, waHref } from '../data/site';
+import { FAQ_CTA_HEADING } from '../lib/faq';
+import { schemaGraphLd } from '../lib/schema';
+
+// FAQ-0: Home › FAQ (labels = the 01-SITEMAP page names in routes.ts).
+const crumbs = [
+  { label: routeLabel('/'), path: '/' },
+  { label: routeLabel(FAQ_PATH), path: FAQ_PATH },
+];
+---
+<Base
+  title={FAQ_HEAD.title}
+  description={FAQ_HEAD.description}
+  path={FAQ_PATH}
+  jsonLd={[schemaGraphLd({ type: 'faq', crumbs }, Astro.site)]}
+>
+  <Breadcrumb items={crumbs} />
+
+  <div class="mx-auto max-w-[1200px] px-4 pb-12 pt-4 md:pt-8 lg:px-6 lg:pb-20">
+    {/* FAQ-1 — "WhatsApp us" opens WhatsApp with the /faq/ question prefill (source faq_page, 09 §2d). */}
+    <div class="measure">
+      <h1 class="t-h1 m-0">{FAQ_HEAD.h1}</h1>
+      <p class="m-0 mt-3 text-slate">
+        {FAQ_INTRO.before}<a href={waHref(prefillFor(FAQ_PATH))} data-source="faq_page" target="_blank" rel="noopener">{FAQ_INTRO.link}</a>{FAQ_INTRO.after}
+      </p>
+    </div>
+
+    <div class="mt-8 lg:mt-12 lg:grid lg:grid-cols-[14rem_minmax(0,1fr)] lg:gap-12">
+      {/* Jump-links to the category H2s (faq.md §5). */}
+      <CategoryNav items={FAQ_PAGE.map((s) => ({ label: s.heading, anchor: s.anchor }))} />
+
+      {/* The 6 categories (faq.md §3): H2 + its one-line link (only while the target page is live) + H3 accordions. */}
+      <div class="mt-10 space-y-12 lg:mt-0 lg:space-y-16">
+        {FAQ_PAGE.map((s) => (
+          <Faq page={FAQ_PATH} heading={s.heading} ids={s.ids} headingId={s.anchor}>
+            {isLive(s.link) ? <p class="m-0 mt-2"><a href={s.link}>{s.linkText}</a></p> : null}
+          </Faq>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  {/* CTA band (faq.md §5): [Book on WhatsApp] (booking prefill naming this page) + [Call [FILL:PHONE]]. */}
+  <CtaBand
+    heading={FAQ_CTA_HEADING}
+    primary={{ label: 'Book on WhatsApp', href: waHref(FAQ_BOOK_PREFILL), source: 'ctaband_faq' }}
+    secondary={{ label: `Call ${site.phone}`, href: telHref(), source: 'ctaband_faq' }}
+  />
+</Base>
