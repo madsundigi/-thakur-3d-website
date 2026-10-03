@@ -57,11 +57,13 @@ const slugOf = (p) => (p === '/' ? 'home' : p.replace(/\.html$/, '').split('/').
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const rows = []; // summary table
 
-// In-page observers, installed before any page script: CLS (layout-shift without recent input) and the LCP entry.
+// In-page observers, installed before any page script: CLS and the LCP entry. Every layout shift counts: the test
+// never interacts before measuring, and Chromium's mobile emulation flags load-time shifts as hadRecentInput, so the
+// field-data filter (!hadRecentInput) would hide real shifts at 360×640.
 const OBSERVERS = `(() => {
   const d = (n) => !n || !n.nodeName ? '?' : n.nodeName.toLowerCase() + (n.id ? '#' + n.id : '') + (typeof n.className === 'string' && n.className.trim() ? '.' + n.className.trim().split(/\\s+/).slice(0, 2).join('.') : '');
   window.__pds = { cls: 0, shifts: [], lcp: null };
-  try { new PerformanceObserver((l) => { for (const e of l.getEntries()) if (!e.hadRecentInput) { window.__pds.cls += e.value; window.__pds.shifts.push({ v: e.value, nodes: (e.sources || []).map((s) => d(s.node)) }); } }).observe({ type: 'layout-shift', buffered: true }); } catch (e) {}
+  try { new PerformanceObserver((l) => { for (const e of l.getEntries()) { window.__pds.cls += e.value; window.__pds.shifts.push({ v: e.value, nodes: (e.sources || []).map((s) => d(s.node)) }); } }).observe({ type: 'layout-shift', buffered: true }); } catch (e) {}
   try { new PerformanceObserver((l) => { const es = l.getEntries(); if (es.length) window.__pds.lcp = es[es.length - 1]; }).observe({ type: 'largest-contentful-paint', buffered: true }); } catch (e) {}
 })();`;
 
@@ -149,19 +151,22 @@ async function runView(path, vp) {
     const ov = await page.evaluate((vw) => {
       const d = (el) => el.tagName.toLowerCase() + (el.id ? `#${el.id}` : '') + (el.classList.length ? `.${[...el.classList].slice(0, 3).join('.')}` : '');
       const sw = Math.max(document.documentElement.scrollWidth, document.body ? document.body.scrollWidth : 0);
-      const culprits = [];
+      const found = [];
       if (sw > vw) {
+        // fixed-position boxes never scroll the page, and a box clipped by a narrower overflow container is contained
         for (const el of document.querySelectorAll('body *')) {
           const r = el.getBoundingClientRect();
           if (!r.width || r.right <= vw + 1) continue;
-          let clipped = false;
-          for (let p = el.parentElement; p && p !== document.body; p = p.parentElement) {
-            if (/(auto|scroll|hidden|clip)/.test(getComputedStyle(p).overflowX) && p.getBoundingClientRect().right <= vw + 1) { clipped = true; break; }
+          let skip = false;
+          for (let p = el; p && p !== document.body; p = p.parentElement) {
+            const cs = getComputedStyle(p);
+            if (cs.position === 'fixed') { skip = true; break; }
+            if (p !== el && /(auto|scroll|hidden|clip)/.test(cs.overflowX) && p.getBoundingClientRect().right <= vw + 1) { skip = true; break; }
           }
-          if (!clipped) culprits.push(`${d(el)} (right ${Math.round(r.right)}px)`);
-          if (culprits.length >= 4) break;
+          if (!skip) found.push({ what: d(el), right: Math.round(r.right) });
         }
       }
+      const culprits = found.sort((a, b) => b.right - a.right).slice(0, 4).map((c) => `${c.what} (right ${c.right}px)`);
       return { sw, culprits };
     }, vp.width);
     if (ov.sw > vp.width) fail('overflow', 'P113', `page is ${ov.sw}px wide in a ${vp.width}px viewport — ${ov.culprits.join(', ') || 'culprit not isolated'}`);
@@ -171,17 +176,22 @@ async function runView(path, vp) {
       const d = (n) => !n || !n.tagName ? null : n.tagName.toLowerCase() + (n.id ? `#${n.id}` : '') + (n.classList?.length ? `.${[...n.classList].slice(0, 2).join('.')}` : '');
       const p = window.__pds || { cls: 0, shifts: [] };
       const hero = document.querySelector('[data-hero-photo]');
+      const img = hero ? (hero.tagName === 'IMG' ? hero : hero.querySelector('img')) : null;
       const el = p.lcp ? p.lcp.element : null;
       return {
         cls: p.cls, shifts: [...p.shifts].sort((a, b) => b.v - a.v).slice(0, 3),
         hasHero: !!hero, lcp: d(el), inHero: !!(hero && el && (hero === el || hero.contains(el))),
+        placeholder: !!img && /\/placeholders\/placeholder-/.test(img.currentSrc || img.src),
       };
     });
     row.cls = perf.cls.toFixed(3);
     if (perf.cls > 0.1) fail('cls', 'P101', `CLS ${perf.cls.toFixed(3)} > 0.1 — largest shifts: ${perf.shifts.map((s) => `${s.v.toFixed(3)} [${s.nodes.join(', ')}]`).join('; ')}`);
     if (perf.hasHero) {
-      row.lcp = perf.inHero ? 'ok' : 'FAIL';
-      if (!perf.inHero) fail('lcp', 'P099', `LCP element is ${perf.lcp ?? 'unknown'}, not inside [data-hero-photo] (04 §5.2.2: the hero photo is the LCP)`);
+      row.lcp = 'ok';
+      const msg = `LCP element is ${perf.lcp ?? 'unknown'}, not inside [data-hero-photo] (04 §5.2.2: the hero photo is the LCP)`;
+      // Chrome drops low-entropy images (a flat grey dev placeholder) from LCP, so only a real photo can be judged.
+      if (!perf.inHero && perf.placeholder) warn('lcp', 'P099', `${msg} — the hero is still a dev placeholder, which Chrome ignores for LCP; re-check with the real photo`);
+      else if (!perf.inHero) fail('lcp', 'P099', msg);
     }
 
     // ld+json parses
@@ -398,7 +408,7 @@ try {
   if (!pages.length) throw new Error('no built page to test');
   await startServer();
   const { chromium } = createRequire(`${execSync('npm root -g').toString().trim()}/`)('playwright');
-  browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || undefined, args: ['--no-sandbox'] });
+  browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || undefined, args: ['--no-sandbox', '--disable-background-networking'] });
   R.info(`${pages.length} page(s) × ${VIEWPORTS.length} viewports on ${BASE} · screenshots → ${SHOTS}`);
   let extrasDone = false;
   for (const path of pages) {
