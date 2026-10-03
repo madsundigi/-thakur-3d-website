@@ -1,0 +1,442 @@
+---
+// ServicePage — the shared money-page layout (/ludhiana/<service>/). Spec: website-plan/blueprints/
+// _TEMPLATE-service-page.md (block order SP-0…SP-13 is binding; this file owns it) + the page's own blueprint
+// (copy values). Decisions: website-plan/decisions/w1-layout.md. Zero client JS.
+//
+// ── API ────────────────────────────────────────────────────────────────────────────────────────────────────────────
+// <ServicePage config={…}> with named slots. `config` holds only what differs per page; everything else comes from the
+// registries: MONEY_PAGES[path] (services.ts: chips, mid-page CTA, areas, OG image, card, WhatsApp prefill), faqFor(path)
+// (faq.json), stepsFor(slug) / SP6_LINES (content.ts), people.ts, reviews.ts, LASTMOD (lastmod.ts), routes.ts (isLive).
+//
+//   config.path         MoneyPath, e.g. '/ludhiana/dog-grooming/' — must be the page's own URL.
+//   config.title        <title>, blueprint §1 verbatim (prices from pricing.ts helpers).
+//   config.description  meta description, blueprint §1 verbatim.
+//   config.hero         { eyebrow, h1, subhead, subheadShort?, primaryLabel, secondary: 'prices' | 'call',
+//                         photo: { name, alt, position? }, notice? }. The primary target is fixed (00 §11 E1/D2):
+//                         /book/?src=hero_<slug>; dog-walking /book/?service=dog-walking&src=hero_dog-walking.
+//                         'prices' = [See exact prices] → #prices · 'call' = [Call [FILL:PHONE]] → tel:. Chips come from
+//                         MONEY_PAGES[path].heroChips. subheadShort / notice: see Hero.astro.
+//   config.sp3          { heading }                — SP-3 H2; the body is the `sp3` slot (section tone: paper).
+//   config.sp4          { heading, lines?, r2? }   — SP-4 H2 (section id="prices", tone: sand). No `lines` = the
+//                         dog-grooming size matrix; `lines` = a pricing.ts PriceLineSet (flat-price pages). `r2`
+//                         replaces R2 (dog-walking: WALK_PAYMENT_LINE).
+//   config.sp5?         { kind: 'pairs' | 'proof', heading? } — renders SP-5 from the data when enough exists:
+//                         'pairs' = ≥ 2 consented before/after pairs for the page's services (heading default
+//                         "Before & after: real Ludhiana grooms"); 'proof' = ≥ 1 consented proof photo (walking/vet,
+//                         heading required). Omitted otherwise (template SP-5: never stock, never placeholders).
+//   config.sp6?         { heading? }               — default "How it works — booked in under 2 minutes".
+//   config.sp7          { team: 'groomers' | 'walkers' | 'vet', heading?, line?, cardsHeading?, variant? } —
+//                         heading/line default to people.ts MEET_GROOMERS / MEET_WALKERS / MEET_VET; cardsHeading =
+//                         an H3 over the cards (dog-walking "Meet your walkers"); variant 'condensed' (default) | 'full'
+//                         (vet). Cards show only people already on the team; the vet card always renders (P046: the
+//                         launch gate must see an unfilled vet). The "How we hire" → /about/ link always renders
+//                         (isLive-gated) — /about/'s P068 inbound link.
+//   config.sp8?         { medical? }               — PromiseBand + the registered-vets line (vet / vaccination).
+//   config.sp9          { intro, prefix, heading? } — intro line; AreaCard anchor prefix ("Dog grooming at home in");
+//                         heading default "Areas we serve in Ludhiana". Cards = MONEY_PAGES[path].areas.
+//   config.sp10         { heading }                — FAQ H2. Questions = faqFor(path) — the same entries the FAQPage
+//                         JSON-LD lists (schemaGraphLd).
+//   config.sp11?        { siblings?, posts? }      — siblings default to the template SP-11 fixed set; posts =
+//                         [{ label, href }] from the blueprint, rendered only once live.
+//   config.sp12         { heading, support, primaryLabel? } — CtaBand: [Book on WhatsApp] (wa.me + page prefill) and
+//                         [Call [FILL:PHONE]], both source ctaband_<slug> (template SP-12, 07 §2 row 4, 09 §2d).
+//
+// Slots (all optional except sp3):
+//   sp3         SP-3 body under its H2 (lead-in, the InfoTable / CheckList, notes).
+//   sp4-lines   inside the price block, right under R1 + R2 (before the mid-page CTA) — e.g. an à-la-carte line.
+//   sp4-extra   end of SP-4, after the CTA and the /pricing/ link — H3 sub-sections (breed / season / coat tables,
+//               the vet emergency footer). The SP-4 band is sand: pass onTint to InfoTable / PriceMatrix there.
+//   sp5         replaces the data-driven SP-5 body (the section and its H2 stay); omit it to let config.sp5 decide.
+//   sp7-intro   between the SP-7 H2 and its supporting line (cat-grooming's three "why home" points).
+//   before-faq  its own band right before SP-10 — only for content a blueprint places there (00 §11: page-specific
+//               sections are H3s inside the nearest block; a new block needs a Decision-log entry).
+//
+// Minimal page:
+//   <ServicePage config={{ path: '/ludhiana/cat-grooming/', title, description,
+//       hero: { eyebrow, h1, subhead, primaryLabel: 'Book on WhatsApp', secondary: 'call', photo },
+//       sp3: { heading }, sp4: { heading, lines: 'cat-grooming' }, sp7: { team: 'groomers' },
+//       sp9: { intro, prefix: 'Cat grooming at home in' }, sp10: { heading }, sp12: { heading, support } }}>
+//     <Fragment slot="sp3"><InfoTable table={PACKAGE_TABLES['cat-grooming']} … /></Fragment>
+//   </ServicePage>
+//
+// Blocks (DOM order, template §1): SP-0 Breadcrumb · SP-1 Hero · SP-2 reviews + E4 CTA row · SP-3 · SP-4 + mid-page
+// CTA · SP-5 · SP-6 · SP-7 · SP-8 · SP-9 · (before-faq) · SP-10 · SP-11 (+ "Last updated", P143) · SP-12 CtaBand.
+// SP-13 (sticky bar, float) is Base chrome. Bands: hero paper, then sand / paper alternating from SP-2 (SP-3 always
+// paper, SP-4 always sand), so two adjacent sections never share a background (08 §1.4 rule 5); padding 48 → 80px at
+// lg (08 §3.1); content max 1200px, 16 → 24px gutters.
+import Base from './Base.astro';
+import AreaCard from '../components/AreaCard.astro';
+import BeforeAfter from '../components/BeforeAfter.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import Button from '../components/Button.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Faq from '../components/Faq.astro';
+import GroomerCard from '../components/GroomerCard.astro';
+import Hero from '../components/Hero.astro';
+import Photo from '../components/Photo.astro';
+import PriceMatrix from '../components/PriceMatrix.astro';
+import PromiseBand from '../components/PromiseBand.astro';
+import ReviewCard from '../components/ReviewCard.astro';
+import ServiceCard from '../components/ServiceCard.astro';
+import StepsStrip from '../components/StepsStrip.astro';
+import Icon from '../components/icons/Icon.astro';
+import { AREA_SLUGS, R2, R4, SP6_LINES, stepsFor } from '../data/content';
+import { LASTMOD } from '../data/lastmod';
+import { groomers, isPlaceholder, MEET_GROOMERS, MEET_VET, MEET_WALKERS, vets, walkers, type Person } from '../data/people';
+import {
+  pairsFor, pickReviews, PROOF_LINE, proofPhotosFor, reviewsReady, REVIEWS_EMPTY_STATE, type BeforeAfterPair,
+} from '../data/reviews';
+import { isLive, routeLabel } from '../data/routes';
+import { isMoneyPath, MONEY_PAGES, type MoneyPath } from '../data/services';
+import { site, telHref, waHref } from '../data/site';
+import { bookHref, type MoneyPage, type PriceLineSet } from '../lib/pricing';
+import { schemaGraphLd } from '../lib/schema';
+
+export interface ServicePageConfig {
+  path: MoneyPath;
+  title: string;
+  description: string;
+  hero: {
+    eyebrow: string;
+    h1: string;
+    subhead: string;
+    subheadShort?: string;
+    primaryLabel: string;
+    secondary: 'prices' | 'call';
+    photo: { name: string; alt: string; position?: string };
+    notice?: string;
+  };
+  sp3: { heading: string };
+  sp4: { heading: string; lines?: PriceLineSet; r2?: string };
+  sp5?: { kind: 'pairs' | 'proof'; heading?: string };
+  sp6?: { heading?: string };
+  sp7: { team: 'groomers' | 'walkers' | 'vet'; heading?: string; line?: string; cardsHeading?: string; variant?: 'condensed' | 'full' };
+  sp8?: { medical?: boolean };
+  sp9: { intro: string; prefix: string; heading?: string };
+  sp10: { heading: string };
+  sp11?: { siblings?: readonly MoneyPath[]; posts?: readonly { label: string; href: string }[] };
+  sp12: { heading: string; support: string; primaryLabel?: string };
+}
+interface Props { config: ServicePageConfig }
+
+const { config: c } = Astro.props;
+if (!isMoneyPath(c.path)) throw new Error(`ServicePage: "${c.path}" is not a money page (services.ts MONEY_PATHS)`);
+const m = MONEY_PAGES[c.path];
+const slug: MoneyPage = m.slug;
+
+// ── SP-0 + head ────────────────────────────────────────────────────────────────────────────────────────────────────
+// Home › Ludhiana › {page name from 01-SITEMAP}. "Ludhiana" stays text until /ludhiana/ is live; its schema item URL
+// is live from day one (04 §2.4). Breadcrumb.astro links an item only while isLive(path).
+const crumbs = [
+  { label: 'Home', path: '/' },
+  { label: routeLabel('/ludhiana/'), path: '/ludhiana/' },
+  { label: m.label, path: m.path },
+];
+// One @graph: Service + FAQPage (faqFor(path) — the entries SP-10 renders) + BreadcrumbList (04 §2.9).
+const jsonLd = [schemaGraphLd({ type: 'service', service: slug, crumbs }, Astro.site)];
+
+// ── SP-1 ───────────────────────────────────────────────────────────────────────────────────────────────────────────
+// E1 / D2 (00 §11): every hero primary → /book/?src=hero_<slug>; dog walking also preselects its service (Trial Week).
+const heroSrc = `hero_${slug}`;
+const primary = {
+  label: c.hero.primaryLabel,
+  href: bookHref({ service: slug === 'dog-walking' ? m.preselect ?? undefined : undefined, src: heroSrc }),
+  source: heroSrc,
+};
+const secondary = c.hero.secondary === 'prices'
+  ? { label: 'See exact prices', href: '#prices', source: heroSrc }
+  : { label: `Call ${site.phone}`, href: telHref(), source: heroSrc };
+
+// ── SP-2 ───────────────────────────────────────────────────────────────────────────────────────────────────────────
+// Cards only once ≥ 3 real Google reviews exist (filtered to this page's services, then nearest, then any); before
+// that the 06 §9 E6 line, its URL linked to the Google profile. Never Review markup (04 §2.0.4).
+const showReviews = reviewsReady();
+const reviews = showReviews ? pickReviews({ services: [...m.serviceIds], count: 3 }) : [];
+const [emptyBefore, emptyAfter = ''] = REVIEWS_EMPTY_STATE.split(site.gbpLink);
+const proofText = PROOF_LINE.replace(/^★\s*/, ''); // the ★ is drawn as an icon (amber, aria-hidden: 08 §1.5)
+
+// ── SP-5 ───────────────────────────────────────────────────────────────────────────────────────────────────────────
+const pairs: BeforeAfterPair[] = c.sp5?.kind === 'pairs' ? pairsFor({ services: [...m.serviceIds], count: 4 }) : [];
+const proofs = c.sp5?.kind === 'proof' ? proofPhotosFor(m.serviceIds, 4) : [];
+const sp5Slot = Astro.slots.has('sp5');
+const hasSp5 = sp5Slot || pairs.length >= 2 || proofs.length >= 1;
+const sp5Heading = c.sp5?.heading ?? (c.sp5?.kind === 'pairs' || !c.sp5 ? 'Before & after: real Ludhiana grooms' : undefined);
+if (hasSp5 && !sp5Heading) throw new Error(`ServicePage ${c.path}: config.sp5.heading is required for a proof-photo row`);
+// Breed chips (dog-grooming.md SP-5): one anchor chip per breed that has a pair, when the gallery shows ≥ 2 breeds.
+const breedId = (b: string) => `ba-${b.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}`;
+const breeds = [...new Set(pairs.map((p) => p.breed))];
+const PERMISSION_NOTE = "All photos shared with the pet parent's permission."; // 06 §4.3 gallery footer note
+
+// ── SP-6 ───────────────────────────────────────────────────────────────────────────────────────────────────────────
+const sp6Lines = slug === 'dog-walking' || slug === 'vet-at-home' ? SP6_LINES[slug] : undefined;
+
+// ── SP-7 ───────────────────────────────────────────────────────────────────────────────────────────────────────────
+const TEAM = {
+  groomers: { people: groomers, copy: MEET_GROOMERS },
+  walkers: { people: walkers, copy: MEET_WALKERS },
+  vet: { people: vets, copy: MEET_VET },
+} as const;
+const team = TEAM[c.sp7.team];
+// Honesty law (people.ts, template SP-7): no card for anyone not yet on the team. The vet is the exception: the page
+// may not ship without a named, registered vet (vet-at-home.md §0.3, 02 P046), so the card renders with its [FILL]
+// tokens and the launch gate (check:fill) stops the release until they are real.
+const people: Person[] = team.people.filter((p) => c.sp7.team === 'vet' || !isPlaceholder(p)).slice(0, 3);
+
+// ── SP-9 ───────────────────────────────────────────────────────────────────────────────────────────────────────────
+// The other 00 §3.3 areas, as plain text (template SP-9: exactly 3 area links in the body, P076).
+const otherAreas = AREA_SLUGS.filter((a) => !m.areas.includes(a)).map((a) => routeLabel(`/ludhiana/areas/${a}/`));
+
+// ── SP-11 ──────────────────────────────────────────────────────────────────────────────────────────────────────────
+// Template SP-11 fixed sibling sets (change only via the Decision log).
+const RELATED: Readonly<Record<MoneyPage, readonly MoneyPath[]>> = {
+  'dog-grooming': ['/ludhiana/puppy-grooming/', '/ludhiana/tick-flea-treatment/', '/ludhiana/cat-grooming/'],
+  'cat-grooming': ['/ludhiana/dog-grooming/', '/ludhiana/tick-flea-treatment/'],
+  'dog-walking': ['/ludhiana/dog-grooming/', '/ludhiana/vet-at-home/'],
+  'vet-at-home': ['/ludhiana/dog-vaccination/', '/ludhiana/tick-flea-treatment/', '/ludhiana/dog-walking/'],
+  'dog-vaccination': ['/ludhiana/vet-at-home/', '/ludhiana/puppy-grooming/'],
+  'tick-flea-treatment': ['/ludhiana/dog-grooming/', '/ludhiana/vet-at-home/'],
+  'puppy-grooming': ['/ludhiana/dog-vaccination/', '/ludhiana/dog-grooming/'],
+};
+const siblings = c.sp11?.siblings ?? RELATED[slug];
+const posts = (c.sp11?.posts ?? []).filter((p) => isLive(p.href));
+
+// "Last updated" (02 P143): the page's real last-material-edit date — the same date as its sitemap <lastmod>.
+const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+const lastmod = LASTMOD[c.path];
+const lastmodText = lastmod && /^\d{4}-\d{2}-\d{2}$/.test(lastmod)
+  ? `${Number(lastmod.slice(8, 10))} ${MONTHS[Number(lastmod.slice(5, 7)) - 1]} ${lastmod.slice(0, 4)}`
+  : null;
+
+// ── SP-12 ──────────────────────────────────────────────────────────────────────────────────────────────────────────
+const bandSrc = `ctaband_${slug}`;
+
+// ── Bands: sand / paper alternating from SP-2 (hero = paper; CtaBand = brand-dark) ───────────────────────────────
+const hasBeforeFaq = Astro.slots.has('before-faq');
+const order = ['sp2', 'sp3', 'sp4', hasSp5 && 'sp5', 'sp6', 'sp7', 'sp8', 'sp9', hasBeforeFaq && 'before-faq', 'sp10', 'sp11']
+  .filter((k): k is string => !!k);
+const band = (key: string) => ['sp-band py-12 lg:py-20', order.indexOf(key) % 2 === 0 ? 'bg-sand' : 'bg-paper'];
+const inner = 'mx-auto max-w-[1200px] px-4 lg:px-6';
+---
+<Base title={c.title} description={c.description} path={c.path} ogImage={m.og.file} ogImageAlt={m.og.alt} jsonLd={jsonLd}>
+  <Photo slot="head" preload preset="hero" name={c.hero.photo.name} />
+
+  {/* SP-0 */}
+  <Breadcrumb items={crumbs} />
+
+  {/* SP-1 */}
+  <Hero
+    eyebrow={c.hero.eyebrow}
+    h1={c.hero.h1}
+    subhead={c.hero.subhead}
+    subheadShort={c.hero.subheadShort}
+    crumbAbove
+    primary={primary}
+    secondary={secondary}
+    priceChip={m.heroChips.price}
+    trustChips={m.heroChips.trust}
+    photo={c.hero.photo}
+    notice={c.hero.notice}
+  />
+
+  {/* SP-2 — social proof + the E4 CTA row (00 §11 E4: the "after reviews" beat of 02 P153) */}
+  <div class:list={band('sp2')}>
+    <div class={inner}>
+      <section>
+        <p class="m-0 flex items-center gap-2 font-semibold">
+          <Icon name="star" size={20} filled class="flex-none text-cta" />
+          <a href={site.gbpLink} target="_blank" rel="noopener" class="prose-link">{proofText}</a>
+        </p>
+        {showReviews ? (
+          <ul class="m-0 mt-6 grid list-none gap-4 p-0 md:grid-cols-2 lg:grid-cols-3 lg:gap-6">
+            {reviews.map((r) => <li class="min-w-0"><ReviewCard review={r} onSand /></li>)}
+          </ul>
+        ) : (
+          <p class="measure m-0 mt-3 text-slate">
+            {emptyBefore}<a href={site.gbpLink} target="_blank" rel="noopener" class="prose-link">{site.gbpLink}</a>{emptyAfter}
+          </p>
+        )}
+        <div class="mt-6 flex flex-col gap-3 md:flex-row md:items-center md:gap-4">
+          <Button href={m.cta.href} source={m.cta.source} full>{m.cta.label}</Button>
+          <p class="m-0 text-sm font-semibold text-ink">{R2}</p>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  {/* SP-3 — what's included (tone: paper) */}
+  <div class:list={band('sp3')}>
+    <div class={inner}>
+      <section aria-labelledby="sp3-heading">
+        <h2 id="sp3-heading" class="t-h2 m-0">{c.sp3.heading}</h2>
+        <div class="mt-4"><slot name="sp3" /></div>
+      </section>
+    </div>
+  </div>
+
+  {/* SP-4 — prices + mid-page CTA (tone: sand) */}
+  <div class:list={band('sp4')}>
+    <div class={inner}>
+      <section id="prices" aria-labelledby="sp4-heading">
+        <h2 id="sp4-heading" class="t-h2 m-0">{c.sp4.heading}</h2>
+        <PriceMatrix matrix={!c.sp4.lines} lines={c.sp4.lines} r2={c.sp4.r2} onTint class="mt-6">
+          <slot name="sp4-lines" />
+        </PriceMatrix>
+        <div class="mt-6">
+          <Button href={m.cta.href} source={m.cta.source} full>{m.cta.label}</Button>
+        </div>
+        {isLive('/pricing/') ? (
+          <p class="m-0 mt-4"><a href="/pricing/" class="prose-link">Compare every service on the full price list</a></p>
+        ) : null}
+        <slot name="sp4-extra" />
+      </section>
+    </div>
+  </div>
+
+  {/* SP-5 — before/after or proof photos, only when real, consented photos exist */}
+  {hasSp5 ? (
+    <div class:list={band('sp5')}>
+      <div class={inner}>
+        <section aria-labelledby="sp5-heading">
+          <h2 id="sp5-heading" class="t-h2 m-0">{sp5Heading}</h2>
+          {sp5Slot ? (
+            <div class="mt-6"><slot name="sp5" /></div>
+          ) : pairs.length >= 2 ? (
+            <>
+              {breeds.length >= 2 ? (
+                <ul class="m-0 mt-4 flex list-none flex-wrap gap-2 p-0" aria-label="Jump to a breed">
+                  {breeds.map((b) => (
+                    <li>
+                      <a href={`#${breedId(b)}`} class="inline-flex min-h-11 items-center rounded-pill border-[1.5px] border-brand bg-paper px-4 text-sm font-semibold text-brand no-underline hover:bg-mint">{b}</a>
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
+              <ul class="m-0 mt-6 grid list-none gap-6 p-0 md:grid-cols-2">
+                {pairs.map((p, i) => (
+                  <li id={pairs.findIndex((x) => x.breed === p.breed) === i ? breedId(p.breed) : undefined} class="min-w-0">
+                    <BeforeAfter pair={p} />
+                  </li>
+                ))}
+              </ul>
+              <p class="m-0 mt-4 text-sm text-slate">{PERMISSION_NOTE}</p>
+            </>
+          ) : (
+            <>
+              <ul class="m-0 mt-6 grid list-none grid-cols-1 gap-4 p-0 md:grid-cols-2 lg:grid-cols-4">
+                {proofs.map((ph) => (
+                  <li class="min-w-0">
+                    <figure class="m-0">
+                      <Photo name={ph.photo} alt={ph.alt} preset="card" class="block aspect-[4/3] h-auto w-full rounded-md object-cover" />
+                      <figcaption class="mt-2 text-sm text-slate">{ph.caption}</figcaption>
+                    </figure>
+                  </li>
+                ))}
+              </ul>
+              <p class="m-0 mt-4 text-sm text-slate">{PERMISSION_NOTE}</p>
+            </>
+          )}
+        </section>
+      </div>
+    </div>
+  ) : null}
+
+  {/* SP-6 — how it works */}
+  <div class:list={band('sp6')}>
+    <div class={inner}>
+      <StepsStrip
+        heading={c.sp6?.heading ?? 'How it works — booked in under 2 minutes'}
+        headingId="sp6-heading"
+        steps={stepsFor(slug)}
+        r4={sp6Lines?.r4 ?? R4}
+      >
+        {isLive('/how-it-works/') ? <p class="m-0"><a href="/how-it-works/" class="prose-link">See the full process</a></p> : null}
+      </StepsStrip>
+    </div>
+  </div>
+
+  {/* SP-7 — your groomer / walker / vet */}
+  <div class:list={band('sp7')}>
+    <div class={inner}>
+      <section aria-labelledby="sp7-heading">
+        <h2 id="sp7-heading" class="t-h2 m-0">{c.sp7.heading ?? team.copy.title}</h2>
+        {Astro.slots.has('sp7-intro') ? <div class="mt-4"><slot name="sp7-intro" /></div> : null}
+        <p class="measure m-0 mt-3">{c.sp7.line ?? team.copy.line}</p>
+        {people.length ? (
+          <>
+            {c.sp7.cardsHeading ? <h3 class="t-h3 m-0 mt-8">{c.sp7.cardsHeading}</h3> : null}
+            <ul class="m-0 mt-6 grid list-none gap-4 p-0 md:grid-cols-3 lg:gap-6">
+              {people.map((p) => (
+                <li class="min-w-0"><GroomerCard person={p} variant={c.sp7.variant ?? 'condensed'} page={slug} headingLevel={c.sp7.cardsHeading ? 4 : 3} /></li>
+              ))}
+            </ul>
+          </>
+        ) : null}
+        {isLive('/about/') ? <p class="m-0 mt-4"><a href="/about/" class="prose-link">How we hire</a></p> : null}
+      </section>
+    </div>
+  </div>
+
+  {/* SP-8 — the PetDoorStep Promise */}
+  <div class:list={band('sp8')}>
+    <div class={inner}>
+      <PromiseBand medical={c.sp8?.medical ?? false} />
+    </div>
+  </div>
+
+  {/* SP-9 — areas served */}
+  <div class:list={band('sp9')}>
+    <div class={inner}>
+      <section aria-labelledby="sp9-heading">
+        <h2 id="sp9-heading" class="t-h2 m-0">{c.sp9.heading ?? 'Areas we serve in Ludhiana'}</h2>
+        <p class="measure m-0 mt-3">{c.sp9.intro}</p>
+        <ul class="m-0 mt-6 grid list-none grid-cols-2 gap-4 p-0 md:grid-cols-3 lg:gap-6">
+          {m.areas.map((a) => <li class="min-w-0"><AreaCard slug={a} prefix={c.sp9.prefix} /></li>)}
+        </ul>
+        <p class="measure m-0 mt-6">…and {otherAreas.join(', ')} — all of Ludhiana served.</p>
+      </section>
+    </div>
+  </div>
+
+  {hasBeforeFaq ? (
+    <div class:list={band('before-faq')}>
+      <div class={inner}><slot name="before-faq" /></div>
+    </div>
+  ) : null}
+
+  {/* SP-10 — FAQ (FAQPage JSON-LD = the same faqFor(path) entries) */}
+  <div class:list={band('sp10')}>
+    <div class={inner}>
+      <Faq page={c.path} heading={c.sp10.heading} />
+    </div>
+  </div>
+
+  {/* SP-11 — related services (+ supporting blog posts once live) and the "Last updated" line */}
+  <div class:list={band('sp11')}>
+    <div class={inner}>
+      <section aria-labelledby="sp11-heading">
+        <h2 id="sp11-heading" class="t-h2 m-0">Pet parents also book</h2>
+        <ul class="m-0 mt-6 grid list-none gap-4 p-0 md:grid-cols-2 lg:grid-cols-3 lg:gap-6">
+          {siblings.map((p) => (
+            <li class="min-w-0"><ServiceCard path={p} blurb={MONEY_PAGES[p].card.blurb} photo={MONEY_PAGES[p].card.photo} onPage={slug} /></li>
+          ))}
+        </ul>
+        {posts.length ? (
+          <ul class="m-0 mt-6 list-none space-y-2 p-0">
+            {posts.map((p) => <li><a href={p.href} class="prose-link">{p.label}</a></li>)}
+          </ul>
+        ) : null}
+      </section>
+      {lastmodText ? (
+        <p class="m-0 mt-10 text-sm text-slate">Last updated <time datetime={lastmod}>{lastmodText}</time></p>
+      ) : null}
+    </div>
+  </div>
+
+  {/* SP-12 — page-end CTA (wa.me with the page prefill; full-bleed, a direct child of <main>) */}
+  <CtaBand
+    heading={c.sp12.heading}
+    support={c.sp12.support}
+    primary={{ label: c.sp12.primaryLabel ?? 'Book on WhatsApp', href: waHref(m.waPrefill), source: bandSrc }}
+    secondary={{ label: `Call ${site.phone}`, href: telHref(), source: bandSrc }}
+  />
+</Base>

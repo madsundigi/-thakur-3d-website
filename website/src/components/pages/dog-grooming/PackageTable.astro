@@ -1,0 +1,52 @@
+---
+// /ludhiana/dog-grooming/ SP-3 body (blueprints/dog-grooming.md §3 SP-3, §2 keyword rows, §4 images) — goes in
+// ServicePage's `sp3` slot, under the template H2 "What's included in every dog grooming package" (paper band).
+// Order: the 2-sentence lead-in → the ✓-grid (PACKAGE_TABLES['dog-grooming']: template SP-3 table verbatim, Premium
+// Spa column labelled "Premium Spa (dog spa at home)", "Most booked" on Full Groom, the duration row, footnotes (a) +
+// the matting line) → the haircut body line → the sealed-kit photo. From md the photo sits beside the lead-in; below md
+// it comes after the table, so the grid is not pushed a screen down on a phone (only non-focusable items move).
+import InfoTable from '../../InfoTable.astro';
+import Photo from '../../Photo.astro';
+import { PACKAGE_TABLES } from '../../../data/services';
+---
+<div class="pkg">
+  <p class="pkg-lead measure m-0">
+    <strong>Looking for a dog parlour in Ludhiana? We bring the parlour home.</strong> No grooming van needed — your groomer
+    carries a complete kit to your verandah, balcony or bathroom, and every dog grooming home service in Ludhiana is priced
+    before we arrive.
+  </p>
+  <InfoTable table={PACKAGE_TABLES['dog-grooming']} class="pkg-table" />
+  <p class="pkg-haircut measure m-0">
+    Need a dog haircut in Ludhiana? Every Full Groom includes breed-appropriate haircut &amp; styling.
+  </p>
+  {/* The wrapper is the grid item: a real photo renders as <picture> around the <img>, a placeholder as a bare <img>. */}
+  <div class="pkg-photo">
+    <Photo
+      name="sealed-sanitised-grooming-kit.jpg"
+      alt="Groomer opening a sealed, sanitised grooming kit at a home in Ludhiana"
+      preset="card"
+      class="block aspect-[4/3] h-auto w-full rounded-lg object-cover"
+    />
+  </div>
+</div>
+
+<style>
+  /* Base: one column in DOM order (lead-in · table · haircut line · photo). */
+  .pkg { display: grid; grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  .pkg-photo { max-width: 480px; }
+
+  /* md+: lead-in beside the photo, the table full width under them, the haircut line last. */
+  @media (min-width: 768px) {
+    .pkg {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+      grid-template-areas: 'lead photo' 'table table' 'haircut haircut';
+      column-gap: 40px;
+      align-items: center;
+    }
+    .pkg-lead { grid-area: lead; }
+    .pkg :global(.pkg-table) { grid-area: table; }
+    .pkg-haircut { grid-area: haircut; }
+    .pkg-photo { grid-area: photo; max-width: none; }
+  }
+  @media (min-width: 1024px) { .pkg { column-gap: 48px; } }
+</style>

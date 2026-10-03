@@ -2,22 +2,33 @@
 // Steps strip (08-DESIGN-SYSTEM §4.9) — the 4 booking steps verbatim from 04-TECHNICAL-SEO §2.8 (src/data/content.ts;
 // the /how-it-works/ HowTo schema reads the same strings). Base: vertical list, numbered discs on a left rail joined by
 // a 2px dashed line-colour connector · ≥ md: 4-up row, the connector running disc to disc. `anchors` adds
-// #step-1…#step-4 (the HowTo step URLs). The default slot renders under the steps: the support line and the
-// "See the full process" link (home H-4; template SP-6 R4 line). Zero JS.
-import { bookingSteps } from '../data/content';
+// #step-1…#step-4 (the HowTo step URLs). Zero JS.
+// Under the steps: the `r4` line when given (template SP-6 reassurance R4, or a page's SP6_LINES r4), then the default
+// slot (the support line and the "See the full process" link — home H-4, template SP-6).
+// Money pages (template SP-6): <StepsStrip heading="…" steps={stepsFor(slug)} r4={SP6_LINES[slug]?.r4 ?? R4} /> —
+// dog-walking and vet-at-home swap in their own step 3/4 text and R4 (content.ts SP6_LINES); step names never change.
+import { bookingSteps, type BookingStep } from '../data/content';
 
 interface Props {
   heading: string;
   anchors?: boolean;
   /** id of the h2 (aria-labelledby) — change it only if a page renders two strips. */
   headingId?: string;
+  /** The 4 steps (default: the 04 §2.8 bookingSteps). Pass stepsFor(slug) from content.ts on a money page. */
+  steps?: readonly BookingStep[];
+  /** Reassurance line under the steps: R4 (06 §9) on grooming pages, SP6_LINES[slug].r4 on dog-walking / vet-at-home.
+   *  Rendered before the default slot. Omit it where the page's slot carries its own support line (home H-4). */
+  r4?: string;
 }
-const { heading, anchors = false, headingId = 'steps-heading' } = Astro.props;
+const { heading, anchors = false, headingId = 'steps-heading', steps = bookingSteps, r4 } = Astro.props;
+// 08 §4.9 is a 4-step strip (and the HowTo it mirrors has 4 steps): a different count is a data slip.
+if (steps.length !== 4) throw new Error(`StepsStrip "${heading}": needs exactly 4 steps (08 §4.9), got ${steps.length}`);
+const hasSlot = Astro.slots.has('default');
 ---
 <section aria-labelledby={headingId}>
   <h2 id={headingId} class="t-h2">{heading}</h2>
   <ol class="mt-4 grid list-none gap-4 p-0 md:grid-cols-4">
-    {bookingSteps.map((s, i) => (
+    {steps.map((s, i) => (
       <li id={anchors ? `step-${i + 1}` : undefined} class="step relative flex gap-3 md:flex-col">
         <span class="flex h-10 w-10 flex-none items-center justify-center rounded-pill bg-brand font-bold text-white">{i + 1}</span>
         <div class="min-w-0">
@@ -27,7 +38,12 @@ const { heading, anchors = false, headingId = 'steps-heading' } = Astro.props;
       </li>
     ))}
   </ol>
-  {Astro.slots.has('default') ? <div class="mt-4"><slot /></div> : null}
+  {r4 || hasSlot ? (
+    <div class="mt-4">
+      {r4 ? <p class="measure m-0 font-medium text-ink">{r4}</p> : null}
+      {r4 && hasSlot ? <div class="mt-2"><slot /></div> : <slot />}
+    </div>
+  ) : null}
 </section>
 
 <style>
