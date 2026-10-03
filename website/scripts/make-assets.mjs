@@ -2,7 +2,8 @@
 //   · favicons — favicon.ico, apple-touch-icon.png, icon-192.png, icon-512.png (08 §6.4)
 //   · /images/petdoorstep-logo.png — 720×720 mark square: GBP logo (05 §2.3.1) + LocalBusiness `logo` (04 §2.1)
 //   · the 04-TECHNICAL-SEO §4 share-image set in /og/ — 1200×630 JPG ≤ 300 KB, 08 §5.6 template
-// Run from website/:  node scripts/make-assets.mjs   (global Playwright; CHROMIUM_PATH overrides the browser)
+// Run: node scripts/make-assets.mjs   (from website/ or anywhere — paths resolve from this file; needs a global
+// Playwright, CHROMIUM_PATH overrides the browser; sharp + esbuild come from node_modules)
 //
 // Share images carry prices, so they read them through src/lib/pricing.ts (the pricing.json helpers — never a typed
 // figure) and stamp what they say into a JPEG comment. astro.config.mjs compares that stamp with ogSpecs() on every
@@ -13,18 +14,18 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 export const OG_DIR = join(ROOT, 'public', 'og');
-const TOWN = 'Ludhiana'; // 00 §3.3 — the one city the Phase-1 images name
 
-/** What each 04 §4 share image says. `p` = the src/lib/pricing.ts module (prices only through its helpers). */
-export function ogSpecs(p) {
-  const atHome = `at your home in ${TOWN}`; // 04 §4: service name + "at your home in Ludhiana" + from-price
+/** What each 04 §4 share image says. `p` = the src/lib/pricing.ts module (prices only through its helpers),
+ *  `site` = src/data/site.ts `site` (tagline + city, 00 §3.1). */
+export function ogSpecs(p, site) {
+  const atHome = `at your home in ${site.city}`; // 04 §4: service name + "at your home in Ludhiana" + from-price
   return [
-    { file: 'petdoorstep-home.jpg', headline: ['Pet care at your doorstep'], price: `${TOWN} · ${p.heroPriceChip('home')}` },
+    { file: 'petdoorstep-home.jpg', headline: [site.tagline], price: `${site.city} · ${p.heroPriceChip('home')}` },
     { file: 'dog-grooming.jpg', headline: ['Dog grooming', atHome], price: p.heroPriceChip('dog-grooming') },
     { file: 'cat-grooming.jpg', headline: ['Cat grooming', atHome], price: p.heroPriceChip('cat-grooming') },
     { file: 'dog-walking.jpg', headline: ['Dog walking', atHome], price: `from ${p.cardPriceChip('dog-walking')}` },
     { file: 'vet-at-home.jpg', headline: ['Vet visits', atHome], price: p.heroPriceChip('vet-at-home') },
-    { file: 'blog-default.jpg', headline: [`Pet care tips for ${TOWN}`], price: '' },
+    { file: 'blog-default.jpg', headline: [`Pet care tips for ${site.city}`], price: '' },
   ];
 }
 
@@ -49,8 +50,8 @@ function readStamp(file) {
 }
 
 /** Share images whose stamp no longer matches ogSpecs() (prices or wording changed since the last render). */
-export function staleOgImages(pricing, dir = OG_DIR) {
-  return ogSpecs(pricing).filter((s) => readStamp(join(dir, s.file)) !== stampOf(s)).map((s) => s.file);
+export function staleOgImages(pricing, site, dir = OG_DIR) {
+  return ogSpecs(pricing, site).filter((s) => readStamp(join(dir, s.file)) !== stampOf(s)).map((s) => s.file);
 }
 
 const isMain = process.argv[1] && pathToFileURL(resolve(process.argv[1])).href === import.meta.url;
@@ -64,9 +65,13 @@ async function main() {
   // Playwright is installed globally (`npm i -g playwright && npx playwright install chromium`), not a dependency.
   const { chromium } = createRequire(execSync('npm root -g').toString().trim() + '/')('playwright');
 
-  // src/lib/pricing.ts, bundled with its pricing.json, so this script prints exactly what the site prints.
-  const bundled = await build({ entryPoints: [join(ROOT, 'src/lib/pricing.ts')], bundle: true, format: 'esm', platform: 'node', write: false, logLevel: 'silent' });
-  const pricing = await import(`data:text/javascript;base64,${Buffer.from(bundled.outputFiles[0].text).toString('base64')}`);
+  // src/lib/pricing.ts (+ its pricing.json) and src/data/site.ts, bundled, so this script prints what the site prints.
+  const bundled = await build({
+    stdin: { contents: "export * from './src/lib/pricing.ts'; export { site } from './src/data/site.ts';", resolveDir: ROOT, loader: 'ts' },
+    bundle: true, format: 'esm', platform: 'node', write: false, logLevel: 'silent',
+  });
+  const pricing = await import(/* @vite-ignore */ `data:text/javascript;base64,${Buffer.from(bundled.outputFiles[0].text).toString('base64')}`);
+  const { site } = pricing;
 
   // Tokens + fonts straight from the site (08 §1.3 / §2.1): the latin files plus the ₹-only subsets.
   const css = readFileSync(join(ROOT, 'src/styles/global.css'), 'utf8');
@@ -136,7 +141,7 @@ async function main() {
   </body></html>`;
 
   mkdirSync(OG_DIR, { recursive: true });
-  for (const spec of ogSpecs(pricing)) {
+  for (const spec of ogSpecs(pricing, site)) {
     await page.setContent(og(spec));
     await page.evaluate(() => document.fonts.ready);
     const lines = await page.evaluate(() => Math.round(document.querySelector('h1').getBoundingClientRect().height / (64 * 1.12)));

@@ -11,11 +11,12 @@ interface Props { medical?: boolean; variant?: 'strip' | 'full' }
 const { medical = false, variant = 'strip' } = Astro.props;
 const points = promisePoints.filter((p) => !p.gated || policy[p.gated]);
 // `body` is optional on a point (06 §4.1 prose); read it without assuming the field exists yet.
-const bodyOf = (p: (typeof points)[number]): string | undefined => (p as { body?: string }).body;
+const bodyOf = (p: (typeof points)[number]): string | undefined =>
+  'body' in p && typeof p.body === 'string' && p.body.trim() ? p.body : undefined;
 ---
 {variant === 'full' ? (
-  <section aria-labelledby="promise-heading" class="rounded-lg bg-mint p-4 md:p-6">
-    <h2 id="promise-heading" class="t-h2">The PetDoorStep Promise</h2>
+  <section aria-labelledby="promise-full-heading" class="rounded-lg bg-mint p-4 md:p-6">
+    <h2 id="promise-full-heading" class="t-h2">The PetDoorStep Promise</h2>
     <ol class="mt-4 grid list-none gap-4 p-0">
       {points.map((p) => (
         <li class="flex items-start gap-3">

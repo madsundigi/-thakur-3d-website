@@ -6,6 +6,7 @@ import tailwindcss from '@tailwindcss/vite';
 import { isLive, routes } from './src/data/routes.ts';
 import { LASTMOD } from './src/data/lastmod.ts';
 import * as pricing from './src/lib/pricing.ts';
+import { site } from './src/data/site.ts';
 import { staleOgImages } from './scripts/make-assets.mjs';
 
 // [FILL:DOMAIN] — planned domain until Sunny buys and confirms it (00-MASTER-PLAN §2 D5).
@@ -27,7 +28,7 @@ const pathOf = (url) => new URL(url).pathname;
 
 // The 04 §4 share images print prices. If pricing.json (or their wording) changed since they were rendered, a
 // WhatsApp preview would show a wrong price: `astro build` stops; dev and preview only warn.
-const staleOg = staleOgImages(pricing);
+const staleOg = staleOgImages(pricing, site);
 if (staleOg.length) {
   const msg = `public/og/: ${staleOg.join(', ')} out of date with src/data/pricing.json — run: node scripts/make-assets.mjs`;
   if (process.argv.includes('build')) throw new Error(msg);
