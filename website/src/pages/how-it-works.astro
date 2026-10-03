@@ -1,0 +1,95 @@
+---
+// /how-it-works/ — blueprint: website-plan/blueprints/how-it-works.md (B10). Blocks HW-0…HW-7 in DOM order.
+// JSON-LD: one @graph = HowTo + BreadcrumbList (04 §2.8/§2.9). The HowTo steps and the HW-2 StepsStrip both read
+// `bookingSteps` (src/data/content.ts = 04 §2.8 verbatim), and the strip's li#step-1…#step-4 are the HowTo step URLs.
+// FAQs render from src/data/faq.json as plain HTML (this page carries no FAQPage markup). Zero client JS.
+import Base from '../layouts/Base.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Faq from '../components/Faq.astro';
+import Hero from '../components/Hero.astro';
+import PromiseBand from '../components/PromiseBand.astro';
+import StepsStrip from '../components/StepsStrip.astro';
+import DayTimeline from '../components/pages/how-it-works/DayTimeline.astro';
+import PrepChecklist from '../components/pages/how-it-works/PrepChecklist.astro';
+import {
+  HIW_CTA_HEADING, HIW_DAY, HIW_FAQ, HIW_HEAD, HIW_PATH, HIW_PREP, HIW_STEPS_HEADING, HIW_SUBHEAD,
+} from '../data/pages/how-it-works';
+import { isLive, routeLabel } from '../data/routes';
+import { prefillFor } from '../data/services';
+import { waHref } from '../data/site';
+import { bookHref } from '../lib/pricing';
+import { schemaGraphLd } from '../lib/schema';
+
+// HW-0: Home › How it works (labels = the 01-SITEMAP page names in routes.ts).
+const crumbs = [
+  { label: routeLabel('/'), path: '/' },
+  { label: routeLabel(HIW_PATH), path: HIW_PATH },
+];
+// Section rhythm (08 §1.4 rule 5, §3.1): paper hero → sand → paper → sand → paper → brand-dark CTA band.
+const section = 'mx-auto max-w-[1200px] px-4 py-12 lg:px-6 lg:py-20';
+---
+<Base
+  title={HIW_HEAD.title}
+  description={HIW_HEAD.description}
+  path={HIW_PATH}
+  jsonLd={[schemaGraphLd({ type: 'howto', crumbs }, Astro.site)]}
+>
+  <Breadcrumb items={crumbs} />
+
+  {/* HW-1 — text-only hero: HW-1 names no photo, eyebrow or chips. The R3 reply line stays (06 §9: near the first CTA
+      on every page). */}
+  <Hero
+    h1={HIW_HEAD.h1}
+    subhead={HIW_SUBHEAD}
+    primary={{ label: 'Book Now', href: bookHref({ src: 'hero_how-it-works' }), source: 'hero_how-it-works' }}
+    trustChips={[]}
+  />
+
+  {/* HW-2 — the 4 booking steps; anchors #step-1…#step-4 = the HowTo step URLs (04 §2.8). */}
+  <div class="bg-sand">
+    <div class={section}>
+      <StepsStrip heading={HIW_STEPS_HEADING} anchors />
+    </div>
+  </div>
+
+  {/* HW-3 — on the day */}
+  <div class={section}>
+    <DayTimeline heading={HIW_DAY.heading} steps={HIW_DAY.steps} />
+  </div>
+
+  {/* HW-4 — what to prepare */}
+  <div class="bg-sand">
+    <div class={section}>
+      <PrepChecklist heading={HIW_PREP.heading} items={HIW_PREP.items} line={HIW_PREP.line} />
+    </div>
+  </div>
+
+  <div class={section}>
+    {/* HW-5 — the 5-icon Promise strip (06 §4.1) */}
+    <PromiseBand />
+
+    {/* HW-6 — 5 Q&As, plain HTML, then the page's link into /faq/ (02 P068: /faq/'s contextual inbound link). */}
+    <div class="mt-12 lg:mt-20">
+      <Faq page={HIW_PATH} heading={HIW_FAQ.heading} />
+      {isLive('/faq/') ? (
+        <p class="m-0 mt-6">{HIW_FAQ.more} <a href="/faq/" class="hit">{HIW_FAQ.moreLink}</a></p>
+      ) : null}
+    </div>
+  </div>
+
+  {/* HW-7 — page-end CTA band: [Book Now] → the booking form, [WhatsApp us] → wa.me with this page's prefill. */}
+  <CtaBand
+    heading={HIW_CTA_HEADING}
+    primary={{ label: 'Book Now', href: bookHref({ src: 'ctaband_how-it-works' }), source: 'ctaband_how-it-works' }}
+    secondary={{ label: 'WhatsApp us', href: waHref(prefillFor(HIW_PATH)), source: 'ctaband_how-it-works' }}
+  />
+</Base>
+
+<style>
+  /* The HW-6 link into /faq/: a 44px touch target (08 §7.3) without moving anything (Breadcrumb's pattern) — an
+     inline-block (a wrapped inline link's containing block would collapse across lines) with an invisible ::before
+     reaching 10px above and 8px below its 26px line box (24px of space above the line, section padding below). */
+  .hit { position: relative; display: inline-block; }
+  .hit::before { content: ''; position: absolute; inset: -10px -4px -8px; }
+</style>

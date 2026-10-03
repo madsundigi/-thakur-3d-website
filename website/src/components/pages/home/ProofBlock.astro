@@ -1,0 +1,39 @@
+---
+// H-2 Social proof (home.md §3 H-2; template SP-2 rules; display rules 06 §4.4; 08 §4.11). The proof line links the
+// Google Business Profile, then 3 ReviewCards with mixed services and mixed localities (pickReviews() unfiltered).
+// Until 3 real Google reviews exist (reviewsReady()), the E6 empty state (06 §9) renders instead of the cards.
+// NO Review / AggregateRating schema, ever (04 §2.0.4) — plain HTML only.
+import ReviewCard from '../../ReviewCard.astro';
+import { pickReviews, PROOF_LINE, reviewsReady, REVIEWS_EMPTY_STATE } from '../../../data/reviews';
+import { site } from '../../../data/site';
+import { HOME_PROOF } from '../../../data/pages/home';
+
+interface Props {
+  /** The block sits on a sand band: review cards switch to paper + hairline border (08 §4.11). */
+  onSand?: boolean;
+}
+const { onSand = false } = Astro.props;
+
+const ready = reviewsReady(3);
+const cards = ready ? pickReviews({ count: 3 }) : [];
+// The ★ is decoration beside its text twin (08 §1.5 stars exception), so screen readers skip the glyph.
+const proofText = PROOF_LINE.replace(/^★\s*/, '');
+// E6 verbatim; its "[FILL:GBP_LINK]" URL renders as the link to the Google Business Profile (06 §9 E6).
+const [emptyBefore, emptyAfter = ''] = REVIEWS_EMPTY_STATE.split(site.gbpLink);
+---
+<section aria-labelledby="proof-heading">
+  <h2 id="proof-heading" class="t-h2 m-0">{HOME_PROOF.heading}</h2>
+  {/* inline-block + 8px padding: the text wraps naturally (★ stays inline) and the tap area clears 44px (08 §7.3). */}
+  <p class="m-0 mt-2">
+    <a href={site.gbpLink} target="_blank" rel="noopener" class="prose-link inline-block py-2 font-semibold"><span aria-hidden="true">★ </span>{proofText}</a>
+  </p>
+  {ready ? (
+    <ul class="mt-4 grid list-none gap-4 p-0 md:grid-cols-2 lg:grid-cols-3 lg:gap-6">
+      {cards.map((r) => <li><ReviewCard review={r} onSand={onSand} /></li>)}
+    </ul>
+  ) : (
+    <p class="measure m-0 mt-2 text-slate">
+      {emptyBefore}<a href={site.gbpLink} target="_blank" rel="noopener" class="prose-link">{site.gbpLink}</a>{emptyAfter}
+    </p>
+  )}
+</section>

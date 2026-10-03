@@ -1,0 +1,22 @@
+---
+// One /pricing/ block as a full-bleed band: <section> named by its H2, content in the 1200px container (08 §3.1:
+// 16px gutters, 24px from lg; section padding 48px, 80px from lg). `band` sets the surface. 08 §1.4 rule 5: two
+// adjacent sections never share a background, so the page alternates paper and sand (mint for Groom Club) — tables and
+// cards inside a sand or mint band take a hairline border instead of a shadow (08 §3.3: their `onTint` prop).
+interface Props {
+  /** id of the H2 — the section's accessible name (aria-labelledby). */
+  id: string;
+  heading: string;
+  band?: 'paper' | 'sand' | 'mint';
+  class?: string;
+}
+
+const { id, heading, band = 'paper', class: cls = '' } = Astro.props;
+const surface = { paper: 'bg-paper', sand: 'bg-sand', mint: 'bg-mint' }[band];
+---
+<section aria-labelledby={id} class:list={[surface, 'py-12 lg:py-20', cls]}>
+  <div class="mx-auto max-w-[1200px] px-4 lg:px-6">
+    <h2 id={id} class="t-h2 m-0">{heading}</h2>
+    <slot />
+  </div>
+</section>

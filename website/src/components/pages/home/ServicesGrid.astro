@@ -1,0 +1,21 @@
+---
+// H-3 Services grid (home.md §3 H-3; 08 §4.7). All 7 money pages in 01-SITEMAP order (= the blueprint's order), one
+// ServiceCard each, with the MONEY_PAGES card data (src/data/services.ts): blurb ≤ 70 chars, 08 §5.2 photo + alt,
+// and the home price chip (cardPriceChip(page, 'home'), e.g. Tick & Flea "… · … add-on"). A card links its page only
+// once that page is live; until then ServiceCard renders it unlinked as "Coming soon" (02 P074).
+// Grid: base 1-col · md 2-col · lg 3-col with the seventh card centred (3+3+1, 08 §4.7).
+import ServiceCard from '../../ServiceCard.astro';
+import { MONEY_PAGES, MONEY_PATHS } from '../../../data/services';
+import { HOME_SERVICES } from '../../../data/pages/home';
+---
+<section aria-labelledby="services-heading">
+  <h2 id="services-heading" class="t-h2 m-0">{HOME_SERVICES.heading}</h2>
+  <p class="measure m-0 mt-3 text-slate">{HOME_SERVICES.intro}</p>
+  <ul class="mt-6 grid list-none gap-4 p-0 md:grid-cols-2 lg:grid-cols-3 lg:gap-6">
+    {MONEY_PATHS.map((path, i) => (
+      <li class:list={['min-w-0', { 'lg:col-start-2': i === MONEY_PATHS.length - 1 && MONEY_PATHS.length % 3 === 1 }]}>
+        <ServiceCard path={path} blurb={MONEY_PAGES[path].card.blurb} photo={MONEY_PAGES[path].card.photo} onPage="home" />
+      </li>
+    ))}
+  </ul>
+</section>

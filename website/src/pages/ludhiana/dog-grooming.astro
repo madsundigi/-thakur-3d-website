@@ -1,0 +1,62 @@
+---
+// /ludhiana/dog-grooming/ — the flagship money page. Blueprint: website-plan/blueprints/dog-grooming.md (copy values,
+// verbatim) on the template _TEMPLATE-service-page.md (blocks SP-0…SP-13, owned by src/layouts/ServicePage.astro).
+// Every ₹ figure comes from src/lib/pricing.ts (07 §4); chips, CTA, areas, OG image and the WhatsApp prefill come from
+// MONEY_PAGES['/ludhiana/dog-grooming/'] (src/data/services.ts); the 8 FAQs (dog-grooming-1…8) from faq.json.
+import ServicePage, { type ServicePageConfig } from '../../layouts/ServicePage.astro';
+import BreedTable from '../../components/pages/dog-grooming/BreedTable.astro';
+import PackageTable from '../../components/pages/dog-grooming/PackageTable.astro';
+import PriceExtras from '../../components/pages/dog-grooming/PriceExtras.astro';
+import { r8 } from '../../data/content';
+import { DOG_GROOM_IDS, fromPrice, priceRange } from '../../lib/pricing';
+
+const from = fromPrice(DOG_GROOM_IDS);
+
+const config: ServicePageConfig = {
+  path: '/ludhiana/dog-grooming/',
+  // §1 Head, verbatim.
+  title: `Dog Grooming at Home in Ludhiana – From ${from} | PetDoorStep`,
+  description:
+    `Professional dog grooming at your home in Ludhiana. Bath & Brush ${priceRange('bath-brush')}, ` +
+    `Full Groom ${priceRange('full-groom')}. Verified groomers, sanitised kit. Book on WhatsApp.`,
+  // SP-1: the template worked example, eyebrow per §3 (06 §2.3).
+  hero: {
+    eyebrow: 'Doorstep dog grooming',
+    h1: 'Dog Grooming at Home in Ludhiana',
+    subhead:
+      `One trained groomer, your verandah or balcony, 60–90 calm minutes. Bath & Brush from ${fromPrice('bath-brush')} · ` +
+      `Full Groom from ${fromPrice('full-groom')} — exact price fixed before we arrive.`,
+    primaryLabel: 'Book on WhatsApp',
+    secondary: 'prices',
+    photo: {
+      name: 'golden-retriever-bath-home-ludhiana.jpg',
+      alt: 'Golden Retriever being bathed at home in Sarabha Nagar, Ludhiana',
+    },
+  },
+  sp3: { heading: "What's included in every dog grooming package" },
+  sp4: { heading: 'Dog grooming price in Ludhiana — fixed, by size' },
+  sp5: { kind: 'pairs' },
+  sp7: { team: 'groomers' },
+  sp9: {
+    intro: "Searching 'dog groomer near me'? We groom at homes across Ludhiana — these areas book dog grooming most:",
+    prefix: 'Dog grooming at home in',
+  },
+  sp10: { heading: 'Dog grooming at home — your questions' },
+  sp11: {
+    posts: [
+      { label: 'What Is Included in a Full Dog Grooming Package?', href: '/blog/full-dog-grooming-package-included/' },
+      { label: 'Pet Grooming at Home vs Salon in India', href: '/blog/home-grooming-vs-salon-india/' },
+    ],
+  },
+  // SP-12: the template worked example.
+  sp12: {
+    heading: r8('Labrador'),
+    support: `Fixed prices from ${from} · no advance payment · photo update after the groom.`,
+  },
+};
+---
+<ServicePage config={config}>
+  <PackageTable slot="sp3" />
+  <PriceExtras slot="sp4-lines" />
+  <BreedTable slot="sp4-extra" />
+</ServicePage>

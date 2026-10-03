@@ -1,0 +1,33 @@
+---
+// A contact value as a link on a legal page (PP-2, PP-10, PP-11, PP-14 · TM-10, TM-14). Values come from
+// src/data/site.ts (05 §4 NAP values) or, for the Grievance Officer, src/data/legal.ts IDENTITY. WhatsApp and tel:
+// anchors carry the page's 09 §2d source — `privacy-policy_page` / `terms_page` — so Base's delegated tracker sends
+// whatsapp_click / call_click with it (09 §3.2). WhatsApp opens the page's own prefill (services.ts PAGE_PREFILL,
+// 02 P158) in a new tab, like every wa.me link on the site. An unfilled [FILL:*] value prints as the token.
+import { site, waHref } from '../../../data/site';
+import { prefillFor } from '../../../data/services';
+import { whatsappDisplay } from '../../../lib/format';
+import { telFor } from './legal-page';
+
+interface Props {
+  kind: 'whatsapp' | 'email' | 'phone';
+  page: '/privacy-policy/' | '/terms/';
+  /** email / phone: another value than the site's (e.g. IDENTITY.GRIEVANCE_EMAIL). */
+  value?: string;
+  /** A link on its own line (a list or card row) gets the 44px tap height (08 §7.3); in a sentence it stays inline. */
+  block?: boolean;
+}
+
+const { kind, page, value, block = false } = Astro.props;
+const source = `${page.slice(1, -1)}_page`; // 09 §2d `<slug>_page`
+const cls = block ? 'prose-link inline-flex min-h-11 items-center' : 'prose-link';
+const email = value ?? site.email;
+const phone = value ?? site.phone;
+---
+{kind === 'whatsapp' ? (
+  <a href={waHref(prefillFor(page))} data-source={source} target="_blank" rel="noopener" class={cls}>{whatsappDisplay(site.whatsapp)}</a>
+) : kind === 'phone' ? (
+  <a href={telFor(phone)} data-source={source} class={cls}>{phone}</a>
+) : (
+  <a href={`mailto:${email}`} class={cls}>{email}</a>
+)}

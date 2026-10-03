@@ -1,0 +1,21 @@
+---
+// A storage key, GA4 event name or event parameter as an inline code chip (privacy-policy.md PP-6 table, PP-7 list).
+// Set in the body face at code size — 08 §2.1 allows no third family — on a mint pill, brand-deep text (AA on mint,
+// 08 §1.5). A <wbr> after every underscore gives the browser a break opportunity there, so a long key in the narrow
+// Name column (≥ md) wraps after an underscore instead of mid-word (the last segment moves to the next line);
+// overflow-wrap: anywhere stays as the fallback for a segment that is still too long. <wbr> adds no text, so the built page still names every key verbatim
+// (scripts/check-legal.mjs --dist reads the main text).
+interface Props {
+  value: string;
+}
+const { value } = Astro.props;
+const parts = value.split('_');
+---
+<code class="legal-key">{parts.map((part, i) => <>{i ? <>_<wbr /></> : null}{part}</>)}</code>
+
+<style>
+  .legal-key {
+    font-family: inherit; font-size: 0.9em; padding: 0 4px; border-radius: var(--radius-sm);
+    background: var(--color-mint); color: var(--color-brand-deep); overflow-wrap: anywhere;
+  }
+</style>

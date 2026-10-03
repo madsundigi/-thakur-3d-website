@@ -1,0 +1,22 @@
+---
+// H-7 Before/after strip (home.md §3 H-7; rules 06 §4.3; 08 §4.12). Three real, consented pairs across breeds —
+// homeGalleryPairs() (src/data/pages/home.ts) returns them only once ≥ 3 exist in src/data/reviews.ts, and the page
+// omits the block until then (never stock, never placeholders — 08 §5.1). Each caption links the pair's service page
+// and its locality page once they are live (BeforeAfter.astro). Wording: template SP-5 H2 + the 06 §4.3 footer note.
+import BeforeAfter from '../../BeforeAfter.astro';
+import type { BeforeAfterPair } from '../../../data/reviews';
+import { MONEY_PAGES, MONEY_PATHS } from '../../../data/services';
+import { HOME_GALLERY } from '../../../data/pages/home';
+
+interface Props { pairs: readonly BeforeAfterPair[] }
+const { pairs } = Astro.props;
+/** The money page that sells the pair's service (e.g. full-groom → /ludhiana/dog-grooming/). */
+const pageFor = (serviceId: string): string | undefined => MONEY_PATHS.find((p) => MONEY_PAGES[p].serviceIds.includes(serviceId));
+---
+<section aria-labelledby="gallery-heading">
+  <h2 id="gallery-heading" class="t-h2 m-0">{HOME_GALLERY.heading}</h2>
+  <ul class="mt-6 grid list-none gap-6 p-0 md:grid-cols-2 lg:grid-cols-3">
+    {pairs.map((p) => <li class="min-w-0"><BeforeAfter pair={p} serviceHref={pageFor(p.service)} /></li>)}
+  </ul>
+  <p class="m-0 mt-4 text-sm text-slate">{HOME_GALLERY.note}</p>
+</section>

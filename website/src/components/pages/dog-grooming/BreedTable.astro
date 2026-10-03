@@ -1,0 +1,22 @@
+---
+// /ludhiana/dog-grooming/ SP-4 addition 2 — H3 "Grooming by breed" (blueprints/dog-grooming.md §3 SP-4, verbatim:
+// 7 rows; "never shave" kept for the double coats — §5 ship check). Carries the breed long-tails (§2: shih tzu /
+// golden retriever / labrador grooming ludhiana). Goes in ServicePage's `sp4-extra` slot, so it sits on the sand
+// SP-4 band: onTint. A wide text table (08 §4.8 640px minimum): it scrolls sideways below md, sticky Breed column.
+import InfoTable from '../../InfoTable.astro';
+
+const columns = [{ label: 'Size' }, { label: 'Coat' }, { label: 'What we recommend' }, { label: 'Typical rhythm' }];
+const rows = [
+  { label: 'Shih Tzu', cells: ['Small', 'Long, mats easily', 'Full Groom — a short "puppy cut" keeps it cool and tangle-free', 'every 4–6 weeks'] },
+  { label: 'Pomeranian', cells: ['Small', 'Thick double coat', 'Bath & Brush; de-shed in spring — never shave', 'every 4–6 weeks'] },
+  { label: 'Beagle', cells: ['Medium', 'Short, sheds', 'Bath & Brush; ear clean every visit (floppy ears trap moisture)', 'every 6–8 weeks'] },
+  { label: 'Indie', cells: ['Medium (most)', 'Short', 'Bath & Brush with a full tick check', 'every 6–8 weeks'] },
+  { label: 'Labrador', cells: ['Large', 'Double, heavy shedder', 'Bath & Brush; Premium Spa de-shed during the Mar–May coat blow', 'every 6–8 weeks'] },
+  { label: 'Golden Retriever', cells: ['Large', 'Long double coat', 'Full Groom — tidy feathering, never shave', 'every 4–6 weeks'] },
+  { label: 'German Shepherd', cells: ['Large', 'Double, heavy shedder', 'Premium Spa de-shed at coat-blow time — never shave', 'every 6–8 weeks'] },
+];
+---
+<div class="mt-12">
+  <h3 id="grooming-by-breed" class="t-h3 m-0">Grooming by breed</h3>
+  <InfoTable caption="Grooming by breed" rowHeader="Breed" columns={columns} rows={rows} wide onTint class="mt-4" />
+</div>

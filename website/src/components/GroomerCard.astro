@@ -9,7 +9,8 @@
 import Icon from './icons/Icon.astro';
 import Photo from './Photo.astro';
 import { isLive } from '../data/routes';
-import { personAlt, type Person } from '../data/people';
+import { personAlt, specialityFor, type Person } from '../data/people';
+import type { MoneyPage } from '../lib/pricing';
 
 interface Props {
   person: Person;
@@ -20,11 +21,14 @@ interface Props {
   /** Page-specific speciality line (item ④), replacing people.ts — e.g. a cat speciality on /ludhiana/cat-grooming/
    *  SP-7 ("Persian cat de-matting"). Must be true of this person (06 §4.2, honesty law in people.ts). */
   speciality?: string;
+  /** The money page the card is rendered on: item ④ then reads specialityFor(person, page) — the person's
+   *  people.ts `specialityOn[page]` line when one is set, else their general speciality. `speciality` still wins. */
+  page?: MoneyPage;
   class?: string;
 }
 
-const { person: p, variant = 'full', headingLevel = 3, class: cls = '' } = Astro.props;
-const speciality = Astro.props.speciality ?? p.speciality;
+const { person: p, variant = 'full', headingLevel = 3, page, class: cls = '' } = Astro.props;
+const speciality = Astro.props.speciality ?? specialityFor(p, page);
 const H = `h${headingLevel}` as 'h2' | 'h3' | 'h4';
 const full = variant === 'full';
 const isVet = p.role === 'vet';

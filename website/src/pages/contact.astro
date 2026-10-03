@@ -1,0 +1,154 @@
+---
+// /contact/ — blueprint: website-plan/blueprints/contact.md (B09). Blocks CO-0…CO-7 in DOM order. Zero-JS page, no
+// form. NAP = <Nap /> (05-LOCAL-SEO §4 via site.ts; byte-identical to the footer, never retyped); no base address
+// (service-area business); no call-back promise (00 §11 D3); no map at launch (02 P098 deferred, 00 §11 E8).
+// Decisions: website-plan/decisions/w1-about-contact.md.
+import Base from '../layouts/Base.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import Button from '../components/Button.astro';
+import Faq from '../components/Faq.astro';
+import Nap from '../components/Nap.astro';
+import Icon from '../components/icons/Icon.astro';
+import ContactCard from '../components/pages/contact/ContactCard.astro';
+import HoursTable from '../components/pages/contact/HoursTable.astro';
+import { isLive, routeLabel, routes } from '../data/routes';
+import { prefillFor } from '../data/services';
+import { instagramHref, site, telHref, waHref } from '../data/site';
+import {
+  AREAS, CARDS, DOORSTEP_LINE, FAQ_HEADING, HOURS, QUICK_LINKS, QUICK_LINKS_LABEL, REPLY_LINE, WEBSITE_LABEL,
+} from '../data/pages/contact';
+import { whatsappDisplay } from '../lib/format';
+import { bookHref } from '../lib/pricing';
+import { schemaGraphLd } from '../lib/schema';
+
+const path = '/contact/';
+const source = 'contact_page'; // 09 §2d `<slug>_page`: every in-page anchor on this page
+const crumbs = [{ label: 'Home', path: '/' }, { label: routeLabel(path), path }];
+
+// CO-5: the 10 00 §3.3 areas in routes.ts order, each a link only once its area page is live (P074).
+const areaRoutes = routes.filter((r) => r.group === 'area');
+// CO-6: only live targets; the booking entry carries its source (07 §2: every route into the widget does).
+const quickLinks = QUICK_LINKS.filter((l) => isLive(l.href)).map((l) => ({
+  ...l,
+  href: l.href === '/book/' ? bookHref({ src: source }) : l.href,
+}));
+const website = `https://${site.domain}/`; // 05 §4 "Website" field
+---
+<Base
+  title="Pet Grooming Contact Number in Ludhiana | PetDoorStep"
+  description="Pet grooming contact number in Ludhiana: a real person replies on WhatsApp within 10 minutes, 9:00–19:00 daily. Fixed prices. Book on WhatsApp."
+  path={path}
+  jsonLd={[schemaGraphLd({ type: 'contact', crumbs }, Astro.site)]}
+>
+  {/* CO-0 */}
+  <Breadcrumb items={crumbs} />
+
+  <div class="mx-auto max-w-[1200px] px-4 pb-12 lg:px-6 lg:pb-20">
+    {/* CO-1 — page header: H1 + the confirmed reply line (no hero: CO-1 has no CTA or photo) */}
+    <div class="pt-2 md:pt-6">
+      <h1 class="t-h1 m-0">Pet Grooming Contact Number in Ludhiana</h1>
+      <p class="reply-line measure m-0 mt-3 text-slate">{REPLY_LINE}</p>
+    </div>
+
+    {/* CO-2 + CO-3 */}
+    <section aria-labelledby="contact-cards-heading" class="mt-8 md:mt-12">
+      <h2 id="contact-cards-heading" class="t-h2 m-0">{CARDS.heading}</h2>
+      <ul class="m-0 mt-4 grid list-none gap-4 p-0 md:mt-6 md:grid-cols-2 lg:gap-6">
+        <li>
+          <ContactCard title={CARDS.whatsapp} icon="whatsapp">
+            <Button href={waHref(prefillFor(path))} variant="whatsapp" source={source} full>
+              <span class="sr-only">WhatsApp</span> {whatsappDisplay(site.whatsapp)}
+            </Button>
+          </ContactCard>
+        </li>
+        <li>
+          <ContactCard title={CARDS.call} icon="phone">
+            <Button href={telHref()} variant="secondary" source={source} full>
+              <span class="sr-only">Call</span> {site.phone}
+            </Button>
+          </ContactCard>
+        </li>
+        <li>
+          <ContactCard title={CARDS.email} icon="mail" note={CARDS.emailNote}>
+            <Button href={`mailto:${site.email}`} variant="secondary" full>
+              <span class="sr-only">Email</span> {site.email}
+            </Button>
+          </ContactCard>
+        </li>
+        <li>
+          <ContactCard title={CARDS.instagram} icon="instagram">
+            <Button href={instagramHref()} variant="secondary" source={source} full>
+              <span class="sr-only">Instagram</span> @{site.instagram}
+            </Button>
+          </ContactCard>
+        </li>
+      </ul>
+
+      {/* CO-3 — the NAP block (05 §4), then the two CO-3 items it does not print. Never the base address. */}
+      <div class="mt-6 rounded-lg bg-mint p-4 text-ink md:p-6">
+        <Nap source={source} tone="light" class="leading-relaxed" />
+        <p class="m-0 mt-3">{DOORSTEP_LINE}</p>
+        <p class="m-0 mt-1">{WEBSITE_LABEL}: {website}</p>
+      </div>
+    </section>
+  </div>
+
+  {/* CO-4 */}
+  <section aria-labelledby="hours-heading" class="bg-sand">
+    <div class="mx-auto max-w-[1200px] px-4 py-12 lg:px-6 lg:py-20">
+      <h2 id="hours-heading" class="t-h2 m-0">{HOURS.heading}</h2>
+      <HoursTable
+        caption={HOURS.caption}
+        rowHeader={HOURS.rowHeader}
+        column={HOURS.column}
+        rows={HOURS.rows}
+        class="mt-4 max-w-[760px]"
+      />
+    </div>
+  </section>
+
+  {/* CO-5 + CO-6 */}
+  <section aria-labelledby="areas-heading">
+    <div class="mx-auto max-w-[1200px] px-4 py-12 lg:px-6 lg:py-20">
+      <h2 id="areas-heading" class="t-h2 m-0">{AREAS.heading}</h2>
+      <p class="t-body-lg m-0 mt-3">{AREAS.line}</p>
+      <ul class="m-0 mt-4 grid list-none grid-cols-2 gap-x-4 gap-y-2 p-0 md:grid-cols-3 lg:grid-cols-5">
+        {areaRoutes.map((r) => (
+          <li class="flex min-h-11 items-center gap-2">
+            <span class="flex-none text-brand"><Icon name="map-pin" size={18} /></span>
+            {isLive(r.path) ? <a href={r.path} class="prose-link">{r.label}</a> : <span>{r.label}</span>}
+          </li>
+        ))}
+      </ul>
+
+      {quickLinks.length ? (
+        <div class="mt-10 border-t border-line pt-6" role="group" aria-label={QUICK_LINKS_LABEL}>
+          <ul class="m-0 flex list-none flex-col gap-1 p-0 md:flex-row md:flex-wrap md:gap-x-8">
+            {quickLinks.map((l) => (
+              <li>
+                <a href={l.href} class="prose-link inline-flex min-h-11 items-center gap-1 font-semibold">
+                  {l.text}<Icon name="arrow-right" size={16} class="flex-none" />
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
+    </div>
+  </section>
+
+  {/* CO-7 — 3 Q&As from faq.json (contact.md §3), plain HTML: no FAQPage on this page (04 §2.9) */}
+  <div class="bg-sand">
+    <div class="mx-auto max-w-[1200px] px-4 py-12 lg:px-6 lg:py-20">
+      <div class="max-w-[760px]">
+        <Faq page={path} heading={FAQ_HEADING} />
+      </div>
+    </div>
+  </div>
+</Base>
+
+<style>
+  /* CO-1 reply line: body size on phones, body-lg from md (08 §2.2, as the hero subhead). */
+  .reply-line { font-size: 1rem; line-height: 1.65; }
+  @media (min-width: 768px) { .reply-line { font-size: 1.125rem; line-height: 1.6; } }
+</style>

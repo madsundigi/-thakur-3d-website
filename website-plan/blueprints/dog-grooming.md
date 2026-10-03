@@ -6,7 +6,7 @@
 
 | URL | Wave | Template | Schema `@graph` | Status |
 |---|---|---|---|---|
-| `/ludhiana/dog-grooming/` | 1 (flagship) | T1 — all 14 blocks | Service + FAQPage + BreadcrumbList | blueprinted |
+| `/ludhiana/dog-grooming/` | 1 (flagship) | T1 — all 14 blocks | Service + FAQPage + BreadcrumbList | built (w1-layout, 2026-10-03) — pending the integrator's route flip |
 
 ## 1 · Head
 
@@ -73,3 +73,23 @@
 - [ ] À-la-carte line shows ₹299 and ₹399 exactly as `pricing.json`
 - [ ] Exactly 2 Hinglish uses (FAQ #8 + nail-trim alt)
 - [ ] Meta is the 153-char version above (03's 159-char draft exceeds P019's 158 ceiling)
+
+## 6 · As built (stage w1-layout, 2026-10-03 — `src/pages/ludhiana/dog-grooming.astro` on `src/layouts/ServicePage.astro`)
+
+Where this blueprint and the template are silent, this is what was built; decisions in `decisions/w1-layout.md` §2.
+
+- **Head:** title 58 / meta 153 / H1 verbatim (§1); canonical + og:url the self URL; og:image `/og/dog-grooming.jpg`; JSON-LD one `@graph` = Service (3 Offers, one per package, min–max by size) + FAQPage (dog-grooming-1…8) + BreadcrumbList (3 items). Word count 1,320.
+- **SP-1:** eyebrow *Doorstep dog grooming*; [Book on WhatsApp] → `/book/?src=hero_dog-grooming` (amber), [See exact prices] → `#prices` (hidden below `md`); chips `from ₹599` + the standard 4; R3 under the CTAs. Fold at 360×640: photo top + 160 = 565 against the sticky bar at 583 (17.8 px spare), price chip and first trust chip whole (decisions §1).
+- **SP-2:** proof line → `[FILL:GBP_LINK]`; the E6 empty state until 3 real reviews exist (`reviews.ts`); the E4 CTA row = `Book Dog Grooming — from ₹599` → `/book/?src=service_dog-grooming` with R2 beside it.
+- **SP-3:** the §3 lead-in (bold first sentence) sits beside the sealed-kit photo from `md` and above the grid; below `md` the photo follows the haircut line so the grid is not pushed a screen down. Grid = `PACKAGE_TABLES['dog-grooming']` verbatim (Premium Spa column "Premium Spa (dog spa at home)", "Most booked" on Full Groom, no header note — `/pricing/`'s "full body dog grooming" note is that page's, W1L-13), duration row, footnotes (a) + the matting line, then the haircut line.
+- **SP-4:** matrix + R1/R2 → the à-la-carte line with the nail-trim thumbnail (112 px, 160 px from `md`) → mid-page CTA `Book Dog Grooming — from ₹599` → "Compare every service on the full price list" → H3 "Grooming by breed" (7 rows, `wide` table: scrolls sideways below `md`, sticky Breed column). "Tick & Flea treatment" links `/ludhiana/tick-flea-treatment/` once live; plain bold text until then.
+- **SP-5:** omitted (no consented pairs yet); renders itself from `reviews.ts` at ≥ 2 pairs, with one anchor chip per breed once ≥ 2 breeds have a pair.
+- **SP-6:** the 4 steps + R4 + "See the full process" → `/how-it-works/`.
+- **SP-7:** heading + line only — no cards until a groomer is hired (people.ts honesty law); "How we hire" → `/about/`.
+- **SP-8:** 4 points (the on-time point waits for the §3.4 policy gate).
+- **SP-9:** the §2 intro, 3 AreaCards (text until the area pages ship), then "…and Civil Lines, Dugri, Pakhowal Road, South City, Ferozepur Road, Haibowal Kalan, Kitchlu Nagar — all of Ludhiana served." (7 areas: every §3.3 area not carded).
+- **SP-10:** the 8 FAQs; answer links render only while their target is live (FAQ #7 → `/ludhiana/vet-at-home/`; FAQ #3's `/safety-hygiene/` stays text until Wave 2).
+- **SP-11:** Puppy Grooming · Tick & Flea Treatment · Cat Grooming at Home cards (not-yet-live pages show "Coming soon", no link); the two blog links appear once those posts are live; "Last updated" line once `lastmod.ts` has the path.
+- **SP-12:** H2 = R8 with {breed} Labrador and no area ("…Slots this week across Ludhiana."), the §3 support line, [Book on WhatsApp] (wa.me, page prefill) + [Call [FILL:PHONE]], source `ctaband_dog-grooming`, R3.
+- **Ship checks (§5):** breed table 7 rows with "never shave" ×3 ✓ · à-la-carte ₹299 / ₹399 from `pricing.json` ✓ · exactly 2 Hinglish uses (FAQ #8 + the nail-trim alt) ✓ · meta = the 153-char line ✓. Gates: `check:pages` passes every rule except P161 on `service_dog-grooming` (a `sources.ts` gap — `requests/w1-layout.md` A-2); `check:budgets`, `check:prices`, `test:site` (fold, axe, CLS 0, tracking) pass.
+

@@ -1,0 +1,24 @@
+---
+// PR-9 offers strip (blueprints/pricing.md; 06 §7.1–7.2): the FIRSTGROOM and referral one-liners, each with its full
+// terms inline — /offers/ is Wave 2, and 06 §7.4 wants every offer's full terms wherever it is advertised. Wording and
+// amounts are the shared constants in src/data/content.ts (amounts from offers.ts / pricing.json), the same terms the
+// /offers/ OfferCatalog carries. The link to /offers/ renders only once that page is live (routes.ts, 02 P074).
+// The section heading belongs to the page.
+import { FIRSTGROOM_LINE, FIRSTGROOM_TERMS, REFERRAL_LINE, REFERRAL_TERMS } from '../../../data/content';
+import { isLive } from '../../../data/routes';
+import { OFFERS_LINK } from '../../../data/pages/pricing';
+
+const offers = [
+  { line: FIRSTGROOM_LINE, terms: FIRSTGROOM_TERMS },
+  { line: REFERRAL_LINE, terms: REFERRAL_TERMS },
+];
+---
+<ul class="m-0 mt-6 grid list-none gap-4 p-0 md:grid-cols-2 lg:gap-6">
+  {offers.map((o) => (
+    <li class="min-w-0 rounded-lg bg-sand p-4 lg:p-6">
+      <p class="m-0 font-semibold text-ink">{o.line}</p>
+      <p class="m-0 mt-2 text-sm text-slate">{o.terms}</p>
+    </li>
+  ))}
+</ul>
+{isLive('/offers/') ? <p class="m-0 mt-4"><a href="/offers/" class="prose-link">{OFFERS_LINK}</a></p> : null}

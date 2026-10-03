@@ -1,0 +1,19 @@
+---
+// A standalone internal text link on the home page ("See the full process", the price-list link, "How we hire").
+// Rendered only while its target route is live (02 P074, src/data/routes.ts); nothing renders before that.
+// 44px hit area (08 §7.3), brand underlined link (08 §1.4 rule 7), decorative arrow (08 §6.1).
+import Icon from '../../icons/Icon.astro';
+import { isLive } from '../../../data/routes';
+
+interface Props {
+  /** A route path from routes.ts, e.g. '/pricing/'. */
+  href: string;
+  class?: string;
+}
+const { href, class: cls = '' } = Astro.props;
+---
+{isLive(href) ? (
+  <p class:list={['m-0', cls]}>
+    <a href={href} class="prose-link inline-flex min-h-11 items-center gap-1 font-semibold"><slot /><Icon name="arrow-right" size={20} /></a>
+  </p>
+) : null}

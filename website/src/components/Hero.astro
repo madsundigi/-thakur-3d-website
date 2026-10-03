@@ -5,10 +5,12 @@
 // ≥ md: 7fr/5fr grid. The photo fills the right column; the R3 line is placed directly under the CTAs, then the
 // notice, then the chips (CSS grid areas). Only non-focusable items move, so the tab order still follows the DOM.
 //
-// FOLD LAW (02 P150, launch blocker; decision E3, website-plan/decisions/f2-components.md): at 360×640 the H1,
-// subhead, primary CTA, ≥ 1 chip, the notice and the top ≥ 160px of the photo sit above the sticky bar (top 584).
-// So below md: the eyebrow and every secondary CTA are hidden (the sticky bar already carries Call + WhatsApp)
-// and the subhead is set in body size; from md up the full 08 §4.6 anatomy shows.
+// FOLD LAW (02 P150, launch blocker; decision E3, website-plan/decisions/f2-components.md + w1-layout.md): at 360×640
+// the H1, subhead, primary CTA, the price chip AND the first trust chip, the notice and the top ≥ 160px of the photo
+// sit above the sticky bar (its visible top is y = 583). So below md: the eyebrow and every secondary CTA are hidden
+// (the sticky bar already carries Call + WhatsApp), the subhead is set in body size (and cut to `subheadShort` when a
+// page passes one), the notice is compact, the chips are dense and the chip row bleeds into the right gutter so its
+// 16px edge fade starts after the second chip (O-1); from md up the full 08 §4.6 anatomy shows.
 //
 // The photo is the LCP: eager + fetchpriority high here. Its <head> preload (04 §5.2.2) is a second call the PAGE
 // makes, as a direct child of <Base>, with the same name:
@@ -39,6 +41,13 @@ interface Props {
   eyebrow?: string;
   h1: string;
   subhead: string;
+  /** Phone version of the subhead (fold law): must be a prefix of `subhead`, e.g. its first sentence. Below md only
+   *  this part shows; the rest stays in the DOM, hidden by CSS (02 P110 parity, like the hidden eyebrow), and shows
+   *  from md up. Use it only when the dropped words repeat facts the chips already carry (vet-at-home). */
+  subheadShort?: string;
+  /** A breadcrumb sits directly above the hero (money and area pages): the base top padding drops 16 → 8px, the
+   *  breadcrumb's own 8px bottom padding completing the gap (fold law room). From md up nothing changes. */
+  crumbAbove?: boolean;
   /** Optional Hinglish support line (00 §3.1: site.taglineHinglish), shown under the subhead. */
   hinglish?: string;
   primary: Cta;
@@ -60,10 +69,15 @@ interface Props {
 }
 
 const {
-  eyebrow, h1, subhead, hinglish, primary, secondary, priceChip,
+  eyebrow, h1, subhead, subheadShort, crumbAbove = false, hinglish, primary, secondary, priceChip,
   trustChips = TRUST_CHIPS, reply = R3, notice, compact = false,
 } = Astro.props;
 const photo = compact ? undefined : Astro.props.photo;
+// The phone subhead is a cut of the full one, never different words (02 P110: one DOM for both).
+if (subheadShort !== undefined && (!subheadShort.trim() || !subhead.startsWith(subheadShort))) {
+  throw new Error(`Hero: subheadShort must be a non-empty prefix of subhead — got "${subheadShort}"`);
+}
+const subheadRest = subheadShort !== undefined ? subhead.slice(subheadShort.length) : '';
 
 // WhatsApp green is for wa.me actions only (08 §1.4 rule 2). A 'whatsapp' variant on any other link (e.g. the
 // "Book on WhatsApp" → /book/ hero CTA) falls back to the slot's default: amber primary or outline secondary.
@@ -74,15 +88,19 @@ const variantOf = (cta: Cta, fallback: Variant): Variant => {
 };
 const hasChips = !!priceChip || trustChips.length > 0;
 // Hero padding 64 → 96 at lg (08 §3.1). The base top is 16px, not 64: every px above the photo counts against the
-// 360×640 fold law (02 P150, a launch blocker). Compact (/pricing/ PR-1): roughly half of that from md up.
-const pad = compact ? 'pb-8 pt-4 md:pb-10 md:pt-10 lg:py-12' : 'pb-16 pt-4 md:pt-16 lg:py-24';
+// 360×640 fold law (02 P150, a launch blocker); 8px under a breadcrumb (`crumbAbove`). Compact (/pricing/ PR-1):
+// roughly half of that from md up.
+const top = crumbAbove ? 'pt-2' : 'pt-4';
+const pad = compact ? `pb-8 ${top} md:pb-10 md:pt-10 lg:py-12` : `pb-16 ${top} md:pt-16 lg:py-24`;
 ---
 <section aria-labelledby="hero-heading" class="hero" data-hero>
   <div class:list={['hero-grid mx-auto max-w-[1200px] px-4 lg:px-6', pad, { 'has-photo': photo }]}>
     <div class="hero-copy min-w-0">
       {eyebrow ? <p class="t-micro m-0 text-brand max-md:hidden">{eyebrow}</p> : null}
       <h1 id="hero-heading" class:list={['t-display m-0', { 'md:mt-2': eyebrow }]} data-hero-h1>{h1}</h1>
-      <p class="hero-subhead measure m-0 mt-3 text-slate" data-hero-subhead>{subhead}</p>
+      <p class="hero-subhead measure m-0 mt-3 text-slate" data-hero-subhead>
+        {subheadShort !== undefined ? <>{subheadShort}<span class="max-md:hidden">{subheadRest}</span></> : subhead}
+      </p>
       {hinglish ? <p class="m-0 mt-2 text-sm font-medium text-brand-deep">{hinglish}</p> : null}
       {/* Base gaps are 12px (subhead → CTA, chips → photo) rather than 16: 8px of fold room (E3, decisions log). */}
       <div class="mt-3 flex flex-col gap-2 md:mt-5 md:flex-row md:flex-wrap md:gap-3">
@@ -96,20 +114,24 @@ const pad = compact ? 'pb-8 pt-4 md:pb-10 md:pt-10 lg:py-12' : 'pb-16 pt-4 md:pt
       </div>
     </div>
 
-    {/* role="note": static advisory text read in place — not role="alert", which would interrupt on page load. */}
+    {/* role="note": static advisory text read in place — not role="alert", which would interrupt on page load.
+        Below md it is compact (13px / 1.4, 16px icon, 8px above): every word stays, it just costs fewer pixels of the
+        360×640 fold (vet-at-home ship check "Emergency line visible in SP-1 on a 360 px screen"). The icon's 1px top
+        margin centres it optically on the 18px first line. */}
     {notice ? (
-      <p role="note" class="hero-notice m-0 mt-3 flex min-w-0 items-start gap-2 text-sm font-medium text-alert-ink" data-hero-notice>
-        <Icon name="alert-circle" size={20} class="flex-none text-alert" />
+      <p role="note" class="hero-notice m-0 mt-2 flex min-w-0 items-start gap-2 text-sm font-medium text-alert-ink md:mt-3" data-hero-notice>
+        <Icon name="alert-circle" size={20} class="flex-none text-alert max-md:mt-px max-md:h-4 max-md:w-4" />
         <span class="measure min-w-0">{notice}</span>
       </p>
     ) : null}
 
     {/* tabindex: below md the row scrolls sideways and holds nothing focusable, so keyboard users need the row itself to
-        take focus to scroll it (08 §7.2; axe scrollable-region-focusable). Same choice as TableFrame's scroller. */}
+        take focus to scroll it (08 §7.2; axe scrollable-region-focusable). Same choice as TableFrame's scroller.
+        Price chip first (template SP-1 rule 5); `dense` chips so the price chip and the first trust chip both fit. */}
     {hasChips ? (
       <ul class="hero-chips chip-row m-0 mt-2 min-w-0 list-none p-0 md:mt-4" tabindex="0">
-        {priceChip ? <li class="flex" data-hero-chip="price"><Chip kind="price" label={priceChip} /></li> : null}
-        {trustChips.map((t) => <li class="flex" data-hero-chip="trust"><Chip kind="trust" label={t} /></li>)}
+        {priceChip ? <li class="flex" data-hero-chip="price"><Chip kind="price" label={priceChip} dense /></li> : null}
+        {trustChips.map((t) => <li class="flex" data-hero-chip="trust"><Chip kind="trust" label={t} dense /></li>)}
       </ul>
     ) : null}
 
@@ -137,18 +159,28 @@ const pad = compact ? 'pb-8 pt-4 md:pb-10 md:pt-10 lg:py-12' : 'pb-16 pt-4 md:pt
   /* Subhead: body size below md (E3 fold law — 08 §2.2 body 16px / 1.65), body-lg from md (08 §4.6). */
   .hero-subhead { font-size: 1rem; line-height: 1.65; }
 
-  /* Base: the chip row is one horizontal scroll-snap line with an edge fade (08 §4.6); ≥ md it wraps (global .chip-row). */
+  /* Notice below md: the 08 §2.2 micro size (13px) at line-height 1.4, normal case — compact, every word kept. */
+  .hero-notice { font-size: 0.8125rem; line-height: 1.4; }
+
+  /* Base: the chip row is one horizontal scroll-snap line with an edge fade (08 §4.6); ≥ md it wraps (global .chip-row).
+     It bleeds 16px into the right page gutter, so the row reaches the screen edge and its 16px fade lies in the gutter:
+     the fade starts after the second chip, and the price chip + first trust chip are both fully visible at 360px
+     (O-1, decisions/w1-layout.md). The ul clips its own content, so the page never scrolls sideways. */
   .hero-chips {
-    padding-right: 32px; /* lets the last chip scroll clear of the 32px fade */
-    -webkit-mask-image: linear-gradient(to right, black calc(100% - 32px), transparent);
-    mask-image: linear-gradient(to right, black calc(100% - 32px), transparent);
+    margin-right: -16px;
+    padding-right: 16px; /* lets the last chip scroll clear of the fade */
+    -webkit-mask-image: linear-gradient(to right, black calc(100% - 16px), transparent);
+    mask-image: linear-gradient(to right, black calc(100% - 16px), transparent);
   }
-  /* The mask would fade the focus ring's right edge — drop it while the row has focus (08 §7.2). */
-  .hero-chips:focus-visible { -webkit-mask-image: none; mask-image: none; }
+  /* The mask would fade the focus ring's right edge, and the bleed puts that edge at the screen edge — while the row
+     has focus, drop the mask and draw the ring inside the row (08 §7.2: focus never clipped). */
+  .hero-chips:focus-visible { -webkit-mask-image: none; mask-image: none; outline-offset: -2px; }
 
   @media (min-width: 768px) {
     .hero-subhead { font-size: 1.125rem; line-height: 1.6; }
-    .hero-chips { padding-right: 0; -webkit-mask-image: none; mask-image: none; }
+    .hero-notice { font-size: 0.875rem; line-height: calc(1.25 / 0.875); } /* = text-sm again (14 / 20px) */
+    .hero-chips { margin-right: 0; padding-right: 0; -webkit-mask-image: none; mask-image: none; }
+    .hero-chips:focus-visible { outline-offset: 2px; }
 
     /* Text-only hero: R3 moves up under the CTAs (08 §4.6 ⑦ "under CTAs"), then the notice (vet-at-home.md SP-1:
        "Under the CTAs, after R3"), then the chips. */

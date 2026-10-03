@@ -1,0 +1,52 @@
+---
+// H-10 Offers teaser (home.md §3 H-10; offers 06 §7.1 + §7.3; 06 §7.4: every offer shows its full terms wherever it is
+// advertised). Two tiles — FIRSTGROOM and Groom Club — each = its display line (bold parts as in home.md H-10) + its
+// full terms inline, because /offers/ is Wave 2. All copy and amounts come from src/data/content.ts / offers.ts /
+// pricing.json. Each tile's display line links /offers/ only once that page is live.
+import { FIRSTGROOM_LINE, FIRSTGROOM_TERMS, GROOM_CLUB_HEADLINE, GROOM_CLUB_PITCH } from '../../../data/content';
+import { FIRSTGROOM } from '../../../data/offers';
+import { isLive } from '../../../data/routes';
+import { inr, pricingData } from '../../../lib/pricing';
+import { HOME_OFFERS } from '../../../data/pages/home';
+
+type Part = { text: string; strong: boolean };
+/** `text` split around `phrases` (first occurrence each) so those render bold. A phrase missing from the copy fails the
+ *  build: the shared offer wording changed, so this tile needs a fresh look. */
+function emphasise(text: string, phrases: readonly string[]): Part[] {
+  const spans = phrases.map((ph) => {
+    const at = text.indexOf(ph);
+    if (at < 0) throw new Error(`OffersTeaser: "${ph}" is not in "${text}" — re-check home.md H-10 against src/data/content.ts`);
+    return { at, end: at + ph.length };
+  }).sort((a, b) => a.at - b.at);
+  const parts: Part[] = [];
+  let i = 0;
+  for (const s of spans) {
+    if (s.at < i) continue; // overlapping phrase: the earlier one already covers it
+    if (s.at > i) parts.push({ text: text.slice(i, s.at), strong: false });
+    parts.push({ text: text.slice(s.at, s.end), strong: true });
+    i = s.end;
+  }
+  if (i < text.length) parts.push({ text: text.slice(i), strong: false });
+  return parts;
+}
+
+const tiles = [
+  { id: 'firstgroom', line: emphasise(FIRSTGROOM_LINE, [`${inr(FIRSTGROOM.off)} off your first groom`, FIRSTGROOM.code]), terms: FIRSTGROOM_TERMS },
+  { id: 'groom-club', line: emphasise(GROOM_CLUB_HEADLINE, [pricingData.groomClub.label]), terms: GROOM_CLUB_PITCH.body },
+];
+const offersLive = isLive('/offers/');
+---
+<section aria-labelledby="offers-heading">
+  <h2 id="offers-heading" class="t-h2 m-0">{HOME_OFFERS.heading}</h2>
+  <ul class="mt-6 grid list-none gap-4 p-0 md:grid-cols-2 lg:gap-6">
+    {tiles.map((t) => {
+      const line = t.line.map((p) => (p.strong ? <strong class="font-semibold">{p.text}</strong> : p.text));
+      return (
+        <li class="flex min-w-0 flex-col rounded-lg border border-line bg-paper p-4 lg:p-6" data-offer={t.id}>
+          <p class="m-0 text-ink">{offersLive ? <a href="/offers/" class="prose-link">{line}</a> : line}</p>
+          <p class="m-0 mt-3 text-sm text-slate">{t.terms}</p>
+        </li>
+      );
+    })}
+  </ul>
+</section>

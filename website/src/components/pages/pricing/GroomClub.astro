@@ -1,0 +1,74 @@
+---
+// PR-8 Groom Club (blueprints/pricing.md; 06 §7.3). The page renders the H2 (GROOM_CLUB_HEADLINE); this block renders
+//  · the pitch — GROOM_CLUB_PITCH, 06 §7.3 verbatim, every figure computed from pricing.json, with 06's bold on its
+//    title and on the three benefits;
+//  · the maths table — groomClubPrices(): one Full Groom at the club discount, rounded down to the rupee (pricing.md §6),
+//    laid out as the blueprint writes it ("Small {Full Groom price} → {club price} (save {saving})"): size · Full
+//    Groom · Groom Club price with its saving. Three columns fit a 360px screen without sideways scrolling, so the
+//    club price is never hidden behind the scroll. A plain <table> in the shared TableFrame (08 §4.8 wrapper); the club
+//    column is the featured sand. No strikethrough on the regular price (06 §7.4);
+//  · [Join Groom Club] — a wa.me link with the size-less prefill (groomClubWaText(): the club price depends on the
+//    size, so the message asks for it) and data-source "groomclub" (09 §2d).
+// ≥ lg: pitch left, table + button right (DOM order = reading order).
+import Button from '../../Button.astro';
+import TableFrame from '../../TableFrame.astro';
+import { GROOM_CLUB_PITCH, groomClubWaText } from '../../../data/content';
+import { waHref } from '../../../data/site';
+import { GROOM_CLUB, SRC } from '../../../data/pages/pricing';
+import { groomClubPercent, groomClubPrices } from '../../../lib/pricing';
+
+// 06 §7.3 sets these three phrases in bold. The shared pitch is one string, so split it around them. A phrase that
+// went missing from the shared wording fails the build instead of silently losing its emphasis.
+const BOLD = [`${groomClubPercent()}% off`, 'free nail-trim visit', 'priority slots'];
+function emphasise(text: string, phrases: readonly string[]): { text: string; strong: boolean }[] {
+  const parts: { text: string; strong: boolean }[] = [];
+  let rest = text;
+  for (const phrase of phrases) {
+    const at = rest.indexOf(phrase);
+    if (at < 0) throw new Error(`GroomClub: "${phrase}" is not in GROOM_CLUB_PITCH.body (06 §7.3) — update BOLD`);
+    if (at > 0) parts.push({ text: rest.slice(0, at), strong: false });
+    parts.push({ text: phrase, strong: true });
+    rest = rest.slice(at + phrase.length);
+  }
+  if (rest) parts.push({ text: rest, strong: false });
+  return parts;
+}
+
+const body = emphasise(GROOM_CLUB_PITCH.body, BOLD);
+const prices = groomClubPrices();
+---
+<div class="mt-6 grid gap-6 lg:grid-cols-2 lg:gap-12">
+  <p class="measure m-0 text-ink">
+    <strong class="font-semibold">{GROOM_CLUB_PITCH.title}.</strong>{' '}
+    {body.map((p) => (p.strong ? <strong class="font-semibold">{p.text}</strong> : p.text))}
+  </p>
+  <div class="min-w-0">
+    <TableFrame label={GROOM_CLUB.caption} onTint>
+      <table class="w-full border-collapse text-left">
+        <caption class="sr-only">{GROOM_CLUB.caption}</caption>
+        <thead>
+          <tr>
+            <th scope="col" class="t-h4">{GROOM_CLUB.rowHeader}</th>
+            <th scope="col" class="t-h4">{GROOM_CLUB.regular}</th>
+            <th scope="col" class="t-h4">{GROOM_CLUB.club}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {prices.map((c) => (
+            <tr>
+              <th scope="row" class="font-semibold text-ink">{c.label}</th>
+              <td class="whitespace-nowrap text-ink"><span class="t-price text-xl">{c.regular}</span></td>
+              <td class="is-featured whitespace-nowrap text-ink">
+                <span class="t-price text-xl">{c.club}</span>
+                <span class="block text-sm text-slate">{GROOM_CLUB.save} <span class="t-price">{c.save}</span></span>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </TableFrame>
+    <div class="mt-6">
+      <Button href={waHref(groomClubWaText())} variant="whatsapp" source={SRC.groomClub} full>{GROOM_CLUB.join}</Button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,133 @@
+---
+// /about/ — blueprint: website-plan/blueprints/about.md (B08). Blocks AB-0…AB-9 in DOM order. AB-6 renders only for
+// people already on the team (none yet) and AB-8 is omitted until real numbers exist — both by the blueprint's rules.
+// Decisions: website-plan/decisions/w1-about-contact.md. Zero client JS.
+import Base from '../layouts/Base.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import CtaBand from '../components/CtaBand.astro';
+import GroomerCard from '../components/GroomerCard.astro';
+import Hero from '../components/Hero.astro';
+import Photo from '../components/Photo.astro';
+import PromiseBand from '../components/PromiseBand.astro';
+import Icon from '../components/icons/Icon.astro';
+import { hiringSteps } from '../data/content';
+import { IDENTITY } from '../data/legal';
+import { isPlaceholder, team, TEAM_LANGUAGES } from '../data/people';
+import { isLive, routeLabel } from '../data/routes';
+import { prefillFor } from '../data/services';
+import { site, telHref, waHref } from '../data/site';
+import {
+  ABOUT_SUBHEAD, CTA_HEADING, FOUNDER_PHOTO, founderPhotoAlt, HIRING, languagesProse, LUDHIANA, MISSION, STORY,
+  storyClosing, TEAM_HEADING,
+} from '../data/pages/about';
+import { bookHref } from '../lib/pricing';
+import { schemaGraphLd } from '../lib/schema';
+
+const path = '/about/';
+const crumbs = [{ label: 'Home', path: '/' }, { label: routeLabel(path), path }];
+
+// about.md ship check: the registered business name shown here is the same value as the legal pages' (legal.ts).
+if (site.legalName !== IDENTITY.LEGAL_NAME) {
+  throw new Error(`about: site.legalName "${site.legalName}" ≠ legal.ts IDENTITY.LEGAL_NAME "${IDENTITY.LEGAL_NAME}" — fill both with the same registered name (02 P047)`);
+}
+
+const steps = hiringSteps({ summary: true }); // AB-5: the 4 claimable summary lines (SH-4 steps 2, 4, 5, 6)
+const hiringLinks = HIRING.links.filter((l) => isLive(l.href));
+const members = team.filter((p) => !isPlaceholder(p)); // AB-6: real people only (honesty law, people.ts)
+---
+<Base
+  title="About PetDoorStep – Ludhiana Doorstep Pet Care | PetDoorStep"
+  description="PetDoorStep is a Ludhiana doorstep pet-care team: background-verified groomers, a registered partner vet, fixed prices and a photo after every visit."
+  path={path}
+  jsonLd={[schemaGraphLd({ type: 'about', crumbs }, Astro.site)]}
+>
+  <Photo slot="head" preload preset="hero" name={FOUNDER_PHOTO} />
+
+  {/* AB-0 */}
+  <Breadcrumb items={crumbs} />
+
+  {/* AB-1 — hero primary → the booking form (07 §2 row 3, 06 §3.1), amber because it is not a wa.me link. */}
+  <Hero
+    h1="About PetDoorStep — Ludhiana's doorstep pet-care team"
+    subhead={ABOUT_SUBHEAD}
+    primary={{ label: 'Book on WhatsApp', href: bookHref({ src: 'hero_about' }), source: 'hero_about' }}
+    photo={{ name: FOUNDER_PHOTO, alt: founderPhotoAlt(site.founderName) }}
+  />
+
+  {/* AB-2 — long-form story */}
+  <section aria-labelledby="story-heading" class="bg-sand">
+    <div class="mx-auto max-w-[1200px] px-4 py-12 lg:px-6 lg:py-20">
+      <div class="prose">
+        <h2 id="story-heading">{STORY.heading}</h2>
+        <p>{STORY.p1} {STORY.founderDetails}</p>
+        <p>{STORY.p2}</p>
+        <p class="text-sm text-slate">{storyClosing(site.founderName, site.legalName)}</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="mx-auto max-w-[1200px] px-4 py-12 lg:px-6 lg:py-20">
+    {/* AB-3 — one line, large type (a paragraph, not a heading: 02 P032). 30ch, not the 65ch body measure: at display
+        size 65ch is the whole 1200px container; 30ch sets the line in three centred lines from md up. */}
+    <p class="t-h1 m-0 mx-auto max-w-[30ch] text-center">{MISSION}</p>
+
+    {/* AB-4 — the full Promise (06 §4.1; point 4 stays gated in content.ts). `medical` adds the 00 §3.4 vet line, the
+        only on-page proof of the meta's "registered partner vet" while AB-6 has no vet card (decisions W1AC-06). */}
+    <div class="mt-10 lg:mt-16">
+      <PromiseBand variant="full" medical />
+    </div>
+  </div>
+
+  {/* AB-5 */}
+  <section aria-labelledby="hire-heading" class="bg-sand">
+    <div class="mx-auto max-w-[1200px] px-4 py-12 lg:px-6 lg:py-20">
+      <h2 id="hire-heading" class="t-h2 m-0">{HIRING.heading}</h2>
+      <ol class="measure m-0 mt-4 grid list-none gap-3 p-0">
+        {steps.map((s) => (
+          <li class="flex items-start gap-3">
+            <span class="mt-0.5 flex-none text-brand"><Icon name="check-circle-2" size={20} /></span>
+            <span>{s.text}</span>
+          </li>
+        ))}
+      </ol>
+      {hiringLinks.length ? (
+        <ul class="m-0 mt-6 flex list-none flex-col gap-1 p-0 md:flex-row md:gap-8">
+          {hiringLinks.map((l) => (
+            <li><a href={l.href} class="prose-link inline-flex min-h-11 items-center font-semibold">{l.text}</a></li>
+          ))}
+        </ul>
+      ) : null}
+    </div>
+  </section>
+
+  {/* AB-6 — omitted while nobody is on the team (no heading, no empty grid, no token cards) */}
+  {members.length ? (
+    <section aria-labelledby="team-heading">
+      <div class="mx-auto max-w-[1200px] px-4 py-12 lg:px-6 lg:py-20">
+        <h2 id="team-heading" class="t-h2 m-0">{TEAM_HEADING}</h2>
+        <ul class="m-0 mt-6 grid list-none gap-4 p-0 md:grid-cols-3 lg:gap-6">
+          {members.map((p) => <li><GroomerCard person={p} /></li>)}
+        </ul>
+      </div>
+    </section>
+  ) : null}
+
+  {/* AB-7 — keeps the band rhythm: sand after AB-6 (paper), paper after AB-5 (sand) (08 §1.4 rule 5) */}
+  <section aria-labelledby="ludhiana-heading" class:list={[members.length ? 'bg-sand' : 'bg-paper']}>
+    <div class="mx-auto max-w-[1200px] px-4 py-12 lg:px-6 lg:py-20">
+      <div class="prose">
+        <h2 id="ludhiana-heading">{LUDHIANA.heading}</h2>
+        <p>{LUDHIANA.line(languagesProse(TEAM_LANGUAGES))}</p>
+      </div>
+    </div>
+  </section>
+
+  {/* AB-8 numbers strip — omitted until real numbers exist (never estimated, never "coming soon") */}
+
+  {/* AB-9 — page-end band: wa.me with the /about/ prefill (06 §3.1) + Call */}
+  <CtaBand
+    heading={CTA_HEADING}
+    primary={{ label: 'Book on WhatsApp', href: waHref(prefillFor(path)), source: 'ctaband_about' }}
+    secondary={{ label: `Call ${site.phone}`, href: telHref(), source: 'ctaband_about' }}
+  />
+</Base>

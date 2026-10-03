@@ -1,0 +1,32 @@
+---
+// /ludhiana/dog-grooming/ SP-4 addition 1 — the à-la-carte line (blueprints/dog-grooming.md §3 SP-4; §2 "dog nail
+// cutting service near me") with the nail-trim close-up (§4 Images, shot 11; its alt is the page's 2nd and last
+// Hinglish use). Goes in ServicePage's `sp4-lines` slot: inside the price block, right under R1 + R2, before the
+// mid-page CTA. A small thumbnail beside the line, so the CTA stays close to the matrix on a phone.
+// Prices from pricing.ts (07 §4). "Tick & Flea treatment" links its page once that page is live (template SP-3:
+// add-on mentions link siblings; P074).
+import Photo from '../../Photo.astro';
+import { isLive } from '../../../data/routes';
+import { addonPrice, flatPrice } from '../../../lib/pricing';
+
+const tickHref = '/ludhiana/tick-flea-treatment/';
+const tickLive = isLive(tickHref);
+---
+<div class="mt-6 flex items-center gap-4">
+  <div class="w-28 flex-none md:w-40">
+    <Photo
+      name="dog-nail-trim-at-home.jpg"
+      alt="dog ke nails kaatna — nail trim at home in Ludhiana"
+      ratio="4x3"
+      widths={[160, 240, 320]}
+      sizes="(max-width: 767px) 112px, 160px"
+      class="block aspect-[4/3] h-auto w-full rounded-md object-cover"
+    />
+  </div>
+  <p class="measure m-0 min-w-0 text-ink">
+    Just nails? <strong>Nail Trim + Ear Clean visit <span class="t-price">{flatPrice('nail-ear')}</span>.</strong> Ticks?
+    Add {tickLive
+      ? <a href={tickHref} class="prose-link font-semibold">Tick &amp; Flea treatment for <span class="t-price">{addonPrice()}</span></a>
+      : <strong>Tick &amp; Flea treatment for <span class="t-price">{addonPrice()}</span></strong>} to any groom.
+  </p>
+</div>

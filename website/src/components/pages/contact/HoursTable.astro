@@ -1,0 +1,47 @@
+---
+// /contact/ CO-4 hours table (blueprints/contact.md) — the page's own <table> inside the shared TableFrame wrapper
+// (08-DESIGN-SYSTEM §4.8: surface, focusable scroll region, header row, zebra, sticky row headers), following
+// TableFrame's parent-markup contract. Not InfoTable: its 9.5rem row-label floor leaves ~118px for the hours at 360px,
+// which split every range at its dash ("9:00–" / "19:00"). Here the label column wraps instead (40% below md) and
+// each day or time range ("Mon–Sun", "9:00–19:00") is kept on one line. Zero JS.
+import TableFrame from '../../TableFrame.astro';
+
+interface Props {
+  /** sr-only caption = the scroll region's accessible name. */
+  caption: string;
+  /** Header of the row-label column and of the hours column. */
+  rowHeader: string;
+  column: string;
+  rows: readonly { label: string; value: string }[];
+  class?: string;
+}
+const { caption, rowHeader, column, rows, class: cls = '' } = Astro.props;
+
+// "Mon–Sun", "Apr–Jun", "9:00", "6:00–9:30" — a range never breaks across lines.
+const RANGE = /([A-Z][a-z]{2}–[A-Z][a-z]{2}|\d{1,2}:\d{2}(?:–\d{1,2}:\d{2})?)/;
+const parts = (value: string) => value.split(RANGE).filter(Boolean).map((text) => ({ text, keep: RANGE.test(text) }));
+---
+<TableFrame label={caption} onTint class={cls}>
+  <table class="w-full border-collapse text-left">
+    <caption class="sr-only">{caption}</caption>
+    <thead>
+      <tr>
+        <th scope="col" class="ht-label t-h4">{rowHeader}</th>
+        <th scope="col" class="t-h4">{column}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {rows.map((r) => (
+        <tr>
+          <th scope="row" class="ht-label font-medium leading-snug text-ink">{r.label}</th>
+          <td class="text-sm text-ink">{parts(r.value).map((p) => (p.keep ? <span class="whitespace-nowrap">{p.text}</span> : p.text))}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</TableFrame>
+
+<style>
+  .ht-label { width: 40%; }
+  @media (min-width: 768px) { .ht-label { width: 14rem; } }
+</style>

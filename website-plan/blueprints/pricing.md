@@ -29,6 +29,36 @@
 | tick treatment cost · dog vaccination cost at home | L | PR-5 · PR-7 rows |
 | do you charge extra for large dogs · grooming ka rate kya hai | L | FAQ #1 · #5 |
 
+### 2.1 · SERP intent check (`02` P040) — 2026-10-03
+
+Checked before building, for the primary keyword in `01-SITEMAP.md` §1, **"dog grooming price ludhiana"**, plus the
+secondary "pet grooming price list ludhiana". Tool: the build session's web search. It uses a US-based index, not
+google.co.in on a Ludhiana phone, and it cannot show the map pack. So repeat the check on a phone in Ludhiana during
+the launch audit (`02` §5).
+
+- **What ranks:**
+  - **Aggregator city service pages that publish package prices.** Mr n Mrs Pet, "Dog Grooming Services in Ludhiana
+    At Your Doorstep" (mrnmrspet.com/dog-grooming-in-ludhiana): four packages, priced higher for medium dogs.
+    thePetNest, "Pet Grooming Service at Home in Ludhiana" (thepetnest.com/pet-grooming/ludhiana): three packages.
+  - **Directories and listings.** myfurries.com/pet-grooming/ludhiana, the JustDial pet-grooming category and
+    locality pages, a PetBacker groomer listing and IndiaMart.
+  - **One listicle.** Pupkitt, "5 Best Pet Grooming Service Providers In Ludhiana".
+  - **The secondary query** returns no Ludhiana price list at all: only templates and national cost guides
+    (e.g. vetic.in).
+  - Competitor figures were mined from SERP snippets 2026-10; re-verify before publishing. They stay off this page
+    (header rule above).
+- **Intent:** buyer. People want the price before they call, and the results that answer it are service pages that
+  publish their grooming packages with prices. Judging by titles and snippets, none of them prices walking or vet
+  visits on the same page.
+- **How this page matches:** it is a price-list service page, the format that ranks, not a listicle or a directory.
+  - The query sits in the title and H1 (§1).
+  - PR-3 is the full by-size matrix as a real HTML table, with the "Pet grooming price list, Ludhiana" caption, and
+    PR-2 explains the sizes first.
+  - Every other service is priced in PR-5 to PR-8.
+  - A Book link ends every price row.
+  - OfferCatalog markup (§5) names each visible price.
+  - FAQ #1 answers "Do you charge extra for large dogs?" (`03` §2.9: "Nobody answers").
+
 ## 3 · Blocks (DOM order)
 
 | # | Block | Spec |

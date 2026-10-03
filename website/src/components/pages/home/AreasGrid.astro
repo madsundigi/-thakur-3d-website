@@ -1,0 +1,16 @@
+---
+// H-9 Areas we serve (home.md §3 H-9; 08 §4.14). The ten 00 §3.3 localities in order (AREA_SLUGS), one AreaCard each
+// with its own distinct one-liner (AREA_LINES) and the home anchor pattern "Pet grooming at home in {Area}" (01 §2.7).
+// A card links its area page only once that page is live (05 §6.10 staggered publishing); plain text before.
+// Grid: base 2-col (compact) · md 3-col · lg 5-col (5 × 2), gap 16 → 24 at lg.
+import AreaCard from '../../AreaCard.astro';
+import { AREA_SLUGS } from '../../../data/content';
+import { HOME_AREAS } from '../../../data/pages/home';
+---
+<section aria-labelledby="areas-heading">
+  <h2 id="areas-heading" class="t-h2 m-0">{HOME_AREAS.heading}</h2>
+  <ul class="mt-6 grid list-none grid-cols-2 gap-4 p-0 md:grid-cols-3 lg:grid-cols-5 lg:gap-6">
+    {AREA_SLUGS.map((slug) => <li class="min-w-0"><AreaCard slug={slug} /></li>)}
+  </ul>
+  <p class="m-0 mt-6 font-semibold text-ink">{HOME_AREAS.line}</p>
+</section>
