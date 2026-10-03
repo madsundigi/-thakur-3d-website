@@ -12,9 +12,25 @@
 
 ## 1 · Head
 
-- **Title** (54): `About Us – Doorstep Pet Care in Ludhiana | PetDoorStep`
+Primary keyword (`01-SITEMAP.md`): *petdoorstep* (brand). It sits in the first 30 characters of the title (`02` P012)
+and in the H1's first 5 words (P026); the `| PetDoorStep` suffix stays (P014).
+
+- **Title** (60): `About PetDoorStep – Ludhiana Doorstep Pet Care | PetDoorStep` (was `About Us – Doorstep Pet Care in Ludhiana | PetDoorStep`, 54, whose brand keyword started at character 44 — a `02` P012 launch-blocker fail; changed 2026-10-03, `decisions/w1-about-contact.md` W1AC-01)
 - **Meta** (149): `PetDoorStep is a Ludhiana doorstep pet-care team: background-verified groomers, a registered partner vet, fixed prices and a photo after every visit.`
 - **H1:** `About PetDoorStep — Ludhiana's doorstep pet-care team`
+
+**SERP-intent check (`02` P040, 2026-10-03).** A web search for `petdoorstep` returns no PetDoorStep result yet (the
+brand is not live). The engine reads the string as "pet door step": PetSTEP dog ramps (Amazon, Handi Products),
+Wikipedia's "Pet door" and an unrelated "My Doorstep Vet" contact page. `petdoorstep OR "pet doorstep" Ludhiana` returns
+Ludhiana's doorstep groomers instead: Mr n Mrs Pet's Ludhiana page, Pupping, Pup Ping's Facebook page and JustDial's
+mobile-grooming category. So the intent is navigational: someone who has heard the name wants the real business, who
+runs it and whether it can be trusted, and search engines still have to learn that "PetDoorStep" is a Ludhiana
+pet-care entity. The page matches that by spelling the brand exactly in the first words of the title and the H1,
+pairing it with "Ludhiana" and "doorstep pet care" in the title, H1 and meta, and pointing AboutPage `mainEntity` at the
+one `#business` node. It also gives a brand-checker the founder and registered business name (P047), the hiring checks
+and the Promise. Limits of this check: the search tool is US-located and returns organic links only, so the knowledge
+panel, the local pack and the google.co.in order were not visible. Re-check the query on a phone in Ludhiana
+(incognito) before launch.
 
 ## 2 · Blocks (DOM order)
 

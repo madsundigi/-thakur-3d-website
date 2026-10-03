@@ -17,6 +17,21 @@ the brand suffix (P015).
 - **Meta** (143): `Pet grooming contact number in Ludhiana: a real person replies on WhatsApp within 10 minutes, 9:00–19:00 daily. Fixed prices. Book on WhatsApp.`
 - **H1:** `Pet Grooming Contact Number in Ludhiana` (39 chars)
 
+**SERP-intent check (`02` P040, 2026-10-03).** A web search for `pet grooming contact number ludhiana` returns
+directories and aggregator city pages, not one business's own contact page. That means JustDial category pages (Pet
+Grooming Services, Dog Grooming Services At Home, locality variants such as Urban Estate Phase 2), the myfurries and
+petgroomly Ludhiana templates, urbanpetsgrooming.in's Ludhiana page, Pupkitt's listicle "5 Best Pet Grooming Service
+Providers In Ludhiana" and a scraped business list (rentechdigital). What a searcher takes away is a phone number from
+one of those listings. `dog grooming at home Ludhiana phone number WhatsApp contact us` looks the same: JustDial, Mr n
+Mrs Pet's Ludhiana page (phone + WhatsApp), PetPro's Instagram. The intent is transactional: a number to call or
+WhatsApp now, plus the hours and whether the area is covered. The page matches that format and answers faster than a
+directory. The keyword H1 is followed directly by the CO-1 reply line and the CO-2 cards, so the WhatsApp number, phone,
+email and Instagram are tappable text in the first screens. Then come the crawlable NAP (byte-identical to the footer
+and to the LocalBusiness `telephone`/`email`), the hours table and the 10 areas — the same facts the directory snippets
+show — with no form and no call-back promise. Winning the map pack is the GBP's job (`05`); this page supports it with
+NAP consistency. Limits of this check: the search tool is US-located and returns organic links only, so the local pack
+and the google.co.in order were not visible. Re-check the query on a phone in Ludhiana (incognito) before launch.
+
 ## 2 · Blocks (DOM order)
 
 | # | Block | Spec |
