@@ -40,15 +40,14 @@ export function importMetaEnv() {
   return { ...pub, MODE: 'production', PROD: true, DEV: false, SSR: true, BASE_URL: '/' };
 }
 
-// Vite/Astro-only specifiers never appear in the plain data modules the gates load; stub them instead of failing.
+// Vite/Astro-only specifiers never appear in the plain data modules the gates load; point them at a stub file instead
+// of failing. (A real file, not an inline onLoad result: Tailwind v4 scans scripts/ for class names too, and the onLoad
+// result key is itself a utility name that would leak a rule into the site's CSS.)
+const STUB = join(WEBSITE, 'scripts', 'lib', 'stub.cjs');
 const stubPlugin = {
   name: 'pds-stub',
   setup(build) {
-    build.onResolve({ filter: /^astro:|\.astro$|\?(raw|url|inline)$/ }, (args) => ({ path: args.path, namespace: 'pds-stub' }));
-    build.onLoad({ filter: /.*/, namespace: 'pds-stub' }, () => ({
-      contents: 'module.exports = new Proxy(function () {}, { get: (t, k) => (k === "__esModule" ? false : k === "default" ? "" : t), apply: () => undefined });',
-      loader: 'js',
-    }));
+    build.onResolve({ filter: /^astro:|\.astro$|\?(raw|url|inline)$/ }, () => ({ path: STUB }));
   },
 };
 
