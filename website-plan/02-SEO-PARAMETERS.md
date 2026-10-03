@@ -154,7 +154,7 @@
 
 | # | Parameter | Pass criterion (measurable) | Severity |
 |---|---|---|---|
-| P088 | NAP block in site-wide footer | Crawlable HTML text on every page: "PetDoorStep · Doorstep pet care across Ludhiana, Punjab 141001 · `[FILL:PHONE]`" — identical byte-for-byte site-wide (SAB: no street address published, per 00 §3.1). | [Launch-blocker] |
+| P088 | NAP block in site-wide footer | Crawlable HTML text on every page rendering the canonical NAP block of `05-LOCAL-SEO.md` §4 (the NAP owner, `00` §11 E9), e.g. "PetDoorStep · Ludhiana, Punjab — doorstep service across Sarabha Nagar, BRS Nagar, Model Town, Civil Lines, Dugri, Pakhowal Road, South City, Ferozepur Road, Haibowal Kalan, Kitchlu Nagar · `[FILL:PHONE]` · WhatsApp `[FILL:WHATSAPP_NUMBER]` · `[FILL:EMAIL]` · Mon–Sun 9:00–19:00 (last booking 17:30)" (`08` §4.4) — identical byte-for-byte site-wide (SAB: no street address or pincode published, per 00 §3.1 and `05` §4). | [Launch-blocker] |
 | P089 | NAP = GBP, character-for-character | Name, phone format, and service-area wording identical across site footer, schema, and Google Business Profile (checked side-by-side at launch and quarterly). | [Launch-blocker] |
 | P090 | Clickable tel: + WhatsApp deep links | Phone wrapped as `tel:+91…`; WhatsApp as `https://wa.me/91XXXXXXXXXX?text=` with the pre-filled payload defined in `07-BOOKING-SPEC.md`. | [Launch-blocker] |
 | P091 | City in title + H1 + first paragraph | Every local landing page names its geo target (Ludhiana, or area + Ludhiana) in all three positions. | [Launch-blocker] |

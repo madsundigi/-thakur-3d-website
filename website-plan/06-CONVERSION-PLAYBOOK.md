@@ -49,7 +49,7 @@ Use P2/P3 for H1 on money pages (SEO), P1/P5 as subheads, P4 on home/area pages,
 
 ### 2.3 Ready heroes (copy-paste for blueprints)
 
-All CTA pairs follow §3. Prices from 00 §3.2 only. Hero photo briefs are in each page blueprint.
+All CTA pairs follow §3. Prices from 00 §3.2 only. Hero photo briefs are in each page blueprint. **Every hero primary links to the booking form** `/book/?src=hero_<page-slug>` (`07` §2 row 3; `00` §11 E1 and D2, 2026-10-03) and renders amber even when its label says "WhatsApp" (`08` §1.4 rule 2). Below `md` the secondary CTA and the eyebrow are hidden (`08` §4.6 fold law).
 
 **HOME `/`**
 - Eyebrow: *Pet care at your doorstep* (tagline, 00 §3.1)
@@ -62,25 +62,25 @@ All CTA pairs follow §3. Prices from 00 §3.2 only. Hero photo briefs are in ea
 **`/ludhiana/dog-grooming/`**
 - H1: **Dog Grooming at Home in Ludhiana**
 - Subhead: "One trained groomer, your verandah or balcony, 60–90 calm minutes. Bath & Brush from ₹599 · Full Groom from ₹1,199 — exact price fixed before we arrive."
-- CTA: [Book on WhatsApp] + [See exact prices] (anchors to on-page price matrix)
+- CTA: [Book on WhatsApp] → `/book/?src=hero_dog-grooming` + [See exact prices] (anchors to on-page price matrix)
 - Trust chips: standard set.
 
 **`/ludhiana/cat-grooming/`**
 - H1: **Cat Grooming at Home in Ludhiana**
 - Subhead: "Calm-handling trained groomers for your cat — no car ride, no strange salon smells. Bath & Brush ₹899 · Full Groom ₹1,399, flat price for all cats."
-- CTA: [Book on WhatsApp] + [Call [FILL:PHONE]]
+- CTA: [Book on WhatsApp] → `/book/?src=hero_cat-grooming` + [Call [FILL:PHONE]]
 - Trust chips: swap chip 4 → `✔ Calm-handling trained for cats`.
 
 **`/ludhiana/dog-walking/`**
 - H1: **Dog Walker in Ludhiana — Daily Walks from ₹2,999/month**
 - Subhead: "The same fixed, verified walker every day, with GPS route and photo update after every walk. Try a full week for ₹699 before you commit."
-- CTA: [Start ₹699 Trial Week] (WhatsApp prefill per 07) + [Call [FILL:PHONE]]
+- CTA: [Start ₹699 Trial Week] → the booking form `/book/?service=dog-walking&src=hero_dog-walking`, Trial Week preselected (`00` §11 D2; not a wa.me link) + [Call [FILL:PHONE]]
 - Trust chips: `✔ Fixed verified walker` · `✔ GPS + photo after every walk` · `✔ Fixed monthly price` · `✔ Background-verified`.
 
 **`/ludhiana/vet-at-home/`**
 - H1: **Vet at Home in Ludhiana** (eyebrow: *Vet home visit, Ludhiana* — final per `blueprints/vet-at-home.md`)
 - Subhead: "A registered veterinarian examines your pet at home — no stressful clinic trip. ₹699 consult; medicines and vaccines at MRP, bill shown to you."
-- CTA: [Book Vet on WhatsApp] + [Call [FILL:PHONE]]
+- CTA: [Book Vet on WhatsApp] → `/book/?src=hero_vet-at-home` + [Call [FILL:PHONE]]
 - Trust chips: `✔ Registered veterinarians only` · `✔ Medicines at MRP — bill shown` · `✔ Fixed visit fee ₹699` · `✔ Mon–Sun 9:00–19:00`.
 
 **`/ludhiana/dog-vaccination/`**
@@ -116,11 +116,11 @@ All CTA pairs follow §3. Prices from 00 §3.2 only. Hero photo briefs are in ea
 
 | Level | CTA | Behaviour |
 |---|---|---|
-| **Primary** | **"Book on WhatsApp"** | Context decides target: on pages with the booking widget available (`/book/`, heroes that embed Step 0) it opens the widget; everywhere else it is a `wa.me/[FILL:WHATSAPP_NUMBER]?text=<page-specific prefill>` deep link. Prefill payloads + ref codes are specified in `07-BOOKING-SPEC.md`. Styled as the WhatsApp-green solid button (token in `08-DESIGN-SYSTEM.md`). |
+| **Primary** | **"Book on WhatsApp"** | Context decides target: in every hero it links to the booking form `/book/?src=hero_<page-slug>` (`07` §2 row 3; `00` §11 E1/D2), and the widget's last step hands over to WhatsApp; on `/book/` it is the widget itself; everywhere else (e.g. the page-end `CtaBand`) it is a `wa.me/[FILL:WHATSAPP_NUMBER]?text=<page-specific prefill>` deep link. Prefill payloads + ref codes are specified in `07-BOOKING-SPEC.md`. Styled as the WhatsApp-green solid button on wa.me links only; a link to `/book/` is the amber primary button (`08-DESIGN-SYSTEM.md` §1.4 rules 1–2). |
 | **Secondary** | **Call** | `tel:[FILL:PHONE]` click-to-call. Outline/ghost style. Always shows the number itself on desktop ("Call [FILL:PHONE]") — a visible number is itself a trust signal. |
 | **Tertiary** (optional, max 1 per screen) | "See exact prices" / "How it works" | In-page anchor or internal link; text link or quiet button. Never competes visually with primary. |
 
-Rules: exactly one primary CTA per viewport-height of content; every money page repeats the primary CTA after the price table, after reviews, and at page end; reply-time promise sits near the first primary CTA: **"A real person replies on WhatsApp within 10 minutes, 9:00–19:00."** (hours per 00 §3.1; staff this before publishing).
+Rules: exactly one primary CTA per viewport-height of content; every money page repeats the primary CTA after the price table, after reviews, and at page end; reply-time promise sits near the first primary CTA: **"A real person replies on WhatsApp within 10 minutes, 9:00–19:00."** (a confirmed operational fact, 00 §3.1, `00` §11 D3 2026-10-03). Never promise a call-back time: calls are not staffed for call-backs (D3).
 
 ### 3.2 Button label bank (use these; never "Submit", "Click here", "Learn more" on money pages)
 
@@ -147,7 +147,7 @@ Rules: exactly one primary CTA per viewport-height of content; every money page 
   - **WhatsApp** → `wa.me` deep link with the current page's prefill; icon + "WhatsApp"; WhatsApp-green token from 08.
   - **Book Now** → opens booking widget (or `/book/` as fallback); amber primary-CTA token from 08; boldest treatment.
 - **Service pages variant:** Book Now label carries the live from-price for that page: "Book · from ₹1,199".
-- Exact hex values, radii, elevation, icons: `08-DESIGN-SYSTEM.md` (this file owns behaviour + labels only). Tap events fire `cta_call` / `cta_whatsapp` / `cta_book` per `09-ANALYTICS-TRACKING.md`.
+- Exact hex values, radii, elevation, icons: `08-DESIGN-SYSTEM.md` (this file owns behaviour + labels only). Tap events per the `09-ANALYTICS-TRACKING.md` §2 registry (its names win, `00` §11 2026-10-02): Call fires `call_click` and WhatsApp fires `whatsapp_click`, both with `source: sticky_bar`; Book Now is a plain link to `/book/?src=sticky_bar`, measured by the widget's `booking_started`.
 
 ---
 
@@ -262,10 +262,10 @@ All offers live on `/offers/` and are echoed on relevant service pages. Every of
 - Display copy: "Love your groomer? Share them. Your friend gets ₹150 off their first groom, you get ₹150 off your next one."
 
 ### 7.3 Groom Club (the retention product — 00 §3.2)
-Pitch copy (use on `/offers/`, `/pricing/`, and post-service WhatsApp):
+Pitch copy (use on `/offers/`, `/pricing/`, and post-service WhatsApp — the WhatsApp use only for customers who replied YES, `00` §11 D4):
 > **Groom Club — your pet's standing appointment.**
 > One Full Groom every month at **15% off** (Small ₹1,019 · Medium ₹1,274 · Large ₹1,614 — you save ₹180–₹285 every month), plus a **free nail-trim visit** between grooms and **priority slots** (first pick of weekend times). Same groomer every visit on request. Pay per visit as always — UPI or cash after the service, cancel anytime on WhatsApp.
-- CTA: [Join Groom Club] → WhatsApp prefill per 07.
+- CTA: [Join Groom Club] → WhatsApp prefill per 07 (`source: groomclub`, `09` §2d).
 
 ### 7.4 Honesty rules (absolute)
 - **No fake urgency or scarcity, ever.** No countdown timers, no "only 2 slots left" unless it reflects real capacity for a real date, no "offer ends tonight" that renews tomorrow.
@@ -278,13 +278,13 @@ Pitch copy (use on `/offers/`, `/pricing/`, and post-service WhatsApp):
 
 (Full flow, payloads, fields and edge cases are owned by `07-BOOKING-SPEC.md` — these are the binding CRO constraints it implements.)
 
-1. **3–5 fields per step, max 4 steps.** Easiest questions first (area, pet type, size as tap-chips); personal details (name, phone) last.
-2. **Progress dots** + "Step X of 4" always visible. Never imply more steps than exist.
-3. **Live price ribbon**: the moment size + package are chosen, pin "Your price: ₹1,499 · Full Groom · Medium dog — no hidden charges" on screen through all remaining steps.
-4. **Chips and selects over typing**; only pet name and notes are free text, both optional.
-5. **Error microcopy is inline, specific and kind — never browser alerts.** Strings in §9.
+1. **3–5 fields per step, 5 steps + a review screen** (`07` §3: Area · Service · Pet · Time · Contact — the built widget; 07 owns the flow). Easiest questions first (area, service, pet type, size as tap-chips); personal details (name, phone) last.
+2. **Progress dots** + "Step X of 5" always visible. Never imply more steps than exist.
+3. **Live price ribbon**: the moment size + package are chosen, pin `Your price: ₹1,499 · Full Groom · Medium` (`07` §3 wording) on screen through all remaining steps.
+4. **Chips and selects over typing**; the only free text is breed and note (both optional), your name, and an area name when "Other area in Ludhiana" is picked (`07` §3).
+5. **Error microcopy is inline, specific and kind — never browser alerts.** The widget's verbatim strings live in `07` §3 (they win over the older E1–E3 drafts in §9).
 6. **Honest slots:** time windows are "preferred", with the line "We confirm your exact slot on WhatsApp within 10 minutes" — never fake a live-availability grid (Urban Company's documented failure).
-7. **State persists** (localStorage) with a resume banner on return: "Finish your booking — {Pet name}'s {Service}".
+7. **State persists** (localStorage) with a resume banner on return: "Welcome back! Continue your booking — {service_label} in {area}." (`07` §6).
 8. **Out-of-area is a lead, not a dead end:** "Outside Ludhiana" choice captures a WhatsApp number for the waitlist.
 9. Final step always shows the §5.4 no-advance-payment line, and the primary button reads "Confirm on WhatsApp →".
 
@@ -306,9 +306,9 @@ Ready strings — copy verbatim. (B = button, R = reassurance, E = error/empty, 
 | R6 | Anxious-pet note field placeholder | Anything we should know? (first groom, anxious, skin issues, senior pet…) |
 | R7 | Slot step | We confirm your exact slot on WhatsApp within 10 minutes. |
 | R8 | Service page footer CTA | Your {breed} deserves a stress-free groom at home. Slots this week in {area}. |
-| E1 | Phone field invalid | That number looks short — WhatsApp numbers have 10 digits (we'll add +91). |
-| E2 | Required chip not picked | Pick one to continue — tap the option that fits best. |
-| E3 | Outside-area selection | We're not in your area yet — but we're expanding. Leave your WhatsApp number and you'll be first to know (plus ₹200 off your first groom when we arrive). |
+| E1 | Phone field invalid | That number looks short — WhatsApp numbers have 10 digits (we'll add +91). *(Inside the booking widget the `07` §3 Step 5 string is used verbatim instead.)* |
+| E2 | Required chip not picked | Pick one to continue — tap the option that fits best. *(Inside the widget: the `07` §3 per-step strings.)* |
+| E3 | Outside-area selection | We're not in your area yet — but we're expanding. Leave your WhatsApp number and you'll be first to know (plus ₹200 off your first groom when we arrive). *(Inside the widget: the `07` §3 Step 1 waitlist copy; the ₹200 also appears in `faq.md` faq-a1.)* |
 | E4 | Widget failed to open WhatsApp (desktop, no app) | WhatsApp didn't open? No problem — message us directly at [FILL:WHATSAPP_NUMBER] or call [FILL:PHONE]. |
 | E5 | 404 page | This page wandered off like an unleashed Beagle. Head home, or book a groom while you're here. |
 | E6 | Empty reviews section (pre-launch) | Fresh reviews coming soon — we're new in Ludhiana and earning them one happy pet at a time. Read our live Google reviews at [FILL:GBP_LINK]. |
@@ -318,10 +318,12 @@ Ready strings — copy verbatim. (B = button, R = reassurance, E = error/empty, 
 | W1 | WhatsApp greeting (business hours) | Hi! 🐾 You've reached PetDoorStep — pet care at your doorstep in Ludhiana. Share your pet's name, breed and your area, and we'll confirm your slot in minutes. |
 | W2 | WhatsApp away message (after 19:00) | We're with our own pets right now 🐶 Bookings reopen at 9:00 AM — leave your message and you're first in the queue. Emergencies: please contact your nearest vet clinic. |
 | W3 | Booking confirmation template | Confirmed! ✅ {Service} for {Pet} on {Date}, {Window}. Your groomer: {Name} (background-verified — photo attached). Price: ₹{Price}, payable after service by UPI/cash. Need to reschedule? Just reply here. |
-| W4 | Post-service follow-up (same evening) | How did {Pet} like today's {Service}? 😊 Two quick favours: (1) a 2-line Google review helps other Ludhiana pet parents find us → [FILL:GBP_LINK] (2) okay to feature {Pet}'s photos on our website? Reply YES and we'll tag {locality} proudly. |
-| W5 | Rebooking nudge (4–6 weeks post-groom) | {Pet}'s coat is due for some love around {date} 🛁 Want the same groomer, same time slot? Reply YES and we'll lock it in — or join Groom Club and save 15% every month. |
+| W4 | Post-service follow-up (same evening) — **YES customers only** (D4) | How did {Pet} like today's {Service}? 😊 Two quick favours: (1) a 2-line Google review helps other Ludhiana pet parents find us → [FILL:GBP_LINK] (2) okay to feature {Pet}'s photos on our website? Reply YES and we'll tag {locality} proudly. |
+| W5 | Rebooking nudge (4–6 weeks post-groom) — **YES customers only** (D4) | {Pet}'s coat is due for some love around {date} 🛁 Want the same groomer, same time slot? Reply YES and we'll lock it in — or join Groom Club and save 15% every month. |
+| W6 | Opt-in ask (once, right after W3, same words to every customer — `00` §11 D4) | One more thing: would you like reminders, review requests and offers from us on WhatsApp? Reply YES. No reply means none of these messages, and you can tell us to stop any time. |
 
 **Usage rules:** emojis allowed in WhatsApp strings and `/thank-you/` only (max 1 per message elsewhere — see `08-DESIGN-SYSTEM.md`); every `{placeholder}` in W-strings is filled by a human or the widget payload per `07-BOOKING-SPEC.md`; Hinglish may be added to W1/W4 naturally when the customer writes in Hinglish first.
+**YES rule (`00` §11 D4, 2026-10-03):** W4, W5, the review asks (`05` §3), reminders (such as vaccination due dates) and any offer or broadcast go only to customers who replied YES to W6. Log the date in the leads-sheet `opt_in` column (`09` §5) and clear it the day the customer asks to stop. W1–W3 and every message about a booking the customer made are not affected. W4's photo question may be asked on its own (§4.3) to a customer who did not opt in.
 
 ---
 
