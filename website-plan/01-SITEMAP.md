@@ -61,13 +61,13 @@ All Wave 2 · all from `blueprints/_TEMPLATE-area-page.md` · Schema: Service + 
 | `/blog/<post-slug>/` | 26 posts, 1/week | 3 | topics + keywords in `10-CONTENT-CALENDAR.md`; anatomy in `_TEMPLATE-blog-post.md` |
 
 ### Legal & utility
-| URL | Wave | Notes |
-|---|---|---|
-| `/privacy-policy/` | 1 | Mention lead data, WhatsApp, analytics |
-| `/terms/` | 1 | Service terms incl. pet-handling consent |
-| `/refund-policy/` | 2 | Must match what we honour (reschedule/refund rules) |
-| `/404` | 1 | Friendly + search + top services links |
-| `/sitemap-0.xml`, `/robots.txt` | 1 | Auto via Astro integration (see `04-TECHNICAL-SEO.md`) |
+| URL | Wave | Blueprint | Notes |
+|---|---|---|---|
+| `/privacy-policy/` | 1 | `blueprints/privacy-policy.md` | Mention lead data, WhatsApp, analytics (data: `website/src/data/legal.ts`) |
+| `/terms/` | 1 | `blueprints/terms.md` | Service terms incl. pet-handling consent (data: `website/src/data/legal.ts`) |
+| `/refund-policy/` | 2 | — | Must match what we honour (reschedule/refund rules) |
+| `/404` | 1 | `04-TECHNICAL-SEO.md` §1.6 | Friendly + search + top services links |
+| `/sitemap-0.xml`, `/robots.txt` | 1 | `04-TECHNICAL-SEO.md` §1.5, §7.1 | Auto via Astro integration (see `04-TECHNICAL-SEO.md`) |
 
 **Count: 44 planned URLs** (14 Wave 1 · 21 Wave 2 · blog ongoing Wave 3) → ~55+ live pages by month 6.
 
