@@ -1,5 +1,8 @@
 /* PetDoorStep global stylesheet — tokens: website-plan/08-DESIGN-SYSTEM.md §1.3 (this @theme IS the Tailwind config) */
 @import "tailwindcss";
+/* Gate scripts and tests are not site markup — keep their words out of the class scan. */
+@source not "../../scripts";
+@source not "../../tests";
 
 /* Self-hosted variable fonts (04 §1.3, 08 §2.1). Latin subset only, plus a ~1.3 KB ₹-only subset per family:
    fontsource's Latin files lack U+20B9, which would otherwise pull the 85 KB "latin-ext" file on every priced page.
