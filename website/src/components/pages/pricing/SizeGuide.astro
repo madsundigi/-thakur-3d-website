@@ -1,0 +1,29 @@
+---
+// PR-2 size guide (blueprints/pricing.md): the 00 §3.2 kg guide with the 06 §5.2 breed examples. It reads the same
+// SIZE_MATRIX rows the PR-3 matrix prints, so the guide and the table can never disagree. Labrador sits under Large
+// (§2: the "price for a large dog / labrador" slot). The dog icon grows with the size (20 → 24 → 28px, the 08 §6.1
+// icon sizes); it is decorative — the words carry the meaning. The section heading belongs to the page.
+import Icon from '../../icons/Icon.astro';
+import { SIZE_MATRIX, SIZES } from '../../../lib/pricing';
+import { SIZE_GUIDE_LINE } from '../../../data/pages/pricing';
+
+const ICON_SIZE = { small: 20, medium: 24, large: 28 } as const;
+---
+<ul class="m-0 mt-6 grid list-none gap-4 p-0 md:grid-cols-3 lg:gap-6">
+  {SIZES.map((size) => {
+    const s = SIZE_MATRIX[size];
+    return (
+      <li class="flex min-w-0 items-start gap-4 rounded-lg border border-line bg-paper p-4 lg:p-6">
+        <span class="flex h-12 w-12 flex-none items-center justify-center rounded-pill bg-mint text-brand">
+          <Icon name="dog" size={ICON_SIZE[size]} />
+        </span>
+        <div class="min-w-0">
+          <p class="t-h3 m-0 text-ink">{s.label}</p>
+          <p class="t-price m-0 text-ink">{s.kg}</p>
+          <p class="m-0 mt-1 text-sm text-slate">{s.examples}</p>
+        </div>
+      </li>
+    );
+  })}
+</ul>
+<p class="measure m-0 mt-4 text-ink">{SIZE_GUIDE_LINE}</p>

@@ -1,0 +1,122 @@
+---
+// /pricing/ — blueprint: website-plan/blueprints/pricing.md (B06), blocks PR-0 … PR-12 in DOM order. Copy: the
+// blueprint verbatim (src/data/pages/pricing.ts) plus the shared strings it cites (src/data/content.ts, faq.json).
+// Prices: every figure renders from src/data/pricing.json through src/lib/pricing.ts — none is typed (07 §4).
+// JSON-LD: one @graph, OfferCatalog + FAQPage + BreadcrumbList (04 §2.9, §2.5). schema.ts builds the catalog from the
+// helpers the visible blocks use — matrixColumns() (PR-3), priceLines('pricing-cat-quick' | 'pricing-walking' |
+// 'pricing-vet') incl. tickFleaLine() (PR-5/6/7), groomClubPrices() (PR-8) — so every Offer name and price in the
+// markup is printed on the page (04 §2.0.3, 02 P087). Zero client JS. Decisions: website-plan/decisions/w1-pricing.md.
+import Base from '../layouts/Base.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Faq from '../components/Faq.astro';
+import Hero from '../components/Hero.astro';
+import InfoTable from '../components/InfoTable.astro';
+import PriceMatrix from '../components/PriceMatrix.astro';
+import GroomClub from '../components/pages/pricing/GroomClub.astro';
+import OffersStrip from '../components/pages/pricing/OffersStrip.astro';
+import PriceSection from '../components/pages/pricing/PriceSection.astro';
+import SizeGuide from '../components/pages/pricing/SizeGuide.astro';
+import { GROOM_CLUB_HEADLINE, WALK_PAYMENT_LINE } from '../data/content';
+import {
+  CTA_BAND_HEADING, DOG_TABLE_CAPTION, FIXED_PRICE_PARAGRAPHS, FULL_GROOM_NOTE, H2, HEAD, HERO, PRICING_PATH, SRC,
+  VET_LINE,
+} from '../data/pages/pricing';
+import { routeLabel } from '../data/routes';
+import { PACKAGE_TABLES, prefillFor } from '../data/services';
+import { waHref } from '../data/site';
+import { bookHref } from '../lib/pricing';
+import { schemaGraphLd } from '../lib/schema';
+
+// PR-0: Home › Pricing (labels from the routes registry = 01-SITEMAP page names).
+const crumbs = [
+  { label: routeLabel('/'), path: '/' },
+  { label: routeLabel(PRICING_PATH), path: PRICING_PATH },
+];
+// Every wa.me link on the page carries the /pricing/ prefill (02 P158; services.ts PAGE_PREFILL).
+const waLink = waHref(prefillFor(PRICING_PATH));
+---
+<Base
+  title={HEAD.title}
+  description={HEAD.description}
+  path={PRICING_PATH}
+  jsonLd={[schemaGraphLd({ type: 'pricing', crumbs }, Astro.site)]}
+>
+  {/* PR-0 */}
+  <Breadcrumb items={crumbs} />
+
+  {/* PR-1 — compact, no photo; standard 4 trust chips (Hero default), R3 under the CTAs. */}
+  <Hero
+    compact
+    eyebrow={HERO.eyebrow}
+    h1={HERO.h1}
+    subhead={HERO.subhead}
+    primary={{ label: HERO.book, href: bookHref({ src: SRC.hero }), source: SRC.hero }}
+    secondary={{ label: HERO.whatsapp, href: waLink, source: SRC.hero }}
+  />
+
+  {/* PR-2 */}
+  <PriceSection id="size-guide" heading={H2.sizeGuide} band="sand">
+    <SizeGuide />
+  </PriceSection>
+
+  {/* PR-3 — the 06 §5.2 canonical matrix; each size row ends in Book → /book/?service=…&size=…&src=pricing_row; R1 + R2. */}
+  <PriceSection id="dog-grooming-prices" heading={H2.dogTable}>
+    <PriceMatrix class="mt-6" caption={DOG_TABLE_CAPTION} showCaption source={SRC.row} />
+  </PriceSection>
+
+  {/* PR-4 — the dog-grooming SP-3 ✓-grid (same shared table) + durations + the Full Groom column note. */}
+  <PriceSection id="whats-included" heading={H2.included} band="sand">
+    <InfoTable class="mt-6" table={PACKAGE_TABLES['dog-grooming']} columnNotes={{ 'full-groom': FULL_GROOM_NOTE }} onTint />
+  </PriceSection>
+
+  {/* PR-5 — cat, puppy & quick visits, each line with its Book link; R1 + R2 (06 §5.4: under every price table). */}
+  <PriceSection id="cat-grooming-prices" heading={H2.catQuick}>
+    <PriceMatrix class="mt-6" matrix={false} lines="pricing-cat-quick" source={SRC.row} />
+  </PriceSection>
+
+  {/* PR-6 — R1 + the walking payment line in R2's place (as on /ludhiana/dog-walking/ SP-4). */}
+  <PriceSection id="dog-walking-prices" heading={H2.walking} band="sand">
+    <PriceMatrix class="mt-6" matrix={false} lines="pricing-walking" source={SRC.row} r2={WALK_PAYMENT_LINE} onTint />
+  </PriceSection>
+
+  {/* PR-7 — fee only; medicines and vaccines at printed MRP (the line under R1 + R2). */}
+  <PriceSection id="vet-prices" heading={H2.vet}>
+    <PriceMatrix class="mt-6" matrix={false} lines="pricing-vet" source={SRC.row}>
+      <p class="m-0 mt-1 text-sm text-slate">{VET_LINE}</p>
+    </PriceMatrix>
+  </PriceSection>
+
+  {/* PR-8 */}
+  <PriceSection id="groom-club" heading={GROOM_CLUB_HEADLINE} band="mint">
+    <GroomClub />
+  </PriceSection>
+
+  {/* PR-9 */}
+  <PriceSection id="offers" heading={H2.offers}>
+    <OffersStrip />
+  </PriceSection>
+
+  {/* PR-10 — three short paragraphs, verbatim. */}
+  <PriceSection id="fixed-prices" heading={H2.fixed} band="sand">
+    <div class="mt-4 grid gap-4 md:grid-cols-3 md:gap-6">
+      {FIXED_PRICE_PARAGRAPHS.map((p) => <p class="m-0 border-l-2 border-brand pl-4 text-ink">{p}</p>)}
+    </div>
+  </PriceSection>
+
+  {/* PR-11 — faq.json entries for /pricing/ (the same entries the FAQPage node lists). */}
+  <div class="bg-paper py-12 lg:py-20">
+    <div class="mx-auto max-w-[1200px] px-4 lg:px-6">
+      <div class="max-w-[760px]">
+        <Faq page={PRICING_PATH} heading={H2.faq} />
+      </div>
+    </div>
+  </div>
+
+  {/* PR-12 — page-end CTA band (full-bleed, a direct child of <main>). */}
+  <CtaBand
+    heading={CTA_BAND_HEADING}
+    primary={{ label: HERO.book, href: bookHref({ src: SRC.ctaBand }), source: SRC.ctaBand }}
+    secondary={{ label: HERO.whatsapp, href: waLink, source: SRC.ctaBand }}
+  />
+</Base>
