@@ -43,7 +43,7 @@
 | BK-6 | FAQ (4 Q&As, A4) | Plain accordion (BreadcrumbList is this page's only schema — `04` §2.9) |
 | BK-7 | No-JS fallback | Always-present links: `wa.me/[FILL:WHATSAPP_NUMBER]` (generic prefill) + `tel:[FILL:PHONE]` — visible text, not hidden |
 
-Sticky bar: hidden while the widget is open (`06` §3.3); exit-intent nudge never on this page (`07` §2 row 7).
+Sticky bar: hidden while the widget is open (`06` §3.3); the exit card never appears on this page (`07` §2 row 7).
 
 ### A4 · FAQ (4 Q&As)
 

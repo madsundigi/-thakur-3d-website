@@ -84,10 +84,10 @@ Admin → Custom definitions → Create custom dimension, all **Event** scope, d
 | Fixed (12) | `sticky_bar` · `header` · `pricing_row` · `book_page` · `exit_nudge` · `float_desktop` · `confirm_button` · `review_screen` · `footer` · `noscript_block` · `not_found` · `groomclub` | `07` §2 rows 1, 2, 5, 6, 7, 8 · widget confirm button and the review-screen `tel:` link (`07` §3) · site footer · `/book/` no-JS block (`07` §6) · 404 page CTAs · every "Join Groom Club" CTA (`06` §7.3, `pricing.md` PR-8, `offers.md` OF-4) |
 | Pattern `hero_<slug>` | e.g. `hero_home`, `hero_dog-grooming`, `hero_pricing` | Hero CTAs (`07` §2 row 3) |
 | Pattern `service_<id>` | e.g. `service_full-groom`, `service_dog-walking` | Body CTA rows of a money page (`07` §2 row 4): `<id>` is the preselected `pricing.json` service id, or the page slug when the link preselects nothing |
-| Pattern `ctaband_<slug>` | e.g. `ctaband_dog-grooming`, `ctaband_contact` | The page-end `CtaBand` (template SP-12 and every blueprint's final CTA band) |
+| Pattern `ctaband_<slug>` | e.g. `ctaband_dog-grooming`, `ctaband_about` | The page-end `CtaBand` (template SP-12 and every blueprint's final CTA band) |
 | Pattern `<slug>_page` | e.g. `contact_page`, `about_page`, `reviews_page`, `offers_page`, `privacy-policy_page`, `sarabha-nagar_page`, `<post-slug>_page` | Any other in-page anchor on that page: contact cards, legal-page contact lines, an area page's booking widget, a blog post's in-body CTA |
 
-`<slug>` is the page's last URL segment (`home` for `/`). Anything else = a bug; the §3 snippet stamps `unlabelled` so misses are findable in GA4. The widget accepts a `src` of up to 40 characters (`[a-z0-9_-]`), so keep slugs that long or shorter.
+`<slug>` is the page's last URL segment (`home` for `/`). Anything else = a bug; the §3 snippet stamps `unlabelled` so misses are findable in GA4. The widget ignores a `src` longer than 40 characters or with characters outside `[a-z0-9_-]` (`BookingWidget.tsx` `SRC_PATTERN`), so shorten the slug part of a long value.
 
 **Funnel report (build once, Explore → Funnel exploration, name `Booking funnel`):** steps = ① `booking_started` ② `booking_step_completed` where `step=1` ③ `step=2` ④ `step=3` ⑤ `step=4` ⑥ `step=5` ⑦ `step=6` ⑧ `booking_submitted`; breakdown dimension `source`. This is where the §8 funnel % is read.
 
