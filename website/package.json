@@ -10,7 +10,11 @@
     "preview": "astro preview",
     "check:fill": "node scripts/check-fill.mjs",
     "check:prices": "node scripts/check-prices.mjs",
-    "test:e2e": "node tests/e2e.mjs"
+    "check:pages": "node scripts/check-pages.mjs",
+    "check:budgets": "node scripts/check-budgets.mjs",
+    "check:legal": "node scripts/check-legal.mjs",
+    "test:e2e": "node tests/e2e.mjs",
+    "test:site": "node tests/site.mjs"
   },
   "engines": {
     "node": ">=20"
