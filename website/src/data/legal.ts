@@ -249,6 +249,7 @@ export const LAW = {
     'Information Technology (Reasonable Security Practices and Procedures and Sensitive Personal Data or Information) Rules, 2011',
   BOARD: 'Data Protection Board of India',
   GRIEVANCE_REPLY: 'within one month of receiving it', // IT Rules 2011 r.5(9) upper limit
+  CONSUMER_ACT: 'Consumer Protection Act, 2019', // /terms/ TM-13: the terms never limit these rights
 };
 
 // ── Your rights (DPDP Act ss.6(4), 11–14; IT Rules 2011 r.5(6), r.5(7), r.5(9)) ─────────────────────────────────
