@@ -14,6 +14,7 @@ import LegalRow from '../components/pages/legal/LegalRow.astro';
 import LegalCell from '../components/pages/legal/LegalCell.astro';
 import LawRef from '../components/pages/legal/LawRef.astro';
 import ContactLink from '../components/pages/legal/ContactLink.astro';
+import Key from '../components/pages/legal/Key.astro';
 import Icon from '../components/icons/Icon.astro';
 import BrandIcon from '../components/icons/BrandIcon.astro';
 import {
@@ -245,7 +246,7 @@ const dpbLink = IDENTITY.DPB_COMPLAINT_LINK;
     <LegalTable caption="Cookies and data saved on your device" columns={['Name', 'Where', 'What for', 'How long']} widths={[24, 17, 33, 26]}>
       {STORAGE_KEYS.map((k) => (
         <LegalRow>
-          <LegalCell head><code class="legal-key">{k.key}</code></LegalCell>
+          <LegalCell head><Key value={k.key} /></LegalCell>
           <LegalCell label="Where">{WHERE[k.store]}</LegalCell>
           <LegalCell label="What for">{k.purpose}</LegalCell>
           <LegalCell label="How long">{k.lifetime}</LegalCell>
@@ -253,7 +254,7 @@ const dpbLink = IDENTITY.DPB_COMPLAINT_LINK;
       ))}
     </LegalTable>
     {idKey ? (
-      <p class="m-0 text-sm text-slate">In <code class="legal-key">{idKey}</code>, &lt;id&gt; stands for our Google Analytics measurement ID.</p>
+      <p class="m-0 text-sm text-slate">In <Key value={idKey} />, &lt;id&gt; stands for our Google Analytics measurement ID.</p>
     ) : null}
     <div class="prose mt-8">
       <h3>We don't use</h3>
@@ -278,9 +279,9 @@ const dpbLink = IDENTITY.DPB_COMPLAINT_LINK;
         </li>
         <li>
           Events never carry your name or mobile number. The events we count are{' '}
-          {GA4_EVENTS.map((e, i) => <>{i ? (i === GA4_EVENTS.length - 1 ? ' and ' : ', ') : ''}<code class="legal-key">{e}</code></>)}, and the
+          {GA4_EVENTS.map((e, i) => <>{i ? (i === GA4_EVENTS.length - 1 ? ' and ' : ', ') : ''}<Key value={e} /></>)}, and the
           details we add to them are{' '}
-          {GA4_PARAMS.map((p, i) => <>{i ? (i === GA4_PARAMS.length - 1 ? ' and ' : ', ') : ''}<code class="legal-key">{p}</code></>)}.
+          {GA4_PARAMS.map((p, i) => <>{i ? (i === GA4_PARAMS.length - 1 ? ' and ' : ', ') : ''}<Key value={p} /></>)}.
         </li>
       </ul>
     </div>
@@ -376,11 +377,3 @@ const dpbLink = IDENTITY.DPB_COMPLAINT_LINK;
     <div class="prose"><p>{R3}</p></div>
   </LegalSection>
 </LegalPage>
-
-<style>
-  /* Storage keys, event and parameter names: our body face (08 §2.1 allows no third family), set apart as code. */
-  .legal-key {
-    font-family: inherit; font-size: 0.9em; padding: 0 4px; border-radius: var(--radius-sm);
-    background: var(--color-mint); color: var(--color-brand-deep); overflow-wrap: anywhere;
-  }
-</style>
