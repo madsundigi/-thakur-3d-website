@@ -16,7 +16,7 @@ const { items } = Astro.props;
           {last ? (
             <span class="font-medium text-ink" aria-current="page">{it.label}</span>
           ) : isLive(it.path) ? (
-            <a href={it.path} class="text-slate no-underline hover:underline">{it.label}</a>
+            <a href={it.path} class="bc-link text-slate no-underline hover:underline">{it.label}</a>
           ) : (
             <span>{it.label}</span>
           )}
@@ -26,3 +26,11 @@ const { items } = Astro.props;
     })}
   </ol>
 </nav>
+
+<style>
+  /* 44px touch target (08 §7.3) around a 20px line of small text: an invisible pseudo-element extends the link 12px
+     up/down and 4px sideways ("Home" ≈ 46×44). Layout is untouched, so the row height — and the 360×640 hero fold
+     below it — stays the same; neighbouring targets stay ≥ 14px apart (08 §7.3 asks ≥ 8px). */
+  .bc-link { position: relative; }
+  .bc-link::before { content: ''; position: absolute; inset: -12px -4px; }
+</style>

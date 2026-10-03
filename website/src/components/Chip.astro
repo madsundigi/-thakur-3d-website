@@ -10,7 +10,8 @@ interface Props {
   /** trust: mint + check · price: sand, tabular-nums · badge: amber "Most booked" · verified: mint + shield
    *  (links /safety-hygiene/ once live) · alert: coral + alert icon, ink text */
   kind: 'trust' | 'price' | 'badge' | 'verified' | 'alert';
-  /** Visible text. Defaults: badge → "Most booked", verified → "Background-verified ✔" (06 §4.2). Slot content also works. */
+  /** Visible text. Defaults: badge → "Most booked", verified → "Background-verified" + check icon (06 §4.2's
+   *  "Background-verified ✔"). Slot content also works. */
   label?: string;
   /** Price chip only: pricing.json service id → its card chip text via chipText() (e.g. 'full-groom' → "from" + the Small price). Ignored when `label` is set. */
   service?: string;
@@ -22,13 +23,17 @@ interface Props {
 
 const { kind, label, service, onTint = false, class: cls = '' } = Astro.props;
 
+// The verified default is 06 §4.2's "Background-verified ✔". The ✔ is drawn as the check icon after the text (like
+// GroomerCard), not typed: Inter's Latin subset has no U+2714, so the glyph would fall back to a different face — or
+// a colour emoji — per phone, and screen readers would announce "heavy check mark".
 const defaults: Partial<Record<Props['kind'], string>> = {
   badge: 'Most booked',
-  verified: 'Background-verified ✔',
+  verified: 'Background-verified',
 };
 const svc = kind === 'price' && service ? getService(service) : undefined;
 if (kind === 'price' && service && !svc) throw new Error(`Chip: unknown pricing.json service "${service}"`);
 const text = label ?? (svc ? chipText(svc) : defaults[kind]);
+const tick = kind === 'verified' && label === undefined;
 
 const isBadge = kind === 'badge' || kind === 'verified';
 const skin: Record<Props['kind'], string> = {
@@ -48,21 +53,24 @@ const pill = [
 ];
 ---
 {href ? (
-  <a href={href} class:list={['chip-link inline-flex min-h-11 items-center no-underline', cls]}>
+  <a href={href} class:list={['chip-link -my-2.5 inline-flex min-h-11 items-center no-underline', cls]}>
     <span class:list={pill}>
       {icon ? <Icon name={icon} size={16} /> : null}
       {text ?? <slot />}
+      {tick ? <Icon name="check" size={14} /> : null}
     </span>
   </a>
 ) : (
   <span class:list={[...pill, cls]}>
     {icon ? <Icon name={icon} size={16} /> : null}
     {text ?? <slot />}
+    {tick ? <Icon name="check" size={14} /> : null}
   </span>
 )}
 
 <style>
-  /* Linked verified badge: the 44px hit area is the transparent anchor (08 §7.3); the pill darkens on hover. */
+  /* Linked verified badge: the 44px hit area is the transparent anchor (08 §7.3); -my-2.5 keeps its layout height at
+     the 24px pill (same trick as GroomerCard's badge link), so a row of badges doesn't grow. The pill darkens on hover. */
   .chip-link:hover > span { background-color: var(--color-brand-deep); color: var(--color-white); }
   .chip-link:focus-visible { outline-offset: 0; border-radius: var(--radius-pill); }
 </style>

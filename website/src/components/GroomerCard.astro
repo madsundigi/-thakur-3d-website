@@ -17,17 +17,21 @@ interface Props {
   variant?: 'full' | 'condensed';
   /** Heading level of the name — h3 under a section H2 (default). */
   headingLevel?: 2 | 3 | 4;
+  /** Page-specific speciality line (item ④), replacing people.ts — e.g. a cat speciality on /ludhiana/cat-grooming/
+   *  SP-7 ("Persian cat de-matting"). Must be true of this person (06 §4.2, honesty law in people.ts). */
+  speciality?: string;
   class?: string;
 }
 
 const { person: p, variant = 'full', headingLevel = 3, class: cls = '' } = Astro.props;
+const speciality = Astro.props.speciality ?? p.speciality;
 const H = `h${headingLevel}` as 'h2' | 'h3' | 'h4';
 const full = variant === 'full';
 const isVet = p.role === 'vet';
 const alt = personAlt(p);
 
 const years = p.years ? `${p.years} ${p.years === 1 ? 'year' : 'years'} ${isVet ? 'of practice' : 'experience'}` : '';
-const meta = [years, p.speciality].filter(Boolean).join(' · ');
+const meta = [years, speciality].filter(Boolean).join(' · ');
 const counterLabel = p.role === 'groomer' ? 'pets groomed' : p.role === 'walker' ? 'walks done' : '';
 const safetyLive = isLive('/safety-hygiene/');
 ---

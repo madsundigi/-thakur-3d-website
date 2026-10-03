@@ -1,20 +1,53 @@
 ---
-// Steps strip (08-DESIGN-SYSTEM §4.9) — the 4 booking steps verbatim from 04-TECHNICAL-SEO §2.8.
+// Steps strip (08-DESIGN-SYSTEM §4.9) — the 4 booking steps verbatim from 04-TECHNICAL-SEO §2.8 (src/data/content.ts;
+// the /how-it-works/ HowTo schema reads the same strings). Base: vertical list, numbered discs on a left rail joined by
+// a 2px dashed line-colour connector · ≥ md: 4-up row, the connector running disc to disc. `anchors` adds
+// #step-1…#step-4 (the HowTo step URLs). The default slot renders under the steps: the support line and the
+// "See the full process" link (home H-4; template SP-6 R4 line). Zero JS.
 import { bookingSteps } from '../data/content';
-interface Props { heading: string; anchors?: boolean }
-const { heading, anchors = false } = Astro.props;
+
+interface Props {
+  heading: string;
+  anchors?: boolean;
+  /** id of the h2 (aria-labelledby) — change it only if a page renders two strips. */
+  headingId?: string;
+}
+const { heading, anchors = false, headingId = 'steps-heading' } = Astro.props;
 ---
-<section aria-labelledby="steps-heading">
-  <h2 id="steps-heading" class="t-h2">{heading}</h2>
+<section aria-labelledby={headingId}>
+  <h2 id={headingId} class="t-h2">{heading}</h2>
   <ol class="mt-4 grid list-none gap-4 p-0 md:grid-cols-4">
     {bookingSteps.map((s, i) => (
-      <li id={anchors ? `step-${i + 1}` : undefined} class="flex gap-3 md:flex-col">
+      <li id={anchors ? `step-${i + 1}` : undefined} class="step relative flex gap-3 md:flex-col">
         <span class="flex h-10 w-10 flex-none items-center justify-center rounded-pill bg-brand font-bold text-white">{i + 1}</span>
-        <span>
+        <div class="min-w-0">
           <h3 class="t-h3 m-0">{s.name}</h3>
           <p class="m-0 mt-1 text-sm text-slate">{s.text}</p>
-        </span>
+        </div>
       </li>
     ))}
   </ol>
+  {Astro.slots.has('default') ? <div class="mt-4"><slot /></div> : null}
 </section>
+
+<style>
+  /* Connector (08 §4.9): 2px dashed line colour from 8px past one disc to 8px short of the next (the list gap is 16px). */
+  .step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: 19px; /* centred on the 40px disc */
+    top: 48px;
+    bottom: -8px;
+    border-left: 2px dashed var(--color-line);
+  }
+  @media (min-width: 768px) {
+    .step:not(:last-child)::after {
+      left: 48px;
+      right: -8px;
+      top: 19px;
+      bottom: auto;
+      border-left: 0;
+      border-top: 2px dashed var(--color-line);
+    }
+  }
+</style>
