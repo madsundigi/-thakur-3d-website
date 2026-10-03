@@ -14,7 +14,8 @@ import Footer from '../components/Footer.astro';
 import StickyBar from '../components/StickyBar.astro';
 import WaFloat from '../components/WaFloat.astro';
 import ExitCard from '../components/ExitCard.astro';
-import { site, WA_DEFAULT_TEXT } from '../data/site';
+import { site } from '../data/site';
+import { prefillFor, stickyBookHrefFor, stickyBookLabelFor } from '../data/services';
 import { ogTitleFrom } from '../lib/format';
 
 interface Props {
@@ -30,7 +31,8 @@ interface Props {
   ogImageAlt?: string;
   /** → <meta name="robots" content="noindex, follow"> and no canonical (04 §3.3, decision E7). */
   noindex?: boolean;
-  /** Page-specific WhatsApp prefill for the header menu, sticky bar and float (07 §2 row 1). */
+  /** Page-specific WhatsApp prefill for the header menu, sticky bar and float (07 §2 row 1). Defaults per path from
+   *  src/data/services.ts (prefillFor / stickyBookHrefFor / stickyBookLabelFor), so pages rarely pass these. */
   waText?: string;
   stickyBookHref?: string;
   stickyBookLabel?: string;
@@ -44,7 +46,8 @@ interface Props {
 
 const {
   title, description, path, ogImage, ogImageAlt, noindex = false, hideStickyBar = false, hideWaFloat = false,
-  waText = WA_DEFAULT_TEXT, stickyBookHref, stickyBookLabel, jsonLd = [], exitCard,
+  waText = prefillFor(Astro.props.path), stickyBookHref = stickyBookHrefFor(Astro.props.path),
+  stickyBookLabel = stickyBookLabelFor(Astro.props.path), jsonLd = [], exitCard,
 } = Astro.props;
 
 // `path` drives the canonical and og:url; a page passing the wrong one would canonicalise to another URL (04 §3.1).

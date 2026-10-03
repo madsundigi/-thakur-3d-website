@@ -5,15 +5,15 @@ import Logo from './Logo.astro';
 import Nap from './Nap.astro';
 import PawMark from './icons/PawMark.astro';
 import BrandIcon from './icons/BrandIcon.astro';
-import { liveRoutes, routes } from '../data/routes';
+import { isLive, liveRoutes, routes } from '../data/routes';
 import { instagramHref, site, waHref, WA_DEFAULT_TEXT } from '../data/site';
 
 const services = liveRoutes('service').filter((r) => r.path !== '/ludhiana/');
 const TOP5 = ['sarabha-nagar', 'brs-nagar', 'model-town', 'dugri', 'south-city']; // 05 §2.4 / 08 §4.4
-const topAreas = TOP5.map((slug) => routes.find((r) => r.path === `/ludhiana/areas/${slug}/`)).filter((r) => r && r.status === 'live');
+const topAreas = TOP5.map((slug) => routes.find((r) => r.path === `/ludhiana/areas/${slug}/`)).filter((r) => r && isLive(r.path));
 const company = ['/pricing/', '/how-it-works/', '/about/', '/contact/', '/faq/', '/reviews/', '/safety-hygiene/', '/offers/', '/join-as-groomer/']
-  .map((p) => routes.find((r) => r.path === p)).filter((r) => r && r.status === 'live');
-const legal = ['/privacy-policy/', '/terms/', '/refund-policy/'].map((p) => routes.find((r) => r.path === p)).filter((r) => r && r.status === 'live');
+  .map((p) => routes.find((r) => r.path === p)).filter((r) => r && isLive(r.path));
+const legal = ['/privacy-policy/', '/terms/', '/refund-policy/'].map((p) => routes.find((r) => r.path === p)).filter((r) => r && isLive(r.path));
 const linkCls = 'inline-flex min-h-11 items-center text-mint no-underline hover:underline';
 const year = new Date().getFullYear();
 ---

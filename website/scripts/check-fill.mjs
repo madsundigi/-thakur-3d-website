@@ -15,7 +15,7 @@ const walk = (dir) => {
     const p = join(dir, name);
     if (statSync(p).isDirectory()) { walk(p); continue; }
     if (/^placeholder-/.test(name)) imgFiles.push(p);
-    const text = /\.(html|xml|txt|js|css|json|ts|tsx|astro|mjs|md|mdx)$/.test(name) ? readFileSync(p, 'utf8') : null;
+    const text = /\.(html|xml|txt|js|css|json|ts|tsx|astro|mjs|md|mdx)$/.test(name) || name === '_redirects' ? readFileSync(p, 'utf8') : null;
     if (text === null) continue;
     for (const m of text.matchAll(/\[FILL:([A-Z0-9_{}]+)\]/g)) counts.set(m[1], (counts.get(m[1]) ?? 0) + 1);
     // dist: the built HTML/CSS that browsers load · src: anything that would end up there.

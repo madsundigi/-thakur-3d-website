@@ -55,13 +55,9 @@ export const ldId = {
 
 const ref = (id: string) => ({ '@id': id });
 
-/** Image + logo used by the business node. 04 §2.1 names /og/petdoorstep-home.jpg and /images/petdoorstep-logo.png,
- *  neither of which exists yet — these point at the shipped brand OG image and 512 px icon so Google never fetches
- *  a 404. Swap to the 04 paths in the commit that adds those files. */
-// Target: '/og/petdoorstep-home.jpg' (04 §2.1 `image`) — the integrator swaps it in once public/og/petdoorstep-home.jpg exists.
-export const BUSINESS_IMAGE_PATH = '/og/default.png';
-// Target: '/images/petdoorstep-logo.png' (04 §2.1 `logo`) — the integrator swaps it in once public/images/petdoorstep-logo.png exists.
-export const BUSINESS_LOGO_PATH = '/icon-512.png';
+/** Image + logo used by the business node — the 04 §2.1 paths (rendered by scripts/make-assets.mjs). */
+export const BUSINESS_IMAGE_PATH = '/og/petdoorstep-home.jpg';
+export const BUSINESS_LOGO_PATH = '/images/petdoorstep-logo.png';
 
 // Facts that live only in 04 §2.1 (not contact values): country code + Ludhiana city-centre coordinate.
 const COUNTRY = 'IN';

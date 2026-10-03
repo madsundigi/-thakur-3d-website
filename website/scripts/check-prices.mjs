@@ -59,11 +59,7 @@ function stripComments(src) {
 }
 
 // Reviewed exceptions, matched on exact line text. Each names why it is not a price and how to remove it.
-const TS_EXEMPT = [
-  // 06 §4.1 Promise point 4 "On time, or ₹100 off." — a policy amount (on-time guarantee), not a price, and gated off
-  // by policy.onTimeOr100Off. To retire this entry: move 100 into src/data/offers.ts and format it with inr().
-  { file: 'src/data/content.ts', text: "label: 'On time, or ₹100 off.'" },
-];
+const TS_EXEMPT = [];
 const exemptUsed = new Set();
 const TS_SKIP = new Set(['src/lib/pricing.ts']); // the ₹ formatter itself
 for (const f of files.filter((f) => /\.(ts|mts|js|mjs)$/.test(f) && !/\.d\.ts$/.test(f) && !TS_SKIP.has(rel(f)))) {
