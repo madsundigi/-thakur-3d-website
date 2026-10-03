@@ -21,7 +21,7 @@ Rules: `website-plan/08-DESIGN-SYSTEM.md` §5. In short:
   frames ≤ 80 KB, groomer photos ≤ 40 KB, page total ≤ 1 MB (08 §5.6 / §8). If Lighthouse flags a photo, re-shoot or
   simplify the frame. Don't add a lower-quality override.
 
-## The launch shot list (08 §5.2: one half-day shoot, 12 shots)
+## The launch shot list (08 §5.2: one half-day shoot, 14 shots)
 
 | # | Filename (put it here) | Shot | Used on | Slot / ratio |
 |---|---|---|---|---|
@@ -37,6 +37,8 @@ Rules: `website-plan/08-DESIGN-SYSTEM.md` §5. In short:
 | 10 | `vet-home-visit-pomeranian-ludhiana.jpg` | Vet examining a Pomeranian at home, vaccine cold box visible | `/ludhiana/vet-at-home/` + `/ludhiana/dog-vaccination/` heroes, GBP #10 | Hero 4:3 |
 | 11 | `dog-nail-trim-at-home.jpg` | Nail-trim close-up, clipper + paw | Nail service row, `/ludhiana/dog-grooming/` body | Card 4:3 |
 | 12 | `petdoorstep-team-founder-ludhiana.jpg` | Team group shot with founder, branded tees | `/about/`, GBP #11, founder-photo crop | Card 4:3 |
+| 13 | `puppy-first-groom-at-home-ludhiana.jpg` | Groomer on the floor with a puppy at its first groom, towel and treat in hand | Home services grid: Puppy Grooming card | Card 4:3 |
+| 14 | `dog-tick-check-at-home-ludhiana.jpg` | Groomer checking a dog for ticks at home (ears and neck parted, tick tool in hand) | Home services grid: Tick & Flea card | Card 4:3 |
 
 Later photos, such as more before/after pairs, area-page heroes and groomer portraits, follow the same naming
 pattern: `{subject-or-breed}-{service-or-action}-{qualifier}-{locality?}-ludhiana.jpg`. In a pair, `before`/`after`
@@ -47,8 +49,10 @@ its `<Photo name="…">` prop. Add the file here under that name.
 
 Each `<Photo>` call carries its own alt, written to the 08 §5.4 formula:
 `{breed or subject} + {what is happening} + at home in {locality}, Ludhiana`. Only name the locality when the photo
-was really taken there, and keep it ≤ 125 characters. If a photo turns out to show a different breed or locality
-from the one its page assumed, update that page's alt in the same commit.
+was really taken there, and keep it ≤ 125 characters. The alt describes the shot in the table above, for example a
+Beagle on the walking hero, a Pomeranian on the vet hero and a cat on a towel on the cat hero (decision E5,
+2026-10-03). If a photo turns out to show a different breed or locality from the one its page assumed, update that
+page's alt in the same commit.
 
 ## Launch gate
 
