@@ -1,0 +1,27 @@
+---
+// H-5 Price teaser (home.md §3 H-5). H2 + 3 tiles (the Bath & Brush and Full Groom from-prices and the vet visit fee —
+// every figure from pricing.json via src/lib/pricing.ts) + R1 and R2 directly under them (06 §5.4; styled as under
+// PriceMatrix, 08 §4.8: small slate, R2 in ink 600) + the /pricing/ link, rendered only while /pricing/ is live. Its
+// anchor text carries the 03 §2.1 long-tail "pet grooming price list".
+import MoreLink from './MoreLink.astro';
+import { R1, R2 } from '../../../data/content';
+import { priceParts } from '../../../lib/pricing';
+import { HOME_PRICES } from '../../../data/pages/home';
+---
+<section aria-labelledby="prices-heading">
+  <h2 id="prices-heading" class="t-h2 m-0">{HOME_PRICES.heading}</h2>
+  <ul class="mt-6 grid list-none gap-4 p-0 md:grid-cols-3 lg:gap-6">
+    {HOME_PRICES.tiles.map((t) => (
+      <li class="rounded-lg bg-sand p-4 lg:p-6">
+        <p class="m-0 font-semibold text-ink">{t.label}</p>
+        {/* 08 §2.2 price type at its 24px (matrix) size; the word "from" stays body text in slate. */}
+        <p class="m-0 mt-1 text-ink">
+          {priceParts(t.price).map((p) => (p.figure ? <span class="t-price text-2xl">{p.text}</span> : <span class="text-slate">{p.text}</span>))}
+        </p>
+      </li>
+    ))}
+  </ul>
+  <p class="m-0 mt-4 text-sm text-slate">{R1}</p>
+  <p class="m-0 mt-1 text-sm font-semibold text-ink">{R2}</p>
+  <MoreLink href="/pricing/" class="mt-2">{HOME_PRICES.link}</MoreLink>
+</section>

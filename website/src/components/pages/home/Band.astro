@@ -1,0 +1,18 @@
+---
+// One full-bleed background band of the home page (08-DESIGN-SYSTEM §1.4 rule 5 surface rhythm: two adjacent bands
+// never share a background; §3.1 spacing: 16px gutter → 24px at lg, 1200px content, 48px → 80px section padding).
+// A plain <div>: the block inside it brings its own <section> + H2 (StepsStrip, PromiseBand and Faq render theirs).
+interface Props {
+  tone?: 'paper' | 'sand' | 'mint';
+  /** Tighter vertical padding (32px → 48px) for a short band, e.g. a one-line block. */
+  compact?: boolean;
+  class?: string;
+}
+const { tone = 'paper', compact = false, class: cls = '' } = Astro.props;
+const bg = { paper: 'bg-paper', sand: 'bg-sand', mint: 'bg-mint' }[tone];
+---
+<div class:list={[bg, cls]} data-band={tone}>
+  <div class:list={['mx-auto max-w-[1200px] px-4 lg:px-6', compact ? 'py-8 lg:py-12' : 'py-12 lg:py-20']}>
+    <slot />
+  </div>
+</div>

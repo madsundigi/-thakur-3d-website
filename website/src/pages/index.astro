@@ -1,0 +1,109 @@
+---
+// `/` — Home. Blueprint: website-plan/blueprints/home.md (B01): head §1, every block in DOM order H-1 … H-12 (§3),
+// FAQ §4, images §5. Copy: src/data/pages/home.ts (+ the shared data files it names). JSON-LD: the 04 §2.9 home row,
+// one @graph = WebSite + LocalBusiness + FAQPage (schemaGraphLd 'home'). Zero client JS (04 §5.3): no island, no
+// script — the CTAs are plain links tracked by the base layout's delegated listener (09 §3.1).
+//
+// Surface rhythm (08 §1.4 rule 5 — two adjacent bands never share a background): hero paper · H-2 sand · H-3 paper ·
+// H-4 sand · H-5 paper · H-6 mint (the trust strip) · [H-7 paper] · [H-8 sand] · H-9 paper · H-10 sand · H-11 paper ·
+// H-12 brand-dark (CtaBand), then the brand-dark footer.
+import Base from '../layouts/Base.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Faq from '../components/Faq.astro';
+import Hero from '../components/Hero.astro';
+import Photo from '../components/Photo.astro';
+import PromiseBand from '../components/PromiseBand.astro';
+import StepsStrip from '../components/StepsStrip.astro';
+import AreasGrid from '../components/pages/home/AreasGrid.astro';
+import Band from '../components/pages/home/Band.astro';
+import BeforeAfterStrip from '../components/pages/home/BeforeAfterStrip.astro';
+import MoreLink from '../components/pages/home/MoreLink.astro';
+import OffersTeaser from '../components/pages/home/OffersTeaser.astro';
+import PriceTeaser from '../components/pages/home/PriceTeaser.astro';
+import ProofBlock from '../components/pages/home/ProofBlock.astro';
+import ServicesGrid from '../components/pages/home/ServicesGrid.astro';
+import TeamBlock from '../components/pages/home/TeamBlock.astro';
+import { prefillFor } from '../data/services';
+import { site, telHref, waHref } from '../data/site';
+import {
+  HOME_CTA, HOME_FAQ, HOME_HEAD, HOME_HERO, HOME_STEPS, homeGalleryPairs, homeGroomers,
+} from '../data/pages/home';
+import { bookHref, heroPriceChip } from '../lib/pricing';
+import { schemaGraphLd } from '../lib/schema';
+
+const PATH = '/';
+const callLabel = `Call ${site.phone}`;
+const pairs = homeGalleryPairs(); // H-7 renders only with ≥ 3 real pairs
+const team = homeGroomers(); // H-8 cards only for people already on the team
+// With no gallery and no team, H-8 is just its line + "How we hire" — it sits under the Promise in the mint band.
+const teamInPromiseBand = !pairs.length && !team.length;
+---
+<Base
+  title={HOME_HEAD.title}
+  description={HOME_HEAD.description}
+  path={PATH}
+  ogImageAlt={HOME_HEAD.ogImageAlt}
+  jsonLd={[schemaGraphLd({ type: 'home' }, Astro.site)]}
+>
+  {/* LCP preload for the hero photo (04 §5.2.2), same transform as the hero <Picture>. */}
+  <Photo slot="head" preload preset="hero" name={HOME_HERO.photo.name} />
+
+  {/* H-1 Hero (06 §2.3; primary → the booking form, amber — 00 §11 E1; Call hidden below md — E3). */}
+  <Hero
+    eyebrow={HOME_HERO.eyebrow}
+    h1={HOME_HERO.h1}
+    subhead={HOME_HERO.subhead}
+    hinglish={HOME_HERO.hinglish}
+    primary={{ label: HOME_HERO.primaryLabel, href: bookHref({ src: 'hero_home' }), source: 'hero_home' }}
+    secondary={{ label: callLabel, href: telHref(), source: 'hero_home' }}
+    priceChip={heroPriceChip('home')}
+    photo={HOME_HERO.photo}
+  />
+
+  {/* H-2 Social proof */}
+  <Band tone="sand"><ProofBlock onSand /></Band>
+
+  {/* H-3 Services grid */}
+  <Band><ServicesGrid /></Band>
+
+  {/* H-4 How it works — the 4 site-wide steps (04 §2.8) + support line + "See the full process". */}
+  <Band tone="sand">
+    <StepsStrip heading={HOME_STEPS.heading}>
+      <p class="measure m-0">{HOME_STEPS.support}</p>
+      <MoreLink href="/how-it-works/" class="mt-1">{HOME_STEPS.link}</MoreLink>
+    </StepsStrip>
+  </Band>
+
+  {/* H-5 Price teaser */}
+  <Band><PriceTeaser /></Band>
+
+  {/* H-6 The PetDoorStep Promise — a full-bleed mint strip. PromiseBand is a mint card (p-4 / md:p-6); on the mint band
+      its padding is pulled back so its text lines up with the other bands (no overflow: the pull never exceeds the
+      band's own 16px / 24px gutter). */}
+  <Band tone="mint">
+    <div class="-m-4 md:-mx-4 md:-my-6 lg:-mx-6"><PromiseBand /></div>
+    {teamInPromiseBand ? <TeamBlock people={team} class="mt-8" /> : null}
+  </Band>
+
+  {/* H-7 Before/after strip — omitted until ≥ 3 real pairs exist. */}
+  {pairs.length ? <Band><BeforeAfterStrip pairs={pairs} /></Band> : null}
+
+  {/* H-8 Meet your groomers — its own band once there is a team (or after the gallery). */}
+  {teamInPromiseBand ? null : <Band tone="sand" compact={!team.length}><TeamBlock people={team} /></Band>}
+
+  {/* H-9 Areas we serve */}
+  <Band><AreasGrid /></Band>
+
+  {/* H-10 Offers teaser */}
+  <Band tone="sand"><OffersTeaser /></Band>
+
+  {/* H-11 FAQ — faq.json home-1 … home-6; the FAQPage markup in the head mirrors it word for word. */}
+  <Band><Faq page={PATH} heading={HOME_FAQ.heading} /></Band>
+
+  {/* H-12 Final CTA band (full-bleed, a direct child of <main>): wa.me with the home prefill + Call. */}
+  <CtaBand
+    heading={HOME_CTA.heading}
+    primary={{ label: HOME_CTA.primaryLabel, href: waHref(prefillFor(PATH)), source: 'ctaband_home' }}
+    secondary={{ label: callLabel, href: telHref(), source: 'ctaband_home' }}
+  />
+</Base>

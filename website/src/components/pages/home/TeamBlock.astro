@@ -1,0 +1,29 @@
+---
+// H-8 Meet your groomers (home.md §3 H-8; content law 06 §4.2; template SP-7; 08 §4.10). Up to 3 condensed
+// GroomerCards — only for people already on the team (homeGroomers(): people.ts honesty law, about.md AB-6).
+// With nobody on the team yet, the block title and the cards are omitted; the 06 §4.2 supporting line and the
+// "How we hire" link to /about/ still render (decisions/w1-home.md): that link is /about/'s contextual inbound link
+// (02 P068). The link renders only while /about/ is live.
+import GroomerCard from '../../GroomerCard.astro';
+import MoreLink from './MoreLink.astro';
+import { MEET_GROOMERS, type Person } from '../../../data/people';
+import { HOME_TEAM } from '../../../data/pages/home';
+
+interface Props { people: readonly Person[]; class?: string }
+const { people, class: cls = '' } = Astro.props;
+---
+{people.length ? (
+  <section aria-labelledby="team-heading" class={cls}>
+    <h2 id="team-heading" class="t-h2 m-0">{MEET_GROOMERS.title}</h2>
+    <p class="measure m-0 mt-3 text-slate">{MEET_GROOMERS.line}</p>
+    <ul class="mt-6 grid list-none gap-4 p-0 md:grid-cols-3 lg:gap-6">
+      {people.map((p) => <li class="min-w-0"><GroomerCard person={p} variant="condensed" /></li>)}
+    </ul>
+    <MoreLink href="/about/" class="mt-4">{HOME_TEAM.hireLink}</MoreLink>
+  </section>
+) : (
+  <div class={cls}>
+    <p class="measure m-0 text-ink">{MEET_GROOMERS.line}</p>
+    <MoreLink href="/about/" class="mt-1">{HOME_TEAM.hireLink}</MoreLink>
+  </div>
+)}
