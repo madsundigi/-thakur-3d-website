@@ -8,7 +8,7 @@ import Chip from './Chip.astro';
 import Photo from './Photo.astro';
 import Icon from './icons/Icon.astro';
 import { isLive, routeLabel } from '../data/routes';
-import { SERVICE_PRICE_CHIP } from '../data/content';
+import { cardPriceChip, type MoneyPage } from '../lib/pricing';
 
 interface Props {
   /** Money-page path from routes.ts, e.g. '/ludhiana/dog-grooming/'. */
@@ -18,8 +18,13 @@ interface Props {
   name?: string;
   /** One-liner, ≤ 70 chars, from that page's 06 §2.3 subhead. */
   blurb: string;
-  /** Price chip text(s) built with pricing helpers. Default: SERVICE_PRICE_CHIP[path]. An array renders several chips. */
+  /** Price chip text(s) — overrides the default. An array renders several chips. */
   price?: string | readonly string[];
+  /** The page this card is rendered on — a slug ('vet-at-home', 'home', 'ludhiana', 'pricing') or its path
+   *  ('/ludhiana/vet-at-home/', '/'). The default chip is cardPriceChip(card page, onPage) from src/lib/pricing.ts,
+   *  which words one chip per host page (Tick & Flea: "… · … add-on" on home and the grooming pages, the bare
+   *  standalone price on vet-at-home SP-11). Pass it on every SP-11 card. */
+  onPage?: string;
   /** 4:3 card photo: planned 08 §5.2 filename + 08 §5.4 alt. */
   photo: { name: string; alt: string; position?: string };
   /** Heading level inside the card (default 3). */
@@ -27,8 +32,21 @@ interface Props {
   class?: string;
 }
 
-const { path, name = routeLabel(path), blurb, photo, level = 3, class: cls = '' } = Astro.props;
-const priceProp = Astro.props.price ?? SERVICE_PRICE_CHIP[path];
+const MONEY_PAGES: readonly MoneyPage[] = [
+  'dog-grooming', 'cat-grooming', 'dog-walking', 'vet-at-home', 'dog-vaccination', 'tick-flea-treatment', 'puppy-grooming',
+];
+type Host = NonNullable<Parameters<typeof cardPriceChip>[1]>;
+const HOSTS: readonly string[] = [...MONEY_PAGES, 'home', 'ludhiana', 'pricing'];
+/** '/ludhiana/vet-at-home/' | 'vet-at-home' → 'vet-at-home' · '/' → 'home' · '/ludhiana/' → 'ludhiana'. */
+const lastSegment = (v: string): string => v.split('/').filter(Boolean).pop() ?? 'home';
+
+const { path, name = routeLabel(path), blurb, photo, onPage, level = 3, class: cls = '' } = Astro.props;
+const page = lastSegment(path) as MoneyPage;
+const host = onPage === undefined ? undefined : lastSegment(onPage);
+if (host !== undefined && !HOSTS.includes(host)) {
+  throw new Error(`ServiceCard ${path}: unknown onPage "${onPage}" (use a money-page slug, 'home', 'ludhiana' or 'pricing')`);
+}
+const priceProp = Astro.props.price ?? (MONEY_PAGES.includes(page) ? cardPriceChip(page, host as Host | undefined) : undefined);
 const prices = priceProp === undefined ? [] : typeof priceProp === 'string' ? [priceProp] : [...priceProp];
 const live = isLive(path);
 const Tag = live ? 'a' : 'div';

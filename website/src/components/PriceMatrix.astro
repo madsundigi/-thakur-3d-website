@@ -1,10 +1,13 @@
 ---
 // Price matrix (08-DESIGN-SYSTEM §4.8; data = the 06-CONVERSION-PLAYBOOK §5.2 canonical matrix + flat-price lines).
 // Real <table>, sticky first column; below md it scrolls sideways behind a right-edge fade, from md up it fits without
-// scroll (08 §4.8). Zero JS. Every ₹ figure comes from src/data/pricing.json via src/lib/pricing.ts.
+// scroll (08 §4.8). The surface, scroll region and shared table rules live in TableFrame.astro (also used by
+// InfoTable.astro); this file keeps only the matrix-specific ones. Zero JS. Every ₹ figure comes from
+// src/data/pricing.json via src/lib/pricing.ts.
 // Book links → /book/?service=<id>&size=<size>&src=<source> (07 §2 row 5).
 // Order (08 §4.8 / 06 §5.4): table → R1 + R2 directly under it → flat-price lines → <slot/> (extra page lines).
 // Flat-only (matrix={false}): flat-price lines → R1 + R2 → <slot/>. The section heading (H2) belongs to the page.
+import TableFrame from './TableFrame.astro';
 import { R1, R2 } from '../data/content';
 import { isLive } from '../data/routes';
 import {
@@ -69,48 +72,46 @@ const surface = onTint ? 'border border-line' : 'shadow-1';
 ---
 <div id={id} class:list={['pm', cls]}>
   {matrix ? (
-    <div class:list={['rounded-lg bg-paper', surface]}>
-      <div class="pm-scroll rounded-lg" role="region" aria-label={caption} tabindex="0">
-        <table class="pm-table w-full border-collapse text-left">
-          <caption class:list={[showCaption ? 'pm-caption' : 'sr-only']}>{caption}</caption>
-          <thead>
-            <tr class="bg-mint text-brand-deep">
-              <th scope="col" class="t-h4">Size</th>
-              <th scope="col" class="t-h4">Weight</th>
-              <th scope="col" class="t-h4">Example breeds <span class="block text-sm font-normal">(Ludhiana favourites)</span></th>
-              {columns.map((c) => (
-                <th scope="col" class:list={['t-h4', { 'is-featured': c.id === featured }]}>
-                  {c.label}
-                  {c.badge ? <span class="t-micro mt-1 flex h-6 w-max items-center rounded-pill bg-cta px-2 text-ink">{c.badge}</span> : null}
-                </th>
-              ))}
-              {rowBook ? <th scope="col"><span class="sr-only">Book</span></th> : null}
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((r) => (
-              <tr>
-                <th scope="row" class="font-semibold text-ink">{r.label}</th>
-                <td class="whitespace-nowrap text-ink">{r.kg}</td>
-                <td class="pm-breeds text-sm text-slate">{r.examples}</td>
-                {r.cells.map((c) => (
-                  <td class:list={['pm-price', { 'is-featured': c.serviceId === featured }]}>
-                    <span class="t-price text-2xl leading-tight">{c.price}</span>
-                  </td>
-                ))}
-                {rowBook ? (
-                  <td class="pm-book-cell">
-                    <a href={bookHref({ service: rowService.id, size: r.size, src: source })} class="pm-book">
-                      Book<span class="sr-only"> {rowService.label}, {r.label} dog</span>
-                    </a>
-                  </td>
-                ) : null}
-              </tr>
+    <TableFrame label={caption} onTint={onTint}>
+      <table class="pm-table w-full border-collapse text-left">
+        <caption class:list={[showCaption ? 'tf-caption' : 'sr-only']}>{caption}</caption>
+        <thead>
+          <tr>
+            <th scope="col" class="t-h4">Size</th>
+            <th scope="col" class="t-h4">Weight</th>
+            <th scope="col" class="t-h4">Example breeds <span class="block text-sm font-normal">(Ludhiana favourites)</span></th>
+            {columns.map((c) => (
+              <th scope="col" class:list={['t-h4', { 'is-featured': c.id === featured }]}>
+                {c.label}
+                {c.badge ? <span class="t-micro mt-1 flex h-6 w-max items-center rounded-pill bg-cta px-2 text-ink">{c.badge}</span> : null}
+              </th>
             ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
+            {rowBook ? <th scope="col"><span class="sr-only">Book</span></th> : null}
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((r) => (
+            <tr>
+              <th scope="row" class="font-semibold text-ink">{r.label}</th>
+              <td class="whitespace-nowrap text-ink">{r.kg}</td>
+              <td class="pm-breeds text-sm text-slate">{r.examples}</td>
+              {r.cells.map((c) => (
+                <td class:list={['pm-price', { 'is-featured': c.serviceId === featured }]}>
+                  <span class="t-price text-2xl leading-tight">{c.price}</span>
+                </td>
+              ))}
+              {rowBook ? (
+                <td class="pm-book-cell">
+                  <a href={bookHref({ service: rowService.id, size: r.size, src: source })} class="pm-book">
+                    Book<span class="sr-only"> {rowService.label}, {r.label} dog</span>
+                  </a>
+                </td>
+              ) : null}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </TableFrame>
   ) : null}
 
   {matrix && reassure ? (
@@ -154,40 +155,14 @@ const surface = onTint ? 'border border-line' : 'shadow-1';
 </div>
 
 <style>
-  /* Scroll container: horizontal scroll on narrow screens, one DOM (no stacked duplicate — 02 content parity). */
-  .pm-scroll {
-    position: relative; /* contains the sr-only (absolute) caption — else it escapes the scroller and widens the page */
-    overflow-x: auto;
-    overscroll-behavior-x: contain;
-    /* Tab-scrolling parks a Book link clear of the sticky Size column (~95px at base). Kept small on purpose: when
-       link + scroll-margin is wider than what is left of a 320px scroller, Chromium stops scrolling it into view and
-       the focus ring is clipped at the edge (08 §7.2). */
-    scroll-padding-inline: 96px 0;
-  }
-  .pm-scroll:focus-visible { outline-offset: -2px; }
-  .pm-table { min-width: 640px; font-variant-numeric: tabular-nums; }
-  .pm-caption { caption-side: top; text-align: left; padding: 16px 16px 4px; font-weight: 600; }
+  /* Shared table rules (scroller, fade, header row, zebra, featured cells, sticky first column, cell padding) live in
+     TableFrame.astro. Matrix-specific rules below. */
 
-  .pm-table th,
-  .pm-table td { padding: 12px 16px; vertical-align: middle; height: 52px; }
-  .pm-table thead th { vertical-align: bottom; }
-
-  /* Rows: paper / sand-50 zebra (08 §4.8). Opaque mix, so the sticky column can inherit it without see-through. */
-  .pm-table tbody tr { --pm-row: var(--color-paper); background: var(--pm-row); border-top: 1px solid var(--color-line); }
-  .pm-table tbody tr:nth-child(even) { --pm-row: color-mix(in srgb, var(--color-sand) 50%, var(--color-paper)); }
-  /* Hero-service emphasis: Full Groom column cells sand. */
-  .pm-table td.is-featured { background: var(--color-sand); }
-
-  /* Sticky first column (z-10 per 08 §3.6) with a hairline edge so scrolled content reads as passing under it. */
-  .pm-table thead th:first-child,
-  .pm-table tbody th[scope='row'] {
-    position: sticky;
-    left: 0;
-    z-index: 10;
-    box-shadow: inset -1px 0 0 var(--color-line);
-  }
-  .pm-table thead th:first-child { background: var(--color-mint); }
-  .pm-table tbody th[scope='row'] { background: var(--pm-row); }
+  /* Tab-scrolling parks a Book link clear of the sticky Size column (~95px at base). Kept small on purpose: when
+     link + scroll-margin is wider than what is left of a 320px scroller, Chromium stops scrolling it into view and
+     the focus ring is clipped at the edge (08 §7.2). */
+  .pm :global(.tf-scroll) { scroll-padding-inline: 96px 0; }
+  .pm-table { min-width: 640px; }
 
   .pm-price { white-space: nowrap; }
   .pm-book-cell { text-align: right; }
@@ -229,32 +204,14 @@ const surface = onTint ? 'border border-line' : 'shadow-1';
   .pm-line-price { display: flex; flex: 0 1 auto; align-items: center; gap: 12px; margin-left: auto; text-align: right; }
   .pm-line-book { flex: none; width: 4.75rem; padding: 0; }
 
-  /* Base (< md) — the table scrolls sideways. A right-edge fade signals "scroll for more"; the last column carries
-     40px of right padding so that, scrolled to the end, only padding sits under the fade. The breeds column keeps
-     a readable width (the table scrolls anyway). Row-end Book links keep ≥ 12px of cell padding to the scroller's
-     bottom edge and ≥ 16px (40px at base) to its right edge, so their ring clears the 16px corner radius (08 §7.2). */
-  .pm-scroll {
-    -webkit-mask-image: linear-gradient(to right, black calc(100% - 32px), transparent);
-    mask-image: linear-gradient(to right, black calc(100% - 32px), transparent);
-  }
-  /* Keyboard users: never let the fade sit over a focused Book link (08 §7.2 — focus never obscured). */
-  .pm-scroll:focus-within { -webkit-mask-image: none; mask-image: none; }
-  .pm-table tr > :last-child { padding-right: 40px; }
+  /* Base (< md) — the table scrolls sideways (TableFrame). The breeds column keeps a readable width (the table scrolls
+     anyway). Row-end Book links keep ≥ 12px of cell padding to the scroller's bottom edge and ≥ 16px (40px at base)
+     to its right edge, so their ring clears the 16px corner radius (08 §7.2). */
   .pm-breeds { min-width: 11rem; }
 
-  /* ≥ md the table fits without scroll (08 §4.8 Responsive): no fade and no trailing fade padding, the breeds column
-     and long headers wrap, cells tighten to 8px sides (16px at the table's outer edges). Measured at 768: the row-end
-     Book variant needs 685px (min-content) of the 736px content width; scrollWidth = clientWidth. */
+  /* ≥ md the table fits without scroll (08 §4.8 Responsive): the breeds column and long headers wrap. Measured at
+     768: the row-end Book variant needs 685px (min-content) of the 736px content width; scrollWidth = clientWidth. */
   @media (min-width: 768px) {
-    .pm-scroll { -webkit-mask-image: none; mask-image: none; }
-    .pm-table th,
-    .pm-table td { padding-left: 8px; padding-right: 8px; }
-    .pm-table tr > :first-child { padding-left: 16px; }
-    .pm-table tr > :last-child { padding-right: 16px; }
     .pm-breeds { min-width: 0; }
-  }
-  @media (min-width: 1024px) {
-    .pm-table th,
-    .pm-table td { padding-left: 16px; padding-right: 16px; }
   }
 </style>
