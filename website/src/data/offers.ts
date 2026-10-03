@@ -15,6 +15,10 @@ export const REFERRAL = {
   friendGets: 150,
 } as const;
 
+/** The PetDoorStep Promise point 4 (06 §4.1): "On time, or ₹100 off." — the rupee amount taken off a visit when we
+ *  miss the confirmed slot window. Rendered with inr() and only while policy.onTimeOr100Off is true (00 §3.4 gate). */
+export const ON_TIME_OFF = 100;
+
 /** A booking qualifies when it's the first on this device and the service is a qualifying groom. */
 export const qualifiesForFirstGroom = (serviceId: string | null, priorBookings: number): boolean =>
   priorBookings === 0 && !!serviceId && (FIRSTGROOM.services as readonly string[]).includes(serviceId);

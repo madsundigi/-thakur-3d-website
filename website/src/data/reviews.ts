@@ -167,3 +167,38 @@ export function pairsFor(opts: { services?: string[]; locality?: string; count?:
 
 /** Caption service label for a pair. */
 export const pairServiceLabel = (p: BeforeAfterPair): string => p.serviceLabel ?? getService(p.service)?.label ?? p.service;
+
+// ── Proof photos (template SP-5 → "proof-photo row" on walking/vet pages) ────────────────────────────────────────────
+// dog-walking.md SP-5 "Real walk updates": 3–4 consented update photos, caption "{Pet} · {Breed} · morning walk · {Area}".
+// vet-at-home.md / dog-vaccination.md SP-5: consented photos of real visits (vet examining a pet at home; vial shown to
+// the owner). Same honesty law as the pairs above: real, consented photos only — the row is omitted until they exist.
+
+export interface ProofPhoto {
+  id: string; // e.g. "bruno-labrador-morning-walk-dugri"
+  service: string; // pricing.json id of the service shown: 'dog-walking' · 'vet-visit' · 'vaccination' · 'deworming'
+  photo: string; // Photo.astro asset name (08 §5.5 naming)
+  alt: string; // 08 §5.4, true to the shot, ≤ 125 chars — e.g. "Labrador on a morning walk in Dugri, Ludhiana"
+  caption: string; // walking: "{Pet} · {Breed} · morning walk · {Area}" (dog-walking.md SP-5); vet: "{Pet} · {Breed} · {Service} · {Area}"
+  locality?: string; // where it was really taken (only when true)
+  consent: string; // date (YYYY-MM-DD) the owner's "YES" arrived on WhatsApp (06 §4.3) — required
+}
+
+// Real, consented photos only — none yet.
+export const proofPhotos: ProofPhoto[] = [];
+
+proofPhotos.forEach((p) => {
+  const missing = [
+    !getService(p.service) && 'service (a pricing.json id)',
+    !p.photo?.trim() && 'photo',
+    !(p.alt?.trim() && p.alt.length <= 125) && 'alt (≤ 125 chars, 08 §5.4)',
+    !p.caption?.trim() && 'caption',
+    !/^\d{4}-\d{2}-\d{2}$/.test(p.consent ?? '') && 'consent (YYYY-MM-DD of the owner\'s YES)',
+  ].filter(Boolean);
+  if (missing.length) throw new Error(`reviews.ts proof photo ${p.id}: needs ${missing.join(', ')}`);
+});
+
+/** Proof photos for a page's service id(s), in file order (SP-5 rows show 3–4; render nothing when this is empty). */
+export function proofPhotosFor(serviceId: string | readonly string[], count = 4): ProofPhoto[] {
+  const ids: readonly string[] = typeof serviceId === 'string' ? [serviceId] : serviceId;
+  return proofPhotos.filter((p) => ids.includes(p.service)).slice(0, count);
+}

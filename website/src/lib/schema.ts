@@ -3,12 +3,16 @@
 // contact value from src/data/site.ts, every FAQ from src/data/faq.json (via ./faq). Absolute URLs are built from
 // Astro.site — the same base as the canonical (§3).
 // Use one <script> per page holding a single @graph (§2.0.1): `jsonLd={[schemaGraphLd({ type: 'pricing', crumbs }, Astro.site)]}`.
-import { bookingSteps } from '../data/content';
+import { bookingSteps, FIRSTGROOM_TERMS, REFERRAL_TERMS } from '../data/content';
 import { FIRSTGROOM, REFERRAL } from '../data/offers';
+import { TEAM_LANGUAGES, type Language } from '../data/people';
 import { routeLabel, routes } from '../data/routes';
+import { PACKAGE_TABLES, packageSummary } from '../data/services';
 import { instagramHref, isFilled, site as biz } from '../data/site';
 import { faqFor, type FaqEntry } from './faq';
-import { areas, getService, inr, sizeGuide, type Service } from './pricing';
+import {
+  areas, getService, groomClubPrices, inr, matrixColumns, priceLineOffers, pricingData, sizeGuide, type Service,
+} from './pricing';
 
 export interface Crumb { label: string; path: string }
 
@@ -54,7 +58,9 @@ const ref = (id: string) => ({ '@id': id });
 /** Image + logo used by the business node. 04 §2.1 names /og/petdoorstep-home.jpg and /images/petdoorstep-logo.png,
  *  neither of which exists yet — these point at the shipped brand OG image and 512 px icon so Google never fetches
  *  a 404. Swap to the 04 paths in the commit that adds those files. */
+// Target: '/og/petdoorstep-home.jpg' (04 §2.1 `image`) — the integrator swaps it in once public/og/petdoorstep-home.jpg exists.
 export const BUSINESS_IMAGE_PATH = '/og/default.png';
+// Target: '/images/petdoorstep-logo.png' (04 §2.1 `logo`) — the integrator swaps it in once public/images/petdoorstep-logo.png exists.
 export const BUSINESS_LOGO_PATH = '/icon-512.png';
 
 // Facts that live only in 04 §2.1 (not contact values): country code + Ludhiana city-centre coordinate.
@@ -110,6 +116,15 @@ function planPrice(serviceId: string, planId: string): number {
 }
 /** Schema prices are plain numbers as strings (04 §2.5: "price": "699"). */
 const num = (n: number) => String(n);
+/** "bath with warm water, …" → "Bath with warm water, …" (an inclusion summary opening a description sentence). */
+const sentence = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+
+/** ServiceChannel languages = what the team speaks (src/data/people.ts TEAM_LANGUAGES, about.md AB-7), as ISO codes
+ *  in the 04 §2.2 order ["en", "hi", "pa"]. */
+const ISO_LANG: Readonly<Record<Language, string>> = { English: 'en', Hindi: 'hi', Punjabi: 'pa' };
+const availableLanguage = (['English', 'Hindi', 'Punjabi'] as const)
+  .filter((l) => TEAM_LANGUAGES.includes(l))
+  .map((l) => ISO_LANG[l]);
 
 // ---- §2.1 LocalBusiness (service-area business: no street address) -------------------------------------------------
 
@@ -156,22 +171,22 @@ export type ServicePage =
 
 interface OfferRow { name: string; price: number; description?: string }
 
-const DOG_GROOM_ROWS: { id: string; name: string; kg: boolean }[] = [
-  { id: 'bath-brush', name: 'Bath & Brush — bath, blow-dry, brush-out, nail trim, ear clean', kg: true },
-  { id: 'full-groom', name: 'Full Groom — Bath & Brush plus haircut/styling, paw & sanitary trim', kg: false },
-  { id: 'premium-spa', name: 'Premium Spa Groom — Full Groom plus de-shed/de-mat, conditioning masque, perfume', kg: false },
-];
-
-/** The three dog-grooming packages as size-ranged Offers (04 §2.2 worked example). */
+/**
+ * The three dog-grooming packages as size-ranged Offers (04 §2.2 worked example). Names are built from the SP-3 ✓-grid
+ * the page renders (PACKAGE_TABLES['dog-grooming']): "{column heading} — {what it includes}", e.g.
+ * "Full Groom — Bath & Brush plus haircut & styling, paw & sanitary trim" (template SP-3: inclusion names echo the
+ * Offer names, wording identical). The first description carries the kg guide, as in 04 §2.2.
+ */
 function dogGroomOffers(url: string): JsonLd[] {
-  return DOG_GROOM_ROWS.map((r) => {
-    const p = bySize(r.id);
-    const description = r.kg
+  const grid = PACKAGE_TABLES['dog-grooming'];
+  return grid.columns.map((col, i) => {
+    const p = bySize(col.serviceId);
+    const description = i === 0
       ? `Small dog (${sizeGuide.small.kg}) ${inr(p.small)} · Medium (${sizeGuide.medium.kg}) ${inr(p.medium)} · Large (${sizeGuide.large.kg}) ${inr(p.large)}`
       : `Small dog ${inr(p.small)} · Medium ${inr(p.medium)} · Large ${inr(p.large)}`;
     return {
       '@type': 'Offer',
-      name: r.name,
+      name: `${col.label} — ${packageSummary(grid, i)}`,
       priceCurrency: 'INR',
       priceSpecification: { '@type': 'PriceSpecification', minPrice: p.small, maxPrice: p.large, priceCurrency: 'INR' },
       description,
@@ -239,7 +254,7 @@ function serviceNode(o: { path: string; name: string; serviceType: string; areaS
     availableChannel: {
       '@type': 'ServiceChannel',
       serviceUrl: absUrl('/book/', site),
-      availableLanguage: ['en', 'hi', 'pa'],
+      availableLanguage,
     },
     offers: o.offers,
   };
@@ -295,24 +310,33 @@ export function faqPageLd(entries: readonly FaqEntry[]): JsonLd {
 
 // ---- §2.5 OfferCatalog (/pricing/) ----------------------------------------------------------------------------------
 
+/**
+ * One Offer per visible /pricing/ price, named exactly as the page labels it (pricing.md §5 — wins over 04 §2.5's
+ * draft names, decision E6), in page order. Built from the very lines the page renders, so names and figures can't
+ * drift: PR-3 matrix → matrixColumns() + the PR-4 ✓-grid (PACKAGE_TABLES) for what each package includes · PR-5/6/7
+ * → priceLineOffers() (Tick & Flea = two Offers named from TICK_FLEA_LINE) · PR-8 → Groom Club. "+ MRP" fees carry
+ * the fee only; the MRP wording stays in the description (pricing.md §5).
+ */
 export function offerCatalogLd(site: Site): JsonLd {
-  const sized = (name: string, id: string, includes: string) => {
-    const p = bySize(id);
+  const grid = PACKAGE_TABLES['dog-grooming'];
+  const sized = matrixColumns().map((c) => {
+    const p = bySize(c.id);
+    const col = grid.columns.findIndex((g) => g.serviceId === c.id);
     return {
       '@type': 'Offer',
-      name,
-      description: `Small ${inr(p.small)} · Medium ${inr(p.medium)} · Large ${inr(p.large)}. ${includes}`,
+      name: c.label,
+      description: `Small ${inr(p.small)} · Medium ${inr(p.medium)} · Large ${inr(p.large)}. ${sentence(packageSummary(grid, col))}.`,
       priceCurrency: 'INR',
       priceSpecification: { '@type': 'PriceSpecification', minPrice: p.small, maxPrice: p.large, priceCurrency: 'INR' },
     };
-  };
-  const flat = (name: string, price: number, description?: string) => ({
-    '@type': 'Offer',
-    name,
-    ...(description ? { description } : {}),
-    price: num(price),
-    priceCurrency: 'INR',
   });
+  const flat = (['pricing-cat-quick', 'pricing-walking', 'pricing-vet'] as const).flatMap(priceLineOffers).map((o) => ({
+    '@type': 'Offer',
+    name: o.name,
+    ...(o.description ? { description: o.description } : {}),
+    price: num(o.amount),
+    priceCurrency: 'INR',
+  }));
   return {
     '@context': CONTEXT,
     '@type': 'OfferCatalog',
@@ -320,34 +344,18 @@ export function offerCatalogLd(site: Site): JsonLd {
     name: 'PetDoorStep Ludhiana — Doorstep Pet Care Price List',
     url: absUrl('/pricing/', site),
     provider: ref(ldId.business(site)),
-    itemListElement: [
-      sized('Bath & Brush (dog)', 'bath-brush', 'Bath, blow-dry, brush-out, nail trim, ear clean.'),
-      sized('Full Groom (dog)', 'full-groom', 'Bath & Brush plus haircut/styling, paw & sanitary trim.'),
-      sized('Premium Spa Groom (dog)', 'premium-spa', 'Full Groom plus de-shed/de-mat, conditioning masque, perfume.'),
-      flat('Puppy Intro Groom (under 6 months)', flatPrice('puppy-intro')),
-      flat('Cat Grooming — Bath & Brush', planPrice('cat-grooming', 'cat-bath-brush')),
-      flat('Cat Grooming — Full', planPrice('cat-grooming', 'cat-full')),
-      flat('Tick & Flea Treatment — add-on with any groom', addonPrice('tick-flea')),
-      flat('Tick & Flea Treatment — standalone visit', flatPrice('tick-flea')),
-      flat('Nail Trim + Ear Clean visit', flatPrice('nail-ear')),
-      flat('Dog Walking — 1 walk/day, monthly', planPrice('dog-walking', 'walk-1x'), 'Fixed walker, GPS + photo update after every walk.'),
-      flat('Dog Walking — 2 walks/day, monthly', planPrice('dog-walking', 'walk-2x')),
-      flat('Dog Walking — Trial Week', planPrice('dog-walking', 'walk-trial')),
-      flat('Vet Home Visit (consultation)', flatPrice('vet-visit'), 'Registered veterinarians only. Medicines/vaccines at MRP.'),
-      flat('Vaccination at Home', flatPrice('vaccination'),
-        `${inr(flatPrice('vaccination'))} service fee + ${plusText('vaccination')}, with reminder calendar.`),
-      flat('Deworming Visit (standard dewormer included)', flatPrice('deworming')),
-      groomClubOffer(),
-    ],
+    itemListElement: [...sized, ...flat, groomClubOffer()],
   };
 }
 
-/** The Groom Club row — shared by the /pricing/ catalog (04 §2.5, last row) and the /offers/ catalog. */
+/** The Groom Club row — shared by the /pricing/ catalog (04 §2.5, last row) and the /offers/ catalog. Named as both
+ *  pages label it ("Groom Club"); benefit + club prices from pricing.json (the PR-8 / OF-4 maths table). */
 function groomClubOffer(): JsonLd {
+  const prices = groomClubPrices().map((c) => `${c.label} ${c.club}`).join(' · ');
   return {
     '@type': 'Offer',
-    name: 'Groom Club monthly subscription',
-    description: '1 Full Groom per month at 15% off + free nail-trim visit + priority slots. Price depends on dog size — see Full Groom rates.',
+    name: pricingData.groomClub.label,
+    description: `${pricingData.groomClub.benefit}. Groom Club price per Full Groom: ${prices}.`,
   };
 }
 
@@ -367,27 +375,21 @@ function offerNode(o: LiveOffer): JsonLd {
   return { '@type': 'Offer', name: o.name, description: o.description };
 }
 
-/** FIRSTGROOM (06 §7.1) — wording from blueprints/offers.md OF-2; amounts from offers.ts + pricing.json. */
+/** FIRSTGROOM (06 §7.1) — terms = FIRSTGROOM_TERMS (src/data/content.ts), the same text the page shows wherever the
+ *  offer is advertised; amounts from offers.ts + pricing.json. */
 export function firstGroomOffer(): LiveOffer {
-  const nailEar = need('nail-ear');
   return {
     name: `${FIRSTGROOM.code} — ${inr(FIRSTGROOM.off)} off your first groom`,
-    description:
-      `${inr(FIRSTGROOM.off)} off your first Full Groom or Premium Spa Groom + a free ${nailEar.label} (${inr(flatPrice('nail-ear'))} value) between grooms, ` +
-      `redeemable within ${FIRSTGROOM.validDays} days of the first visit. ` +
-      'Terms: one use per household · applies to Full Groom or Premium Spa only · not combinable with another discount on the same booking.',
+    description: FIRSTGROOM_TERMS,
   };
 }
 
-/** Referral (06 §7.2) — wording from blueprints/offers.md OF-3; amounts from offers.ts (REFERRAL, FIRSTGROOM). */
+/** Referral (06 §7.2) — terms = REFERRAL_TERMS (src/data/content.ts), shared with the visible copy; amounts from
+ *  offers.ts (REFERRAL, FIRSTGROOM). */
 export function referralOffer(): LiveOffer {
   return {
     name: `Refer a friend — ${inr(REFERRAL.youGet)} off for you, ${inr(REFERRAL.friendGets)} off for them`,
-    description:
-      `You get ${inr(REFERRAL.youGet)} off your next service; your friend gets ${inr(REFERRAL.friendGets)} off their first service. ` +
-      `If your friend's first booking is a Full Groom or Premium Spa, they get ${FIRSTGROOM.code}'s ${inr(FIRSTGROOM.off)} instead ` +
-      `(one discount per booking — the larger one applies); you still get your ${inr(REFERRAL.youGet)}. ` +
-      'Your friend mentions your name or number in their first WhatsApp booking. No limit on referrals.',
+    description: REFERRAL_TERMS,
   };
 }
 

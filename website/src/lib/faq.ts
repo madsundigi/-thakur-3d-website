@@ -1,7 +1,11 @@
 // FAQ access — the ONE way pages, Faq.astro and the FAQPage JSON-LD read src/data/faq.json (blueprints/faq.md §2).
 // The data is validated when this module loads, so a malformed entry fails `astro build` instead of shipping.
+// faq.json is frozen: answer text changes go through a decision log entry, never a quiet edit.
 import data from '../data/faq.json';
+import { RESCHEDULE_TEXT } from '../data/content';
 import { isLive } from '../data/routes';
+import { site } from '../data/site';
+import { DOG_GROOM_IDS, flatPrice, fromPrice, planPrice } from './pricing';
 
 export type FaqCategory = 'booking' | 'grooming' | 'walking' | 'vet' | 'safety' | 'areas' | 'careers';
 
@@ -35,9 +39,29 @@ export const FAQ_SECTIONS: readonly FaqSection[] = [
     ids: ['home-1', 'faq-a1', 'faq-a2'] },
 ];
 
+/** The one-line link under each /faq/ category H2 (faq.md §3: "Each category is an H2 with a one-line link to its
+ *  money page"); its target is that section's `link`, and it renders only while the target is live. */
+export const FAQ_PAGE_CATEGORY_LINKS: Readonly<Partial<Record<FaqCategory, string>>> = {
+  booking: 'Compare every service on the full price list',
+  grooming: `Dog grooming at home in Ludhiana — from ${fromPrice(DOG_GROOM_IDS)}`,
+  walking: `Daily dog walks in Ludhiana — ${planPrice('dog-walking', 'walk-1x')}/month`,
+  vet: `Vet home visits in Ludhiana — ${flatPrice('vet-visit')} per visit`,
+  safety: 'Read our full safety & hygiene standards',
+  areas: 'Ask about your area — WhatsApp, call or email us',
+};
+
+/** Heading of the /faq/ closing CTA band (faq.md §5: [Book on WhatsApp] + [Call [FILL:PHONE]]). */
+export const FAQ_CTA_HEADING = 'Got your answer? Book your first visit in 2 minutes.';
+
 const CATEGORIES: readonly FaqCategory[] = ['booking', 'grooming', 'walking', 'vet', 'safety', 'areas', 'careers'];
 
-export const faqEntries: readonly FaqEntry[] = data as FaqEntry[];
+/** [FILL:*] tokens an answer may carry, filled from src/data/site.ts so each real-world value is typed in one place
+ *  (faq.json is frozen). While site.ts still holds the token the answer shows it — the launch gate catches it. */
+const ANSWER_FILLS: Readonly<Record<string, string>> = { '[FILL:EMERGENCY_VET_LIST]': site.emergencyVets };
+const fillTokens = (text: string): string =>
+  Object.entries(ANSWER_FILLS).reduce((t, [token, value]) => t.split(token).join(value), text);
+
+export const faqEntries: readonly FaqEntry[] = (data as FaqEntry[]).map((e) => ({ ...e, a: fillTokens(e.a) }));
 const byId = new Map(faqEntries.map((e) => [e.id, e]));
 
 // ---- build-time validation ---------------------------------------------------------------------------------------
@@ -68,6 +92,14 @@ const byId = new Map(faqEntries.map((e) => [e.id, e]));
     }
   }
   for (const e of faqEntries) if (e.pages.includes('/faq/') && !listed.has(e.id)) problems.push(`${e.id}: has "/faq/" but no /faq/ section lists it`);
+  for (const s of FAQ_SECTIONS) {
+    const text = FAQ_PAGE_CATEGORY_LINKS[s.category];
+    if (!text?.trim() || text.length > 80) problems.push(`/faq/ section "${s.heading}": FAQ_PAGE_CATEGORY_LINKS needs a one-line link text (≤ 80 chars)`);
+  }
+  // One reschedule wording everywhere (book.md / how-it-works.md ship checks; 00 §3.2).
+  for (const id of ['book-3', 'how-it-works-3']) {
+    if (!byId.get(id)?.a.includes(RESCHEDULE_TEXT)) problems.push(`${id}: answer must contain RESCHEDULE_TEXT (src/data/content.ts) verbatim`);
+  }
   if (problems.length) throw new Error(`src/data/faq.json is invalid:\n  ${problems.join('\n  ')}`);
 })();
 
@@ -88,9 +120,10 @@ export function faqByIds(ids: readonly string[]): FaqEntry[] {
   });
 }
 
-/** The /faq/ page: its sections with entries resolved (faq.md §3). */
-export function faqPageSections(): (FaqSection & { entries: FaqEntry[] })[] {
-  return FAQ_SECTIONS.map((s) => ({ ...s, entries: faqByIds(s.ids) }));
+/** The /faq/ page: its sections with entries resolved (faq.md §3) and the category's one-line link text
+ *  (`linkText`, from FAQ_PAGE_CATEGORY_LINKS — render it as a link to `link` only while isLive(link)). */
+export function faqPageSections(): (FaqSection & { entries: FaqEntry[]; linkText: string })[] {
+  return FAQ_SECTIONS.map((s) => ({ ...s, entries: faqByIds(s.ids), linkText: FAQ_PAGE_CATEGORY_LINKS[s.category] ?? '' }));
 }
 
 /** Every /faq/ entry, flattened in section order — what the /faq/ FAQPage markup lists. */

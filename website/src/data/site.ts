@@ -17,6 +17,15 @@ export const site = {
   reviewCount: '[FILL:REVIEW_COUNT]',
   ga4Id: '[FILL:GA4_ID]',
   author: '[FILL:AUTHOR_NAME]', // blog byline ("By {author}, PetDoorStep") + BlogPosting author (00 §8 People)
+  // Registered business name — /about/ and the legal pages must name it (02 P047 launch-blocker). The brand stays
+  // `name` everywhere else (05 §4 rule 1: "PetDoorStep" alone in every listing).
+  legalName: '[FILL:LEGAL_NAME]',
+  // The founder as /about/ names him (02 P047; about.md AB-1/AB-2) — the public name Sunny chooses to publish.
+  founderName: '[FILL:FOUNDER_NAME]',
+  // 2 nearby 24-hour veterinary hospitals with phone numbers, verified by calling them (vet-at-home.md §0 rule 4).
+  // Shown in the vet-at-home SP-4 footer line and the contact-3 / vet-at-home-3 FAQ answers — src/lib/faq.ts fills
+  // the token inside faq.json from this one value, so it is filled here only.
+  emergencyVets: '[FILL:EMERGENCY_VET_LIST]',
   city: 'Ludhiana',
   region: 'Punjab',
   hours: {

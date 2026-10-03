@@ -150,10 +150,32 @@ function amountsOf(s: Service): number[] {
   }
 }
 
+/** Lowest amount across one or more services, as a number: fromAmount(DOG_GROOM_IDS) → 599 (schema, maths). */
+export function fromAmount(ids: string | readonly string[]): number {
+  const list = typeof ids === 'string' ? [ids] : ids;
+  return Math.min(...list.flatMap((id) => amountsOf(requireService(id))));
+}
+
 /** Lowest price across one or more services: fromPrice('bath-brush') → "₹599"; fromPrice(DOG_GROOM_IDS) → "₹599". */
 export function fromPrice(ids: string | readonly string[]): string {
-  const list = typeof ids === 'string' ? [ids] : ids;
-  return inr(Math.min(...list.flatMap((id) => amountsOf(requireService(id)))));
+  return inr(fromAmount(ids));
+}
+
+/** Numeric twins of the text helpers below (schema prices, maths). Same errors on an unknown id/plan. */
+export function flatAmount(id: string): number {
+  const p = requireService(id).pricing;
+  if (p.type !== 'flat' && p.type !== 'flat_plus') throw new Error(`pricing: "${id}" has no single flat price`);
+  return p.price;
+}
+export function planAmount(id: string, planId: string): number {
+  const plan = getPlan(requireService(id), planId);
+  if (!plan) throw new Error(`pricing: "${id}" has no plan "${planId}"`);
+  return plan.price;
+}
+export function addonAmount(id = 'tick-flea'): number {
+  const p = requireService(id).pricing;
+  if (p.type !== 'flat' || !p.addonPrice) throw new Error(`pricing: "${id}" has no add-on price`);
+  return p.addonPrice;
 }
 
 /** Lowest–highest with an en dash: priceRange('full-groom') → "₹1,199–₹1,899". Single-price services → "₹699". */
@@ -173,23 +195,17 @@ export function sizePriceText(id: string, size: Size): string {
 
 /** Plan price: planPrice('dog-walking', 'walk-1x') → "₹2,999". Copy adds its own unit ("/month", "/mo"). */
 export function planPrice(id: string, planId: string): string {
-  const plan = getPlan(requireService(id), planId);
-  if (!plan) throw new Error(`pricing: "${id}" has no plan "${planId}"`);
-  return inr(plan.price);
+  return inr(planAmount(id, planId));
 }
 
 /** Flat fee (flat or "+ MRP" services): flatPrice('vet-visit') → "₹699"; flatPrice('vaccination') → "₹199". */
 export function flatPrice(id: string): string {
-  const p = requireService(id).pricing;
-  if (p.type !== 'flat' && p.type !== 'flat_plus') throw new Error(`pricing: "${id}" has no single flat price`);
-  return inr(p.price);
+  return inr(flatAmount(id));
 }
 
 /** Add-on price: addonPrice() → "₹399" (Tick & Flea with any groom — the only add-on in 00 §3.2). */
 export function addonPrice(id = 'tick-flea'): string {
-  const p = requireService(id).pricing;
-  if (p.type !== 'flat' || !p.addonPrice) throw new Error(`pricing: "${id}" has no add-on price`);
-  return inr(p.addonPrice);
+  return inr(addonAmount(id));
 }
 
 /** The pricing.json "plus" wording of a "+ MRP" service: plusText('vet-visit') → "medicines/vaccines at MRP". */
@@ -331,6 +347,45 @@ export interface PriceLine {
   service?: string; // pricing.json id → row-end Book link (omitted on add-on rows: an add-on is booked with a groom)
   size?: Size; // optional size preselect for the Book link
   href?: string; // explicit link override (rare)
+  /** The schema Offer rows this visible line stands for — one per ₹ figure it shows. Names are the visible wording
+   *  (pricing.md §5: "names identical to the table labels"), so the /pricing/ OfferCatalog is built from these.
+   *  Every line priceLines() returns carries them; a hand-built line may leave them out. */
+  offers?: LineOffer[];
+}
+
+/** One schema Offer behind a visible price line: `name` = the words on the page, `amount` = the ₹ figure (number),
+ *  `description` = the visible price text when it says more than the bare figure ("₹2,999/month", "₹699 + medicines
+ *  at MRP") or the line's note. */
+export interface LineOffer { name: string; amount: number; description?: string }
+
+/** A single-figure line whose Offer is named exactly as its visible label. The Offer description repeats what the
+ *  line says beyond the bare figure: "₹2,999/month", "₹699 + medicines at MRP", "dewormer included". */
+function priceLine(label: string, amount: number, price: string, rest: Omit<PriceLine, 'label' | 'price' | 'offers'> = {}): PriceLine {
+  const note = rest.note?.replace(/^\((.*)\)$/, '$1');
+  const extra = [price === inr(amount) ? '' : price, note ?? ''].filter(Boolean).join(' · ');
+  return { label, price, ...rest, offers: [{ name: label, amount, ...(extra ? { description: extra } : {}) }] };
+}
+
+/** The visible label of the two-price Tick & Flea line (06 §5.2, pricing.md PR-5) and the word before each figure. */
+export const TICK_FLEA_LINE = { label: 'Tick & Flea', addon: 'add-on', standalone: 'standalone' } as const;
+
+/**
+ * Tick & Flea, worded once (pricing.md PR-5 / 06 §5.2): the visible line "Tick & Flea · add-on ₹399 / standalone ₹699"
+ * and its two schema Offers "Tick & Flea add-on" (₹399) and "Tick & Flea standalone" (₹699) are built from the same
+ * TICK_FLEA_LINE words, so the /pricing/ text and the OfferCatalog names can never drift apart.
+ */
+export function tickFleaLine(): PriceLine {
+  const { label, addon, standalone } = TICK_FLEA_LINE;
+  const parts = [
+    { word: addon, amount: addonAmount() },
+    { word: standalone, amount: flatAmount('tick-flea') },
+  ];
+  return {
+    label,
+    price: parts.map((p) => `${p.word} ${inr(p.amount)}`).join(' / '),
+    service: 'tick-flea',
+    offers: parts.map((p) => ({ name: `${label} ${p.word}`, amount: p.amount })),
+  };
 }
 
 /** Which verbatim list: the 06 §5.2 canonical set, a /pricing/ section, or a money page's SP-4 flat list. */
@@ -346,84 +401,94 @@ export type PriceLineSet =
   | 'tick-flea-treatment' // tick-flea-treatment.md SP-4 (Wave 2)
   | 'puppy-grooming'; // puppy-grooming.md SP-4 (Wave 2)
 
-/** The verbatim flat-price lines for a page/section. PriceMatrix adds the Book links (its `source` prop). */
+/** The verbatim flat-price lines for a page/section. PriceMatrix adds the Book links (its `source` prop). Every line
+ *  carries its schema `offers` (see PriceLine) — the /pricing/ OfferCatalog is built from the very same lines. */
 export function priceLines(set: PriceLineSet): PriceLine[] {
-  const tick = `add-on ${addonPrice()} / standalone ${flatPrice('tick-flea')}`;
-  const catBB: PriceLine = { label: 'Cat Bath & Brush', price: planPrice('cat-grooming', 'cat-bath-brush'), service: 'cat-grooming' };
-  const catFull: PriceLine = { label: 'Cat Full Groom', price: planPrice('cat-grooming', 'cat-full'), service: 'cat-grooming' };
-  const walk1 = planPrice('dog-walking', 'walk-1x');
-  const walk2 = planPrice('dog-walking', 'walk-2x');
-  const trial = planPrice('dog-walking', 'walk-trial');
+  const catBBAmt = planAmount('cat-grooming', 'cat-bath-brush');
+  const catFullAmt = planAmount('cat-grooming', 'cat-full');
+  const catBB = priceLine('Cat Bath & Brush', catBBAmt, inr(catBBAmt), { service: 'cat-grooming' });
+  const catFull = priceLine('Cat Full Groom', catFullAmt, inr(catFullAmt), { service: 'cat-grooming' });
+  const walk1 = planAmount('dog-walking', 'walk-1x');
+  const walk2 = planAmount('dog-walking', 'walk-2x');
+  const trial = planAmount('dog-walking', 'walk-trial');
+  const puppy = flatAmount('puppy-intro');
+  const nailEar = flatAmount('nail-ear');
+  const vet = flatAmount('vet-visit');
+  const vacc = flatAmount('vaccination');
+  const deworm = flatAmount('deworming');
   switch (set) {
     case 'canonical':
       return [
-        { label: 'Puppy Intro Groom (< 6 months)', price: flatPrice('puppy-intro'), service: 'puppy-intro' },
+        priceLine('Puppy Intro Groom (< 6 months)', puppy, inr(puppy), { service: 'puppy-intro' }),
         catBB,
         catFull,
-        { label: 'Nail Trim + Ear Clean', price: flatPrice('nail-ear'), service: 'nail-ear' },
-        { label: 'Tick & Flea', price: tick, service: 'tick-flea' },
-        { label: 'Vet visit', price: `${flatPrice('vet-visit')} + MRP`, service: 'vet-visit' },
-        { label: 'Vaccination', price: `${flatPrice('vaccination')} + vaccine MRP`, service: 'vaccination' },
-        { label: 'Deworming', price: flatPrice('deworming'), service: 'deworming' },
-        { label: 'Walking', price: `${walk1}/mo`, note: '(1 walk/day)', service: 'dog-walking' },
-        { label: 'Walking', price: `${walk2}/mo`, note: '(2 walks/day)', service: 'dog-walking' },
-        { label: 'Trial Week', price: trial, service: 'dog-walking' },
+        priceLine('Nail Trim + Ear Clean', nailEar, inr(nailEar), { service: 'nail-ear' }),
+        tickFleaLine(),
+        priceLine('Vet visit', vet, `${inr(vet)} + MRP`, { service: 'vet-visit' }),
+        priceLine('Vaccination', vacc, `${inr(vacc)} + vaccine MRP`, { service: 'vaccination' }),
+        priceLine('Deworming', deworm, inr(deworm), { service: 'deworming' }),
+        priceLine('Walking', walk1, `${inr(walk1)}/mo`, { note: '(1 walk/day)', service: 'dog-walking' }),
+        priceLine('Walking', walk2, `${inr(walk2)}/mo`, { note: '(2 walks/day)', service: 'dog-walking' }),
+        priceLine('Trial Week', trial, inr(trial), { service: 'dog-walking' }),
       ];
     case 'pricing-cat-quick':
       return [
         catBB,
         catFull,
-        { label: 'Puppy Intro Groom (8 weeks–6 months)', price: flatPrice('puppy-intro'), service: 'puppy-intro' },
-        { label: 'Nail Trim + Ear Clean visit', price: flatPrice('nail-ear'), service: 'nail-ear' },
-        { label: 'Tick & Flea', price: tick, service: 'tick-flea' },
+        priceLine('Puppy Intro Groom (8 weeks–6 months)', puppy, inr(puppy), { service: 'puppy-intro' }),
+        priceLine('Nail Trim + Ear Clean visit', nailEar, inr(nailEar), { service: 'nail-ear' }),
+        tickFleaLine(),
       ];
     case 'pricing-walking':
       return [
-        { label: '1 walk/day', price: `${walk1}/month`, service: 'dog-walking' },
-        { label: '2 walks/day', price: `${walk2}/month`, service: 'dog-walking' },
-        { label: 'Trial Week (7 walks)', price: trial, service: 'dog-walking' },
+        priceLine('1 walk/day', walk1, `${inr(walk1)}/month`, { service: 'dog-walking' }),
+        priceLine('2 walks/day', walk2, `${inr(walk2)}/month`, { service: 'dog-walking' }),
+        priceLine('Trial Week (7 walks)', trial, inr(trial), { service: 'dog-walking' }),
       ];
     case 'pricing-vet':
       return [
-        { label: 'Vet visit', price: `${flatPrice('vet-visit')} + medicines at MRP`, service: 'vet-visit' },
-        { label: 'Vaccination', price: `${flatPrice('vaccination')} + vaccine at MRP`, service: 'vaccination' },
-        { label: 'Deworming', price: flatPrice('deworming'), note: '(dewormer included)', service: 'deworming' },
+        priceLine('Vet visit', vet, `${inr(vet)} + medicines at MRP`, { service: 'vet-visit' }),
+        priceLine('Vaccination', vacc, `${inr(vacc)} + vaccine at MRP`, { service: 'vaccination' }),
+        priceLine('Deworming', deworm, inr(deworm), { note: '(dewormer included)', service: 'deworming' }),
       ];
     case 'cat-grooming':
       return [
         catBB,
-        { ...catFull, note: 'any breed, any coat' },
-        { label: 'Flea treatment add-on', price: addonPrice(), note: '(cat-safe products)' },
-        { label: 'Nail Trim + Ear Clean visit', price: flatPrice('nail-ear'), service: 'nail-ear' },
+        priceLine('Cat Full Groom', catFullAmt, inr(catFullAmt), { note: 'any breed, any coat', service: 'cat-grooming' }),
+        priceLine('Flea treatment add-on', addonAmount(), addonPrice(), { note: '(cat-safe products)' }),
+        priceLine('Nail Trim + Ear Clean visit', nailEar, inr(nailEar), { service: 'nail-ear' }),
       ];
     case 'dog-walking':
       return [
-        { label: '1 walk/day', price: `${walk1}/month`, service: 'dog-walking' },
-        { label: '2 walks/day', price: `${walk2}/month`, service: 'dog-walking' },
-        { label: 'Trial Week', price: trial, note: '(7 walks)', service: 'dog-walking' },
+        priceLine('1 walk/day', walk1, `${inr(walk1)}/month`, { service: 'dog-walking' }),
+        priceLine('2 walks/day', walk2, `${inr(walk2)}/month`, { service: 'dog-walking' }),
+        priceLine('Trial Week', trial, inr(trial), { note: '(7 walks)', service: 'dog-walking' }),
       ];
     case 'vet-at-home':
       return [
-        { label: 'Vet visit', price: `${flatPrice('vet-visit')} + medicines at MRP`, service: 'vet-visit' },
-        { label: 'Vaccination', price: `${flatPrice('vaccination')} + vaccine MRP`, service: 'vaccination' },
-        { label: 'Deworming', price: flatPrice('deworming'), note: '(dewormer included)', service: 'deworming' },
+        priceLine('Vet visit', vet, `${inr(vet)} + medicines at MRP`, { service: 'vet-visit' }),
+        priceLine('Vaccination', vacc, `${inr(vacc)} + vaccine MRP`, { service: 'vaccination' }),
+        priceLine('Deworming', deworm, inr(deworm), { note: '(dewormer included)', service: 'deworming' }),
       ];
     case 'dog-vaccination':
       return [
-        { label: 'Vaccination service fee', price: `${flatPrice('vaccination')} + vaccine at printed MRP`, service: 'vaccination' },
-        { label: 'Deworming Visit', price: flatPrice('deworming'), service: 'deworming' },
+        priceLine('Vaccination service fee', vacc, `${inr(vacc)} + vaccine at printed MRP`, { service: 'vaccination' }),
+        priceLine('Deworming Visit', deworm, inr(deworm), { service: 'deworming' }),
       ];
     case 'tick-flea-treatment':
       return [
-        { label: 'Add-on with any groom', price: addonPrice() },
-        { label: 'Standalone visit', price: flatPrice('tick-flea'), service: 'tick-flea' },
+        priceLine('Add-on with any groom', addonAmount(), addonPrice()),
+        priceLine('Standalone visit', flatAmount('tick-flea'), flatPrice('tick-flea'), { service: 'tick-flea' }),
       ];
     case 'puppy-grooming':
       return [
-        { label: 'Puppy Intro Groom', price: flatPrice('puppy-intro'), note: 'any breed, 8 weeks to 6 months', service: 'puppy-intro' },
+        priceLine('Puppy Intro Groom', puppy, inr(puppy), { note: 'any breed, 8 weeks to 6 months', service: 'puppy-intro' }),
       ];
   }
 }
+
+/** Every schema Offer behind a set's visible lines, in display order (Tick & Flea contributes two). */
+export const priceLineOffers = (set: PriceLineSet): LineOffer[] => priceLines(set).flatMap((l) => l.offers ?? []);
 
 // ── Per-page price chips & labels (wording from each page blueprint / 06 §2.3 / template SP-1, SP-11, SP-13) ────
 
