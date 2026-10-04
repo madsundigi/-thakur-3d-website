@@ -1,0 +1,41 @@
+---
+// /ludhiana/cat-grooming/ SP-3 body (blueprints/cat-grooming.md §3 SP-3, §5 images) — goes in ServicePage's `sp3` slot,
+// under the §2 H2 "Cat Bath & Brush — <price>, everything included" (paper band: no onTint). The blueprint gives SP-3 no
+// lead-in and the template formula has none, so the block is the ✓-grid itself — PACKAGE_TABLES['cat-grooming'], the
+// blueprint table verbatim (two flat-price columns, 8 inclusions, the duration row, footnotes (a) + the matting line) —
+// and the §5 cat-bath photo, whose alt is the page's 2nd and last Hinglish use (03 §5 row 9; §6 ship check). The shot
+// is not one of the 14 in 08 §5.2, so its filename follows 08 §5.5 (requests/w1-cat.md). From lg the photo sits beside
+// the grid (7fr/5fr, centred on it); below that it follows the grid, so the inclusions are never pushed a screen down.
+import InfoTable from '../../InfoTable.astro';
+import Photo from '../../Photo.astro';
+import { PACKAGE_TABLES } from '../../../data/services';
+---
+<div class="pkg">
+  <InfoTable table={PACKAGE_TABLES['cat-grooming']} class="pkg-table" />
+  {/* The wrapper is the grid item: a real photo renders as <picture> around the <img>, a placeholder as a bare <img>. */}
+  <div class="pkg-photo">
+    <Photo
+      name="cat-bath-home-ludhiana.jpg"
+      alt="billi ko nehlana — gentle cat bath at home in Ludhiana"
+      preset="card"
+      class="block aspect-[4/3] h-auto w-full rounded-lg object-cover"
+    />
+  </div>
+</div>
+
+<style>
+  /* Base and md: one column in DOM order (grid · photo), the photo capped like a card. */
+  .pkg { display: grid; grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  .pkg-photo { max-width: 480px; }
+
+  /* lg+: the grid keeps the wider column, the photo beside it. The 3-column ✓-grid needs ~540px to show both package
+     headings on two lines; at md (736px content) a 7fr share is too narrow for that, so the split waits for lg. */
+  @media (min-width: 1024px) {
+    .pkg {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+      column-gap: 48px;
+      align-items: center;
+    }
+    .pkg-photo { max-width: none; }
+  }
+</style>

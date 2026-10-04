@@ -1,0 +1,20 @@
+---
+// /ludhiana/cat-grooming/ SP-4 addition — H3 "Persian & long-hair coat care" (blueprints/cat-grooming.md §3 SP-4,
+// verbatim: 3 rows; §2's "persian cat grooming at home" long-tail). Goes in ServicePage's `sp4-extra` slot, after the
+// mid-page CTA and the /pricing/ link, on the sand SP-4 band: onTint. The one ₹ figure (the Nail Trim + Ear Clean
+// visit in the Indie row) comes from pricing.ts (07 §4). A wide text table (08 §4.8 640px minimum): it scrolls
+// sideways below md, sticky Cat column.
+import InfoTable from '../../InfoTable.astro';
+import { flatPrice } from '../../../lib/pricing';
+
+const columns = [{ label: 'At home, daily' }, { label: 'With us' }, { label: 'Rhythm' }];
+const rows = [
+  { label: 'Persian / Himalayan', cells: ['5-minute comb, face & eye wipe', 'Full Groom (de-mat + comfort trim in summer)', 'every 4–8 weeks'] },
+  { label: 'Long-haired mixed breed', cells: ['3–4 combs a week', 'Bath & Brush, Full Groom if mats form', 'every 6–8 weeks'] },
+  { label: 'Short-haired & Indie cats', cells: ['Weekly brush', `Bath & Brush or just nails + ears (${flatPrice('nail-ear')} visit)`, 'every 6–8 weeks'] },
+];
+---
+<div class="mt-12">
+  <h3 id="persian-coat-care" class="t-h3 m-0">Persian &amp; long-hair coat care</h3>
+  <InfoTable caption="Persian & long-hair coat care" rowHeader="Cat" columns={columns} rows={rows} wide onTint class="mt-4" />
+</div>
