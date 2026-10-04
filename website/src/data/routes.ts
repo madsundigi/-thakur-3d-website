@@ -30,9 +30,9 @@ export const routes: RouteEntry[] = [
   // money pages
   { path: '/ludhiana/', label: 'Ludhiana', group: 'service', wave: 2, status: 'planned' },
   { path: '/ludhiana/dog-grooming/', label: 'Dog Grooming at Home', group: 'service', wave: 1, status: 'live' },
-  { path: '/ludhiana/cat-grooming/', label: 'Cat Grooming at Home', group: 'service', wave: 1, status: 'planned' },
-  { path: '/ludhiana/dog-walking/', label: 'Dog Walking', group: 'service', wave: 1, status: 'planned' },
-  { path: '/ludhiana/vet-at-home/', label: 'Vet at Home', group: 'service', wave: 1, status: 'planned' },
+  { path: '/ludhiana/cat-grooming/', label: 'Cat Grooming at Home', group: 'service', wave: 1, status: 'live' },
+  { path: '/ludhiana/dog-walking/', label: 'Dog Walking', group: 'service', wave: 1, status: 'live' },
+  { path: '/ludhiana/vet-at-home/', label: 'Vet at Home', group: 'service', wave: 1, status: 'live' },
   { path: '/ludhiana/dog-vaccination/', label: 'Dog Vaccination at Home', group: 'service', wave: 2, status: 'planned' },
   { path: '/ludhiana/tick-flea-treatment/', label: 'Tick & Flea Treatment', group: 'service', wave: 2, status: 'planned' },
   { path: '/ludhiana/puppy-grooming/', label: 'Puppy Grooming', group: 'service', wave: 2, status: 'planned' },

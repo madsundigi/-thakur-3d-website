@@ -13,4 +13,7 @@ export const LASTMOD: Record<string, string> = {
   '/faq/': '2026-10-03',
   '/privacy-policy/': '2026-10-03',
   '/terms/': '2026-10-03',
+  '/ludhiana/cat-grooming/': '2026-10-03',
+  '/ludhiana/dog-walking/': '2026-10-03',
+  '/ludhiana/vet-at-home/': '2026-10-03',
 };
