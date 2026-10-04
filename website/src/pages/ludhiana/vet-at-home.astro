@@ -14,7 +14,7 @@ import { flatPrice } from '../../lib/pricing';
 
 const visit = flatPrice('vet-visit');
 // The phone cut of the SP-1 subhead (Hero subheadShort, W1L-5): its first sentence. The dropped words repeat the chips
-// ("₹699 visit", "Medicines at MRP — bill shown", "Fixed visit fee ₹699"); with the full line the 360×640 fold fails.
+// (the price chip, "Medicines at MRP — bill shown", the "Fixed visit fee" chip); with the full line the 360×640 fold fails.
 const subheadShort = 'A registered veterinarian examines your pet at home — no stressful clinic trip.';
 
 const config: ServicePageConfig = {
