@@ -6,7 +6,7 @@
 
 | URL | Wave | Template | Schema `@graph` | Status |
 |---|---|---|---|---|
-| `/ludhiana/cat-grooming/` | 1 | T1 — all 14 blocks | Service + FAQPage + BreadcrumbList | blueprinted |
+| `/ludhiana/cat-grooming/` | 1 | T1 — all 14 blocks | Service + FAQPage + BreadcrumbList | built (w1-cat, 2026-10-04) — pending the integrator's route flip |
 
 ## 1 · Head
 
@@ -123,3 +123,61 @@ In-answer links: #4 → week-16 post (once live) · #5 → `/ludhiana/tick-flea-
 - [ ] Permethrin warning present in FAQ #5 (cat safety — non-negotiable)
 - [ ] Every price is a flat cat price; no size matrix rendered on this page
 - [ ] Exactly 2 Hinglish uses (FAQ #8 + SP-3 alt)
+
+## 7 · As built (stage w1-cat, 2026-10-04 — `src/pages/ludhiana/cat-grooming.astro` on `src/layouts/ServicePage.astro`)
+
+Where this blueprint and the template are silent, this is what was built; decisions in `decisions/w1-cat.md`, needs in
+other owners' files in `requests/w1-cat.md`.
+
+- **Head:** title 58 / meta 156 / H1 verbatim (§1); canonical + og:url the self URL; og:image `/og/cat-grooming.jpg`
+  (alt "PetDoorStep — cat grooming at your home in Ludhiana, from ₹899"); JSON-LD one `@graph` = Service (name = the H1,
+  serviceType "Cat grooming at home", **2 flat Offers**: Cat Bath & Brush 899 · Cat Full Groom 1399 — the `04` §2.2 cat row,
+  `00` §11 E8) + FAQPage (cat-grooming-1…8) + BreadcrumbList (3 items). ≈ 900 words in `<main>` (P044 floor 800).
+- **SP-0:** `Home › Ludhiana › Cat Grooming at Home` — "Ludhiana" is text until `/ludhiana/` ships; all three schema item URLs.
+- **SP-1:** eyebrow *Cat grooming at home* (hidden below `md`); [Book on WhatsApp] → `/book/?src=hero_cat-grooming` (amber,
+  E1), [Call [FILL:PHONE]] → `tel:` (hidden below `md`); chips `from ₹899` · Background-verified groomers · Sealed sanitised
+  kit per pet · Fixed prices — no doorstep bargaining · Calm-handling trained for cats (`MONEY_PAGES`); photo
+  `cat-grooming-at-home-ludhiana.jpg` (eager, `fetchpriority="high"`, preloaded) with the §5 alt; R3 under the CTAs.
+  **Fold at 360×640, measured on the built page:** H1 bottom 175.7 · subhead 293.2 · primary 353.2 · price chip 16–97.6
+  and first trust chip 105.6–335.2 (both whole, the fade starts at 344) · photo top 405.2 → +160 = 565.2 against the
+  sticky bar at 583 — **17.8 px spare**, no horizontal overflow (scrollWidth 360). No P150 exception needed.
+- **SP-2:** proof line → `[FILL:GBP_LINK]`; the E6 empty state until 3 real reviews exist (`reviews.ts`); the E4 row =
+  `Book Cat Grooming — from ₹899` → `/book/?service=cat-grooming&src=service_cat-grooming` with R2 beside it.
+- **SP-3:** H2 = the §2 line "Cat Bath & Brush — ₹899, everything included"; no lead-in (§3 gives none, the template formula
+  has none); grid = `PACKAGE_TABLES['cat-grooming']` verbatim (2 package columns, 8 inclusion rows, the duration row,
+  footnote (a) + the matting line); then the §5 cat-bath photo `cat-bath-home-ludhiana.jpg`, alt "billi ko nehlana — gentle
+  cat bath at home in Ludhiana" (Hinglish use 2 of 2). From `lg` the photo sits beside the grid (7fr/5fr: table 644 px,
+  photo 460 px at 1280); below `lg` it follows the grid (capped at 480 px), so the inclusions are never pushed a screen down.
+  At 360 the grid is 408 px in a 328 px column: it scrolls 80 px behind the edge fade with the sticky Included column
+  (InfoTable, W1L-20 floors) — both package headings stay verbatim (W1C-5).
+- **SP-4:** the flat-price list (`lines: 'cat-grooming'`, PriceMatrix `<dl>`): Cat Bath & Brush ₹899 [Book] · Cat Full
+  Groom ₹1,399 "any breed, any coat" [Book] · Flea treatment add-on ₹399 "(cat-safe products)" (no Book — an add-on is
+  booked with a groom; it links `/ludhiana/tick-flea-treatment/` only once that page is live, requests B-2) · Nail Trim +
+  Ear Clean visit ₹299 [Book] → R1 + R2 → mid-page CTA `Book Cat Grooming — from ₹899` → "Compare every service on the
+  full price list" → `/pricing/` → H3 "Persian & long-hair coat care" (3 rows verbatim, `wide` table: 640 px minimum,
+  scrolls sideways below `md` with the sticky Cat column; "(₹299 visit)" from `flatPrice('nail-ear')`). No size matrix.
+- **SP-5:** omitted (no consented pairs yet); renders itself from `reviews.ts` at ≥ 2 cat pairs.
+- **SP-6:** the 4 steps + R4 + "See the full process" → `/how-it-works/`.
+- **SP-7:** H2 "Why home beats the salon for cats" → the 3 points (numbered discs, an `<ol>`) → the supporting line → "How
+  we hire" → `/about/`. No cards until a groomer is hired (people.ts honesty law); the cat specialities then come from
+  `specialityOn['cat-grooming']` (requests B-1).
+- **SP-8:** 4 points (the on-time point waits for the §3.4 policy gate).
+- **SP-9:** the §3 intro, 3 AreaCards "Cat grooming at home in Civil Lines / Kitchlu Nagar / Sarabha Nagar" (text until
+  the area pages ship), then "…and BRS Nagar, Model Town, Dugri, Pakhowal Road, South City, Ferozepur Road, Haibowal
+  Kalan — all of Ludhiana served." (the 7 areas not carded).
+- **SP-10:** H2 "Cat grooming at home — your questions" (template pattern; §4 names none); the 8 Q&As verbatim, FAQPage
+  mirrors them. Answer links render only while live: #5 → `/ludhiana/vet-at-home/` now; `/ludhiana/tick-flea-treatment/`
+  (#5), `/safety-hygiene/` (#6) and the week-16 post (#4) stay text until Wave 2 / the post ships.
+- **SP-11:** Dog Grooming at Home (`from ₹599`, linked) · Tick & Flea Treatment (`₹699 · ₹399 add-on`, "Coming soon", no
+  link); the week-16 post link appears once live; "Last updated" once `lastmod.ts` has the path.
+- **SP-12:** H2 = the §3 line verbatim (it adds "calm," to R8, so not `r8()`), support "Flat ₹899 · no advance payment ·
+  photo update after the groom.", [Book on WhatsApp] (wa.me, prefill "Hi PetDoorStep! I want to book cat grooming (from
+  your Cat Grooming at Home page). My area: ___ . My cat: ___") + [Call [FILL:PHONE]], source `ctaband_cat-grooming`, R3.
+- **SP-13:** sticky `Call | WhatsApp | Book · from ₹899` (→ `/book/?service=cat-grooming&src=sticky_bar`); desktop float
+  with the page prefill.
+- **Ship checks (§6):** permethrin warning in FAQ #5 ✓ · every price a flat cat price, no size matrix rendered ✓ · exactly 2
+  Hinglish uses (FAQ #8 + the SP-3 alt; the hero alt is English per E5) ✓. Gates (`PUBLIC_PDS_PREVIEW_LIVE=wave1`):
+  `check:pages` 0 FAIL · 2 WARN (P074 links to `/ludhiana/dog-walking/` and `/ludhiana/vet-at-home/`, built by other stages) ·
+  `check:budgets` 0 · 0 (CSS 50,423 B of 51,200) · `check:prices` OK · `test:site` 0 FAIL · 1 WARN (P099: the LCP is the H1
+  while the hero is a placeholder) — 360 / 768 / 1280: no overflow, no console errors, axe clean, JSON-LD parses, CLS 0.000,
+  fold ok at 360×640, 11 tracked links each logged with its `data-source`.
