@@ -6,7 +6,7 @@
 
 | URL | Wave | Template | Schema `@graph` | Status |
 |---|---|---|---|---|
-| `/ludhiana/dog-walking/` | 1 | T1 — all 14 blocks (SP-3 = ✓-lists, SP-4 = flat list, SP-5 = proof-photo row) | Service + FAQPage + BreadcrumbList | built (w1-walk, 2026-10-03) — pending the integrator's route flip |
+| `/ludhiana/dog-walking/` | 1 | T1 — all 14 blocks (SP-3 = ✓-lists, SP-4 = flat list, SP-5 = proof-photo row) | Service + FAQPage + BreadcrumbList | built and verified block by block (w1-walk, 2026-10-03/04, §7) — pending the integrator's route flip (`requests/w1-walk.md` A-1) |
 
 ## 1 · Head
 
@@ -110,3 +110,60 @@ and it cannot show the map pack — so repeat the check on a phone in Ludhiana d
 - [ ] No promise of single walks; FAQ #7 wording honest
 - [ ] Payment line says month-end, no advance — consistent with `/pricing/` and `/offers/`
 - [ ] One Hinglish use only (FAQ #8)
+
+## 7 · As built (stage w1-walk, 2026-10-03/04 — `src/pages/ludhiana/dog-walking.astro` on `src/layouts/ServicePage.astro`)
+
+Where this blueprint and the template are silent, this is what was built; decisions in `decisions/w1-walk.md`. The copy
+lives in `src/data/pages/dog-walking.ts` (every string verbatim from §1/§3/§5, prices through `src/lib/pricing.ts`; the
+head lengths, the eyebrow, the alts and the walk hours are checked at build time); the two page partials are
+`src/components/pages/dog-walking/PlanList.astro` (SP-3 body) and `WalkWindows.astro` (SP-4 H3).
+
+- **Head:** title 51 / meta 148 / H1 22 characters, verbatim (§1); canonical + `og:url` the self URL; `og:image`
+  `/og/dog-walking.jpg`; the hero preloaded. JSON-LD = one `@graph`: Service (3 Offers — 1 walk/day monthly 2999 ·
+  2 walks/day monthly 4999 · Walking Trial Week 699, the `04` §2.2 row) + FAQPage (dog-walking-1…8, word for word
+  the SP-10 text) + BreadcrumbList (Home · Ludhiana · Dog Walking). Word count 1,155.
+- **SP-0:** `Home › Ludhiana › Dog Walking` — "Ludhiana" plain text until the hub ships; its schema item URL live.
+- **SP-1:** eyebrow *Daily dog walking* (from `md`); [Start ₹699 Trial Week] → `/book/?service=dog-walking&src=hero_dog-walking`
+  (amber; the target is the layout's, D2); [Call [FILL:PHONE]] hidden below `md`; chips `₹699 trial week` + the four
+  §3 trust chips (`MONEY_PAGES`); hero alt = §5 (`08` §5.2 shot 9); R3. Fold at 360×640: H1 2 lines (bottom 175.7),
+  subhead 4 lines (293.2), primary 353.2, price chip 16–129.1 and first trust chip 137.1–303.4 (both left of the 344
+  fade), photo top 405.2 → +160 = 565.2 against the sticky bar at 583 — 17.8 px spare; no sideways scroll.
+- **SP-2:** proof line → `[FILL:GBP_LINK]`; the E6 empty state until 3 real reviews exist; the E4 row =
+  `Book Dog Walking — from ₹699 (trial week)` → `/book/?service=dog-walking&src=service_dog-walking` (the registry
+  label: the figure the widget shows once it lands, `00` §11 E2) with R2 beside it.
+- **SP-3:** H2 + lead-in → `CheckList` (three cards in §3 order, prices from `planPrice()`; no badge, no per-card CTA;
+  the bold "and" renders as plain text — W1W-04) → H3 "Every walk, the same rules" as a ✓-list with the §5
+  walk-update photo (`walk-update-whatsapp-gps-route-ludhiana.jpg`, a placeholder until shot) beside it from `md`
+  and under it below. No template footnotes (a)/(b) — W1W-05.
+- **SP-4:** `id="prices"`; the flat list `priceLines('dog-walking')` (1 walk/day ₹2,999/month · 2 walks/day
+  ₹4,999/month · Trial Week ₹699 (7 walks)) with row-end Book links (`pricing_row`); R1 + the walking payment line
+  (`WALK_PAYMENT_LINE`); the mid-page CTA; "Compare every service on the full price list" → `/pricing/`; then H3
+  "Ludhiana walk windows by season" = `InfoTable` (`wide`, `onTint`), 4 rows verbatim — at 360 Months 158 · Walk
+  windows 214 · Why 268 px with 2–3-line rows, scrolling behind the fade with Months sticky; fits from `md`. The
+  price block starts at 28.8 % / 30.5 % / 29.4 % of the page height at 360 / 768 / 1280 (P164 is by word count:
+  every plan price is already in SP-3, the trial price in the hero).
+- **SP-5:** omitted — `sp5: { kind: 'proof', heading: 'Real walk updates' }` renders the row by itself once
+  `reviews.ts` holds ≥ 1 consented walk-update photo (`proofPhotos`, caption `{Pet} · {Breed} · morning walk · {Area}`).
+- **SP-6:** the default H2; steps 1–2 shared, 3–4 the walking lines (`SP6_LINES['dog-walking']`: walk hours + heat
+  rule, walker meets the dog first); the walking R4; "See the full process" → `/how-it-works/`.
+- **SP-7:** H2 "Background-verified, fixed walker" + the §3 line (= `people.ts` `MEET_WALKERS.line`); no cards while
+  both walkers are `[FILL]` (honesty law, W1L-14) — the H3 "Meet your walkers" and the cards appear once a walker is
+  on the team; "How we hire" → `/about/`.
+- **SP-8:** 4 points (the on-time point waits for the §3.4 policy gate); no medical line.
+- **SP-9:** the §3 intro; cards Dugri · South City · Pakhowal Road anchored "Dog walking in {Area}" (W1W-08; plain
+  text until the area pages ship); then "…and Sarabha Nagar, BRS Nagar, Model Town, Civil Lines, Ferozepur Road,
+  Haibowal Kalan, Kitchlu Nagar — all of Ludhiana served."
+- **SP-10:** H2 "Dog walking in Ludhiana — your questions" (W1W-09); the 8 FAQs as `<details>`; no answer links
+  (none are named).
+- **SP-11:** Dog Grooming at Home (`from ₹599`) · Vet at Home (`₹699`) cards; the two blog links appear once those
+  posts are live; "Last updated" once `lastmod.ts` has the path.
+- **SP-12:** H2 and support line verbatim; [Book on WhatsApp] (wa.me with the `MONEY_PAGES` prefill) + [Call
+  [FILL:PHONE]], both `ctaband_dog-walking`; R3.
+- **SP-13:** `Book trial · ₹699` → `/book/?service=dog-walking&src=sticky_bar`, one line at 360.
+- **Ship checks (§6):** walk windows = `00` §3.1 — every time in `site.hours.walks` must appear in the table, checked
+  at build ✓ · no single-walk promise; FAQ #7 as written ✓ · payment line month-end / no advance = `WALK_PAYMENT_LINE`
+  (the same string on `/pricing/` PR-6 and in FAQ #1) ✓ · one Hinglish use (FAQ #8; both alts English) ✓.
+  Gates on the final build (`PUBLIC_PDS_PREVIEW_LIVE=wave1`): `check:pages` 0 FAIL · 2 WARN (P074: cat-grooming and
+  vet-at-home are built by other stages) · `check:budgets` 0 · 0 (CSS 50,502 B of 51,200) · `check:prices` OK ·
+  `test:site` 0 FAIL · 1 WARN (P099: placeholder LCP at 1280) — fold ok at 360×640, axe clean, CLS 0, 11 tracked
+  links, exit card ok.
