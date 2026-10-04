@@ -6,13 +6,17 @@
 
 | URL | Wave | Template | Schema `@graph` | Status |
 |---|---|---|---|---|
-| `/ludhiana/dog-walking/` | 1 | T1 — all 14 blocks (SP-3 = ✓-lists, SP-4 = flat list, SP-5 = proof-photo row) | Service + FAQPage + BreadcrumbList | blueprinted |
+| `/ludhiana/dog-walking/` | 1 | T1 — all 14 blocks (SP-3 = ✓-lists, SP-4 = flat list, SP-5 = proof-photo row) | Service + FAQPage + BreadcrumbList | built (w1-walk, 2026-10-03) — pending the integrator's route flip |
 
 ## 1 · Head
 
 - **Title** (51): `Dog Walker in Ludhiana – ₹2,999/Month | PetDoorStep`
 - **Meta** (148): `Background-verified, fixed daily dog walker in Ludhiana. ₹2,999/month (1 walk/day), GPS + photo after every walk. Trial week ₹699. Book on WhatsApp.`
-- **H1:** `Dog Walker in Ludhiana — Daily Walks from ₹2,999/month` (primary keyword in the first 4 words — P026)
+- **H1:** `Dog Walker in Ludhiana` (primary keyword in the first 4 words — P026). Fold-law cut, 2026-10-03: the earlier
+  "— Daily Walks from ₹2,999/month" tail set the H1 in 4 lines at 360 px and pushed the hero photo 62–70 px under the sticky
+  bar (`decisions/f2-components.md` S-2, `decisions/w1-layout.md` §1 agreed copy, `00` §11 E3); the monthly price stays in
+  the title, the meta, the SP-1 chips and SP-4. `03` §3 and `06` §2.3 still show the long form — sync requested
+  (`requests/w1-walk.md`).
 
 ## 2 · Keyword → block assignment
 
@@ -29,6 +33,35 @@
 | is the same walker fixed · summer timings | L | FAQ #2 · #4 |
 | dog walker ka rate / walking wala chahiye (Hinglish) | L | FAQ #8 (single combined use) |
 
+### 2.1 · SERP intent check (`02` P040) — 2026-10-03
+
+Checked before building, for the primary keyword **"dog walker ludhiana"**, plus the secondary "dog walking charges
+ludhiana monthly". Tool: the build session's web search. It uses a US-based index, not google.co.in on a Ludhiana phone,
+and it cannot show the map pack — so repeat the check on a phone in Ludhiana during the launch audit (`02` §5).
+
+- **What ranks:**
+  - **Marketplace listing pages.** PetBacker, "Top Dog Walking in Ludhiana with Best Prices"
+    (petbacker.in/s/dog-walking/ludhiana--punjab--india, with a .com mirror "Top Ludhiana Dog Walking Prices & Reviews"):
+    39 individual walker listings, each with its own ask, "vetted" walkers, insurance wording. PetBacker's Ludhiana
+    dog-sitter and daycare pages rank beside it.
+  - **Directories.** JustDial's "Top Dog Walking Services in Ludhiana" category page — kennels, a dog hostel and pet shops
+    (Civil Lines, New Model Town) listed under dog walking — and myfurries.com's Ludhiana dog-trainers list.
+  - **Out-of-city service pages.** Sploot's Delhi dog-walking page and dogsathi.in (national): the single-provider
+    service-page format, but none of them for Ludhiana.
+  - **The secondary query** returns no Ludhiana result at all — UK, US and South African rate pages and generic
+    "average cost of a dog walker" articles. Nobody publishes a Ludhiana monthly rate; the `03` §2.4 finding stands.
+  - Competitor figures are not used on this page (`06` §5.6: snippet-mined prices never go in hero, table, schema or FAQ).
+- **Intent:** buyer. People want a trusted walker nearby and a price before they message; what ranks are listing pages
+  where the walker, the price and the trust signals change from listing to listing.
+- **How this page matches:** a single-provider service page for Ludhiana — the format Sploot holds in Delhi and nobody
+  holds here — carrying what a marketplace cannot promise: one fixed, verified walker, a printed monthly price and a
+  ₹699 trial.
+  - The query sits in the title, the H1 and the SP-1 subhead (§1, §3).
+  - SP-4 prints the three plans as a flat price list with Book links, so the "charges / monthly cost" queries are
+    answered on the page; SP-3 lists what every walk includes.
+  - SP-7 names the verification; FAQ #1, #2 and #3 answer cost, "same walker every day?" and safety answer-first.
+  - Service markup carries the three plan Offers and FAQPage the eight Q&As (§4).
+
 ## 3 · Block values
 
 - **SP-1 Hero** (`06` §2.3): eyebrow *Daily dog walking* · subhead "The same fixed, verified walker every day, with GPS route and photo update after every walk. Try a full week for ₹699 before you commit." · CTAs [Start ₹699 Trial Week] → the booking form `/book/?service=dog-walking&src=hero_dog-walking`, which preselects Trial Week, the widget's default dog-walking plan (`00` §11 D2, 2026-10-03; `07` §2 row 3 — not a wa.me link) + [Call [FILL:PHONE]] (hidden below `md`, `08` §4.6) · chips `₹699 trial week` + `✔ Fixed verified walker` · `✔ GPS + photo after every walk` · `✔ Fixed monthly price` · `✔ Background-verified`.
@@ -37,7 +70,7 @@
   - **2 walks/day — ₹4,999/month:** ✓ everything above, morning **and** evening (~30 min each)
   - **Trial Week — ₹699:** ✓ meet-and-greet with your walker first ✓ 7 walks (1/day, ~30 min) ✓ full updates — no commitment after
   - **H3 "Every walk, the same rules":** leash on at all times (double-clip lead, never off-leash near roads) · 5-second back-of-hand tarmac test before setting off · routes planned around known stray hotspots · towel-dry paws and belly after rain · walker never leaves your dog unattended.
-- **SP-4 Prices** — H2 per §2; flat list: `1 walk/day ₹2,999/month · 2 walks/day ₹4,999/month · Trial Week ₹699 (7 walks)` + R1 + R2 adapted: "Monthly plans are paid at the end of each month by UPI or cash — no advance." Then **H3 "Ludhiana walk windows by season"** (walk hours `00-MASTER-PLAN.md` §3.1):
+- **SP-4 Prices** — H2 per §2; flat list: `1 walk/day ₹2,999/month · 2 walks/day ₹4,999/month · Trial Week ₹699 (7 walks)` + R1 + R2 adapted: "Monthly plans are paid at month-end by UPI or cash — no advance." (content.ts `WALK_PAYMENT_LINE` — the one wording shared with `/pricing/` PR-6 and FAQ #1; this line read "at the end of each month" until 2026-10-03, synced to the registry — W1W-03). Then **H3 "Ludhiana walk windows by season"** (walk hours `00-MASTER-PLAN.md` §3.1):
 
   | Months | Walk windows | Why |
   |---|---|---|

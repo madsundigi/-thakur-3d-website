@@ -1,0 +1,16 @@
+---
+// /ludhiana/dog-walking/ SP-4 H3 "Ludhiana walk windows by season" (blueprints/dog-walking.md §3 SP-4, verbatim; the
+// hours are 00 §3.1's walk hours + the Apr–Jun heat rule — the same values as site.ts hours.walks and the SP-6 step-3
+// line, checked at build time in src/data/pages/dog-walking.ts). Goes in ServicePage's `sp4-extra` slot: the end of
+// the price block, after the mid-page CTA and the /pricing/ link, on the sand SP-4 band — onTint. Carries the §2
+// long-tail "morning evening dog walker · daily dog walking". A 3-column text table: below md it scrolls sideways
+// behind the fade with the Months column sticky (08 §4.8); from md it fits.
+import InfoTable from '../../InfoTable.astro';
+import { HEADINGS, WALK_WINDOWS } from '../../../data/pages/dog-walking';
+
+const columns = WALK_WINDOWS.columns.map((label) => ({ label }));
+---
+<div class="mt-12">
+  <h3 id="walk-windows" class="t-h3 m-0">{HEADINGS.windows}</h3>
+  <InfoTable caption={HEADINGS.windows} rowHeader={WALK_WINDOWS.rowHeader} columns={columns} rows={WALK_WINDOWS.rows} onTint class="mt-4" />
+</div>
