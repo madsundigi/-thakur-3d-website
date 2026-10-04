@@ -44,7 +44,8 @@ const config: ServicePageConfig = {
   // dewormer included) with R1 + R2; the emergency footer line goes in through the sp4-extra slot.
   sp4: { heading: `Vet home visit charges — fixed ${visit}`, lines: 'vet-at-home' },
   // SP-5: the proof-photo row renders itself once reviews.ts holds consented photos of real visits (omitted until then).
-  sp5: { kind: 'proof', heading: 'Real home visits across Ludhiana' },
+  // The blueprint names no H2 for the row; this mirrors dog-walking.md SP-5 ("Real walk updates") until it does (W1V-07).
+  sp5: { kind: 'proof', heading: 'Real home visits' },
   // SP-7 "Meet your vet" + the registered-vets line (people.ts MEET_VET); the full card variant (W1L-14).
   sp7: { team: 'vet', variant: 'full' },
   sp8: { medical: true },

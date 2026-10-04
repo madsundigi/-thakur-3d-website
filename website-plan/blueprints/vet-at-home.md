@@ -133,3 +133,61 @@ In-answer links: #4 → week-14 post (once live) · #1 → `/pricing/` · #5 →
 - [ ] Emergency line visible in SP-1 on a 360 px screen (fold test)
 - [ ] No online-consult, night or 24×7 claim anywhere on the page
 - [ ] One Hinglish use only (FAQ #8)
+
+## 7 · As built (stage w1-vet, 2026-10-04 — `src/pages/ludhiana/vet-at-home.astro` on `src/layouts/ServicePage.astro`)
+
+Where this blueprint and the template are silent, this is what was built; decisions in `decisions/w1-vet.md`. Verified on
+the built HTML of a `PUBLIC_PDS_PREVIEW_LIVE=wave1` build, block by block, and in Chromium at 360 / 768 / 1280.
+
+- **Head:** title 50 / meta 144 / H1 verbatim (§1); canonical + og:url the self URL; og:image `/og/vet-at-home.jpg`
+  (alt from `services.ts`); one JSON-LD `@graph` = Service (serviceType "Veterinary home visit"; one Offer "Vet Home
+  Visit (consult)" → 699, description "medicines/vaccines at MRP" — the `04` §2.2 vet row, kept by `00` §11 E8; the
+  vaccination and deworming figures are the dog-vaccination Service node's) + FAQPage (vet-at-home-1…8, #3 with
+  `[FILL:EMERGENCY_VET_LIST]` filled from `site.ts`) + BreadcrumbList (3 items). Word count 1,170 (≥ 800).
+- **SP-1:** eyebrow *Vet home visit, Ludhiana* (hidden below `md`); the §3 subhead verbatim — below `md` only its first
+  sentence shows (`subheadShort`, W1L-5; the rest stays in the DOM); [Book Vet on WhatsApp] → `/book/?src=hero_vet-at-home`
+  (amber), [Call [FILL:PHONE]] → `tel:` (hidden below `md`); the **full** emergency notice (`role="note"`, alert icon;
+  13 px compact below `md`, W1L-6) under the CTAs, after R3 from `md`; chips `₹699 visit` + the four §3 trust chips from
+  `services.ts`; the shot-10 photo with the §5 alt; R3. **Fold at 360×640** (DPR 2, fonts ready): H1 bottom 175.7
+  (2 lines) · subhead 240.4 (2) · primary CTA 300.4 · notice 363.0 (3 lines, every word) · chips 371–403 with the price
+  chip at 16–94.2 and the first trust chip at 102.2–321.8, both whole before the 344 fade · photo top 415.0 → +160 =
+  575.0 against the sticky bar's top at 583 = **8.0 px spare**; page scrollWidth 360. Identical to
+  `decisions/w1-layout.md` §1.2.
+- **SP-2:** proof line → `[FILL:GBP_LINK]`; the E6 empty state until 3 real reviews exist (`reviews.ts`); the E4 CTA row
+  `Book Vet Home Visit — ₹699 + MRP` → `/book/?service=vet-visit&src=service_vet-visit` with R2 beside it.
+- **SP-3:** H2 per §2; the three visit types as ✓-list cards (`CheckList`: 1 column at base, 2 from `md` (2 + 1), 3 from
+  `lg`): "Vet Home Visit ₹699" (5 ✓), "Vaccination at Home ₹199 + vaccine MRP" (2 ✓, then "Full details on Dog
+  Vaccination at Home — coming soon" as text until that page is live, a link after), "Deworming Visit ₹499" (2 ✓);
+  ✓-lines in sentence case, words verbatim; the template's two footnotes are not rendered (W1V-04). Then the H3 "What a
+  home visit can — and can't — do": a plain two-column `InfoTable` (no row headers, nothing sticky; 154 + 174 px at
+  360, no sideways scroll) beside the medicine-MRP photo from `md` (7fr / 5fr); below `md` the photo follows the table.
+- **SP-4:** H2 per §2; the `'vet-at-home'` flat list from `pricing.ts` — Vet visit ₹699 + medicines at MRP · Vaccination
+  ₹199 + vaccine MRP · Deworming ₹499 (dewormer included) — each with a row-end Book (`src=pricing_row`); R1 + R2; the
+  mid-page CTA `Book Vet Home Visit — ₹699 + MRP`; "Compare every service on the full price list" → `/pricing/`; last,
+  the footer line "Emergency? Nearest 24-hour hospitals: [FILL:EMERGENCY_VET_LIST]." (`role="note"`, alert icon;
+  `site.emergencyVets` — the value FAQ #3 also reads).
+- **SP-5:** omitted (no consented proof photos in `reviews.ts` yet); configured `{ kind: 'proof', heading: 'Real home
+  visits' }`, so the row appears by itself at ≥ 1 real photo (W1V-07).
+- **SP-6:** the 4 steps with the vet step 4 and the vet R4 from `content.ts` `SP6_LINES`; "See the full process" →
+  `/how-it-works/`.
+- **SP-7:** "Meet your vet" + the registered-vets line (`people.ts` MEET_VET); one full-variant card —
+  `[FILL:VET_PARTNER_NAME], BVSc & AH` · Reg. No. `[FILL:VET_REG_NO]` · Dogs & cats; years, languages and the portrait
+  render once `people.ts` holds the real values (never estimated); "How we hire" → `/about/`.
+- **SP-8:** 4 points (the on-time point waits for the `00` §3.4 policy gate) + "Registered veterinarians only — every
+  medical service, no exceptions."
+- **SP-9:** the §3 intro; Civil Lines · Model Town · Haibowal Kalan (text cards until the area pages ship); "…and
+  Sarabha Nagar, BRS Nagar, Dugri, Pakhowal Road, South City, Ferozepur Road, Kitchlu Nagar — all of Ludhiana served."
+- **SP-10:** the 8 FAQs in §4 order; #1 links `/pricing/`; #4 (week-14 post) and #5 (`/ludhiana/dog-vaccination/`) stay
+  text until those pages are live.
+- **SP-11:** Dog Vaccination at Home (`₹199 + MRP`, "Coming soon") · Tick & Flea Treatment (`₹699`, "Coming soon") ·
+  Dog Walking (`₹2,999/month`, linked) cards; the two blog links once live; "Last updated" once `lastmod.ts` has the path.
+- **SP-12:** the §3 H2 verbatim, the support line (fee from `pricing.ts`), [Book on WhatsApp] (wa.me with the page
+  prefill) + [Call [FILL:PHONE]], source `ctaband_vet-at-home`, R3.
+- **SP-13:** `Book vet · ₹699` (`pricing.ts`).
+- **Ship checks (§6):** §0 rules — the vet's name and registration number and the emergency list are still `[FILL]`
+  tokens; the page renders them so `check:fill` (the launch gate) sees them ✓ · the emergency line is visible in SP-1 at
+  360×640 (numbers above; `test:site` fold ok) ✓ · no online-consult, night or 24×7 claim — "24-hour" appears only in
+  the three routing lines, FAQ #3 answers "No" and FAQ #7 "Not in Phase 1" ✓ · exactly one Hinglish use (FAQ #8; every
+  alt is English) ✓. Gates: `check:pages` 0 FAIL / 2 WARN (P074: cat-grooming and dog-walking are not built in this
+  worktree), `check:budgets` 0 / 0 (CSS 50,653 of 51,200 B), `check:prices` OK, `test:site` 0 FAIL / 1 WARN (P099 while
+  the hero is a placeholder).
