@@ -1,0 +1,14 @@
+---
+// /ludhiana/vet-at-home/ SP-4 footer line (blueprints/vet-at-home.md §3 SP-4; §0 rule 4): "Emergency? Nearest 24-hour
+// hospitals: [FILL:EMERGENCY_VET_LIST]." The list is site.emergencyVets — the one place the token is filled (two
+// 24-hour veterinary hospitals with phone numbers, verified by calling them); src/lib/faq.ts fills FAQ #3 from the same
+// value, so the two never disagree. Goes in ServicePage's `sp4-extra` slot: the end of SP-4, after the mid-page CTA
+// and the /pricing/ link (sand band). role="note", the alert icon and the alert-ink colour match the hero notice —
+// routing text, not an alert that interrupts.
+import Icon from '../../icons/Icon.astro';
+import { site } from '../../../data/site';
+---
+<p role="note" class="m-0 mt-6 flex max-w-[720px] items-start gap-2 text-sm font-medium text-alert-ink">
+  <Icon name="alert-circle" size={20} class="flex-none text-alert" />
+  <span class="min-w-0 [overflow-wrap:anywhere]">Emergency? Nearest 24-hour hospitals: {site.emergencyVets}.</span>
+</p>

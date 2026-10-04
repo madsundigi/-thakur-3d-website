@@ -25,6 +25,49 @@
 - **Meta** (144): `Vet at home in Ludhiana: a registered vet examines your pet at your door. Consult ₹699, medicines at MRP. Slots 9am–7pm daily. Book on WhatsApp.`
 - **H1:** `Vet at Home in Ludhiana`
 
+## 1a · SERP intent check (`02` P040) — 2026-10-03
+
+Checked before building, for the sitemap's wording of this page's query, **"vet home visit ludhiana"** (`01` §1 keyword
+column; `03` §2.5 S), and for the primary keyword **"vet at home ludhiana"** (`03` §2.5 P). Tool: the build session's
+web search. It uses a US-based index, not google.co.in on a Ludhiana phone, and it cannot show the map pack — repeat
+the check on a phone in Ludhiana during the launch audit (`02` §5).
+
+- **What ranks for "vet home visit ludhiana":**
+  - **Directories and listing categories**, most of the page: JustDial "Veterinary Clinics in Ludhiana", JustDial
+    "Mobile Veterinary Clinics in Ludhiana" and a single clinic listing ("Vets For Pets", Sarabha Nagar);
+    indiaonline.in "Best Pet Clinics Near Me in Ludhiana"; petofy.com "Veterinary Doctors in Ludhiana with Clinic
+    Address"; lybrate.com "Veterinarians in Ludhiana — book instant appointment, consult online, view fees";
+    joonsquare.com "Best Veterinary in Ludhiana Punjab".
+  - **One at-home service page from a Ludhiana clinic chain:** Pupkitt "Vets On Call — Veterinary Home Services"
+    (home consultation and treatment ₹500 all-in for 45 minutes, booked on a Sunder Nagar phone number), plus
+    Pupkitt's "Best Veterinary Hospital in Ludhiana" page.
+  - **Local businesses in the snippets:** "Vets At Home", a clinic at 45-B Tagore Nagar, Civil Lines (9:00–20:00,
+    "7 years"); "Vet Doctor Home Visit — DeePet Services" (dogs and cats, vaccinations, surgery, "24x7"); Silver Oak
+    Pet Care's home page.
+- **What ranks for "vet at home ludhiana":** no Ludhiana page at all — Vetic's national and metro "vet at home"
+  landing pages (Delhi, Noida, Gurgaon, Bengaluru: "vet visit in 60 mins", ₹299 home consultation, not offered in
+  Ludhiana), a Careers360 question about GADVASU and one prototype site. Locally, the field for the exact H1 phrase is
+  empty.
+- **Competitor figures** (Pupkitt ₹500 all-in · Vetic ₹299 in the metros) were mined from SERP snippets 2026-10-03;
+  re-verify before quoting them anywhere. They stay off this page (template §0 rule 5: never in hero, table, schema or
+  FAQ; `03` §2.5 names them only as the expectation anchor for the ₹699 fee).
+- **Intent:** buyer — someone whose pet needs seeing without a clinic trip — plus a navigational slice: "Vets At Home"
+  is the trading name of that Civil Lines clinic, so part of the query means *that* business. The page never uses the
+  phrase as a brand: the H1 keeps the generic "Vet at Home in Ludhiana" and the eyebrow names the service.
+- **Format that ranks:** directories and one service page. Nothing local publishes a fixed home-visit fee, the vet's
+  registration, what the visit includes, or honest emergency routing; the listings that promise "24x7" are exactly what
+  this page will not claim (§0 rule 2).
+- **How this page matches:** it is the service landing page the query lacks — not a directory, not a listicle.
+  - "vet at home ludhiana" in the title, H1 and subhead (§1); "vet home visit" in the eyebrow and the SP-4 H2 (§2).
+  - The fixed ₹699 fee answers "charges / fee" first: hero chip, SP-4 flat list with R1 + R2, the Offer in the Service
+    markup.
+  - SP-3 prints what the visit includes (✓-lists) and the H3 "What a home visit can — and can't — do", which sends
+    accident, poisoning and surgery cases to a hospital — the honest counter to the "24x7" listings.
+  - SP-7 names the registered vet with BVSc & AH and the registration number (`02` P046).
+  - The hero notice and FAQ #3 carry the emergency routing line and the two verified 24-hour hospitals.
+  - FAQ #5 (cats), #6 (same-day), #7 (no online consults) and #8 (Hinglish) answer the long-tails the directories leave
+    unanswered (`03` §2.5).
+
 ## 2 · Keyword → block assignment
 
 | Keyword (03 §2.5) | Role | Lands in |
