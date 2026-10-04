@@ -5,7 +5,7 @@
 // OG image and the WhatsApp prefill come from MONEY_PAGES['/ludhiana/dog-walking/'] (src/data/services.ts); the 8 FAQs
 // (dog-walking-1…8) from faq.json; the walking step 3/4 text + R4 from content.ts SP6_LINES; the SP-7 line from
 // people.ts MEET_WALKERS. The hero primary → /book/?service=dog-walking&src=hero_dog-walking (Trial Week preselected,
-// 00 §11 D2 — the layout sets it for this path); the sticky label "Book trial · ₹699" is pricing.ts stickyBookLabel.
+// 00 §11 D2 — the layout sets it for this path); the sticky label ("Book trial · <trial price>") is pricing.ts stickyBookLabel.
 import ServicePage, { type ServicePageConfig } from '../../layouts/ServicePage.astro';
 import PlanList from '../../components/pages/dog-walking/PlanList.astro';
 import WalkWindows from '../../components/pages/dog-walking/WalkWindows.astro';
@@ -17,7 +17,7 @@ const config: ServicePageConfig = {
   // §1 Head, verbatim.
   title: HEAD.title,
   description: HEAD.description,
-  // SP-1 (§3; 06 §2.3): [Start ₹699 Trial Week] (amber, the booking form) + [Call [FILL:PHONE]] (hidden below md).
+  // SP-1 (§3; 06 §2.3): [Start <trial price> Trial Week] (amber, the booking form) + [Call [FILL:PHONE]] (hidden below md).
   hero: {
     eyebrow: HERO.eyebrow,
     h1: HEAD.h1,
