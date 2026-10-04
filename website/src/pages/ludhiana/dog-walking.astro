@@ -1,0 +1,45 @@
+---
+// /ludhiana/dog-walking/ — the walking money page. Blueprint: website-plan/blueprints/dog-walking.md (copy values,
+// verbatim, held in src/data/pages/dog-walking.ts) on the template _TEMPLATE-service-page.md (blocks SP-0…SP-13, owned
+// by src/layouts/ServicePage.astro). Every ₹ figure comes from src/lib/pricing.ts (07 §4); chips, the body CTA, areas,
+// OG image and the WhatsApp prefill come from MONEY_PAGES['/ludhiana/dog-walking/'] (src/data/services.ts); the 8 FAQs
+// (dog-walking-1…8) from faq.json; the walking step 3/4 text + R4 from content.ts SP6_LINES; the SP-7 line from
+// people.ts MEET_WALKERS. The hero primary → /book/?service=dog-walking&src=hero_dog-walking (Trial Week preselected,
+// 00 §11 D2 — the layout sets it for this path); the sticky label ("Book trial · <trial price>") is pricing.ts stickyBookLabel.
+import ServicePage, { type ServicePageConfig } from '../../layouts/ServicePage.astro';
+import PlanList from '../../components/pages/dog-walking/PlanList.astro';
+import WalkWindows from '../../components/pages/dog-walking/WalkWindows.astro';
+import { WALK_PAYMENT_LINE } from '../../data/content';
+import { HEAD, HEADINGS, HERO, POSTS, SP9, SP12, WALK_PATH } from '../../data/pages/dog-walking';
+
+const config: ServicePageConfig = {
+  path: WALK_PATH,
+  // §1 Head, verbatim.
+  title: HEAD.title,
+  description: HEAD.description,
+  // SP-1 (§3; 06 §2.3): [Start <trial price> Trial Week] (amber, the booking form) + [Call [FILL:PHONE]] (hidden below md).
+  hero: {
+    eyebrow: HERO.eyebrow,
+    h1: HEAD.h1,
+    subhead: HERO.subhead,
+    primaryLabel: HERO.primaryLabel,
+    secondary: 'call',
+    photo: HERO.photo,
+  },
+  sp3: { heading: HEADINGS.sp3 },
+  // SP-4: the flat list (1 walk/day · 2 walks/day · Trial Week) + R1 + the walking payment line in R2's place.
+  sp4: { heading: HEADINGS.sp4, lines: 'dog-walking', r2: WALK_PAYMENT_LINE },
+  // SP-5: the proof-photo row, rendered by the layout only once reviews.ts holds consented walk-update photos.
+  sp5: { kind: 'proof', heading: HEADINGS.sp5 },
+  // SP-7: the §2 H2 over the people.ts MEET_WALKERS line; the H3 and cards appear once a walker is on the team.
+  sp7: { team: 'walkers', heading: HEADINGS.sp7, cardsHeading: HEADINGS.sp7Cards },
+  sp9: { intro: SP9.intro, prefix: SP9.prefix },
+  sp10: { heading: HEADINGS.sp10 },
+  sp11: { posts: POSTS },
+  sp12: { heading: SP12.heading, support: SP12.support },
+};
+---
+<ServicePage config={config}>
+  <PlanList slot="sp3" />
+  <WalkWindows slot="sp4-extra" />
+</ServicePage>

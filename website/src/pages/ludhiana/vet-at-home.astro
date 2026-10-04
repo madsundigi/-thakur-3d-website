@@ -1,0 +1,73 @@
+---
+// /ludhiana/vet-at-home/ — the medical money page. Blueprint: website-plan/blueprints/vet-at-home.md (copy values,
+// verbatim; §0 legal rules) on the template _TEMPLATE-service-page.md (blocks SP-0…SP-13, owned by
+// src/layouts/ServicePage.astro). Every ₹ figure comes from src/lib/pricing.ts (07 §4); chips, body CTA, areas, OG
+// image and the WhatsApp prefill from MONEY_PAGES['/ludhiana/vet-at-home/'] (src/data/services.ts); the 8 FAQs
+// (vet-at-home-1…8) from faq.json — #3 carries [FILL:EMERGENCY_VET_LIST], filled from site.emergencyVets by
+// src/lib/faq.ts; the SP-6 step 4 + R4 from content.ts SP6_LINES; the vet card from people.ts.
+// §0: PetDoorStep arranges and schedules the visit and never practises medicine; the page never implies emergency,
+// night or 24×7 cover — the hero notice and FAQ #3 route emergencies to a 24-hour hospital.
+import ServicePage, { type ServicePageConfig } from '../../layouts/ServicePage.astro';
+import EmergencyLine from '../../components/pages/vet-at-home/EmergencyLine.astro';
+import VisitTypes from '../../components/pages/vet-at-home/VisitTypes.astro';
+import { flatPrice } from '../../lib/pricing';
+
+const visit = flatPrice('vet-visit');
+// The phone cut of the SP-1 subhead (Hero subheadShort, W1L-5): its first sentence. The dropped words repeat the chips
+// (the price chip, "Medicines at MRP — bill shown", the "Fixed visit fee" chip); with the full line the 360×640 fold fails.
+const subheadShort = 'A registered veterinarian examines your pet at home — no stressful clinic trip.';
+
+const config: ServicePageConfig = {
+  path: '/ludhiana/vet-at-home/',
+  // §1 Head, verbatim.
+  title: `Vet at Home in Ludhiana – ${visit} Visit | PetDoorStep`,
+  description:
+    `Vet at home in Ludhiana: a registered vet examines your pet at your door. Consult ${visit}, medicines at MRP. ` +
+    'Slots 9am–7pm daily. Book on WhatsApp.',
+  // SP-1 (§3; 06 §2.3 ready hero): [Book Vet on WhatsApp] → /book/?src=hero_vet-at-home (00 §11 E1, amber) +
+  // [Call [FILL:PHONE]]; chips from the registry; the emergency notice under the CTAs, after R3, every word kept (W1L-6).
+  hero: {
+    eyebrow: 'Vet home visit, Ludhiana',
+    h1: 'Vet at Home in Ludhiana',
+    subhead: `${subheadShort} ${visit} consult; medicines and vaccines at MRP, bill shown to you.`,
+    subheadShort,
+    primaryLabel: 'Book Vet on WhatsApp',
+    secondary: 'call',
+    photo: {
+      name: 'vet-home-visit-pomeranian-ludhiana.jpg',
+      alt: 'Vet examining a Pomeranian during a home visit in Ludhiana',
+    },
+    notice: 'Not for emergencies — for accidents, poisoning, seizures or heavy bleeding, go to the nearest 24-hour vet hospital now.',
+  },
+  sp3: { heading: "What a veterinary doctor's home visit includes" },
+  // SP-4: the flat list (pricing.ts 'vet-at-home': vet visit + medicines at MRP · vaccination + vaccine MRP · deworming,
+  // dewormer included) with R1 + R2; the emergency footer line goes in through the sp4-extra slot.
+  sp4: { heading: `Vet home visit charges — fixed ${visit}`, lines: 'vet-at-home' },
+  // SP-5: the proof-photo row renders itself once reviews.ts holds consented photos of real visits (omitted until then).
+  // The blueprint names no H2 for the row; this mirrors dog-walking.md SP-5 ("Real walk updates") until it does (W1V-07).
+  sp5: { kind: 'proof', heading: 'Real home visits' },
+  // SP-7 "Meet your vet" + the registered-vets line (people.ts MEET_VET); the full card variant (W1L-14).
+  sp7: { team: 'vet', variant: 'full' },
+  sp8: { medical: true },
+  sp9: {
+    intro: 'Need a vet on call in Ludhiana? Our vet visits homes across the city — including:',
+    prefix: 'Vet at home in',
+  },
+  sp10: { heading: 'Vet at home — your questions' },
+  sp11: {
+    posts: [
+      { label: 'Vet Home Visit vs Clinic Visit', href: '/blog/vet-home-visit-vs-clinic/' },
+      { label: 'Puppy Diet Plan for the First 3 Months', href: '/blog/puppy-diet-plan-first-3-months/' },
+    ],
+  },
+  // SP-12: the blueprint's own line (not the R8 pattern), support verbatim with the fee from pricing.ts.
+  sp12: {
+    heading: 'Your pet deserves a calm check-up at home. Vet visits this week across Ludhiana.',
+    support: `${visit} visit · medicines at MRP, bill shown · pay after the visit.`,
+  },
+};
+---
+<ServicePage config={config}>
+  <VisitTypes slot="sp3" />
+  <EmergencyLine slot="sp4-extra" />
+</ServicePage>

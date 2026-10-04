@@ -1,0 +1,51 @@
+---
+// /ludhiana/dog-walking/ SP-3 body (blueprints/dog-walking.md §3 SP-3, §5 Images) — goes in ServicePage's `sp3` slot,
+// under the template H2 "What every walk includes" (paper band: no onTint). Order: the one-line lead-in → the ✓-list
+// per plan (CheckList: one card per 00 §3.2 plan, lines verbatim, prices through pricing.ts) → the H3 "Every walk,
+// the same rules" as a ✓-list, with the walk-update photo (§5) beside it from md and under it below md (only a
+// non-focusable item moves, so the tab order follows the DOM). The blueprint's bold "and" in the 2-walks line is not
+// rendered: CheckList items are plain strings (decisions/w1-walk.md W1W-04).
+import CheckList from '../../CheckList.astro';
+import Photo from '../../Photo.astro';
+import Icon from '../../icons/Icon.astro';
+import { HEADINGS, PLAN_CARDS, SP3_LEAD, UPDATE_PHOTO, WALK_RULES } from '../../../data/pages/dog-walking';
+---
+<div class="plans">
+  <p class="measure m-0">{SP3_LEAD}</p>
+  <CheckList items={PLAN_CARDS} class="mt-6" />
+  <div class="rules mt-10">
+    <div class="rules-text">
+      <h3 id="walk-rules" class="t-h3 m-0">{HEADINGS.rules}</h3>
+      <ul class="m-0 mt-4 list-none space-y-2 p-0">
+        {WALK_RULES.map((rule) => (
+          <li class="flex items-start gap-2 text-ink">
+            <Icon name="check" size={20} class="mt-0.5 flex-none text-brand" />
+            <span class="min-w-0">{rule}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+    {/* The wrapper is the grid item: a real photo renders as <picture> around the <img>, a placeholder as a bare <img>. */}
+    <div class="rules-photo">
+      <Photo
+        name={UPDATE_PHOTO.name}
+        alt={UPDATE_PHOTO.alt}
+        preset="card"
+        class="block aspect-[4/3] h-auto w-full rounded-lg object-cover"
+      />
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Base: the rules, then the photo under them. */
+  .rules { display: grid; grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  .rules-photo { max-width: 480px; }
+
+  /* md+: rules beside the photo. */
+  @media (min-width: 768px) {
+    .rules { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); column-gap: 40px; align-items: center; }
+    .rules-photo { max-width: none; }
+  }
+  @media (min-width: 1024px) { .rules { column-gap: 48px; } }
+</style>

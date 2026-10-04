@@ -1,0 +1,20 @@
+---
+// /ludhiana/cat-grooming/ SP-7 intro — the three "why home" points (blueprints/cat-grooming.md §3 SP-7, verbatim; §2's
+// "why do cats hate salons / stress-free cat grooming" long-tail). Goes in ServicePage's `sp7-intro` slot: between the
+// H2 "Why home beats the salon for cats" and the supporting line, before the groomer cards. Numbered discs as on the
+// StepsStrip (08 §4.9), no card surface: the SP-7 band is sand today and paper once SP-5 renders, so the points must
+// read on either tone. 1-col base, 3-up from md, like the cards that follow.
+const points = [
+  { lead: 'No carrier, no car.', text: "For most cats the journey is the worst part of grooming — at home it doesn't exist." },
+  { lead: 'No dog smells, no barking.', text: 'Your cat stays in its own territory, which keeps stress (and scratches) down.' },
+  { lead: 'One groomer, your room, breaks allowed.', text: 'We pause whenever your cat needs to — nobody is waiting for the table.' },
+];
+---
+<ol class="m-0 grid list-none gap-4 p-0 md:grid-cols-3 lg:gap-6">
+  {points.map((p, i) => (
+    <li class="flex gap-3">
+      <span class="flex h-10 w-10 flex-none items-center justify-center rounded-pill bg-brand font-bold text-white" aria-hidden="true">{i + 1}</span>
+      <p class="m-0 min-w-0 pt-2 text-ink"><strong>{p.lead}</strong> {p.text}</p>
+    </li>
+  ))}
+</ol>

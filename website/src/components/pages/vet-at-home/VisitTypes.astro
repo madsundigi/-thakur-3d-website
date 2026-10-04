@@ -1,0 +1,99 @@
+---
+// /ludhiana/vet-at-home/ SP-3 body (blueprints/vet-at-home.md §3 SP-3, §2 keyword rows, §5 images) — goes in
+// ServicePage's `sp3` slot, under the §2 H2 "What a veterinary doctor's home visit includes" (paper band: no onTint).
+// Order: the three visit types as ✓-list cards (CheckList — template SP-3: "Non-grooming pages replace the grid with a
+// ✓-list per package"; the blueprint's ✓-lines word for word, set in sentence case; prices from pricing.ts) → the H3
+// "What a home visit can — and can't — do" (InfoTable: two plain text columns, rowHeaders={false} — nothing sticky) →
+// the medicine-MRP photo (§5). From md the table sits beside the photo; below md the photo follows the table.
+// Facts are the blueprint's (00 §3.2 vet rows). No SP-3 footnotes: the template's (a) "nothing on this list costs
+// extra" would contradict "medicines or vaccines at printed MRP", and (b) is the grooming matting line (W1V-04).
+import CheckList from '../../CheckList.astro';
+import InfoTable from '../../InfoTable.astro';
+import Photo from '../../Photo.astro';
+import { isLive, routeLabel } from '../../../data/routes';
+import { flatPrice } from '../../../lib/pricing';
+
+const cards = [
+  {
+    title: 'Vet Home Visit',
+    priceText: flatPrice('vet-visit'),
+    items: [
+      'Full examination by a registered vet (temperature, weight, heart & lungs, skin, ears, eyes, teeth)',
+      'Diagnosis and written prescription',
+      'Medicines or vaccines at printed MRP, wrapper and bill shown',
+      'Visit summary on WhatsApp',
+      'Typically 20–30 minutes',
+    ],
+  },
+  {
+    title: 'Vaccination at Home',
+    priceText: `${flatPrice('vaccination')} + vaccine MRP`,
+    items: ['Cold-chain carried vaccine', 'Reminder calendar'],
+  },
+  {
+    title: 'Deworming Visit',
+    priceText: flatPrice('deworming'),
+    items: ['Standard dewormer included', 'Dose by weight (pet weighed first)'],
+  },
+] as const;
+
+// "→ full details on /ludhiana/dog-vaccination/" (blueprint SP-3): a link once that Wave-2 page is live (02 P074);
+// until then the pointer stays as text, marked "coming soon" like the SP-11 ServiceCard for the same page.
+const vaccHref = '/ludhiana/dog-vaccination/';
+const vaccLabel = routeLabel(vaccHref);
+const vaccLive = isLive(vaccHref);
+
+// H3 table (blueprint SP-3, verbatim): "Ideal at home" | "Needs a clinic or hospital".
+const CAN_CANT = "What a home visit can — and can't — do";
+const columns = [{ label: 'Needs a clinic or hospital' }];
+const rows = [
+  { label: 'Check-ups, vaccinations, deworming', cells: ['Road accidents and injuries, heavy bleeding'] },
+  { label: 'Skin, ear and eye problems', cells: ['Suspected poisoning, seizures, breathing trouble'] },
+  { label: 'Tick and flea issues, mild tummy upsets', cells: ['Bloody diarrhoea or suspected parvo'] },
+  { label: 'Follow-ups after illness, senior-pet reviews', cells: ['X-rays, ultrasound, surgery, drips'] },
+];
+---
+<div class="vt">
+  <CheckList items={cards} class="vt-cards">
+    <p slot="cta-2" class="m-0 text-sm">
+      {vaccLive
+        ? <a href={vaccHref} class="prose-link font-semibold">Full details on {vaccLabel}</a>
+        : <span class="text-slate">Full details on {vaccLabel} — coming soon</span>}
+    </p>
+  </CheckList>
+
+  <div class="vt-table">
+    <h3 id="home-visit-can-cant" class="t-h3 m-0">{CAN_CANT}</h3>
+    <InfoTable caption={CAN_CANT} rowHeader="Ideal at home" columns={columns} rows={rows} rowHeaders={false} class="mt-4" />
+  </div>
+
+  {/* The wrapper is the grid item: a real photo renders as <picture> around the <img>, a placeholder as a bare <img>. */}
+  <div class="vt-photo">
+    <Photo
+      name="vet-showing-medicine-mrp-ludhiana.jpg"
+      alt="Vet showing the medicine MRP to a pet parent during a home visit in Ludhiana"
+      preset="card"
+      class="block aspect-[4/3] h-auto w-full rounded-lg object-cover"
+    />
+  </div>
+</div>
+
+<style>
+  /* Base: one column in DOM order (cards · can/can't table · photo). */
+  .vt { display: grid; grid-template-columns: minmax(0, 1fr); gap: 32px; }
+  .vt-photo { max-width: 480px; }
+
+  /* md+: the three cards full width, then the table beside the photo. */
+  @media (min-width: 768px) {
+    .vt {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+      grid-template-areas: 'cards cards' 'table photo';
+      column-gap: 40px;
+      align-items: start;
+    }
+    .vt :global(.vt-cards) { grid-area: cards; }
+    .vt-table { grid-area: table; }
+    .vt-photo { grid-area: photo; max-width: none; }
+  }
+  @media (min-width: 1024px) { .vt { column-gap: 48px; row-gap: 40px; } }
+</style>

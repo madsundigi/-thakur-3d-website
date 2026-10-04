@@ -1,0 +1,73 @@
+---
+// /ludhiana/cat-grooming/ — the cat money page. Blueprint: website-plan/blueprints/cat-grooming.md (copy values,
+// verbatim) on the template _TEMPLATE-service-page.md (blocks SP-0…SP-13, owned by src/layouts/ServicePage.astro).
+// Every ₹ figure comes from src/lib/pricing.ts (07 §4); chips (chip 4 = "Calm-handling trained for cats"), the body
+// CTA, areas, OG image and the WhatsApp prefill come from MONEY_PAGES['/ludhiana/cat-grooming/'] (src/data/services.ts);
+// the 8 FAQs (cat-grooming-1…8) from faq.json. Decisions: website-plan/decisions/w1-cat.md.
+import ServicePage, { type ServicePageConfig } from '../../layouts/ServicePage.astro';
+import CoatCareTable from '../../components/pages/cat-grooming/CoatCareTable.astro';
+import PackageTable from '../../components/pages/cat-grooming/PackageTable.astro';
+import WhyHome from '../../components/pages/cat-grooming/WhyHome.astro';
+import { fromPrice, planPrice } from '../../lib/pricing';
+
+const from = fromPrice('cat-grooming');
+const bathBrush = planPrice('cat-grooming', 'cat-bath-brush');
+const fullGroom = planPrice('cat-grooming', 'cat-full');
+
+const config: ServicePageConfig = {
+  path: '/ludhiana/cat-grooming/',
+  // §1 Head, verbatim.
+  title: `Cat Grooming at Home in Ludhiana – From ${from} | PetDoorStep`,
+  description:
+    `Stress-free cat grooming at home in Ludhiana — no scary salon trips. Bath & Brush ${bathBrush}, Full Groom ${fullGroom}. ` +
+    'Calm-handling trained groomers. Book on WhatsApp.',
+  // SP-1 (§3, 06 §2.3): [Book on WhatsApp] → /book/?src=hero_cat-grooming (E1, amber) + [Call [FILL:PHONE]]; the chip row
+  // (the from-price chip + the standard set with chip 4 swapped) is the registry's. Alt = §5 hero line (08 §5.2 shot 5, E5: the
+  // cat on a towel) — name the breed in the same commit that adds the real photo, once it shows one.
+  hero: {
+    eyebrow: 'Cat grooming at home',
+    h1: 'Cat Grooming at Home in Ludhiana',
+    subhead:
+      `Calm-handling trained groomers for your cat — no car ride, no strange salon smells. Bath & Brush ${bathBrush} · ` +
+      `Full Groom ${fullGroom}, flat price for all cats.`,
+    primaryLabel: 'Book on WhatsApp',
+    secondary: 'call',
+    photo: {
+      name: 'cat-grooming-at-home-ludhiana.jpg',
+      alt: 'Cat sitting calmly on a towel during cat grooming at home in Ludhiana',
+    },
+  },
+  // SP-3 H2 = §2 "cat bathing service at home" slot; the body (grid + bath photo) is the sp3 slot.
+  sp3: { heading: `Cat Bath & Brush — ${bathBrush}, everything included` },
+  // SP-4: the flat-price list (§3 — no size matrix on this page), then the H3 coat-care table in sp4-extra.
+  sp4: { heading: 'Cat grooming price in Ludhiana — one flat price', lines: 'cat-grooming' },
+  sp5: { kind: 'pairs' },
+  // SP-7 (§3): the blueprint's H2 and supporting line replace the people.ts MEET_GROOMERS defaults; the three "why home"
+  // points go in sp7-intro. Cards render only for groomers on the team (honesty law), with people.ts specialityOn.
+  sp7: {
+    team: 'groomers',
+    heading: 'Why home beats the salon for cats',
+    line: 'Your cat groomer in Ludhiana is calm-handling trained and background-verified.',
+  },
+  sp9: {
+    intro: 'Looking for cat grooming near me? We visit homes across Ludhiana — these areas book cat grooming most:',
+    prefix: 'Cat grooming at home in',
+  },
+  // Template SP-10 heading pattern ("<Service> at home — your questions"); the blueprint names none.
+  sp10: { heading: 'Cat grooming at home — your questions' },
+  // SP-11: siblings = the template's fixed cat set (Dog Grooming · Tick & Flea Treatment); the week-16 post once live.
+  sp11: {
+    posts: [{ label: 'How Often Should a Persian Cat Be Groomed in India?', href: '/blog/persian-cat-grooming-schedule-india/' }],
+  },
+  // SP-12: the blueprint's line verbatim — it adds "calm," to the 06 §9 R8 pattern, so r8('Persian') would not match it.
+  sp12: {
+    heading: 'Your Persian deserves a calm, stress-free groom at home. Slots this week across Ludhiana.',
+    support: `Flat ${bathBrush} · no advance payment · photo update after the groom.`,
+  },
+};
+---
+<ServicePage config={config}>
+  <PackageTable slot="sp3" />
+  <CoatCareTable slot="sp4-extra" />
+  <WhyHome slot="sp7-intro" />
+</ServicePage>
