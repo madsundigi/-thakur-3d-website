@@ -75,6 +75,9 @@ const generalInfo = !d.reviewer && (d.category === 'Health & vaccination' || d.c
   articleModified={updated ?? published}
   jsonLd={jsonLd}
 >
+  {/* LCP preload for the hero photo (04 §5.2.2), same transform as the hero <Photo> below. */}
+  <Photo slot="head" preload preset="blog" name={d.heroImage} />
+
   {/* BP-0 */}
   <Breadcrumb items={crumbs} />
 
@@ -96,8 +99,10 @@ const generalInfo = !d.reviewer && (d.category === 'Health & vaccination' || d.c
       ) : null}
     </header>
 
-    {/* BP-6 hero image */}
-    <Photo name={d.heroImage} alt={d.heroAlt} preset="blog" eager class="mt-6 block h-auto w-full rounded-lg object-cover" />
+    {/* BP-6 hero image — the LCP: eager + fetchpriority high, with the matching <head> preload above. */}
+    <div class="mt-6" data-hero-photo>
+      <Photo name={d.heroImage} alt={d.heroAlt} preset="blog" eager class="block h-auto w-full rounded-lg object-cover" />
+    </div>
 
     {/* BP-5 money-page card (standing CTA; the first-half in-body anchor is written in the .md) */}
     <aside class="mt-6 flex flex-col gap-3 rounded-lg border border-line bg-sand p-4 md:flex-row md:items-center md:justify-between">

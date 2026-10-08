@@ -13,7 +13,7 @@ This file is documentation, not a post — the collection glob excludes `README.
 ---
 title: "Dog Grooming Price List in Ludhiana (2026): Every Service, Every Size, Real Rates"  # = H1; ≤ 110 chars
 seoTitle: "Dog Grooming Cost in Ludhiana (2026 Guide) | PetDoorStep"  # <title>; ≤ 60 chars (drop " | PetDoorStep" if over)
-description: "Dog grooming at home in Ludhiana — full price breakdown by size and package, and what each one includes."  # meta; 50–155 chars, answer-first
+description: "Dog grooming at home in Ludhiana — a full price breakdown by size and package, what each groom includes, and how to avoid doorstep surprises."  # meta; 120–158 chars, answer-first
 slug: "dog-grooming-price-list-ludhiana"   # lowercase-hyphenated, year-free; the /blog/<slug>/ URL; never changes after publish
 date: 2026-11-02                            # first publish (YYYY-MM-DD)
 updated: 2026-11-05                         # optional; bump on every substantive refresh
@@ -48,7 +48,7 @@ box and adds `reviewedBy` to the BlogPosting JSON-LD. When absent, add the gener
 |---|---|
 | `title` | = the H1. ≤ 110 chars (BlogPosting `headline` cap, 04 §2.7). |
 | `seoTitle` | the `<title>`. ≤ 60 chars (check:pages holds it to 50–60). |
-| `description` | answer-first meta, 50–155 chars; no double quotes. |
+| `description` | answer-first meta, 120–158 chars; no double quotes. |
 | `slug` | lowercase-hyphenated, year-free; matches the `/blog/<slug>/` URL and the routes.ts entry. |
 | `date` / `updated` | ISO `YYYY-MM-DD`. `dateModified` falls back to `date` when `updated` is omitted. |
 | `category` | exactly one of: `Grooming`, `Health & vaccination`, `Ticks & seasons`, `Walking`, `Cats`, `Puppies`. |

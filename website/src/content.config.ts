@@ -25,7 +25,7 @@ const blog = defineCollection({
     // Head (04 §3 lengths; _TEMPLATE-blog-post.md §1/§7).
     title: z.string().min(1).max(110), // = H1; BlogPosting headline (04 §2.7 caps it at 110)
     seoTitle: z.string().min(1).max(60), // <title>, ≤ 60 chars (drop " | PetDoorStep" if over)
-    description: z.string().min(50).max(155), // meta description, answer-first (≤ 155)
+    description: z.string().min(120).max(158), // meta description, answer-first (check:pages P019 holds it to 120–158)
     slug: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'slug must be lowercase-hyphenated, year-free (00 §5)'),
     // Dates (04 §2.7). `date` = first publish; `updated` bumps on a substantive refresh (10 §4).
     date: z.coerce.date(),
