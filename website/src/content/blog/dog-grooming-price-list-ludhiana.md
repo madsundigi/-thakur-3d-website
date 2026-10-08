@@ -1,10 +1,10 @@
 ---
-title: "Dog Grooming Price List in Ludhiana (2026): Every Service & Size"
-seoTitle: "Dog Grooming Cost in Ludhiana (2026): Full Price List"
-description: "Dog grooming in Ludhiana costs ₹599 to ₹2,799 at home, by size and package. Here is the full PetDoorStep price list and what each one includes."
+title: "How Much Does Dog Grooming Cost in Ludhiana? (2026 Guide)"
+seoTitle: "Dog Grooming Cost in Ludhiana (2026): At-Home Guide"
+description: "Dog grooming in Ludhiana costs ₹599 to ₹2,799 at home, by size and package. Here is the full cost breakdown and what each groom includes."
 slug: "dog-grooming-price-list-ludhiana"
 date: 2026-10-08
-keywords: ["dog grooming cost in ludhiana", "dog grooming price list ludhiana", "pet grooming charges"]
+keywords: ["dog grooming cost in ludhiana", "how much is dog grooming in ludhiana"]
 funnel: "BOFU"
 format: "price-guide"
 category: "Grooming"

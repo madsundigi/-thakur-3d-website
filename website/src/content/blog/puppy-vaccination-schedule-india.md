@@ -24,7 +24,7 @@ A puppy in India gets its **first vaccine at 6 to 8 weeks of age**, then a boost
 
 - **First shot at 6–8 weeks**, then boosters at roughly 10–12 and 14–16 weeks.
 - **Anti-rabies at 12–16 weeks**, often given with the last puppy booster.
-- **Keep the puppy in** until about a week after the final shot before public walks.
+- **Keep the puppy in** until about one to two weeks after the final shot before public walks.
 - **Deworm alongside** the vaccines — every 2 weeks to 12 weeks, then monthly to 6 months.
 - At home in Ludhiana it is a flat **₹199 service fee + the vaccine at MRP** — [book a home vaccination](/ludhiana/dog-vaccination/).
 
