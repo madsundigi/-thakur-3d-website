@@ -1,0 +1,32 @@
+---
+// /ludhiana/tick-flea-treatment/ SP-4 additions (blueprints/tick-flea-treatment.md §3 SP-4, verbatim) — goes in
+// ServicePage's `sp4-extra` slot, after the mid-page CTA and the /pricing/ link, on the sand SP-4 band: onTint.
+// Two H3 sub-sections (00 §11 2026-10-02: page-specific sections are H3s inside the nearest block): the "Punjab tick
+// season" month-by-month as a real <table> (carries the "tick season in punjab" long-tail), then "Cats too — cat-safe
+// products only" (the permethrin/cat warning, present here AND in FAQ #5 — §6 ship check). The ₹ figures come from
+// pricing.ts (07 §4).
+import InfoTable from '../../InfoTable.astro';
+import { addonPrice, flatPrice } from '../../../lib/pricing';
+
+const SEASON = 'Punjab tick season';
+const columns = [{ label: 'Tick activity' }, { label: 'What to do' }];
+const rows = [
+  { label: 'Apr–Jun', cells: ['Rising with the heat', 'Start prevention; check your dog weekly'] },
+  { label: 'Jul–Sep', cells: ['Peak (monsoon) — tick-fever cases highest May–Sep', 'Check nightly; treat at the first ticks'] },
+  { label: 'Oct–Mar', cells: ['Lower', 'Monthly checks; treat bedding if you see any'] },
+];
+---
+<div class="mt-12 space-y-10">
+  <div>
+    <h3 id="punjab-tick-season" class="t-h3 m-0">{SEASON}</h3>
+    <InfoTable caption={SEASON} rowHeader="Months" columns={columns} rows={rows} wide onTint class="mt-4" />
+  </div>
+
+  <div>
+    <h3 id="cats-too" class="t-h3 m-0">Cats too — cat-safe products only</h3>
+    <p class="measure m-0 mt-3">
+      Flea treatment for cats uses cat-specific products (many dog products contain permethrin, which is toxic to cats).
+      Same <span class="t-price">{addonPrice()}</span> add-on / <span class="t-price">{flatPrice('tick-flea')}</span> standalone.
+    </p>
+  </div>
+</div>

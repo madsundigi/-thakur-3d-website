@@ -1,0 +1,78 @@
+---
+// /ludhiana/puppy-grooming/ — the puppy lead-magnet money page. Blueprint: website-plan/blueprints/puppy-grooming.md
+// (copy values, verbatim) on the template _TEMPLATE-service-page.md (blocks SP-0…SP-13, owned by
+// src/layouts/ServicePage.astro). Every ₹ figure comes from src/lib/pricing.ts (07 §4); chips, body CTA, areas, OG
+// image and the WhatsApp prefill from MONEY_PAGES['/ludhiana/puppy-grooming/'] (src/data/services.ts); the 8 FAQs
+// (puppy-grooming-1…8) from faq.json. Eyebrow carries "Ludhiana" (00 §11 2026-10-08 P091), adapted from the
+// blueprint's "Puppy's first groom". SP-3 is a ✓-list + the 5-step flow (CheckList, not a size grid).
+import ServicePage, { type ServicePageConfig } from '../../layouts/ServicePage.astro';
+import FirstGroom from '../../components/pages/puppy-grooming/FirstGroom.astro';
+import BreedFocus from '../../components/pages/puppy-grooming/BreedFocus.astro';
+import { fromPrice, flatPrice } from '../../lib/pricing';
+import { isLive } from '../../data/routes';
+
+const flat = flatPrice('puppy-intro');
+// 6-month cut-over line (blueprint SP-4; §6 ship check: it names the Bath & Brush (small) price). /ludhiana/dog-grooming/
+// is a live Wave-1 route, so the anchor renders; isLive keeps it honest if that changes (W1L-18, 02 P074).
+const dogHref = '/ludhiana/dog-grooming/';
+const dogLive = isLive(dogHref);
+const bathFrom = fromPrice('bath-brush');
+
+const config: ServicePageConfig = {
+  path: '/ludhiana/puppy-grooming/',
+  // §1 Head, verbatim.
+  title: `Puppy Grooming at Home in Ludhiana – ${flat} | PetDoorStep`,
+  description:
+    `Gentle first-time grooming for puppies under 6 months — ${flat} flat, at your home in Ludhiana. ` +
+    'Trained, patient groomers with sanitised kit. Book on WhatsApp.',
+  // SP-1 (§3; 06 §2.3): [Book Puppy's First Groom] → /book/?src=hero_puppy-grooming (00 §11 E1, amber) +
+  // [Call [FILL:PHONE]]; the chip row (the flat-price chip + the 4 override chips) is the registry's.
+  hero: {
+    eyebrow: 'Puppy grooming in Ludhiana',
+    h1: `Puppy Grooming at Home in Ludhiana — First Groom ${flat}`,
+    subhead:
+      `A gentle first-time groom for puppies under 6 months — short sessions, lots of breaks, treats allowed. ` +
+      `One flat price: ${flat}, any breed.`,
+    primaryLabel: "Book Puppy's First Groom",
+    secondary: 'call',
+    photo: {
+      name: 'puppy-first-groom-at-home-ludhiana.jpg',
+      alt: "Shih Tzu puppy's first groom at home in Ludhiana",
+    },
+  },
+  // SP-3 H2 = §2 "puppy first grooming session" slot; the body (lead-in + ✓-list + the 5-step flow + §5 towel photo)
+  // is the sp3 slot.
+  sp3: { heading: 'Gentle first-time groom — what happens' },
+  // SP-4: the single flat line (pricing.ts 'puppy-grooming': Puppy Intro Groom · any breed, 8 weeks to 6 months) with
+  // R1 + R2; the 6-month cut-over line in sp4-lines, the "Popular first-groom breeds" table in sp4-extra.
+  sp4: { heading: `Puppy grooming price — ${flat} flat, any breed`, lines: 'puppy-grooming' },
+  // SP-5: a grooming page, so before/after pairs — the layout renders the row once reviews.ts holds ≥ 2 consented
+  // puppy pairs, otherwise the block is omitted (template SP-5: never stock, never placeholders).
+  sp5: { kind: 'pairs' },
+  sp7: { team: 'groomers' },
+  sp9: {
+    intro: 'Looking for a puppy groomer near me in Ludhiana? We visit homes across the city, including:',
+    prefix: 'Puppy grooming at home in',
+  },
+  sp10: { heading: 'Puppy grooming at home — your questions' },
+  sp11: {
+    posts: [{ label: "Puppy's First Grooming: The Right Age", href: '/blog/puppy-first-grooming-age/' }],
+  },
+  // SP-12: the blueprint's own line (not the R8 pattern), support verbatim with the price from pricing.ts.
+  sp12: {
+    heading: 'Your puppy’s first groom should be a happy one. Gentle slots this week across Ludhiana.',
+    support: `${flat} flat · any breed · pay after the groom.`,
+  },
+};
+---
+<ServicePage config={config}>
+  <FirstGroom slot="sp3" />
+  <Fragment slot="sp4-lines">
+    <p class="measure m-0 mt-4 text-sm text-slate">
+      From 6 months, your pup moves to {dogLive
+        ? <a href={dogHref} class="prose-link font-semibold">regular dog grooming</a>
+        : <strong>regular dog grooming</strong>} from <span class="t-price">{bathFrom}</span> (Bath &amp; Brush, small).
+    </p>
+  </Fragment>
+  <BreedFocus slot="sp4-extra" />
+</ServicePage>

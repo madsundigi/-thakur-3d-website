@@ -1,0 +1,75 @@
+---
+// /ludhiana/puppy-grooming/ SP-3 body (blueprints/puppy-grooming.md §3 SP-3, §5 image) — goes in ServicePage's `sp3`
+// slot, under the H2 "Gentle first-time groom — what happens" (paper band: no onTint). Order: the lead-in → the
+// single Puppy Intro Groom ✓-list card (CheckList — template SP-3: non-grooming/flat pages use a ✓-list per package;
+// the blueprint's ✓-lines verbatim, price through pricing.ts) → the 5 numbered steps (the "what happens" flow) beside
+// the §5 towel photo from md. The only ₹ figure (the card price) comes from pricing.ts (07 §4). Minimum age stated as
+// 8 weeks (card note; §6 ship check).
+import CheckList from '../../CheckList.astro';
+import Photo from '../../Photo.astro';
+import { flatPrice } from '../../../lib/pricing';
+
+const card = {
+  title: 'Puppy Intro Groom',
+  priceText: flatPrice('puppy-intro'),
+  items: [
+    'Gentle bath with puppy shampoo (or spot-clean if your vet advises waiting)',
+    'Towel + low-speed dry',
+    'Brush-out',
+    'Nail-tip trim',
+    'Ear and eye wipe',
+    'Paw-pad and face tidy',
+    'Clipper-sound introduction',
+    'Photo update for the family',
+  ],
+  note: '8 weeks to 6 months · ~45 minutes with breaks',
+} as const;
+
+const steps = [
+  { title: 'Meet & sniff (5 min)', text: 'your groomer sits on the floor and lets your puppy come to them.' },
+  { title: 'Touch practice', text: 'paws, ears and muzzle touched briefly, a treat each time.' },
+  { title: 'Bath or spot-clean', text: 'warm water, puppy shampoo, quick and calm.' },
+  { title: 'Dry & brush with breaks', text: 'low-speed dryer introduced gradually; play breaks whenever needed.' },
+  { title: 'Nail tips, tidy, praise', text: 'finish on a happy note, then a photo for the family.' },
+];
+---
+<div>
+  <p class="measure m-0">Puppy grooming in Ludhiana that builds a calm adult dog.</p>
+  <CheckList items={[card]} class="mt-6" />
+
+  <div class="flow mt-10">
+    <ol class="flow-steps m-0 list-none p-0">
+      {steps.map((s, i) => (
+        <li class="flex items-start gap-3">
+          <span class="flex-none inline-flex h-8 w-8 items-center justify-center rounded-pill bg-brand text-sm font-semibold text-paper" aria-hidden="true">{i + 1}</span>
+          <p class="m-0 min-w-0"><strong class="text-ink">{s.title}</strong> — {s.text}</p>
+        </li>
+      ))}
+    </ol>
+
+    {/* The wrapper is the grid item: a real photo renders as <picture> around the <img>, a placeholder as a bare <img>. */}
+    <div class="flow-photo">
+      <Photo
+        name="puppy-towel-dry-after-bath-ludhiana.jpg"
+        alt="Labrador puppy towel-dried after a gentle first bath at home in Ludhiana"
+        preset="card"
+        class="block aspect-[4/3] h-auto w-full rounded-lg object-cover"
+      />
+    </div>
+  </div>
+</div>
+
+<style>
+  .flow-steps { display: flex; flex-direction: column; gap: 16px; }
+
+  /* Base: the steps, then the towel photo under them. */
+  .flow { display: grid; grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  .flow-photo { max-width: 480px; }
+
+  /* md+: the steps beside the photo (only the non-focusable photo moves, so the tab order follows the DOM). */
+  @media (min-width: 768px) {
+    .flow { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); column-gap: 40px; align-items: center; }
+    .flow-photo { max-width: none; }
+  }
+  @media (min-width: 1024px) { .flow { column-gap: 48px; } }
+</style>

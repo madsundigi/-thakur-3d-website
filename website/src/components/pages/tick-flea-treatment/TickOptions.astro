@@ -1,0 +1,85 @@
+---
+// /ludhiana/tick-flea-treatment/ SP-3 body (blueprints/tick-flea-treatment.md §3 SP-3, §5 image) — goes in
+// ServicePage's `sp3` slot, under the H2 "Anti-tick bath — what's included" (paper band: no onTint). Order: the
+// lead-in → the two ✓-list cards (CheckList — template SP-3: non-grooming pages use a ✓-list per package; lines
+// verbatim, prices through pricing.ts) → the printed product rule → the coral "When it's more than ticks" symptoms
+// box (H3, routes to the vet page, never grooming — §6 ship check) → the §5 tick-tool photo. The ₹ figures come from
+// pricing.ts (07 §4).
+import CheckList from '../../CheckList.astro';
+import Photo from '../../Photo.astro';
+import Icon from '../../icons/Icon.astro';
+import { isLive, routeLabel } from '../../../data/routes';
+import { addonPrice, flatPrice } from '../../../lib/pricing';
+
+const cards = [
+  {
+    title: 'Add-on with any groom',
+    priceText: addonPrice(),
+    items: [
+      'Anti-tick/flea treatment during the groom',
+      'Full-body tick check (ears, between toes, under the collar, armpits, tail base)',
+      'Visible ticks removed with a proper tick tool',
+    ],
+  },
+  {
+    title: 'Standalone',
+    priceText: flatPrice('tick-flea'),
+    items: [
+      'Anti-tick bath',
+      'The same full-body check and removal',
+      'Home advice: bedding wash, nightly 60-second tick check',
+    ],
+  },
+] as const;
+
+// The coral symptoms box routes to the vet page (blueprint SP-3 H3; §6 ship check). /ludhiana/vet-at-home/ is a live
+// Wave-1 route, so the anchor renders; isLive keeps it honest if that ever changes (W1L-18, 02 P074).
+const vetHref = '/ludhiana/vet-at-home/';
+const vetLive = isLive(vetHref);
+const vetLabel = routeLabel(vetHref);
+---
+<div>
+  <p class="measure m-0">Tick and flea treatment at home, done properly — not just a quick shampoo.</p>
+  <CheckList items={cards} class="mt-6" />
+
+  <p class="measure m-0 mt-6 text-sm text-slate">
+    Vet-approved products chosen for your pet's species, age and weight — never dog products on cats.
+  </p>
+
+  <div class="tick-alert mt-8" role="note">
+    <h3 id="more-than-ticks" class="t-h3 m-0 flex items-start gap-2 text-alert-ink">
+      <Icon name="alert-circle" size={20} class="mt-1 flex-none text-alert" />
+      <span class="min-w-0">When it's more than ticks</span>
+    </h3>
+    <p class="measure m-0 mt-2">
+      Lethargy · loss of appetite · fever · pale gums · dark or reddish urine. These can mean tick fever — book a
+      <span class="t-price">{flatPrice('vet-visit')}</span> {vetLive
+        ? <a href={vetHref} class="prose-link font-semibold">vet home visit</a>
+        : <strong>vet home visit</strong>} today rather than a grooming treatment.
+    </p>
+    <span class="sr-only">{vetLabel}</span>
+  </div>
+
+  {/* The wrapper is the grid item: a real photo renders as <picture> around the <img>, a placeholder as a bare <img>. */}
+  <figure class="m-0 mt-8 max-w-[480px]">
+    <Photo
+      name="dog-tick-check-at-home-ludhiana.jpg"
+      alt="Groomer removing a tick from a dog's ear with a tick tool in Ludhiana"
+      preset="card"
+      class="block aspect-[4/3] h-auto w-full rounded-lg object-cover"
+    />
+  </figure>
+</div>
+
+<style>
+  /* Coral box (blueprint SP-3 "boxed, coral"): the alert hue as a hairline border + a faint tint, on the paper band.
+     The alert icon + alert-ink heading match the hero/vet emergency styling (routing text, not an alarm). */
+  .tick-alert {
+    max-width: 640px;
+    border: 1.5px solid var(--color-alert);
+    border-radius: var(--radius-lg);
+    background: color-mix(in srgb, var(--color-alert) 7%, var(--color-paper));
+    padding: 16px;
+  }
+  @media (min-width: 1024px) { .tick-alert { padding: 24px; } }
+</style>

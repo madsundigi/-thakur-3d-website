@@ -1,0 +1,72 @@
+---
+// /ludhiana/tick-flea-treatment/ — the tick & flea money page. Blueprint: website-plan/blueprints/tick-flea-treatment.md
+// (copy values, verbatim) on the template _TEMPLATE-service-page.md (blocks SP-0…SP-13, owned by
+// src/layouts/ServicePage.astro). Every ₹ figure comes from src/lib/pricing.ts (07 §4); chips, body CTA, areas, OG
+// image and the WhatsApp prefill from MONEY_PAGES['/ludhiana/tick-flea-treatment/'] (src/data/services.ts); the 8 FAQs
+// (tick-flea-treatment-1…8) from faq.json. Eyebrow carries "Ludhiana" (00 §11 2026-10-08 P091), adapted from the
+// blueprint's "Anti-tick bath at home".
+// NOTE (fold, W1L-7): the registry hero price chip (standalone price + add-on price + "with a groom") is ~178px wide,
+// so at 360×640 the first trust chip is cut — the chip row is copy owned by pricing.ts (heroPriceChip), not this page,
+// so the resolution (a shorter chip or a P150 exception) is Sunny's call. Logged in decisions + requests/w2-money.md.
+import ServicePage, { type ServicePageConfig } from '../../layouts/ServicePage.astro';
+import TickOptions from '../../components/pages/tick-flea-treatment/TickOptions.astro';
+import TickSeason from '../../components/pages/tick-flea-treatment/TickSeason.astro';
+import { addonPrice, flatPrice } from '../../lib/pricing';
+
+const standalone = flatPrice('tick-flea');
+const addon = addonPrice();
+
+const config: ServicePageConfig = {
+  path: '/ludhiana/tick-flea-treatment/',
+  // §1 Head, verbatim.
+  title: 'Tick & Flea Treatment for Dogs in Ludhiana | PetDoorStep',
+  description:
+    `Anti-tick bath and flea treatment at your home in Ludhiana. Add-on ${addon} with any groom, standalone ${standalone}. ` +
+    "Beat Punjab's pre-monsoon tick season. Book now.",
+  // SP-1 (§3; 06 §2.3): [Book on WhatsApp] → /book/?src=hero_tick-flea-treatment (00 §11 E1, amber) + [Call [FILL:PHONE]];
+  // the chip row (price chip + the standard 4 trust chips) is the registry's.
+  hero: {
+    eyebrow: 'Anti-tick bath in Ludhiana',
+    h1: 'Tick & Flea Treatment for Dogs in Ludhiana — At Your Home',
+    subhead:
+      `Ticks love Punjab's monsoon. We don't. Standalone treatment ${standalone}, or add it to any groom for ${addon} — ` +
+      'sealed fresh kit, every single pet.',
+    primaryLabel: 'Book on WhatsApp',
+    secondary: 'call',
+    photo: {
+      name: 'anti-tick-bath-indie-dog-ludhiana.jpg',
+      alt: 'Indie dog getting an anti-tick bath at home in Ludhiana',
+    },
+  },
+  // SP-3 H2 = §2 "anti tick bath for dogs ludhiana" slot; the body (lead-in + ✓-lists + product rule + the coral
+  // symptoms box + §5 tick-tool photo) is the sp3 slot.
+  sp3: { heading: "Anti-tick bath — what's included" },
+  // SP-4: the flat list (pricing.ts 'tick-flea-treatment': Add-on with any groom · Standalone visit) with R1 + R2;
+  // the Punjab tick-season table + the "Cats too" permethrin H3 go in sp4-extra.
+  sp4: { heading: `Tick treatment price — ${addon} add-on or ${standalone} standalone`, lines: 'tick-flea-treatment' },
+  // SP-5: before/after only where visually meaningful (coat condition); the layout renders it once reviews.ts holds
+  // ≥ 2 consented pairs for this service, otherwise the block is omitted (blueprint SP-5).
+  sp5: { kind: 'pairs' },
+  sp7: { team: 'groomers' },
+  sp9: {
+    intro: 'Looking for tick and flea treatment near you in Ludhiana? We visit homes across the city — these areas book it most:',
+    prefix: 'Tick & flea treatment at home in',
+  },
+  sp10: { heading: 'Tick & flea treatment at home — your questions' },
+  sp11: {
+    posts: [
+      { label: 'Tick Season in Ludhiana: Your Month-by-Month Prevention Calendar', href: '/blog/tick-season-ludhiana-prevention-calendar/' },
+      { label: 'Tick Fever in Dogs', href: '/blog/tick-fever-dogs-symptoms-treatment/' },
+    ],
+  },
+  // SP-12: the blueprint's own line (not the R8 pattern), support verbatim with the prices from pricing.ts.
+  sp12: {
+    heading: 'Your Indie deserves a tick-free monsoon. Treatment slots this week across Ludhiana.',
+    support: `${standalone} standalone · ${addon} with any groom · pay after the service.`,
+  },
+};
+---
+<ServicePage config={config}>
+  <TickOptions slot="sp3" />
+  <TickSeason slot="sp4-extra" />
+</ServicePage>

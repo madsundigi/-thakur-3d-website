@@ -1,0 +1,62 @@
+---
+// /ludhiana/dog-vaccination/ SP-3 body (blueprints/dog-vaccination.md §3 SP-3, §5 image) — goes in ServicePage's `sp3`
+// slot, under the H2 "What a home vaccination visit includes" (paper band: no onTint). Order: the lead-in → the two
+// ✓-list cards (CheckList — template SP-3: non-grooming pages replace the grid with a ✓-list per package; the
+// blueprint's ✓-lines verbatim in sentence case; prices through pricing.ts) → the §5 cold-chain-box photo. The
+// Deworming card title is the blueprint's SP-3 H3 "Deworming Visit" (CheckList renders titles as H3). The reminder
+// line keeps the 00 §11 D4 "once you reply YES" opt-in wording verbatim. From md the photo sits beside the cards.
+import CheckList from '../../CheckList.astro';
+import Photo from '../../Photo.astro';
+import { flatPrice } from '../../../lib/pricing';
+
+const cards = [
+  {
+    title: 'Vaccination at Home',
+    priceText: `${flatPrice('vaccination')} + vaccine at MRP`,
+    items: [
+      'Registered vet',
+      'Vaccine carried in a temperature-controlled box',
+      'Batch number and expiry shown before the injection',
+      '15-minute observation after the shot',
+      "Entry in your pet's vaccination card, signed with the vet's registration number",
+      'Free WhatsApp reminder a week before every next dose, once you reply YES',
+    ],
+  },
+  {
+    title: 'Deworming Visit',
+    priceText: flatPrice('deworming'),
+    items: ['Standard dewormer included', 'Dose by weight (pet weighed first)'],
+    note: `With a vaccination in the same visit: ${flatPrice('vaccination')} + vaccine MRP + ${flatPrice('deworming')} — just the list prices added, nothing extra.`,
+  },
+] as const;
+---
+<div class="vi">
+  <div class="vi-copy">
+    <p class="measure m-0">Dog vaccination in Ludhiana without the clinic queue — or the clinic germs.</p>
+    <CheckList items={cards} class="vi-cards mt-6" />
+  </div>
+
+  {/* The wrapper is the grid item: a real photo renders as <picture> around the <img>, a placeholder as a bare <img>. */}
+  <div class="vi-photo">
+    <Photo
+      name="vaccine-cold-box-home-ludhiana.jpg"
+      alt="Temperature-controlled vaccine box carried by a vet in Ludhiana"
+      preset="card"
+      class="block aspect-[4/3] h-auto w-full rounded-lg object-cover"
+    />
+  </div>
+</div>
+
+<style>
+  /* Base: the copy (lead-in + cards), then the photo under it. */
+  .vi { display: grid; grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  .vi-photo { max-width: 480px; }
+
+  /* md+: cards beside the photo (the two cards drop to one column in the narrower share). */
+  @media (min-width: 768px) {
+    .vi { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); column-gap: 40px; align-items: start; }
+    .vi :global(.vi-cards) { grid-template-columns: minmax(0, 1fr); }
+    .vi-photo { max-width: none; align-self: center; }
+  }
+  @media (min-width: 1024px) { .vi { column-gap: 48px; } }
+</style>
