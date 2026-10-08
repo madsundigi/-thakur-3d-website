@@ -7,6 +7,7 @@ import ReviewCard from '../../ReviewCard.astro';
 import { pickReviews, PROOF_LINE, reviewsReady, REVIEWS_EMPTY_STATE } from '../../../data/reviews';
 import { site } from '../../../data/site';
 import { HOME_PROOF } from '../../../data/pages/home';
+import { isLive } from '../../../data/routes';
 
 interface Props {
   /** The block sits on a sand band: review cards switch to paper + hairline border (08 §4.11). */
@@ -36,4 +37,7 @@ const [emptyBefore, emptyAfter = ''] = REVIEWS_EMPTY_STATE.split(site.gbpLink);
       {emptyBefore}<a href={site.gbpLink} target="_blank" rel="noopener" class="prose-link">{site.gbpLink}</a>{emptyAfter}
     </p>
   )}
+  {isLive('/reviews/') ? (
+    <p class="m-0 mt-4"><a href="/reviews/" class="prose-link font-semibold">Read all our reviews</a></p>
+  ) : null}
 </section>

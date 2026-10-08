@@ -106,9 +106,9 @@
     "id": "book-3",
     "category": "booking",
     "q": "Can I reschedule or cancel?",
-    "a": "Yes. Rescheduling or cancelling is free until 2 hours before your confirmed slot — just reply on WhatsApp. Since we never take advance payment, there's nothing to refund. Full details are on our terms page.",
+    "a": "Yes. Rescheduling or cancelling is free until 2 hours before your confirmed slot — just reply on WhatsApp. Since we never take advance payment, there's nothing to refund. The full rules are on our refund policy and terms page.",
     "pages": ["/book/", "/faq/"],
-    "links": [{ "text": "terms page", "href": "/terms/" }]
+    "links": [{ "text": "refund policy", "href": "/refund-policy/" }, { "text": "terms page", "href": "/terms/" }]
   },
   {
     "id": "book-4",

@@ -42,7 +42,7 @@ const grid = 'm-0 mt-6 grid list-none gap-4 p-0 md:grid-cols-2 lg:grid-cols-3 lg
 </nav>
 
 {/* RV-4 — cards grouped by service; each group is a jump target; each card carries a per-review id for the area chips. */}
-<div class="mt-8 space-y-10 lg:space-y-14">
+<div class="mt-8 space-y-12">
   {groups.map((g) => (
     <section aria-labelledby={`reviews-${g.id}`}>
       <h2 id={`reviews-${g.id}`} class="t-h2 m-0">{g.label}</h2>

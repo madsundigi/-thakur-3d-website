@@ -28,7 +28,10 @@ import { bookHref, DOG_GROOM_IDS, fromPrice, priceRange } from '../../../lib/pri
 import { schemaGraphLd } from '../../../lib/schema';
 
 export function getStaticPaths() {
-  return AREA_SLUGS.map((slug) => ({ params: { slug } }));
+  // Staggered publishing (05-LOCAL-SEO §6.10): only build an area once its route is live (or in a preview build, where
+  // isLive() counts every wave-2 route). A planned area is not generated at all — so it never ships as a built-but-
+  // not-live page (check:pages P127/P128). An area goes live in the commit that fills its local data + flips its route.
+  return AREA_SLUGS.filter((slug) => isLive(`/ludhiana/areas/${slug}/`)).map((slug) => ({ params: { slug } }));
 }
 
 const { slug } = Astro.params as { slug: string };

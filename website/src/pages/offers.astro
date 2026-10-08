@@ -74,7 +74,7 @@ const section = 'mx-auto max-w-[1200px] px-4 py-12 lg:px-6 lg:py-20';
   <Breadcrumb items={crumbs} />
 
   {/* OF-1 — header (text only; the first offer carries the first CTA, offers.md OF-2) */}
-  <section aria-labelledby="offers-heading" class="mx-auto max-w-[1200px] px-4 pb-4 pt-4 md:pt-6 lg:px-6">
+  <section aria-labelledby="offers-heading" class="mx-auto max-w-[1200px] px-4 py-4 md:pt-6 lg:px-6">
     <h1 id="offers-heading" class="t-display m-0 text-balance">Dog Grooming Offers in Ludhiana</h1>
     <p class="measure m-0 mt-3 text-slate md:text-lg">
       Real offers with full terms — no countdown timers, no fake &lsquo;last slots&rsquo;.
@@ -93,7 +93,7 @@ const section = 'mx-auto max-w-[1200px] px-4 py-12 lg:px-6 lg:py-20';
             The booking form adds {FIRSTGROOM.code} automatically for first-timers, or type it in your WhatsApp message.
           </p>
           <p class="m-0 mt-3 text-sm text-slate"><span class="font-semibold text-ink">Terms:</span> {firstGroomTerms}</p>
-          <div class="mt-auto pt-5">
+          <div class="mt-auto pt-6">
             <Button href={bookHref({ service: 'full-groom', src: 'offers_page' })} source="offers_page">
               Get {inr(FIRSTGROOM.off)} off — first groom
             </Button>

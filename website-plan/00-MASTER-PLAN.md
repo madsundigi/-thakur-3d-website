@@ -151,9 +151,12 @@ multi-city stage (they then link down to each city version).
 > Tick `[x]` + date when done. `[~]` = built, not yet audited. A page is "done" only when it passes the
 > `02-SEO-PARAMETERS.md` audit at **all Launch-blocker items** and its blueprint is fully implemented.
 
-> **Status (2026-10-08):** Wave 0 + Wave 1 code done and audited — all 14 launch pages built, every automated gate
-> green, both cross-site audits applied. Remaining before go-live: Sunny's `[FILL]` values, the legal-page lawyer review
-> (§9), the real-device/Lighthouse pass on the live domain, and deployment. Next build wave: Wave 2 depth pages.
+> **Status (2026-10-08):** Wave 0 + Wave 1 + Wave 2 code done and audited — 27 pages live in the build (14 launch +
+> hub + 3 money + 5 trust/legal + `/blog/` + 2 posts), every automated gate green, cross-site audits applied. The 10
+> area pages are built but held `planned` pending owner local data + staggered rollout. Remaining before go-live:
+> Sunny's `[FILL]` values (incl. 20 area tokens), the vet sign-off for dog-vaccination, the legal-page + refund-policy
+> lawyer review (§9), the real-device/Lighthouse pass on the live domain, and deployment. Next build wave: Wave 3 blog
+> cadence + area publishing as local data arrives.
 >
 > **(2026-10-02):** Wave 0 code done — `website/` scaffold, design system, layout chrome, booking widget,
 > `/book/`, `/thank-you/`, 404 (built, audit pending). Wave 0 owner tasks (domain, WhatsApp, GA4/GSC, GBP) are Sunny's.
@@ -180,12 +183,23 @@ multi-city stage (they then link down to each city version).
 > remain are **deploy-time or owner tasks** (HTTPS/apex redirect, Lighthouse on the live domain, GBP, GA4/GSC) and the
 > **P070 silo** (needs the Wave-2 area + blog links). `check:fill` lists the `[FILL]` tokens Sunny still supplies.
 
-### Wave 2 — Depth (weeks 2–6 after launch)
-- [ ] `/ludhiana/` hub · [ ] `/ludhiana/dog-vaccination/` · [ ] `/ludhiana/tick-flea-treatment/`
-- [ ] `/ludhiana/puppy-grooming/` · [ ] `/reviews/` · [ ] `/safety-hygiene/`
-- [ ] `/join-as-groomer/` · [ ] `/offers/` · [ ] `/refund-policy/`
-- [ ] 10 × `/ludhiana/areas/<area>/` (one per §3.3 locality)
-- [ ] First 2 blog posts from `10-CONTENT-CALENDAR.md`
+### Wave 2 — Depth (built + cross-site audited 2026-10-08)
+- [x] `/ludhiana/` hub · [x] `/ludhiana/dog-vaccination/` · [x] `/ludhiana/tick-flea-treatment/`
+- [x] `/ludhiana/puppy-grooming/` · [x] `/reviews/` · [x] `/safety-hygiene/`
+- [x] `/join-as-groomer/` · [x] `/offers/` · [x] `/refund-policy/` (built; lawyer sign-off pending, §9 / §11)
+- [x] First 2 blog posts: `/blog/` index + `/blog/dog-grooming-price-list-ludhiana/` + `/blog/puppy-vaccination-schedule-india/`
+- [~] 10 × `/ludhiana/areas/<area>/` — **built and gate-green, held `planned` (not published).** Each goes live only
+  when Sunny supplies that area's street landmarks + India-Post pin codes (`[FILL:LANDMARKS_*]` / `[FILL:PINCODES_*]`)
+  and its §0 publish gate passes; staggered 3–4 first, then one every 2–4 weeks (05-LOCAL-SEO §6.10). The dynamic route
+  only builds an area once its route is flipped live, so planned areas never ship.
+
+> **Wave 2 status (2026-10-08):** 13 new pages live in the build (hub, 3 money pages, 5 trust/supply + legal pages,
+> `/blog/` index + 2 posts); routes flipped live + `lastmod` 2026-10-08. Every automated gate green (`check:prices`,
+> `check:pages --all` 0/0 on 27 pages, `check:budgets` 0/0, `check:legal --dist` 0 FAIL, `test:e2e` 55/55, `test:site`),
+> plus a fresh cross-site audit. The 10 area pages are built and verified but deliberately unpublished (owner local data
+> + staggered rollout). Owner tasks before go-live: the same `[FILL]` set as Wave 1 plus the 20 area tokens, the vet
+> medical sign-off for `/ludhiana/dog-vaccination/`, and the lawyer review for `/refund-policy/` (folds into the §9
+> legal review). Decisions + open owner items logged in §11.
 
 ### Wave 3 — Compounding (ongoing)
 - [ ] 1 blog post/week per `10-CONTENT-CALENDAR.md`
@@ -281,5 +295,13 @@ templated-text-only city pages (doorway risk) — file 11 defines the minimum un
 
 | 2026-10-08 | **Audit B (honesty / a11y / booking walk)** found 0 blockers, 0 majors. Fixes: `/book/` consent now shows a separate "Privacy policy" link outside the `<label>` (07 §3 Step 5); the exit card no longer moves focus on open (07 §9). The full 360px booking walkthrough passes and the composed WhatsApp message matches 07 §5 exactly | Session |
 | 2026-10-08 | **Wave 1 close-out:** all 14 launch pages built + both cross-site audits applied; every gate green (check:pages/budgets/legal, test:site, e2e 55/55). §6 + `01-SITEMAP` statuses updated. **Open before go-live** (not code): Sunny's `[FILL]` values (`check:fill`), the legal-page **lawyer review** (§9.7), the live-domain Lighthouse/real-device pass, HTTPS + apex redirect, GBP/GA4/GSC. **Open Wave-2 engineering** (from the audits, logged in the per-stage `requests/*.md`): P070 area + blog silo links; `/ludhiana/` hub & `/reviews/` in-body links when those routes flip live; vet SP-7 card → `/about/` bio once `VET_PARTNER_NAME` is filled; OfferCatalog descriptions to `04` §2.5; photo shots 13–15 (`08` §5.2). The per-stage `decisions/*.md` + `requests/*.md` are kept as build provenance | Session |
+
+| 2026-10-08 | **Wave 2 integration.** Octopus-merged the four builder branches (foundation, money, trust-a, trust-b — disjoint file sets); wrote the 2 launch blog posts; flipped 13 routes live (hub, 3 money, 5 trust/legal, `/blog/` + 2 posts) + `lastmod` 2026-10-08. Every gate green: `check:pages --all` 0/0 (27 pages), `check:budgets` 0/0, `check:legal --dist` 0 FAIL, `test:e2e` 55/55, `test:site`. Per-stage `decisions/*.md` + `requests/*.md` kept as build provenance | Session |
+| 2026-10-08 | **W2-1 · Area staggering (05 §6.10).** The 10 area pages are built and gate-green but held `planned`. The dynamic route `getStaticPaths` now builds an area **only when its route is live** (or in a preview build), so a planned area is never generated — it can't ship as a built-but-not-live page (`check:pages` P127/P128). Each area goes live in the commit that fills its `[FILL:LANDMARKS_*]`/`[FILL:PINCODES_*]` and flips its route; 3–4 first, then one every 2–4 weeks | Session |
+| 2026-10-08 | **W2-2 · CSS budget (P104) merge fix.** Merging the four branches grew the shared Tailwind sheet +910 B (union of each branch's utilities), tipping the 7 table-heavy ServicePage pages over 51,200 B. Fixed by consolidating Wave-2-only utilities onto ones already in the sheet, visually identical or negligible: `space-y-10`→`space-y-12`, dropped `lg:space-y-14`, `rounded-full`→`rounded-pill` (both full circle), `pb-4 pt-4`→`py-4` (identical), `pt-5`→`pt-6`, `w-8`→`w-9`. All 27 pages now pass with ~130 B headroom on the tightest (dog-grooming) | Session |
+| 2026-10-08 | **W2-3 · Blog H1 ≤ 70 (P026 wins over the T3 template's ≤ 110).** `check:pages` P026 caps every H1 at 20–70 chars with no blog exemption; as a `02` launch-blocker it outranks `_TEMPLATE-blog-post.md` §1 / `content.config.ts` (`title` max 110). Both launch-post titles were written to 64 chars. Follow-up: tighten the template + schema note to say the H1/`title` is effectively ≤ 70 (Wave-3 housekeeping) | Session |
+| 2026-10-08 | **W2-4 · Orphan silo links (P068).** Three newly-live pages had no in-`<main>` inbound link (header/footer/nav do not count): added home `ProofBlock` → `/reviews/` ("Read all our reviews"), restored the `/refund-policy/` link in FAQ `book-3` (dropped in the Wave-1 audit when the page was not live), and each blog post body now links `/blog/` ("browse all our Ludhiana pet care guides"). This also closes part of the Wave-1 P070 silo gap now that hub/blog routes are live | Session |
+| 2026-10-08 | **W2-5 · Blog share images.** Each post's `/og/blog/<slug>.jpg` is the branded `blog-default` 1200×630 image as a placeholder (hero photos are not shot yet); per-post crops land with the real photo shoot. Build + budgets pass (29 KB each) | Session |
+| 2026-10-08 | **Open Wave-2 owner items** (not code): Sunny's 20 area tokens (`[FILL:LANDMARKS_*]` + `[FILL:PINCODES_*]`) to publish areas; the **vet medical sign-off** for `/ludhiana/dog-vaccination/` schedule tables + FAQ; the **lawyer review** of `/refund-policy/` (folds into the §9.7 legal review); 4 new area/money photo shots (08 §5.2); the tick-flea hero price-chip fold note (`requests/w2-money.md` B-1, Sunny's copy call) | Session |
 
 *2026-10-03 rows: D1–D4 are that day's owner decisions and E1–E12 its engineering decisions. They are not the §2 D-numbers. Other files cite them as "`00` §11 D1 (2026-10-03)" or just "D1"/"E7" next to that date.*

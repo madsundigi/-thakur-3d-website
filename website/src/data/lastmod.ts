@@ -32,4 +32,13 @@ export const LASTMOD: Record<string, string> = {
   '/blog/': '2026-10-08',
   '/blog/dog-grooming-price-list-ludhiana/': '2026-10-08',
   '/blog/puppy-vaccination-schedule-india/': '2026-10-08',
+  // Wave-2 money pages (wave2/w2-money) and trust/supply + legal pages (wave2/w2-trust-a, wave2/w2-trust-b).
+  '/ludhiana/dog-vaccination/': '2026-10-08',
+  '/ludhiana/tick-flea-treatment/': '2026-10-08',
+  '/ludhiana/puppy-grooming/': '2026-10-08',
+  '/reviews/': '2026-10-08',
+  '/safety-hygiene/': '2026-10-08',
+  '/offers/': '2026-10-08',
+  '/join-as-groomer/': '2026-10-08',
+  '/refund-policy/': '2026-10-08',
 };
