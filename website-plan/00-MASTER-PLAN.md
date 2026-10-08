@@ -151,7 +151,11 @@ multi-city stage (they then link down to each city version).
 > Tick `[x]` + date when done. `[~]` = built, not yet audited. A page is "done" only when it passes the
 > `02-SEO-PARAMETERS.md` audit at **all Launch-blocker items** and its blueprint is fully implemented.
 
-> **Status (2026-10-02):** Wave 0 code done — `website/` scaffold, design system, layout chrome, booking widget,
+> **Status (2026-10-08):** Wave 0 + Wave 1 code done and audited — all 14 launch pages built, every automated gate
+> green, both cross-site audits applied. Remaining before go-live: Sunny's `[FILL]` values, the legal-page lawyer review
+> (§9), the real-device/Lighthouse pass on the live domain, and deployment. Next build wave: Wave 2 depth pages.
+>
+> **(2026-10-02):** Wave 0 code done — `website/` scaffold, design system, layout chrome, booking widget,
 > `/book/`, `/thank-you/`, 404 (built, audit pending). Wave 0 owner tasks (domain, WhatsApp, GA4/GSC, GBP) are Sunny's.
 > Next: Wave 1 content pages.
 
@@ -163,12 +167,18 @@ multi-city stage (they then link down to each city version).
 - [ ] Google Business Profile (SAB) per `05-LOCAL-SEO.md`
 - [x] Booking widget built per `07-BOOKING-SPEC.md` (works standalone before pages) — 2026-10-02 (55/55 browser checks pass; storage + WhatsApp go live once the `[FILL]` values arrive)
 
-### Wave 1 — Launch set (site goes live when ALL ticked)
-- [ ] `/` home · [ ] `/ludhiana/dog-grooming/` · [ ] `/ludhiana/cat-grooming/`
-- [ ] `/ludhiana/dog-walking/` · [ ] `/ludhiana/vet-at-home/`
-- [ ] `/pricing/` · [~] `/book/` (built, audit pending) · [ ] `/about/` · [ ] `/contact/`
-- [ ] `/how-it-works/` · [ ] `/faq/` · [~] `/thank-you/` (built, audit pending)
-- [ ] `/privacy-policy/` · [ ] `/terms/`
+### Wave 1 — Launch set (built + cross-site audited 2026-10-08; goes public once Sunny's `[FILL]` values + deploy are done)
+- [x] `/` home · [x] `/ludhiana/dog-grooming/` · [x] `/ludhiana/cat-grooming/`
+- [x] `/ludhiana/dog-walking/` · [x] `/ludhiana/vet-at-home/`
+- [x] `/pricing/` · [x] `/book/` · [x] `/about/` · [x] `/contact/`
+- [x] `/how-it-works/` · [x] `/faq/` · [x] `/thank-you/`
+- [x] `/privacy-policy/` · [x] `/terms/`
+
+> All 14 built on Astro + the shared ServicePage/booking layer; every page passes `check:pages --all`, `check:budgets`,
+> `check:legal`, `test:site` (fold/axe/CLS at 360/768/1280) and the 55-check booking e2e, plus two read-only cross-site
+> audits (A: SEO/links/schema; B: honesty/a11y/booking-walk) — findings applied, 0 blockers open. Launch-blockers that
+> remain are **deploy-time or owner tasks** (HTTPS/apex redirect, Lighthouse on the live domain, GBP, GA4/GSC) and the
+> **P070 silo** (needs the Wave-2 area + blog links). `check:fill` lists the `[FILL]` tokens Sunny still supplies.
 
 ### Wave 2 — Depth (weeks 2–6 after launch)
 - [ ] `/ludhiana/` hub · [ ] `/ludhiana/dog-vaccination/` · [ ] `/ludhiana/tick-flea-treatment/`
@@ -268,5 +278,8 @@ templated-text-only city pages (doorway risk) — file 11 defines the minimum un
 | 2026-10-08 | `/book/` JSON-LD unified to one `@graph` (breadcrumb-only) per `04` §2.0.1; vet-at-home gains a live Wave-1 sibling (cat grooming) toward the `02` P070 silo; `02` P070's area/blog links remain a Wave-2/3 dependency (no area or blog route is live yet) | Session |
 | 2026-10-08 | **Honesty (`00` §7):** FAQ answers no longer promise pages that are not live — the safety page (cat FAQ), the vaccination page (puppy FAQ) and the refund-policy page (book FAQ) references were reworded; the vet-visit FAQ anchor now names the price list (P069) | Session |
 | 2026-10-08 | og:image:alt wording aligned to `04` §4 (walking, vet) + lowercased default; AreaCard drops the keyword prefix on non-live cards (home H-9 density, P035); `/about/` + `/privacy-policy/` gained contextual cross-page links (P071); `src/data/site.ts` `domain` guarded to a bare hostname matching SITE_URL (`09` §3.1 — prevents a silent GA4-off footgun). P040 SERP notes added to `dog-grooming.md` §2a and `book.md` A2a | Session |
+
+| 2026-10-08 | **Audit B (honesty / a11y / booking walk)** found 0 blockers, 0 majors. Fixes: `/book/` consent now shows a separate "Privacy policy" link outside the `<label>` (07 §3 Step 5); the exit card no longer moves focus on open (07 §9). The full 360px booking walkthrough passes and the composed WhatsApp message matches 07 §5 exactly | Session |
+| 2026-10-08 | **Wave 1 close-out:** all 14 launch pages built + both cross-site audits applied; every gate green (check:pages/budgets/legal, test:site, e2e 55/55). §6 + `01-SITEMAP` statuses updated. **Open before go-live** (not code): Sunny's `[FILL]` values (`check:fill`), the legal-page **lawyer review** (§9.7), the live-domain Lighthouse/real-device pass, HTTPS + apex redirect, GBP/GA4/GSC. **Open Wave-2 engineering** (from the audits, logged in the per-stage `requests/*.md`): P070 area + blog silo links; `/ludhiana/` hub & `/reviews/` in-body links when those routes flip live; vet SP-7 card → `/about/` bio once `VET_PARTNER_NAME` is filled; OfferCatalog descriptions to `04` §2.5; photo shots 13–15 (`08` §5.2). The per-stage `decisions/*.md` + `requests/*.md` are kept as build provenance | Session |
 
 *2026-10-03 rows: D1–D4 are that day's owner decisions and E1–E12 its engineering decisions. They are not the §2 D-numbers. Other files cite them as "`00` §11 D1 (2026-10-03)" or just "D1"/"E7" next to that date.*

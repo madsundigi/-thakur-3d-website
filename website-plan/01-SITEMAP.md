@@ -9,18 +9,18 @@
 ### Core & conversion pages
 | URL | Page | Wave | Primary keyword target | Blueprint | Schema | Status |
 |---|---|---|---|---|---|---|
-| `/` | Home | 1 | pet grooming at home ludhiana · pet care services ludhiana | `blueprints/home.md` | LocalBusiness + WebSite + FAQPage | blueprinted |
-| `/book/` | Book a service (widget host) | 1 | book dog grooming at home ludhiana | `blueprints/book.md` | BreadcrumbList (indexable; thin-safe content per blueprint) | built (Wave 0; audit pending) |
-| `/pricing/` | Price list | 1 | dog grooming price ludhiana · pet grooming charges | `blueprints/pricing.md` | OfferCatalog + FAQPage + BreadcrumbList | blueprinted |
-| `/thank-you/` | Booking confirmation | 1 | — (**noindex**) | in `book.md` | — | built (Wave 0; audit pending) |
+| `/` | Home | 1 | pet grooming at home ludhiana · pet care services ludhiana | `blueprints/home.md` | LocalBusiness + WebSite + FAQPage | built (Wave 1; audited 2026-10-08) |
+| `/book/` | Book a service (widget host) | 1 | book dog grooming at home ludhiana | `blueprints/book.md` | BreadcrumbList (indexable; thin-safe content per blueprint) | built (Wave 1; audited 2026-10-08) |
+| `/pricing/` | Price list | 1 | dog grooming price ludhiana · pet grooming charges | `blueprints/pricing.md` | OfferCatalog + FAQPage + BreadcrumbList | built (Wave 1; audited 2026-10-08) |
+| `/thank-you/` | Booking confirmation | 1 | — (**noindex**) | in `book.md` | — | built (Wave 1; audited 2026-10-08) |
 
 ### Money pages — city-service silo
 | URL | Page | Wave | Primary keyword target | Blueprint | Schema | Status |
 |---|---|---|---|---|---|---|
-| `/ludhiana/dog-grooming/` | Dog Grooming at Home | 1 | dog grooming at home ludhiana · dog groomer near me | `blueprints/dog-grooming.md` | Service + FAQPage + BreadcrumbList | blueprinted |
-| `/ludhiana/cat-grooming/` | Cat Grooming at Home | 1 | cat grooming at home ludhiana | `blueprints/cat-grooming.md` | Service + FAQPage + BreadcrumbList | blueprinted |
-| `/ludhiana/dog-walking/` | Dog Walking | 1 | dog walker ludhiana · dog walking service near me | `blueprints/dog-walking.md` | Service + FAQPage + BreadcrumbList | blueprinted |
-| `/ludhiana/vet-at-home/` | Vet at Home | 1 | vet home visit ludhiana · veterinary doctor home service | `blueprints/vet-at-home.md` | Service + FAQPage + BreadcrumbList | blueprinted |
+| `/ludhiana/dog-grooming/` | Dog Grooming at Home | 1 | dog grooming at home ludhiana · dog groomer near me | `blueprints/dog-grooming.md` | Service + FAQPage + BreadcrumbList | built (Wave 1; audited 2026-10-08) |
+| `/ludhiana/cat-grooming/` | Cat Grooming at Home | 1 | cat grooming at home ludhiana | `blueprints/cat-grooming.md` | Service + FAQPage + BreadcrumbList | built (Wave 1; audited 2026-10-08) |
+| `/ludhiana/dog-walking/` | Dog Walking | 1 | dog walker ludhiana · dog walking service near me | `blueprints/dog-walking.md` | Service + FAQPage + BreadcrumbList | built (Wave 1; audited 2026-10-08) |
+| `/ludhiana/vet-at-home/` | Vet at Home | 1 | vet home visit ludhiana · veterinary doctor home service | `blueprints/vet-at-home.md` | Service + FAQPage + BreadcrumbList | built (Wave 1; audited 2026-10-08) |
 | `/ludhiana/dog-vaccination/` | Dog Vaccination at Home | 2 | dog vaccination at home ludhiana | `blueprints/dog-vaccination.md` | Service + FAQPage + BreadcrumbList | blueprinted |
 | `/ludhiana/tick-flea-treatment/` | Tick & Flea Treatment | 2 | tick treatment for dogs ludhiana | `blueprints/tick-flea-treatment.md` | Service + FAQPage + BreadcrumbList | blueprinted |
 | `/ludhiana/puppy-grooming/` | Puppy Grooming | 2 | puppy grooming at home ludhiana | `blueprints/puppy-grooming.md` | Service + FAQPage + BreadcrumbList | blueprinted |
@@ -45,10 +45,10 @@ All Wave 2 · all from `blueprints/_TEMPLATE-area-page.md` · Schema: Service + 
 ### Trust, info & supply pages
 | URL | Page | Wave | Primary keyword target | Blueprint | Schema | Status |
 |---|---|---|---|---|---|---|
-| `/how-it-works/` | How it works | 1 | — (conversion support) | `blueprints/how-it-works.md` | HowTo + BreadcrumbList | blueprinted |
-| `/about/` | About / our story | 1 | petdoorstep (brand) | `blueprints/about.md` | AboutPage + BreadcrumbList | blueprinted |
-| `/contact/` | Contact | 1 | pet grooming contact number ludhiana | `blueprints/contact.md` | LocalBusiness + ContactPage + BreadcrumbList | blueprinted |
-| `/faq/` | Master FAQ | 1 | pet grooming at home questions | `blueprints/faq.md` | FAQPage + BreadcrumbList | blueprinted |
+| `/how-it-works/` | How it works | 1 | — (conversion support) | `blueprints/how-it-works.md` | HowTo + BreadcrumbList | built (Wave 1; audited 2026-10-08) |
+| `/about/` | About / our story | 1 | petdoorstep (brand) | `blueprints/about.md` | AboutPage + BreadcrumbList | built (Wave 1; audited 2026-10-08) |
+| `/contact/` | Contact | 1 | pet grooming contact number ludhiana | `blueprints/contact.md` | LocalBusiness + ContactPage + BreadcrumbList | built (Wave 1; audited 2026-10-08) |
+| `/faq/` | Master FAQ | 1 | pet grooming at home questions | `blueprints/faq.md` | FAQPage + BreadcrumbList | built (Wave 1; audited 2026-10-08) |
 | `/reviews/` | Reviews & results | 2 | petdoorstep reviews | `blueprints/reviews.md` | BreadcrumbList only — no Review markup (see 04) | blueprinted |
 | `/safety-hygiene/` | Safety & hygiene standards | 2 | — (trust differentiator) | `blueprints/safety-hygiene.md` | BreadcrumbList | blueprinted |
 | `/join-as-groomer/` | Careers: groomers/walkers | 2 | pet groomer jobs ludhiana | `blueprints/join-as-groomer.md` | BreadcrumbList + JobPosting per live role | blueprinted |
