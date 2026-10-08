@@ -1,0 +1,168 @@
+---
+// /offers/ — blueprint: website-plan/blueprints/offers.md (B18). Blocks OF-0…OF-7 in DOM order. Offer definitions and
+// honesty rules from 06-CONVERSION-PLAYBOOK §7; every amount from src/data/offers.ts + src/data/pricing.json via the
+// pricing helpers / src/data/content.ts (FIRSTGROOM_TERMS, REFERRAL_TERMS, GROOM_CLUB_PITCH, groomClub* helpers) — no
+// ₹ figure is typed here (07 §4; npm run check:prices). Every offer shows its full terms inline — no asterisks (06
+// §7.4). JSON-LD: one @graph = BreadcrumbList + OfferCatalog scoped to the offers live today (04 §2.9; the OF-5
+// seasonal block and its schema row are omitted while no real dated offer is live). Zero client JS.
+import Base from '../layouts/Base.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import Button from '../components/Button.astro';
+import CtaBand from '../components/CtaBand.astro';
+import InfoTable from '../components/InfoTable.astro';
+import Icon from '../components/icons/Icon.astro';
+import { FIRSTGROOM_TERMS, REFERRAL_TERMS, GROOM_CLUB_PITCH, groomClubWaText } from '../data/content';
+import { FIRSTGROOM, REFERRAL } from '../data/offers';
+import { routeLabel } from '../data/routes';
+import { prefillFor } from '../data/services';
+import { waHref } from '../data/site';
+import { bookHref, flatPrice, groomClubPercent, groomClubPrices, inr } from '../lib/pricing';
+import { schemaGraphLd } from '../lib/schema';
+
+const PATH = '/offers/';
+
+// OF-0: Home › Offers (labels = the 01-SITEMAP page names in routes.ts).
+const crumbs = [
+  { label: routeLabel('/'), path: '/' },
+  { label: routeLabel(PATH), path: PATH },
+];
+
+// ── Head (offers.md §1; every ₹ built from offers.ts + pricing.json, so no literal is typed) ─────────────────────
+const title = `Dog Grooming Offers in Ludhiana – ${inr(FIRSTGROOM.off)} Off | PetDoorStep`;
+const description =
+  `Dog grooming offers in Ludhiana: ${inr(FIRSTGROOM.off)} off your first groom with code ${FIRSTGROOM.code}, ` +
+  `${inr(REFERRAL.youGet)} referral rewards, and Groom Club — ${groomClubPercent()}% off every monthly Full Groom.`;
+
+// OF-2: FIRSTGROOM_TERMS is the offer sentence + "Terms: …" in one string (content.ts, = the schema description). Split
+// it so the card shows Offer → How → Terms (offers.md OF-2 order) from the one source, never a hand-typed amount.
+const [firstGroomOffer, firstGroomTerms] = FIRSTGROOM_TERMS.split(' Terms: ');
+
+// OF-4: the 15%-off maths, regenerated from pricing.json at build (matches /pricing/ PR-8).
+const club = groomClubPrices();
+const clubMedium = club.find((c) => c.size === 'medium')!;
+// Worked example (offers.md OF-4): 12 months × the Medium monthly saving, and the nail-trim visit value — both numbers.
+const yearSaving = inr(clubMedium.amounts.save * 12);
+const nailValue = flatPrice('nail-ear');
+// OF-4 terms, verbatim from offers.md OF-4.
+const clubTerms = [
+  'One Full Groom a month',
+  'Free Nail Trim + Ear Clean visit between grooms',
+  'Priority weekend slots',
+  'Same groomer on request',
+  'Pay per visit after the service (UPI or cash)',
+  'Cancel anytime on WhatsApp',
+];
+
+// OF-6: honesty rules — the four points of offers.md OF-6 (06 §7.4). The inflated-coupon aside of 06 §7.4 is 06's
+// explanatory example (a competitor's rupee "permanent coupon"), not page copy; the blueprint's OF-6 states the
+// condensed four points (also keeps 07 §4 — no rupee literal in a component). Logged in decisions/w2-trust-b.md.
+const offerRules = [
+  "No fake urgency or scarcity, ever. No countdown timers, no “only 2 slots left” unless it reflects real capacity for a real date, and no “offer ends tonight” that quietly renews tomorrow.",
+  'No inflated strikethrough prices. We strike through a price only for a genuinely temporary, dated offer against our real standard price.',
+  "Every offer shows its full terms where it’s advertised — no asterisks, no conditions hidden elsewhere.",
+  'Offers end on their stated date, or are honestly extended with a new date.',
+];
+
+const section = 'mx-auto max-w-[1200px] px-4 py-12 lg:px-6 lg:py-20';
+---
+<Base
+  title={title}
+  description={description}
+  path={PATH}
+  jsonLd={[schemaGraphLd({ type: 'offers', crumbs }, Astro.site)]}
+>
+  <Breadcrumb items={crumbs} />
+
+  {/* OF-1 — header (text only; the first offer carries the first CTA, offers.md OF-2) */}
+  <section aria-labelledby="offers-heading" class="mx-auto max-w-[1200px] px-4 pb-4 pt-4 md:pt-6 lg:px-6">
+    <h1 id="offers-heading" class="t-display m-0 text-balance">Dog Grooming Offers in Ludhiana</h1>
+    <p class="measure m-0 mt-3 text-slate md:text-lg">
+      Real offers with full terms — no countdown timers, no fake &lsquo;last slots&rsquo;.
+    </p>
+  </section>
+
+  {/* OF-2 + OF-3 — the two code/referral offers, each with its full terms inline (06 §7.4) */}
+  <div class="bg-sand">
+    <div class={section}>
+      <ul class="m-0 grid list-none gap-4 p-0 lg:grid-cols-2 lg:gap-6">
+        {/* OF-2 · New here — code FIRSTGROOM */}
+        <li class="flex h-full min-w-0 flex-col rounded-lg border border-line bg-paper p-5 lg:p-6">
+          <h2 class="t-h2 m-0">New here — code {FIRSTGROOM.code}</h2>
+          <p class="m-0 mt-3 text-ink">{firstGroomOffer}</p>
+          <p class="m-0 mt-3 text-ink">
+            The booking form adds {FIRSTGROOM.code} automatically for first-timers, or type it in your WhatsApp message.
+          </p>
+          <p class="m-0 mt-3 text-sm text-slate"><span class="font-semibold text-ink">Terms:</span> {firstGroomTerms}</p>
+          <div class="mt-auto pt-5">
+            <Button href={bookHref({ service: 'full-groom', src: 'offers_page' })} source="offers_page">
+              Get {inr(FIRSTGROOM.off)} off — first groom
+            </Button>
+          </div>
+        </li>
+
+        {/* OF-3 · Refer a friend */}
+        <li class="flex h-full min-w-0 flex-col rounded-lg border border-line bg-paper p-5 lg:p-6">
+          <h2 class="t-h2 m-0">Friends with benefits (the pet kind)</h2>
+          <p class="m-0 mt-3 text-ink">{REFERRAL_TERMS}</p>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  {/* OF-4 · Groom Club (feature block) */}
+  <section aria-labelledby="groom-club-heading" class={section}>
+    <h2 id="groom-club-heading" class="t-h2 m-0 text-balance">{GROOM_CLUB_PITCH.title}</h2>
+    <p class="measure m-0 mt-4 text-ink md:text-lg">{GROOM_CLUB_PITCH.body}</p>
+
+    <div class="mt-8 max-w-[640px]">
+      <InfoTable
+        caption="Groom Club price per Full Groom, by dog size"
+        rowHeader="Size"
+        columns={[{ label: 'Full Groom' }, { label: 'Groom Club price' }, { label: 'You save / month' }]}
+        rows={club.map((c) => ({ label: c.label, cells: [c.regular, c.club, c.save] }))}
+      />
+    </div>
+
+    <p class="measure m-0 mt-6 rounded-lg bg-mint p-4 text-ink">
+      A Medium dog on Groom Club for a year: 12 Full Grooms at {clubMedium.club} saves{' '}
+      <span class="font-semibold">{yearSaving}</span>, plus 12 free nail-trim visits (worth {nailValue} each).
+    </p>
+
+    <div class="mt-6">
+      <p class="t-micro m-0 text-slate">What's included</p>
+      <ul class="m-0 mt-2 grid list-none gap-2 p-0 sm:grid-cols-2">
+        {clubTerms.map((t) => (
+          <li class="flex items-start gap-2 text-ink">
+            <Icon name="check" size={20} class="mt-0.5 flex-none text-brand" />
+            <span class="min-w-0">{t}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <div class="mt-8">
+      <Button href={waHref(groomClubWaText())} source="groomclub">Join Groom Club</Button>
+    </div>
+  </section>
+
+  {/* OF-6 · Our offer rules (OF-5 seasonal omitted — no live dated offer) */}
+  <div class="bg-sand">
+    <section aria-labelledby="offer-rules-heading" class={section}>
+      <h2 id="offer-rules-heading" class="t-h2 m-0">Our offer rules</h2>
+      <ul class="measure m-0 mt-5 grid list-none gap-4 p-0">
+        {offerRules.map((r) => (
+          <li class="flex items-start gap-3 text-ink">
+            <Icon name="shield-check" size={22} class="mt-0.5 flex-none text-brand" />
+            <span class="min-w-0">{r}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+  </div>
+
+  {/* OF-7 · page-end CTA band */}
+  <CtaBand
+    heading="Ready when you are. Book in 2 minutes."
+    primary={{ label: 'Book on WhatsApp', href: waHref(prefillFor(PATH)), source: 'ctaband_offers' }}
+  />
+</Base>
