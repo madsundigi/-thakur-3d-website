@@ -15,6 +15,11 @@ import { addonPrice, flatPrice } from '../../lib/pricing';
 
 const standalone = flatPrice('tick-flea');
 const addon = addonPrice();
+// The phone cut of the SP-1 subhead (Hero subheadShort, W1L-5/E3 fold law): the two opening sentences. The 4-line
+// blueprint H1 plus the full 4-line subhead pushes the hero photo below the 360×640 fold; the dropped words repeat the
+// chips — the two prices are the price chip (standalone + add-on), "sealed fresh kit" is the "Sealed sanitised kit per
+// pet" trust chip — so only this prefix shows below md, the rest stays in the DOM (02 P110 parity) for md+/SEO.
+const subheadShort = "Ticks love Punjab's monsoon. We don't.";
 
 const config: ServicePageConfig = {
   path: '/ludhiana/tick-flea-treatment/',
@@ -28,9 +33,8 @@ const config: ServicePageConfig = {
   hero: {
     eyebrow: 'Anti-tick bath in Ludhiana',
     h1: 'Tick & Flea Treatment for Dogs in Ludhiana — At Your Home',
-    subhead:
-      `Ticks love Punjab's monsoon. We don't. Standalone treatment ${standalone}, or add it to any groom for ${addon} — ` +
-      'sealed fresh kit, every single pet.',
+    subhead: `${subheadShort} Standalone treatment ${standalone}, or add it to any groom for ${addon} — sealed fresh kit, every single pet.`,
+    subheadShort,
     primaryLabel: 'Book on WhatsApp',
     secondary: 'call',
     photo: {
