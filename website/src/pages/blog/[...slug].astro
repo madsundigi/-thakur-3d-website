@@ -1,0 +1,163 @@
+---
+// /blog/<slug>/ — a blog post. Blueprint: website-plan/blueprints/_TEMPLATE-blog-post.md (front-matter §1, blocks §2,
+// schema §5). The .md body carries BP-2…BP-7 (answer-first intro, TL;DR, scaffold, in-body BOFU anchor, images, FAQ);
+// this layout owns the head, breadcrumb, byline, the BP-5 money-page card, the author/review boxes, related posts and
+// the end CTA band. Schema = BlogPosting + BreadcrumbList (04 §2.9); og:type=article with the article times (Base).
+// With zero posts in the collection getStaticPaths returns [] and nothing builds — the infra is still verified.
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import BlogCard from '../../components/BlogCard.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import Button from '../../components/Button.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import Photo from '../../components/Photo.astro';
+import Chip from '../../components/Chip.astro';
+import { readMinutes, relatedPosts } from '../../data/blog';
+import { isLive, routeLabel } from '../../data/routes';
+import { isMoneyPath, MONEY_PAGES } from '../../data/services';
+import { site, telHref, waHref } from '../../data/site';
+import { cardPriceChip, type MoneyPage } from '../../lib/pricing';
+import { schemaGraphLd } from '../../lib/schema';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map((entry) => ({ params: { slug: entry.data.slug }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const d = entry.data;
+const { Content } = await render(entry);
+
+const PATH = `/blog/${d.slug}/`;
+const iso = (x: string | Date): string => (x instanceof Date ? x.toISOString().slice(0, 10) : x);
+const published = iso(d.date);
+const updated = d.updated ? iso(d.updated) : undefined;
+const mins = readMinutes(entry.body ?? '');
+const ogImage = `/og/blog/${d.slug}.jpg`;
+
+const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+const human = (x: string): string => `${Number(x.slice(8, 10))} ${MONTHS[Number(x.slice(5, 7)) - 1]} ${x.slice(0, 4)}`;
+
+const crumbs = [
+  { label: 'Home', path: '/' },
+  { label: 'Blog', path: '/blog/' },
+  { label: d.title, path: PATH },
+];
+const jsonLd = [schemaGraphLd({
+  type: 'blog',
+  post: {
+    slug: d.slug, title: d.title, description: d.description, date: published, updated,
+    image: ogImage, ...(d.reviewer ? { reviewer: { name: d.reviewer.name } } : {}),
+  },
+  crumbs,
+}, Astro.site)];
+
+// BP-5 money-page card. The in-body descriptive anchor is the author's job; this is the standing card.
+const moneyMoney = isMoneyPath(d.moneyPage) ? MONEY_PAGES[d.moneyPage] : null;
+const moneyLabel = routeLabel(d.moneyPage);
+const moneyLive = isLive(d.moneyPage);
+const moneyChip = moneyMoney ? cardPriceChip(moneyMoney.slug as MoneyPage) : null;
+const postSrc = `${d.slug}_page`; // 09 §2d <slug>_page
+const cardWa = waHref(`Hi PetDoorStep! I read your "${d.title}" guide and want to book. My area: ___ . My pet: ___`);
+
+const related = (await relatedPosts(d.related)).filter((p) => isLive(`/blog/${p.slug}/`));
+const callLabel = `Call ${site.phone}`;
+const generalInfo = !d.reviewer && (d.category === 'Health & vaccination' || d.category === 'Ticks & seasons');
+---
+<Base
+  title={d.seoTitle}
+  description={d.description}
+  path={PATH}
+  ogImage={ogImage}
+  ogImageAlt={d.heroAlt}
+  ogType="article"
+  articlePublished={published}
+  articleModified={updated ?? published}
+  jsonLd={jsonLd}
+>
+  {/* LCP preload for the hero photo (04 §5.2.2), same transform as the hero <Photo> below. */}
+  <Photo slot="head" preload preset="blog" name={d.heroImage} />
+
+  {/* BP-0 */}
+  <Breadcrumb items={crumbs} />
+
+  <div class="mx-auto max-w-[760px] px-4 pb-16 lg:px-6">
+    {/* BP-1 Header */}
+    <header class="pt-2">
+      <p class="t-micro m-0 text-brand">{d.category}</p>
+      <h1 class="t-h1 m-0 mt-2">{d.title}</h1>
+      <p class="measure m-0 mt-3 text-slate">{d.description}</p>
+      <p class="m-0 mt-3 text-sm text-slate">
+        By {site.author}, PetDoorStep
+        <span aria-hidden="true"> · </span>
+        <time datetime={published}>{human(published)}</time>
+        {updated && updated !== published ? <><span aria-hidden="true"> · </span>Updated <time datetime={updated}>{human(updated)}</time></> : null}
+        <span aria-hidden="true"> · </span>{mins} min read
+      </p>
+      {d.reviewer ? (
+        <p class="m-0 mt-1 text-sm font-medium text-brand-deep">Medically reviewed by {d.reviewer.name}, {d.reviewer.credential}, Reg. No. {d.reviewer.registration}</p>
+      ) : null}
+    </header>
+
+    {/* BP-6 hero image — the LCP: eager + fetchpriority high, with the matching <head> preload above. */}
+    <div class="mt-6" data-hero-photo>
+      <Photo name={d.heroImage} alt={d.heroAlt} preset="blog" eager class="block h-auto w-full rounded-lg object-cover" />
+    </div>
+
+    {/* BP-5 money-page card (standing CTA; the first-half in-body anchor is written in the .md) */}
+    <aside class="mt-6 flex flex-col gap-3 rounded-lg border border-line bg-sand p-4 md:flex-row md:items-center md:justify-between">
+      <div class="min-w-0">
+        <p class="m-0 font-semibold text-ink">
+          {moneyLive ? <a href={d.moneyPage} class="prose-link">{moneyLabel}</a> : moneyLabel}
+        </p>
+        {moneyChip ? <p class="m-0 mt-1"><Chip kind="price" label={moneyChip} onTint /></p> : null}
+      </div>
+      <Button href={cardWa} variant="whatsapp" source={postSrc}>Book on WhatsApp</Button>
+    </aside>
+
+    {/* BP-2…BP-7 — the post body (answer-first intro, TL;DR, scaffold, in-body BOFU anchor, images, FAQ) */}
+    <div class="prose mt-8">
+      <Content />
+    </div>
+
+    {/* BP-8 — expert-review note (health posts without a named reviewer) */}
+    {generalInfo ? (
+      <p class="mt-8 rounded-md bg-mint p-4 text-sm text-brand-deep">
+        This guide is general information; for your pet's specific needs, {isLive('/ludhiana/vet-at-home/') ? <a href="/ludhiana/vet-at-home/" class="prose-link">book a vet visit</a> : 'book a vet visit'}.
+      </p>
+    ) : null}
+
+    {/* BP-9 — author box */}
+    <aside class="mt-10 flex items-start gap-4 border-t border-line pt-6">
+      <div class="min-w-0">
+        <p class="m-0 font-semibold text-ink">{site.author}</p>
+        <p class="measure m-0 mt-1 text-sm text-slate">
+          Part of the PetDoorStep team grooming and caring for pets at homes across Ludhiana.
+          {isLive('/about/') ? <> <a href="/about/" class="prose-link">About PetDoorStep</a>.</> : null}
+        </p>
+      </div>
+    </aside>
+
+    {/* BP-10 — related posts */}
+    {related.length ? (
+      <section aria-labelledby="related-heading" class="mt-12">
+        <h2 id="related-heading" class="t-h2 m-0">Keep reading</h2>
+        <ul class="mt-6 grid list-none grid-cols-1 gap-6 p-0 md:grid-cols-2 lg:gap-6">
+          {related.map((p) => (
+            <li class="min-w-0">
+              <BlogCard slug={p.slug} title={p.title} category={p.category} excerpt={p.description} date={p.date} readMinutes={p.readMinutes} heroImage={p.heroImage} heroAlt={p.heroAlt} />
+            </li>
+          ))}
+        </ul>
+      </section>
+    ) : null}
+  </div>
+
+  {/* BP-11 — end CTA band */}
+  <CtaBand
+    heading="Doorstep pet care in Ludhiana, booked in 2 minutes"
+    support="Fixed prices, no advance payment, a photo update after every visit."
+    primary={{ label: 'Book on WhatsApp', href: cardWa, source: `ctaband_${d.slug}` }}
+    secondary={{ label: callLabel, href: telHref(), source: `ctaband_${d.slug}` }}
+  />
+</Base>

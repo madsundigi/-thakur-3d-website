@@ -1,0 +1,61 @@
+---
+// RV-3 filters + RV-4 review cards (reviews.md RV-3/RV-4; display rules 06 §4.4; 08 §4.11). Plain HTML — NO Review /
+// AggregateRating schema, ever (04 §2.0.4). Zero JS: the filter chips are anchor links that jump to a section heading
+// (service) or the first card from a locality (area), per RV-3 "each chip jumps to a section heading".
+//
+// This block is DORMANT until real Google reviews exist (src/data/reviews.ts holds only [FILL:REVIEW_n] seeds today):
+// the page renders the E6 empty state instead and never mounts this component. When reviews are collected it groups
+// them by service (RV-4 "grouped by service") in the RV-3 filter order, and the monthly review ritual (09 §8) rotates
+// them so each locality and service stays represented.
+import ReviewCard from '../../ReviewCard.astro';
+import Chip from '../../Chip.astro';
+import { realReviews, type Review } from '../../../data/reviews';
+import { REVIEW_SERVICE_FILTERS } from '../../../data/pages/reviews';
+
+const real = realReviews();
+
+// RV-4: reviews grouped into the RV-3 service buckets, in blueprint order; only non-empty buckets render a section.
+const groups = REVIEW_SERVICE_FILTERS
+  .map((f) => ({ ...f, cards: real.filter((r) => f.serviceIds.includes(r.service)) }))
+  .filter((g) => g.cards.length > 0);
+
+// RV-3 "by area": localities with ≥ 2 reviews, each chip jumping to the first card from that locality (rev-<id>).
+const localityCounts = new Map<string, number>();
+for (const r of real) if (r.locality) localityCounts.set(r.locality, (localityCounts.get(r.locality) ?? 0) + 1);
+const firstCardId = (locality: string): string | undefined =>
+  real.find((r): r is Review => r.locality === locality)?.id;
+const areaChips = [...localityCounts.entries()]
+  .filter(([, n]) => n >= 2)
+  .map(([locality]) => ({ locality, target: firstCardId(locality) }))
+  .filter((a): a is { locality: string; target: string } => !!a.target);
+
+const grid = 'm-0 mt-6 grid list-none gap-4 p-0 md:grid-cols-2 lg:grid-cols-3 lg:gap-6';
+---
+{/* RV-3 — zero-JS anchor chips: service buckets (jump to the section heading) then localities with ≥ 2 reviews. */}
+<nav aria-label="Filter reviews" class="m-0 flex list-none flex-wrap gap-2 p-0">
+  {groups.map((g) => (
+    <a href={`#reviews-${g.id}`} class="chip-jump no-underline"><Chip kind="trust" label={g.label} /></a>
+  ))}
+  {areaChips.map((a) => (
+    <a href={`#rev-${a.target}`} class="chip-jump no-underline"><Chip kind="price" label={a.locality} /></a>
+  ))}
+</nav>
+
+{/* RV-4 — cards grouped by service; each group is a jump target; each card carries a per-review id for the area chips. */}
+<div class="mt-8 space-y-10 lg:space-y-14">
+  {groups.map((g) => (
+    <section aria-labelledby={`reviews-${g.id}`}>
+      <h2 id={`reviews-${g.id}`} class="t-h2 m-0">{g.label}</h2>
+      <ul class={grid}>
+        {g.cards.map((r) => (
+          <li id={`rev-${r.id}`} class="min-w-0"><ReviewCard review={r} showSource /></li>
+        ))}
+      </ul>
+    </section>
+  ))}
+</div>
+
+<style>
+  /* The anchor is the 44px touch target around the 32px chip (08 §7.3); layout height stays the chip's. */
+  .chip-jump { display: inline-flex; align-items: center; min-height: 44px; }
+</style>

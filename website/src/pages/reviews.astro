@@ -1,0 +1,101 @@
+---
+// /reviews/ — blueprint: website-plan/blueprints/reviews.md (B15). Blocks RV-0…RV-8 in DOM order. Decisions:
+// website-plan/decisions/w2-trust-a.md. Zero client JS.
+//
+// Google is the source of truth. BreadcrumbList schema ONLY — no Review/AggregateRating markup, ever (04 §2.0.4,
+// 02 P086). The page publishes only once ≥ 10 real Google reviews exist (reviews.md ship checks + routes.ts); until
+// then the proof bar carries the [FILL:GOOGLE_RATING]/[FILL:REVIEW_COUNT] tokens and the cards block (RV-3/RV-4)
+// gives way to the E6 empty state. RV-5 (before/after) and RV-6 (video) render nothing until real, consented media
+// exists. The header-nav "Reviews" item and the footer appear once /reviews/ flips live (isLive()).
+import Base from '../layouts/Base.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import Button from '../components/Button.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Icon from '../components/icons/Icon.astro';
+import ReviewWall from '../components/pages/reviews/ReviewWall.astro';
+import { PROOF_LINE, reviewsReady, REVIEWS_EMPTY_STATE } from '../data/reviews';
+import { routeLabel } from '../data/routes';
+import { site, telHref, waHref } from '../data/site';
+import {
+  GBP_REVIEW_LINK, PROOF_BAR, REVIEWS_BOOK_PREFILL, REVIEWS_FEEDBACK_PREFILL, REVIEWS_HEAD, REVIEWS_INTRO,
+  REVIEWS_PATH, RV_CTA_HEADING, RV_NOT_HAPPY,
+} from '../data/pages/reviews';
+import { schemaGraphLd } from '../lib/schema';
+
+// RV-0: Home › Reviews (labels = the 01-SITEMAP page names in routes.ts; BreadcrumbList schema mirrors them).
+const crumbs = [
+  { label: routeLabel('/'), path: '/' },
+  { label: routeLabel(REVIEWS_PATH), path: REVIEWS_PATH },
+];
+
+const ready = reviewsReady(); // show the grouped cards once real Google reviews exist; the E6 empty state until then
+// E6 verbatim (06 §9); its "[FILL:GBP_LINK]" URL renders as the link to the Google Business Profile (reviews.ts).
+const [emptyBefore, emptyAfter = ''] = REVIEWS_EMPTY_STATE.split(site.gbpLink);
+const proofText = PROOF_LINE.replace(/^★\s*/, ''); // the ★ is drawn as an icon beside its text twin (08 §1.5)
+const section = 'mx-auto max-w-[1200px] px-4 py-12 lg:px-6 lg:py-20';
+---
+<Base
+  title={REVIEWS_HEAD.title}
+  description={REVIEWS_HEAD.description}
+  path={REVIEWS_PATH}
+  waText={REVIEWS_BOOK_PREFILL}
+  jsonLd={[schemaGraphLd({ type: 'breadcrumb-only', crumbs }, Astro.site)]}
+>
+  {/* RV-0 */}
+  <Breadcrumb items={crumbs} />
+
+  <div class="mx-auto max-w-[1200px] px-4 pb-12 pt-4 md:pt-8 lg:px-6 lg:pb-20">
+    {/* RV-1 — header: H1 + the one line (reviews.md RV-1). No CTA here (RV-1 names none). */}
+    <h1 class="t-h1 m-0">{REVIEWS_HEAD.h1}</h1>
+    <p class="measure m-0 mt-3 text-slate">{REVIEWS_INTRO}</p>
+
+    {/* RV-2 — proof bar: the shared ★ proof line (06 §4.4, numbers from the single reviews data file) linked to the
+        GBP, then [See all reviews on Google] and [Write a review]. */}
+    <div class="mt-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+      <p class="m-0 flex items-center gap-2 font-semibold">
+        <Icon name="star" size={20} filled class="flex-none text-cta" />
+        <a href={site.gbpLink} target="_blank" rel="noopener" class="prose-link">{proofText}</a>
+      </p>
+      <div class="flex flex-col gap-3 sm:flex-row">
+        <Button href={site.gbpLink} variant="secondary" external>{PROOF_BAR.seeAll}</Button>
+        <Button href={GBP_REVIEW_LINK} variant="secondary" external>{PROOF_BAR.write}</Button>
+      </div>
+    </div>
+  </div>
+
+  {/* RV-3 + RV-4 — review cards grouped by service (dormant until real reviews exist), else the E6 empty state. */}
+  <div class="bg-sand">
+    <div class={section}>
+      {ready ? (
+        <ReviewWall />
+      ) : (
+        <p class="measure m-0 text-slate">
+          {emptyBefore}<a href={site.gbpLink} target="_blank" rel="noopener" class="prose-link">{site.gbpLink}</a>{emptyAfter}
+        </p>
+      )}
+    </div>
+  </div>
+
+  {/* RV-5 before/after + RV-6 video: render only when real, consented media exists (reviews.ts beforeAfterPairs is
+      empty; video is a Phase-2 slot — reviews.md RV-5/RV-6). Nothing renders until then. */}
+
+  {/* RV-7 — "Not happy?" (reviews.md RV-7): a feedback WhatsApp chat, not a booking. */}
+  <section aria-labelledby="not-happy-heading">
+    <div class={section}>
+      <div class="measure">
+        <h2 id="not-happy-heading" class="t-h2 m-0">{RV_NOT_HAPPY.heading}</h2>
+        <p class="m-0 mt-3 text-slate">{RV_NOT_HAPPY.body}</p>
+        <div class="mt-5">
+          <Button href={waHref(REVIEWS_FEEDBACK_PREFILL)} variant="whatsapp" source="reviews_page">{RV_NOT_HAPPY.cta}</Button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* RV-8 — page-end CTA band: [Book on WhatsApp] (wa.me, booking prefill naming this page) + [Call [FILL:PHONE]]. */}
+  <CtaBand
+    heading={RV_CTA_HEADING}
+    primary={{ label: 'Book on WhatsApp', href: waHref(REVIEWS_BOOK_PREFILL), source: 'ctaband_reviews' }}
+    secondary={{ label: `Call ${site.phone}`, href: telHref(), source: 'ctaband_reviews' }}
+  />
+</Base>

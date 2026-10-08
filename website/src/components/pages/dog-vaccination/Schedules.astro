@@ -1,0 +1,55 @@
+---
+// /ludhiana/dog-vaccination/ SP-4 additions (blueprints/dog-vaccination.md §3 SP-4, verbatim; §5 card image) — goes in
+// ServicePage's `sp4-extra` slot, after the mid-page CTA and the /pricing/ link, on the sand SP-4 band: onTint.
+// Three H3 sub-sections (00 §11 2026-10-02: page-specific sections are H3s inside the nearest block): the "Puppy
+// course" schedule as a real <table> (snippet eligibility — §6 ship check), then "Cats too" and "Deworming rhythm" as
+// prose, then the §5 signed-card photo. The only ₹ figure (the cat fee) comes from pricing.ts (07 §4).
+// Medical sign-off gate (blueprint): both schedule tables and FAQ #3/#6/#7 are reviewed and approved in writing by
+// the registered vet before publishing — vaccine brands vary; the vet's sign-off is the source of truth.
+import InfoTable from '../../InfoTable.astro';
+import Photo from '../../Photo.astro';
+import { flatPrice } from '../../../lib/pricing';
+
+const PUPPY_COURSE = 'Puppy course';
+const puppyColumns = [{ label: 'Vaccine' }, { label: 'Protects against' }];
+const puppyRows = [
+  { label: '6 weeks', cells: ['Puppy DP', 'Distemper, parvovirus'] },
+  { label: '8–9 weeks', cells: ['DHPPiL (1st)', 'Distemper, hepatitis, parainfluenza, parvovirus, leptospirosis'] },
+  { label: '12 weeks', cells: ['DHPPiL booster', 'As above'] },
+  { label: '14–16 weeks', cells: ['Anti-rabies (1st)', 'Rabies'] },
+  { label: 'As your vet advises', cells: ['Rabies booster', 'Rabies'] },
+  { label: 'Every year, for life', cells: ['DHPPiL + anti-rabies boosters', 'All of the above'] },
+];
+const puppyNote = "Your vet may add kennel cough or other vaccines based on your dog's risk, and exact dates vary by vaccine brand.";
+---
+<div class="mt-12 space-y-10">
+  <div>
+    <h3 id="puppy-course" class="t-h3 m-0">{PUPPY_COURSE}</h3>
+    <InfoTable caption={PUPPY_COURSE} rowHeader="Age" columns={puppyColumns} rows={puppyRows} footnotes={[puppyNote]} wide onTint class="mt-4" />
+  </div>
+
+  <div>
+    <h3 id="cats-too" class="t-h3 m-0">Cats too</h3>
+    <p class="measure m-0 mt-3">
+      Tricat (panleukopenia, herpesvirus, calicivirus) at 8–9 weeks · booster at 12 weeks · anti-rabies from 14–16 weeks ·
+      yearly boosters. Same <span class="t-price">{flatPrice('vaccination')}</span> fee + vaccine MRP.
+    </p>
+  </div>
+
+  <div>
+    <h3 id="deworming-rhythm" class="t-h3 m-0">Deworming rhythm</h3>
+    <p class="measure m-0 mt-3">
+      Puppies every 2 weeks until 12 weeks · monthly until 6 months · adults every 3 months for life.
+    </p>
+  </div>
+
+  {/* The wrapper is the grid item: a real photo renders as <picture> around the <img>, a placeholder as a bare <img>. */}
+  <figure class="m-0 max-w-[480px]">
+    <Photo
+      name="dog-vaccination-card-ludhiana.jpg"
+      alt="Signed dog vaccination card with next due dates, Ludhiana"
+      preset="card"
+      class="block aspect-[4/3] h-auto w-full rounded-lg object-cover"
+    />
+  </figure>
+</div>

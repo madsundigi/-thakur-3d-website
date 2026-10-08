@@ -37,6 +37,12 @@ interface Props {
   stickyBookHref?: string;
   stickyBookLabel?: string;
   jsonLd?: object[];
+  /** Open Graph object type (04 §4). Default 'website'; blog posts pass 'article' with the two article times below
+   *  so the page carries the BlogPosting's dates in its OG head (blueprints/_TEMPLATE-blog-post.md §1/§5). */
+  ogType?: 'website' | 'article';
+  /** og `article:published_time` / `article:modified_time` — ISO date, only emitted when ogType='article'. */
+  articlePublished?: string;
+  articleModified?: string;
   hideStickyBar?: boolean;
   hideWaFloat?: boolean;
   /** Exit card variant (07 §2 row 7 + D1). Default by path: 'neutral' on the cat-grooming, dog-walking, vet-at-home and
@@ -48,6 +54,7 @@ const {
   title, description, path, ogImage, ogImageAlt, noindex = false, hideStickyBar = false, hideWaFloat = false,
   waText = prefillFor(Astro.props.path), stickyBookHref = stickyBookHrefFor(Astro.props.path),
   stickyBookLabel = stickyBookLabelFor(Astro.props.path), jsonLd = [], exitCard,
+  ogType = 'website', articlePublished, articleModified,
 } = Astro.props;
 
 // `path` drives the canonical and og:url; a page passing the wrong one would canonicalise to another URL (04 §3.1).
@@ -105,7 +112,9 @@ if (!themeColor) throw new Error('Base.astro: --color-brand not found in styles/
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
     <meta name="theme-color" content={themeColor} />
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={ogType} />
+    {ogType === 'article' && articlePublished ? <meta property="article:published_time" content={articlePublished} /> : null}
+    {ogType === 'article' && articleModified ? <meta property="article:modified_time" content={articleModified} /> : null}
     <meta property="og:site_name" content={site.name} />
     <meta property="og:locale" content="en_IN" />
     <meta property="og:title" content={ogTitle} />

@@ -187,3 +187,28 @@ Road localities use "on" (`03-KEYWORD-MAP.md` §3). Each area's `[FILL:LANDMARKS
 - [ ] Widget mounts with the area preset; wa.me fallback link works with JS disabled
 - [ ] Schema `@graph` = Service (area variant) + BreadcrumbList; validates with zero errors (`02-SEO-PARAMETERS.md` P087)
 - [ ] `02-SEO-PARAMETERS.md` audit row created; all [Launch-blocker] items pass
+
+---
+
+## 6 · As built (Wave 2 FOUNDATION — 2026-10-08, `wave2/w2-foundation`)
+
+The ten area pages are rendered by `website/src/pages/ludhiana/areas/[slug].astro` (one `getStaticPaths` entry per
+`AREA_SLUGS`). Per-area copy: `src/data/content.ts` `AREA_LINES` (hero one-liner, meta local line) + `src/data/areas.ts`
+`AREAS` (anchor line, housing line, AP-9 adjacency trio, "also serving", road flag). Schema: `schemaGraphLd({ type:
+'area', area: slug, crumbs })` → Service (area variant) + BreadcrumbList. Gate-green; routes stay `planned` until each
+area's §0 publish gate passes (decisions/requests: `website-plan/{decisions,requests}/w2-foundation.md`).
+
+Deviations from this template, by rule order (02 [Launch-blocker] > blueprint):
+- **AP-1 `src`** is `hero_<slug>` / **AP-11** `ctaband_<slug>` / **AP-10** `<slug>_page`, the canonical 09 §2d patterns —
+  not `hero_area-<slug>` (P161; the area slugs are in `src/data/sources.ts` `ROUTE_SLUGS`).
+- **AP-10 is NOT the booking island** — it is a WhatsApp CTA + a link to `/book/?src=<slug>_page`. 04 §5.3 /
+  check:budgets P103 allow the React island on `/book/` only; this uses the template's own no-JS wa.me fallback.
+- **H1** is "…at Home **in** {Area}, Ludhiana" for every area (matches the `areaServiceLd` Service `name`, 04 §2.0.3);
+  the **title** keeps "**on**" for road localities (03 §3).
+- **Meta** uses `Doorstep grooming, walking and vet visits {in/on} {Area}, Ludhiana — {local line}. Fixed prices from
+  ₹599. Book on WhatsApp.` (122–152 chars) because the §3 "PetDoorStep brings … to homes in {Area}" wording ran > 158
+  for three areas (P019). The §4 local line is unchanged.
+- **AP-3** adds a dog-grooming size-range line (`₹599–₹999 · ₹1,199–₹1,899 · ₹1,799–₹2,799`) so every Service-node
+  Offer min/max price is visible (P087).
+- **AP-2 landmarks** = `[FILL:LANDMARKS_<SLUG>]`, **AP-5 pin codes** = `[FILL:PINCODES_<SLUG>]` (00 §8; Sunny fills).
+  AP-4 local proof and AP-8 local FAQs render honest placeholder/generic-true copy until real local data lands.

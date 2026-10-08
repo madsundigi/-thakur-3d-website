@@ -16,4 +16,20 @@ export const LASTMOD: Record<string, string> = {
   '/ludhiana/cat-grooming/': '2026-10-03',
   '/ludhiana/dog-walking/': '2026-10-03',
   '/ludhiana/vet-at-home/': '2026-10-03',
+  // Wave-2 foundation pages (built on wave2/w2-foundation; the integrator flips their routes to 'live' when the pages
+  // land). Every live route needs a real lastmod (astro.config.mjs guard + check:pages P127), so these are listed now.
+  '/ludhiana/': '2026-10-08',
+  '/ludhiana/areas/sarabha-nagar/': '2026-10-08',
+  '/ludhiana/areas/brs-nagar/': '2026-10-08',
+  '/ludhiana/areas/model-town/': '2026-10-08',
+  '/ludhiana/areas/civil-lines/': '2026-10-08',
+  '/ludhiana/areas/dugri/': '2026-10-08',
+  '/ludhiana/areas/pakhowal-road/': '2026-10-08',
+  '/ludhiana/areas/south-city/': '2026-10-08',
+  '/ludhiana/areas/ferozepur-road/': '2026-10-08',
+  '/ludhiana/areas/haibowal-kalan/': '2026-10-08',
+  '/ludhiana/areas/kitchlu-nagar/': '2026-10-08',
+  '/blog/': '2026-10-08',
+  '/blog/dog-grooming-price-list-ludhiana/': '2026-10-08',
+  '/blog/puppy-vaccination-schedule-india/': '2026-10-08',
 };

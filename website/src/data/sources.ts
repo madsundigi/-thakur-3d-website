@@ -20,6 +20,7 @@ export const SOURCES = [
   'noscript_block',
   'not_found',
   'groomclub',
+  'blog_card', // a tracked CTA inside a BlogCard / blog body (08 §4.15; blueprints/_TEMPLATE-blog-post.md BP-5/BP-10)
 ] as const;
 
 export type FixedSource = (typeof SOURCES)[number];
@@ -34,6 +35,8 @@ export const ROUTE_SLUGS = [
   'privacy-policy', 'terms', 'refund-policy',
   'sarabha-nagar', 'brs-nagar', 'model-town', 'civil-lines', 'dugri',
   'pakhowal-road', 'south-city', 'ferozepur-road', 'haibowal-kalan', 'kitchlu-nagar',
+  // blog index + the first two posts (01-SITEMAP §4) — `blog_page`, `hero_<post-slug>`, `ctaband_<post-slug>` etc.
+  'blog', 'dog-grooming-price-list-ludhiana', 'puppy-vaccination-schedule-india',
 ] as const;
 
 /** Service ids for `service_<id>` — the `services[].id` values of src/data/pricing.json (07 §2 row 4). */

@@ -1,0 +1,146 @@
+---
+// /ludhiana/ — the city hub. Blueprint: website-plan/blueprints/_TEMPLATE-service-page.md §3 (City-hub variant).
+// Head §3; schema = BreadcrumbList + WebPage (about → #business), no Service/FAQPage (04 §2.9). Zero client JS.
+// The hub's job is routing (fixes the Wave-1 audit hub-orphan): it links all 7 money pages + all live area pages +
+// /pricing/ + /book/ + /how-it-works/. Not-yet-live pages render as plain cards (ServiceCard/AreaCard use isLive).
+import Base from '../../layouts/Base.astro';
+import AreaCard from '../../components/AreaCard.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import Hero from '../../components/Hero.astro';
+import Photo from '../../components/Photo.astro';
+import ServiceCard from '../../components/ServiceCard.astro';
+import StepsStrip from '../../components/StepsStrip.astro';
+import Icon from '../../components/icons/Icon.astro';
+import { AREA_SLUGS } from '../../data/content';
+import { MONEY_PATHS, MONEY_PAGES } from '../../data/services';
+import { isLive, routeLabel } from '../../data/routes';
+import { site, telHref, waHref } from '../../data/site';
+import { bookHref, DOG_GROOM_IDS, flatPrice, fromPrice, heroPriceChip, planPrice } from '../../lib/pricing';
+import { schemaGraphLd } from '../../lib/schema';
+
+const PATH = '/ludhiana/';
+const crumbs = [
+  { label: 'Home', path: '/' },
+  { label: routeLabel(PATH), path: PATH },
+];
+const heroPhoto = {
+  name: 'pet-care-at-home-ludhiana.jpg',
+  alt: 'A PetDoorStep groomer arriving at a Ludhiana doorstep with a sealed, sanitised kit',
+};
+const callLabel = `Call ${site.phone}`;
+// §3 meta — every ₹ figure from pricing.ts (no literal in this file; check:prices):
+const META =
+  `All PetDoorStep pet care services in Ludhiana: grooming from ${fromPrice(DOG_GROOM_IDS)}, ` +
+  `walking ${planPrice('dog-walking', 'walk-1x')}/mo, vet visit ${flatPrice('vet-visit')}, ` +
+  `vaccination ${flatPrice('vaccination')} + MRP. Fixed prices. Book on WhatsApp.`;
+const hubWa = 'Hi PetDoorStep! I want to book a service in Ludhiana. My area: ___ . My pet: ___';
+
+// SP-10 — 4 hub-level FAQs (plain HTML, NO FAQPage markup: the hub schema is Breadcrumb + WebPage only, 04 §2.9).
+const HUB_FAQS: { q: string; a: string }[] = [
+  {
+    q: 'Which areas of Ludhiana do you cover?',
+    a: 'All of Ludhiana. We groom, walk and visit homes in Sarabha Nagar, BRS Nagar, Model Town, Civil Lines, Dugri, Pakhowal Road, South City, Ferozepur Road, Haibowal Kalan, Kitchlu Nagar and every locality in between — there is no travel charge anywhere in the city.',
+  },
+  {
+    q: 'What are your hours?',
+    a: `${site.hours.visits}. Dog walks run ${site.hours.walks}. A real person replies on WhatsApp 9:00–19:00, every day.`,
+  },
+  {
+    q: 'How does booking work?',
+    a: 'Pick a service, tell us your pet and area, choose a slot, and confirm on WhatsApp — the whole thing takes about 90 seconds. We reply within 10 minutes with your groomer’s name, and you pay by UPI or cash after the service.',
+  },
+  {
+    q: 'Do I need an app?',
+    a: 'No app. No login. Book in 90 seconds on WhatsApp.',
+  },
+];
+
+const bands = ['services', 'how', 'areas', 'faq'];
+const band = (key: string) => ['py-12 lg:py-20', bands.indexOf(key) % 2 === 0 ? 'bg-sand' : 'bg-paper'];
+const inner = 'mx-auto max-w-[1200px] px-4 lg:px-6';
+---
+<Base
+  title="Pet Care Services in Ludhiana – At Your Door | PetDoorStep"
+  description={META}
+  path={PATH}
+  waText={hubWa}
+  jsonLd={[schemaGraphLd({ type: 'city-hub', crumbs }, Astro.site)]}
+>
+  <Photo slot="head" preload preset="hero" name={heroPhoto.name} />
+
+  {/* SP-0 — breadcrumb (Home › Ludhiana) */}
+  <Breadcrumb items={crumbs} />
+
+  {/* SP-1 — hero */}
+  <Hero
+    eyebrow="Doorstep pet care in Ludhiana"
+    h1="Pet Care Services in Ludhiana — All at Your Doorstep"
+    subhead="Grooming, walking, vet visits, vaccination and tick care — one background-verified Ludhiana team, fixed prices, booked on WhatsApp in 2 minutes."
+    crumbAbove
+    primary={{ label: 'Book on WhatsApp', href: bookHref({ src: 'hero_ludhiana' }), source: 'hero_ludhiana' }}
+    secondary={{ label: 'See exact prices', href: '/pricing/', source: 'hero_ludhiana' }}
+    priceChip={heroPriceChip('ludhiana')}
+    photo={heroPhoto}
+  />
+
+  {/* Services grid — one card per money page (the hub's reason to exist: routing) */}
+  <div class:list={band('services')}>
+    <div class={inner}>
+      <section aria-labelledby="hub-services-heading">
+        <h2 id="hub-services-heading" class="t-h2 m-0">Every service, one verified team</h2>
+        <ul class="mt-6 grid list-none grid-cols-1 gap-4 p-0 md:grid-cols-2 lg:grid-cols-3 lg:gap-6">
+          {MONEY_PATHS.map((p) => (
+            <li class="min-w-0"><ServiceCard path={p} blurb={MONEY_PAGES[p].card.blurb} photo={MONEY_PAGES[p].card.photo} onPage="ludhiana" /></li>
+          ))}
+        </ul>
+      </section>
+    </div>
+  </div>
+
+  {/* How it works — the 4 site-wide steps + the full-process link (links /how-it-works/) */}
+  <div class:list={band('how')}>
+    <div class={inner}>
+      <StepsStrip heading="How it works — booked in under 2 minutes" headingId="hub-how-heading">
+        {isLive('/how-it-works/') ? <p class="m-0"><a href="/how-it-works/" class="prose-link">See the full process</a></p> : null}
+      </StepsStrip>
+    </div>
+  </div>
+
+  {/* Areas grid — all 10 localities (00 §3.3 order); not-yet-live ones render as plain cards */}
+  <div class:list={band('areas')}>
+    <div class={inner}>
+      <section aria-labelledby="hub-areas-heading">
+        <h2 id="hub-areas-heading" class="t-h2 m-0">Pick your area</h2>
+        <ul class="mt-6 grid list-none grid-cols-2 gap-4 p-0 md:grid-cols-3 lg:grid-cols-5 lg:gap-6">
+          {AREA_SLUGS.map((slug) => <li class="min-w-0"><AreaCard slug={slug} /></li>)}
+        </ul>
+      </section>
+    </div>
+  </div>
+
+  {/* SP-10 — hub FAQ (plain accordion, no FAQPage markup) */}
+  <div class:list={band('faq')}>
+    <div class={inner}>
+      <section aria-labelledby="hub-faq-heading">
+        <h2 id="hub-faq-heading" class="t-h2 m-0">Pet care in Ludhiana — common questions</h2>
+        <div class="mt-4 border-t border-line">
+          {HUB_FAQS.map((f) => (
+            <details class="faq">
+              <summary><h3 class="t-h3 m-0">{f.q}</h3><span class="faq-icon"><Icon name="plus" size={20} /></span></summary>
+              <div class="faq-body"><p class="m-0">{f.a}</p></div>
+            </details>
+          ))}
+        </div>
+      </section>
+    </div>
+  </div>
+
+  {/* Page-end CTA band */}
+  <CtaBand
+    heading="One team for every pet-care need in Ludhiana"
+    support="Fixed prices, no advance payment, a photo update after every visit."
+    primary={{ label: 'Book on WhatsApp', href: waHref(hubWa), source: 'ctaband_ludhiana' }}
+    secondary={{ label: callLabel, href: telHref(), source: 'ctaband_ludhiana' }}
+  />
+</Base>

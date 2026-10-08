@@ -80,3 +80,48 @@ In-answer links: #1, #7, #8 → `/ludhiana/dog-vaccination/` · #3 → `/safety-
 - [ ] Minimum age stated as 8 weeks everywhere (SP-3, SP-4, FAQ #1/#2)
 - [ ] 6-month cut-over line links nowhere misleading — it names the ₹599 Bath & Brush (small)
 - [ ] One Hinglish use only (FAQ #7)
+
+## 1a · SERP intent check (`02` P040) — 2026-10-08
+
+Checked at build for the primary keyword **"puppy grooming at home ludhiana"** (`03` §2.8 P) and "puppy grooming
+ludhiana" / "puppy groomer near me". Tool: the build session's web search — a US-based index, not google.co.in on a
+Ludhiana phone, no map pack. **Repeat on a Ludhiana phone at the launch audit (`02` §5).**
+
+- **What ranks:** no at-home puppy-grooming service based in Ludhiana. The results are international how-to guides
+  (Purina, Dutch, Petstock, Petmania, Woofies "prepare your puppy for the groomer") and IndiaMART tool sellers. The
+  "…at home in Ludhiana" phrase is empty locally — the field is wide open (try "mobile dog grooming Ludhiana" / Justdial
+  / Maps to confirm at launch).
+- **Intent:** buyer (first groom for a young pup at home) + first-timer questions ("when can a puppy have its first
+  bath/groom", "is it safe before full vaccination", "will you cut the hair") — answered by SP-3 and FAQ #1/#3/#5.
+- **Useful corroboration:** the guides put a pup's first professional groom at **~10–12 weeks / after the second
+  vaccine round** and routine grooming every ~4–8 weeks — which matches this page's FAQ #1 (from ~8 weeks, ideally
+  10–12) and the 6-month cut-over to regular dog grooming. No local ₹ figure surfaced; none placed on the page.
+- **How this page matches:** the local service landing page the query lacks — fixed ₹699 flat, any breed, 8 weeks to
+  6 months (hero chip, SP-4 flat line + Service Offer), the gentle 5-step first-groom flow and the full ✓-list (SP-3),
+  the vaccination-safety answer (FAQ #3 → `/safety-hygiene/`), and the first-groom-by-breed table (SP-4 H3).
+
+## 7 · As built (branch `wave2/w2-money`, 2026-10-08)
+
+- **Page:** `website/src/pages/ludhiana/puppy-grooming.astro` — a thin `ServicePage` config + two slot components
+  (`src/components/pages/puppy-grooming/FirstGroom.astro` → `sp3`, `BreedFocus.astro` → `sp4-extra`) plus an inline
+  `sp4-lines` Fragment for the 6-month cut-over line. Chips, body CTA, 3 areas (Kitchlu Nagar · Pakhowal Road · Model
+  Town), OG image and the wa.me prefill from `MONEY_PAGES['/ludhiana/puppy-grooming/']`; 8 FAQs (`puppy-grooming-1…8`)
+  from `faq.json`; Service + FAQPage + BreadcrumbList from `schema.ts`. Every ₹ via `pricing.ts` (`check:prices` green).
+- **SP-1 eyebrow** adapted to **"Puppy grooming in Ludhiana"** so the eyebrow carries the geo (`00` §11 2026-10-08
+  P091), in place of "Puppy's first groom"; `subheadShort` = "A gentle first-time groom for puppies under 6 months —
+  short sessions, lots of breaks, treats allowed." so the 3-line blueprint H1 + full subhead clears the 360×640 fold
+  (W1L-5); the dropped "One flat price…" repeats the price/trust chips. Full subhead stays in the DOM for md+/SEO.
+- **SP-3** is a **✓-list + the 5-step flow** (CheckList, not a size grid) under the single §2 H2 "Gentle first-time
+  groom — what happens": lead-in, the Puppy Intro Groom ✓-list card (note "8 weeks to 6 months · ~45 minutes with
+  breaks"), then the 5 numbered steps beside the §5 towel photo. Minimum age stated as 8 weeks everywhere (SP-3 note,
+  SP-4 line, FAQ #1/#2 in faq.json) — §6 ship check ✓.
+- **SP-4** single flat line (`lines: 'puppy-grooming'`) + R1/R2; the **6-month cut-over line** (`sp4-lines`) names the
+  Bath & Brush (small) price and links `/ludhiana/dog-grooming/` (live) — §6 ship check ✓; then the "Popular
+  first-groom breeds" H3 table (`sp4-extra`).
+- **SP-3 image** new shot `puppy-towel-dry-after-bath-ludhiana.jpg` (grey placeholder until shot); hero reuses shot 13
+  `puppy-first-groom-at-home-ludhiana.jpg`. The blueprint's "speciality line example" (Gentle with first-timers and
+  nervous puppies) is a `people.ts specialityOn` value for when a groomer is hired — requested, not a page change (no
+  groomer is on the team yet, so no SP-7 card renders).
+- **Gates (wave1 preview):** build OK · check:prices OK · check:budgets 0 FAIL · test:site 0 FAIL (fold ok at 360×640;
+  P099 LCP WARNs = grey placeholder hero). check:pages FAILs = only the page's own canonical/og:url "not live" until the
+  route flips.

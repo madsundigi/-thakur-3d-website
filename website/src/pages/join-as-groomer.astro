@@ -1,0 +1,217 @@
+---
+// /join-as-groomer/ — blueprint: website-plan/blueprints/join-as-groomer.md (B17). Blocks JG-0…JG-7 in DOM order.
+// The supply side: recruits groomers, walkers and a partner vet. Hiring process is the safety-hygiene.md SH-4 steps
+// verbatim via src/data/content.ts HIRING_STEPS / hiringSteps() — the police step is policy-gated (00 §3.4), so the
+// "Our N-step process" heading counts the steps actually claimable today (content.ts: never hard-code six). Pay and
+// vet-partner terms are honest [FILL:*] tokens (00 §8; check:fill is the launch gate). JSON-LD: one @graph =
+// BreadcrumbList only — a JobPosting node is added per LIVE opening with real validThrough + baseSalary, and none is
+// open yet (04 §2.9; schema.ts §535). Zero client JS. No ₹ figure is typed here (07 §4).
+import Base from '../layouts/Base.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import Button from '../components/Button.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Icon from '../components/icons/Icon.astro';
+import { hiringSteps, R3 } from '../data/content';
+import { routeLabel } from '../data/routes';
+import { waHref } from '../data/site';
+import { schemaGraphLd } from '../lib/schema';
+
+const PATH = '/join-as-groomer/';
+
+// JG-0: Home › Careers (blueprint JG-0 names the trail "Careers"; the page's own route label is "Join as Groomer").
+// The visible breadcrumb and the BreadcrumbList JSON-LD both use these crumbs, so they always match (04 §2.9 P084).
+const crumbs = [
+  { label: routeLabel('/'), path: '/' },
+  { label: 'Careers', path: PATH },
+];
+
+// Apply-on-WhatsApp prefill (JG-5; 02 P158). One button serves every role, so {role} reads "groomer, walker or vet";
+// the "What to send" list asks the applicant to name their exact role. Double spaces are where they type their answer.
+const applyText = 'Hi PetDoorStep, I want to apply as a groomer, walker or vet. Name:  Experience (years):  Area: ';
+const applyHref = waHref(applyText);
+
+// JG-2 · Why join (4 tiles) — verbatim; tile 2 carries the honest [FILL:PAY_RANGES] token (00 §8).
+const whyJoin: { icon: 'calendar-days' | 'shield-check' | 'sparkles' | 'star'; title: string; body: string }[] = [
+  { icon: 'calendar-days', title: 'Steady bookings', body: "we find the customers; you do what you're good at." },
+  { icon: 'shield-check', title: 'Fair, transparent pay', body: '[FILL:PAY_RANGES] (per-groom and monthly-walker pay, published here once final). Tips are yours, in full.' },
+  { icon: 'sparkles', title: 'Training & kit', body: 'we train you on our standards and provide the sealed-kit supplies; you never pay for them.' },
+  { icon: 'star', title: 'Respect and growth', body: 'customers see your name and photo and can request you; senior-groomer and team-lead roles open as we expand across Punjab.' },
+];
+
+// JG-3 · Roles (3 cards) — "You'll need" lists, verbatim. The vet row carries the [FILL:VET_PARTNER_TERMS] token.
+const roles: { title: string; needs: string[] }[] = [
+  {
+    title: 'Groomer',
+    needs: [
+      '1+ year grooming experience or a completed grooming course',
+      'comfortable with dogs (all sizes) and cats',
+      'own two-wheeler + licence',
+      'smartphone with WhatsApp',
+      'Punjabi or Hindi',
+    ],
+  },
+  {
+    title: 'Dog walker',
+    needs: [
+      '18+',
+      'genuinely loves dogs',
+      'reliable for early mornings (from 6:00) and evenings',
+      'lives in or near our service areas',
+      'smartphone with WhatsApp',
+    ],
+  },
+  {
+    title: 'Partner vet',
+    needs: [
+      'BVSc & AH, registered with the Punjab State Veterinary Council',
+      'home-visit availability within 9:00–19:00',
+      'terms: [FILL:VET_PARTNER_TERMS]',
+    ],
+  },
+];
+
+// JG-4 · How we hire — the SH-4 steps verbatim (content.ts HIRING_STEPS). The police step is gated out until done for
+// every team member, so the heading counts only the steps claimable today (00 §3.4; content.ts note).
+const steps = hiringSteps();
+const processHeading = `Our ${steps.length}-step process — the same one we promise customers`;
+
+// JG-5 · What to send (listed on the page).
+const whatToSend = [
+  'name',
+  'phone',
+  'role (Groomer / Walker / Vet)',
+  'years of experience',
+  'your area of Ludhiana',
+  'two-wheeler (yes/no)',
+  'languages',
+];
+
+// JG-6 · FAQ (5 Q&As, plain HTML — no FAQPage markup on this page; 04 §2.9 allows BreadcrumbList + JobPosting only).
+const faqs: { q: string; a: string }[] = [
+  { q: 'Do I need my own grooming kit?', a: 'No. We provide the standard sealed kit and supplies, and train you on how we clean and seal it after every visit.' },
+  { q: 'Is this full-time or part-time?', a: 'Both. You choose your available slots; full-time groomers get first pick of bookings in their area.' },
+  { q: 'How soon will I get bookings?', a: "After your three supervised visits, bookings follow demand in your area — we'll tell you honestly what to expect before you start." },
+  { q: 'Do you train beginners?', a: 'Walkers, yes — we train you fully. Groomers need basic grooming skills; we then train you on our handling, hygiene and heat-safety standards.' },
+  { q: 'Do I have to pay anything to join?', a: 'Never. No joining fee, no deposit, no kit charge.' },
+];
+
+const section = 'mx-auto max-w-[1200px] px-4 py-12 lg:px-6 lg:py-20';
+---
+<Base
+  title="Pet Groomer & Dog Walker Jobs in Ludhiana | PetDoorStep"
+  description="Join PetDoorStep in Ludhiana as a pet groomer, dog walker or partner vet. Steady bookings, fair pay, training and respect. Apply on WhatsApp in 2 minutes."
+  path={PATH}
+  waText={applyText}
+  jsonLd={[schemaGraphLd({ type: 'breadcrumb-only', crumbs }, Astro.site)]}
+>
+  <Breadcrumb items={crumbs} />
+
+  {/* JG-1 — header (H1 · subhead · Apply CTA · R3 reply line). Text-only; no [data-hero] fold markers on this
+      recruitment page, so the long mandated H1 is never squeezed against the 360×640 fold law. */}
+  <section aria-labelledby="jg-heading" class="mx-auto max-w-[1200px] px-4 pb-10 pt-4 md:pt-6 lg:px-6">
+    <h1 id="jg-heading" class="t-display m-0 text-balance">
+      Join PetDoorStep — Groomer, Walker &amp; Vet Partner Roles in Ludhiana
+    </h1>
+    <p class="measure m-0 mt-4 text-slate md:text-lg">
+      Pet groomer jobs in Ludhiana with steady bookings near your home, fair and transparent pay, real training — and
+      pet parents who book you by name.
+    </p>
+    <div class="mt-6">
+      <Button href={applyHref} source="hero_join-as-groomer">Apply on WhatsApp</Button>
+    </div>
+    <p class="m-0 mt-3 text-sm text-slate">{R3}</p>
+  </section>
+
+  {/* JG-2 · Why join (4 tiles) */}
+  <div class="bg-sand">
+    <section aria-labelledby="why-join-heading" class={section}>
+      <h2 id="why-join-heading" class="t-h2 m-0">Why join PetDoorStep</h2>
+      <ul class="m-0 mt-6 grid list-none gap-4 p-0 md:grid-cols-2 lg:gap-6">
+        {whyJoin.map((t) => (
+          <li class="flex min-w-0 gap-3 rounded-lg border border-line bg-paper p-5">
+            <span class="mt-0.5 flex-none text-brand"><Icon name={t.icon} size={24} /></span>
+            <p class="m-0 min-w-0 text-ink"><span class="font-semibold">{t.title}</span> — {t.body}</p>
+          </li>
+        ))}
+      </ul>
+    </section>
+  </div>
+
+  {/* JG-3 · Roles (3 cards) */}
+  <section aria-labelledby="roles-heading" class={section}>
+    <h2 id="roles-heading" class="t-h2 m-0">Roles we're hiring for</h2>
+    <ul class="m-0 mt-6 grid list-none gap-4 p-0 md:grid-cols-3 lg:gap-6">
+      {roles.map((r) => (
+        <li class="flex h-full min-w-0 flex-col rounded-lg border border-line bg-paper p-5 lg:p-6">
+          <h3 class="t-h3 m-0">{r.title}</h3>
+          <p class="t-micro m-0 mt-3 text-slate">You'll need</p>
+          <ul class="m-0 mt-2 list-none space-y-2 p-0">
+            {r.needs.map((n) => (
+              <li class="flex items-start gap-2 text-sm text-ink">
+                <Icon name="check" size={20} class="mt-0.5 flex-none text-brand" />
+                <span class="min-w-0">{n}</span>
+              </li>
+            ))}
+          </ul>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  {/* JG-4 · How we hire (the SH-4 steps verbatim; count from hiringSteps()) */}
+  <div class="bg-sand">
+    <section aria-labelledby="process-heading" class={section}>
+      <h2 id="process-heading" class="t-h2 m-0 text-balance">{processHeading}</h2>
+      <ol class="measure m-0 mt-6 grid list-none gap-3 p-0">
+        {steps.map((s, i) => (
+          <li class="flex items-start gap-3 text-ink">
+            <span class="t-price mt-0.5 flex h-7 w-7 flex-none items-center justify-center rounded-pill bg-mint text-sm text-brand-deep">{i + 1}</span>
+            <span class="min-w-0 self-center">{s.text}</span>
+          </li>
+        ))}
+      </ol>
+      <p class="measure m-0 mt-6 font-semibold text-ink">
+        No joining fee or deposit — ever. Anyone asking you for money in our name is not us.
+      </p>
+    </section>
+  </div>
+
+  {/* JG-5 · Apply */}
+  <section aria-labelledby="apply-heading" class={section}>
+    <h2 id="apply-heading" class="t-h2 m-0">Apply in 2 minutes</h2>
+    <div class="measure mt-5">
+      <p class="t-micro m-0 text-slate">What to send</p>
+      <ul class="m-0 mt-2 flex list-none flex-wrap gap-2 p-0">
+        {whatToSend.map((w) => (
+          <li class="rounded-pill bg-sand px-3 py-1 text-sm text-ink">{w}</li>
+        ))}
+      </ul>
+      <p class="m-0 mt-3 text-slate">No CV needed.</p>
+      <div class="mt-6">
+        <Button href={applyHref} source="join-as-groomer_page">Apply on WhatsApp</Button>
+      </div>
+      <p class="m-0 mt-3 text-sm text-slate">{R3}</p>
+    </div>
+  </section>
+
+  {/* JG-6 · FAQ (5 Q&As, plain HTML) */}
+  <div class="bg-sand">
+    <section aria-labelledby="jg-faq-heading" class={section}>
+      <h2 id="jg-faq-heading" class="t-h2 m-0">Questions from people who join</h2>
+      <dl class="measure m-0 mt-6">
+        {faqs.map((f, i) => (
+          <div class:list={[{ 'mt-6': i > 0 }]}>
+            <dt class="t-h3 text-ink">{f.q}</dt>
+            <dd class="m-0 mt-2 text-ink">{f.a}</dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+  </div>
+
+  {/* JG-7 · page-end CTA band */}
+  <CtaBand
+    heading="Love pets? Let's talk."
+    primary={{ label: 'Apply on WhatsApp', href: applyHref, source: 'ctaband_join-as-groomer' }}
+  />
+</Base>

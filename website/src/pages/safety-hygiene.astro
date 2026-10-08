@@ -1,0 +1,148 @@
+---
+// /safety-hygiene/ — blueprint: website-plan/blueprints/safety-hygiene.md (B16). Blocks SH-0…SH-9 in DOM order.
+// Decisions: website-plan/decisions/w2-trust-a.md. Zero client JS.
+//
+// JSON-LD: one @graph = BreadcrumbList only (04 §2.9). The SH-2 Promise and SH-4 verification steps render from the
+// shared src/data/content.ts (PromiseBand full + hiringSteps()), so this page, /about/ and the FAQ can never drift;
+// a gated Promise point (on-time) and the gated police-verification step stay out until their 00 §3.4 policy gate is
+// confirmed. The header-nav "Safety & Hygiene" item and the footer appear once /safety-hygiene/ flips live (isLive()).
+import Base from '../layouts/Base.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Hero from '../components/Hero.astro';
+import PromiseBand from '../components/PromiseBand.astro';
+import Icon from '../components/icons/Icon.astro';
+import { hiringSteps } from '../data/content';
+import { isLive, routeLabel } from '../data/routes';
+import { site, telHref, waHref } from '../data/site';
+import {
+  HANDLING, IF_WRONG, INSURANCE_STATUS, RESPECT, SAFETY_BOOK_PREFILL, SAFETY_CTA_HEADING, SAFETY_HEAD, SAFETY_PATH,
+  SAFETY_SUBHEAD, SEALED_KIT, VERIFY_HEADING, VETS_ONLY,
+} from '../data/pages/safety-hygiene';
+import { bookHref } from '../lib/pricing';
+import { schemaGraphLd } from '../lib/schema';
+
+// SH-0: Home › Safety & Hygiene (labels = the 01-SITEMAP page names in routes.ts; BreadcrumbList mirrors them).
+const crumbs = [
+  { label: routeLabel('/'), path: '/' },
+  { label: routeLabel(SAFETY_PATH), path: SAFETY_PATH },
+];
+
+// SH-4: the claimable verification steps (SH-4's 6, minus any still behind a policy gate — police until
+// content.ts policy.policeVerified). Count the rendered steps; never hard-code six (content.ts note).
+const verifySteps = hiringSteps();
+const section = 'mx-auto max-w-[1200px] px-4 py-12 lg:px-6 lg:py-20';
+---
+<Base
+  title={SAFETY_HEAD.title}
+  description={SAFETY_HEAD.description}
+  path={SAFETY_PATH}
+  waText={SAFETY_BOOK_PREFILL}
+  jsonLd={[schemaGraphLd({ type: 'breadcrumb-only', crumbs }, Astro.site)]}
+>
+  {/* SH-0 */}
+  <Breadcrumb items={crumbs} />
+
+  {/* SH-1 — text-only hero: H1 + subhead + [Book on WhatsApp] → the booking form (06 §3.1), amber (not a wa.me link). */}
+  <Hero
+    h1={SAFETY_HEAD.h1}
+    subhead={SAFETY_SUBHEAD}
+    crumbAbove
+    primary={{ label: 'Book on WhatsApp', href: bookHref({ src: 'hero_safety-hygiene' }), source: 'hero_safety-hygiene' }}
+    trustChips={[]}
+  />
+
+  {/* SH-2 — the full 5-point Promise (06 §4.1; the on-time point (point 4) stays gated in content.ts). */}
+  <div class={section}>
+    <PromiseBand variant="full" />
+  </div>
+
+  {/* SH-3 — the sealed-kit ritual (6 steps; step 1 names [FILL:DISINFECTANT_PRODUCT]). */}
+  <section aria-labelledby="kit-heading" class="bg-sand">
+    <div class={section}>
+      <h2 id="kit-heading" class="t-h2 m-0">{SEALED_KIT.heading}</h2>
+      <ol class="measure m-0 mt-6 grid list-none gap-4 p-0">
+        {SEALED_KIT.steps.map((text, i) => (
+          <li class="flex items-start gap-3">
+            <span class="mt-0.5 flex h-7 w-7 flex-none items-center justify-center rounded-full bg-mint text-sm font-semibold text-brand-deep">{i + 1}</span>
+            <span class="min-w-0">{text}</span>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  {/* SH-4 — how we verify every groomer and walker. Numbered from hiringSteps() (police step waits for its gate). */}
+  <section aria-labelledby="verify-heading">
+    <div class={section}>
+      <h2 id="verify-heading" class="t-h2 m-0">{VERIFY_HEADING}</h2>
+      <ol class="measure m-0 mt-6 grid list-none gap-4 p-0">
+        {verifySteps.map((s, i) => (
+          <li class="flex items-start gap-3">
+            <span class="mt-0.5 flex h-7 w-7 flex-none items-center justify-center rounded-full bg-mint text-sm font-semibold text-brand-deep">{i + 1}</span>
+            <span class="min-w-0">{s.text}</span>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  {/* SH-5 — calm, safe handling. */}
+  <section aria-labelledby="handling-heading" class="bg-sand">
+    <div class={section}>
+      <h2 id="handling-heading" class="t-h2 m-0">{HANDLING.heading}</h2>
+      <ul class="measure m-0 mt-6 grid list-none gap-3 p-0">
+        {HANDLING.rules.map((r) => (
+          <li class="flex items-start gap-3">
+            <Icon name="paw-print" size={20} class="mt-0.5 flex-none text-brand" />
+            <span class="min-w-0"><strong class="font-semibold text-ink">{r.lead}</strong> {r.rest}</span>
+          </li>
+        ))}
+      </ul>
+      <p class="measure m-0 mt-4 font-semibold text-brand-deep">{HANDLING.closing}</p>
+    </div>
+  </section>
+
+  {/* SH-6 — respect for your home. */}
+  <section aria-labelledby="respect-heading">
+    <div class={section}>
+      <h2 id="respect-heading" class="t-h2 m-0">{RESPECT.heading}</h2>
+      <ul class="measure m-0 mt-6 grid list-none gap-3 p-0 md:grid-cols-2">
+        {RESPECT.items.map((item) => (
+          <li class="flex items-start gap-3">
+            <Icon name="check" size={20} class="mt-0.5 flex-none text-brand" />
+            <span class="min-w-0">{item}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  {/* SH-7 — if something goes wrong. Insurance status = [FILL:INSURANCE_STATUS] (filled or the line dropped at launch);
+      the "who pays for a vet check" promise is held back behind its policy gate (not rendered). */}
+  <section aria-labelledby="wrong-heading" class="bg-sand">
+    <div class={section}>
+      <h2 id="wrong-heading" class="t-h2 m-0">{IF_WRONG.heading}</h2>
+      <p class="measure m-0 mt-4">{IF_WRONG.body}</p>
+      <p class="measure m-0 mt-3 text-slate">{INSURANCE_STATUS}</p>
+    </div>
+  </section>
+
+  {/* SH-8 — registered vets only → the live vet-at-home page. */}
+  <section aria-labelledby="vets-heading">
+    <div class={section}>
+      <h2 id="vets-heading" class="t-h2 m-0">{VETS_ONLY.heading}</h2>
+      <p class="measure m-0 mt-4">{VETS_ONLY.body}</p>
+      {isLive(VETS_ONLY.linkPath) ? (
+        <p class="m-0 mt-3"><a href={VETS_ONLY.linkPath} class="prose-link font-semibold">{VETS_ONLY.linkText}</a></p>
+      ) : null}
+    </div>
+  </section>
+
+  {/* SH-9 — page-end CTA band: [Book on WhatsApp] (wa.me, booking prefill) + [Call [FILL:PHONE]]. */}
+  <CtaBand
+    heading={SAFETY_CTA_HEADING}
+    primary={{ label: 'Book on WhatsApp', href: waHref(SAFETY_BOOK_PREFILL), source: 'ctaband_safety-hygiene' }}
+    secondary={{ label: `Call ${site.phone}`, href: telHref(), source: 'ctaband_safety-hygiene' }}
+  />
+</Base>

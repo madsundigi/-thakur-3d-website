@@ -1,0 +1,76 @@
+---
+// /ludhiana/dog-vaccination/ — the vaccination money page (medical). Blueprint: website-plan/blueprints/dog-vaccination.md
+// (copy values, verbatim; it inherits vet-at-home.md §0 legal rules) on the template _TEMPLATE-service-page.md
+// (blocks SP-0…SP-13, owned by src/layouts/ServicePage.astro). Every ₹ figure comes from src/lib/pricing.ts (07 §4);
+// chips, body CTA, areas, OG image and the WhatsApp prefill from MONEY_PAGES['/ludhiana/dog-vaccination/']
+// (src/data/services.ts); the 8 FAQs (dog-vaccination-1…8) from faq.json; the vet card from people.ts.
+// §0 (vet-at-home.md): PetDoorStep arranges and schedules the visit and never practises medicine; the page never
+// implies emergency, night or 24×7 cover — the hero notice routes emergencies to a 24-hour hospital (vet §0 rule 2).
+// Eyebrow carries "Ludhiana" (00 §11 2026-10-08 P091), adapted from the blueprint's "Puppies, dogs & cats".
+import ServicePage, { type ServicePageConfig } from '../../layouts/ServicePage.astro';
+import VaccineInclusions from '../../components/pages/dog-vaccination/VaccineInclusions.astro';
+import Schedules from '../../components/pages/dog-vaccination/Schedules.astro';
+import { flatPrice } from '../../lib/pricing';
+
+const fee = flatPrice('vaccination');
+// The phone cut of the SP-1 subhead (Hero subheadShort, W1L-5): the clause before the em dash. The dropped words
+// ("with a reminder calendar so you never miss a due date") repeat the "Free reminder calendar" chip; with the notice
+// and the full line the 360×640 fold fails (vet-at-home §1.2 shows the same cut is needed when a notice is present).
+const subheadShort = 'Registered vet, cold-chain carried vaccine, done in your living room';
+
+const config: ServicePageConfig = {
+  path: '/ludhiana/dog-vaccination/',
+  // §1 Head, verbatim.
+  title: `Dog Vaccination at Home in Ludhiana – ${fee} Fee | PetDoorStep`,
+  description:
+    `Vaccination at your doorstep by registered vets: ${fee} visit fee + vaccine at MRP, with a free reminder calendar. ` +
+    'Puppies, dogs and cats. Book on WhatsApp.',
+  // SP-1 (§3; 06 §2.3): [Book Vaccination on WhatsApp] → /book/?src=hero_dog-vaccination (00 §11 E1, amber) +
+  // [Call [FILL:PHONE]]; chips from the registry; the emergency notice under the CTAs, after R3, every word kept (W1L-6).
+  hero: {
+    eyebrow: 'Dog vaccination in Ludhiana',
+    h1: 'Dog Vaccination at Home in Ludhiana',
+    subhead: `${subheadShort} — with a reminder calendar so you never miss a due date.`,
+    subheadShort,
+    primaryLabel: 'Book Vaccination on WhatsApp',
+    secondary: 'call',
+    photo: {
+      name: 'vet-home-visit-pomeranian-ludhiana.jpg',
+      alt: 'Vet with a vaccine cold box examining a Pomeranian before dog vaccination at home in Ludhiana',
+    },
+    notice: 'Not for emergencies — for accidents, poisoning, seizures or heavy bleeding, go to the nearest 24-hour vet hospital now.',
+  },
+  // SP-3 H2: the blueprint names none; the template "what … includes" pattern (vet-at-home "What a veterinary doctor's
+  // home visit includes"). Body (lead-in + ✓-lists + §5 cold-box photo) is the sp3 slot.
+  sp3: { heading: 'What a home vaccination visit includes' },
+  // SP-4: the flat list (pricing.ts 'dog-vaccination': the vaccination service fee + vaccine at printed MRP · Deworming
+  // Visit) with R1 + R2; the three schedule H3s (Puppy course / Cats too / Deworming rhythm) + the §5 card in sp4-extra.
+  sp4: { heading: `Dog vaccination price in Ludhiana — ${fee} + vaccine MRP`, lines: 'dog-vaccination' },
+  // SP-5: the proof-photo row, rendered by the layout only once reviews.ts holds consented home-vaccination photos.
+  sp5: { kind: 'proof', heading: 'Real home vaccinations' },
+  // SP-7 "Meet your vet" + the registered-vets line (people.ts MEET_VET); the full card variant — identical to
+  // vet-at-home.md §3 SP-7.
+  sp7: { team: 'vet', variant: 'full' },
+  sp8: { medical: true },
+  sp9: {
+    intro: 'Need a vet to vaccinate your pet at home in Ludhiana? Our vet visits homes across the city — including:',
+    prefix: 'Dog vaccination at home in',
+  },
+  sp10: { heading: 'Dog vaccination at home — your questions' },
+  sp11: {
+    posts: [
+      { label: 'Puppy Vaccination Schedule in India', href: '/blog/puppy-vaccination-schedule-india/' },
+      { label: 'Dog Vaccination Cost in Ludhiana', href: '/blog/dog-vaccination-cost-ludhiana/' },
+    ],
+  },
+  // SP-12: the blueprint's own line (not the R8 pattern), support verbatim with the fee from pricing.ts.
+  sp12: {
+    heading: "Your puppy's next shot, done calmly at home. Vaccination slots this week across Ludhiana.",
+    support: `${fee} + vaccine MRP · reminder calendar included · pay after the visit.`,
+  },
+};
+---
+<ServicePage config={config}>
+  <VaccineInclusions slot="sp3" />
+  <Schedules slot="sp4-extra" />
+</ServicePage>

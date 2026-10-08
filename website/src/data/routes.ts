@@ -7,7 +7,8 @@
 //
 // Preview switch (review builds only): with PUBLIC_PDS_PREVIEW_LIVE=wave1 in the build environment, every wave-1
 // route counts as live without editing a status, so the whole launch set can be clicked through before it ships.
-// Never set it for a production build. It is read wherever this module runs: Astro pages and the React booking island
+// PUBLIC_PDS_PREVIEW_LIVE=wave2 does the same for every wave ≤ 2 route (so Wave-2 cross-links render during review);
+// wave1 stays wave-1-only. Never set either for a production build. It is read wherever this module runs: Astro pages and the React booking island
 // (Vite inlines PUBLIC_* values as import.meta.env.*), astro.config.mjs and plain Node / esbuild bundles
 // (process.env). A runtime without either simply sees no preview.
 
@@ -49,6 +50,11 @@ export const routes: RouteEntry[] = [
   { path: '/privacy-policy/', label: 'Privacy Policy', group: 'legal', wave: 1, status: 'live' },
   { path: '/terms/', label: 'Terms', group: 'legal', wave: 1, status: 'live' },
   { path: '/refund-policy/', label: 'Refund Policy', group: 'legal', wave: 2, status: 'planned' },
+  // blog (index + the first two posts — 01-SITEMAP §4; anatomy blueprints/_TEMPLATE-blog-post.md). The posts' .md
+  // content is owned by the content builder (src/content/blog/); these rows let isLive() gate the links to them.
+  { path: '/blog/', label: 'Blog', group: 'blog', wave: 2, status: 'planned' },
+  { path: '/blog/dog-grooming-price-list-ludhiana/', label: 'Dog Grooming Price List in Ludhiana', group: 'blog', wave: 2, status: 'planned' },
+  { path: '/blog/puppy-vaccination-schedule-india/', label: 'Puppy Vaccination Schedule (India)', group: 'blog', wave: 2, status: 'planned' },
   // areas (staggered publishing — 05-LOCAL-SEO §6.10)
   ...[
     ['sarabha-nagar', 'Sarabha Nagar'], ['brs-nagar', 'BRS Nagar'], ['model-town', 'Model Town'],
@@ -80,10 +86,13 @@ function previewSwitch(): string | undefined {
 
 /** True only in a review build made with PUBLIC_PDS_PREVIEW_LIVE=wave1 (every wave-1 route then counts as live). */
 export const PREVIEW_WAVE1: boolean = previewSwitch() === 'wave1';
+/** True only in a review build made with PUBLIC_PDS_PREVIEW_LIVE=wave2 (every wave ≤ 2 route then counts as live). */
+export const PREVIEW_WAVE2: boolean = previewSwitch() === 'wave2';
 
 const byPath = new Map(routes.map((r) => [r.path, r]));
 
-const counts = (r: RouteEntry | undefined): boolean => !!r && (r.status === 'live' || (PREVIEW_WAVE1 && r.wave === 1));
+const counts = (r: RouteEntry | undefined): boolean =>
+  !!r && (r.status === 'live' || (PREVIEW_WAVE1 && r.wave === 1) || (PREVIEW_WAVE2 && r.wave <= 2));
 
 export const isLive = (path: string): boolean => counts(byPath.get(path));
 export const routeLabel = (path: string): string => byPath.get(path)?.label ?? path;

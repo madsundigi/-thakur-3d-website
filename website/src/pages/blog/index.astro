@@ -1,0 +1,97 @@
+---
+// /blog/ — the blog index. Blueprint: website-plan/blueprints/_TEMPLATE-blog-post.md §6 (Index variant). Head §6;
+// schema = BreadcrumbList only (04-TECHNICAL-SEO §2.9 gives the index no FAQPage/Article). Zero client JS.
+// Posts come from the `blog` content collection (src/data/blog.ts). The foundation ships with zero posts, so the
+// grid renders its empty state; it fills automatically as posts land (newest-first, 12 per page — pagination is a
+// Wave-3 concern once there are > 12).
+import Base from '../../layouts/Base.astro';
+import BlogCard from '../../components/BlogCard.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import { BLOG_CATEGORIES } from '../../content.config';
+import { getBlogPosts } from '../../data/blog';
+import { isLive } from '../../data/routes';
+import { site, telHref, waHref, WA_DEFAULT_TEXT } from '../../data/site';
+import { schemaGraphLd } from '../../lib/schema';
+
+const PATH = '/blog/';
+const crumbs = [
+  { label: 'Home', path: '/' },
+  { label: 'Blog', path: PATH },
+];
+const posts = await getBlogPosts();
+const callLabel = `Call ${site.phone}`;
+const PAGE_SIZE = 12; // 04 §3.6 / 08 §4.15
+const shown = posts.slice(0, PAGE_SIZE);
+---
+<Base
+  title="Pet Care Guides for Ludhiana Pet Parents | PetDoorStep"
+  description="Practical, vet-reviewed pet care guides for Ludhiana: grooming prices, vaccination schedules, tick season, summer walks and more."
+  path={PATH}
+  ogImage="blog-default.jpg"
+  ogImageAlt="PetDoorStep pet care guides for Ludhiana pet parents"
+  jsonLd={[schemaGraphLd({ type: 'breadcrumb-only', crumbs }, Astro.site)]}
+>
+  {/* BP-0 */}
+  <Breadcrumb items={crumbs} />
+
+  <div class="mx-auto max-w-[1200px] px-4 pb-16 lg:px-6">
+    {/* Index header: H1 + the 2-sentence intro (who writes these, why) */}
+    <header class="pt-4 md:pt-6">
+      <h1 class="t-h1 m-0">Pet care guides for Ludhiana pet parents</h1>
+      <p class="measure m-0 mt-3 text-slate">
+        Our groomers and partner vet write these — the same people who come to your door. Every guide answers a
+        question Ludhiana pet parents actually ask us on WhatsApp, with real local detail and honest prices.
+      </p>
+    </header>
+
+    {/* Category chips — the six index topics (§6). Plain labels for now; they become filter links when the Wave-3
+        tag pages exist, so nothing here points at a page that is not live. */}
+    <ul class="mt-6 flex list-none flex-wrap gap-2 p-0" aria-label="Guide topics">
+      {BLOG_CATEGORIES.map((c) => (
+        <li><span class="inline-flex h-8 items-center rounded-pill bg-mint px-3 text-sm font-semibold text-brand-deep">{c}</span></li>
+      ))}
+    </ul>
+
+    {/* Post grid, newest first (empty state until the first posts land) */}
+    {shown.length ? (
+      <ul class="mt-8 grid list-none grid-cols-1 gap-6 p-0 md:grid-cols-2 lg:grid-cols-3 lg:gap-6">
+        {shown.map((p) => (
+          <li class="min-w-0">
+            <BlogCard
+              slug={p.slug}
+              title={p.title}
+              category={p.category}
+              excerpt={p.description}
+              date={p.date}
+              readMinutes={p.readMinutes}
+              heroImage={p.heroImage}
+              heroAlt={p.heroAlt}
+            />
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <div class="mt-8 rounded-lg border border-line bg-sand p-6">
+        <h2 class="t-h3 m-0">Our first guides are on the way</h2>
+        <p class="measure m-0 mt-2 text-slate">
+          We're writing them now — grooming prices, the puppy vaccination schedule, tick season and more, one a week.
+          {isLive('/pricing/') ? <> Meanwhile, every price is on the <a href="/pricing/" class="prose-link">full price list</a>, and our team answers questions on WhatsApp.</> : <> Meanwhile, our team answers questions on WhatsApp.</>}
+        </p>
+        <p class="m-0 mt-4">
+          <a href={waHref(WA_DEFAULT_TEXT)} data-source="blog_card" target="_blank" rel="noopener" class="prose-link">Ask us on WhatsApp</a>
+          <span class="text-slate"> · </span>
+          <a href={telHref()} data-source="blog_card" class="prose-link">{site.phone}</a>
+        </p>
+      </div>
+    )}
+  </div>
+
+  {/* CTA band (§6 "Default CtaBand.astro") */}
+  <CtaBand
+    heading="A question we haven't covered yet?"
+    support="A real person replies on WhatsApp within 10 minutes, 9:00–19:00 — no app, no login."
+    primary={{ label: 'Ask on WhatsApp', href: waHref(WA_DEFAULT_TEXT), source: 'ctaband_blog' }}
+    secondary={{ label: callLabel, href: telHref(), source: 'ctaband_blog' }}
+  />
+</Base>
