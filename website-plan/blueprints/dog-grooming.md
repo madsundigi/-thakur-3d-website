@@ -34,9 +34,25 @@
 | mobile dog grooming / grooming van ludhiana | L | SP-3 lead-in: "No grooming van needed — your groomer carries a complete kit to your verandah, balcony or bathroom." |
 | medicated bath · how long does grooming take | L | SP-10 FAQ #7 · #5 |
 
+
+### 2a · SERP-intent check (`02` P040) — 2026-10-03 (re-verified 2026-10-08)
+
+- **Query:** `dog grooming at home ludhiana` (primary keyword, `03` §2.2). Same cluster and the same ranking set as
+  `home.md` §2a's check of `pet grooming at home ludhiana` (checked 2026-10-03 with a web-search tool that searches from
+  the US, so the map pack and ads were not visible — re-check from a phone in Ludhiana and log in `09` §7).
+- **What ranks:** single-city doorstep-service pages (Mr n Mrs Pet "Dog Grooming Services in Ludhiana At Your Doorstep",
+  thePetNest, Urban Pets, Petgroomly) next to marketplace/directory category pages (PetBacker, Justdial). No listicle
+  or blog ranks; the local pack is a GBP play (`05`), not a page play.
+- **Intent:** BUYER, local + transactional. Google rewards a service + "at home / doorstep" + Ludhiana title and H1 with
+  a booking path.
+- **How this page matches:** the title and H1 carry "Dog Grooming at Home in Ludhiana", the hero eyebrow + subhead name
+  the city and the fixed from-prices, the booking CTA is in the first screen, and the page goes further than the ranked
+  results with a published price matrix (SP-4), a what's-included grid (SP-3), the 10 localities (SP-9) and an 8-question
+  FAQ with FAQPage markup (SP-10) — the depth the directory/marketplace pages lack.
+
 ## 3 · Block values (only where this page adds to the template)
 
-- **SP-1 Hero** — template worked example verbatim, except eyebrow = *Doorstep dog grooming*. Primary [Book on WhatsApp] → `/book/?src=hero_dog-grooming` (`00` §11 E1). Chips: `from ₹599` + standard 4.
+- **SP-1 Hero** — template worked example verbatim, except eyebrow = *Dog grooming in Ludhiana* (P091: the geo sits in the first `<p>`; the fold-law subhead stays short, `00` §11 2026-10-08). Primary [Book on WhatsApp] → `/book/?src=hero_dog-grooming` (`00` §11 E1). Chips: `from ₹599` + standard 4.
 - **SP-3 Package table** — template worked table verbatim. Lead-in (above table, 2 sentences): "**Looking for a dog parlour in Ludhiana? We bring the parlour home.** No grooming van needed — your groomer carries a complete kit to your verandah, balcony or bathroom, and every dog grooming home service in Ludhiana is priced before we arrive."
 - **SP-4 Price matrix** — template worked matrix verbatim, then two additions inside the block:
   - **À-la-carte line:** "Just nails? **Nail Trim + Ear Clean visit ₹299.** Ticks? Add **Tick & Flea treatment for ₹399** to any groom." (links `/ludhiana/tick-flea-treatment/`)
@@ -79,7 +95,7 @@
 Where this blueprint and the template are silent, this is what was built; decisions in `decisions/w1-layout.md` §2.
 
 - **Head:** title 58 / meta 153 / H1 verbatim (§1); canonical + og:url the self URL; og:image `/og/dog-grooming.jpg`; JSON-LD one `@graph` = Service (3 Offers, one per package, min–max by size) + FAQPage (dog-grooming-1…8) + BreadcrumbList (3 items). Word count 1,320.
-- **SP-1:** eyebrow *Doorstep dog grooming*; [Book on WhatsApp] → `/book/?src=hero_dog-grooming` (amber), [See exact prices] → `#prices` (hidden below `md`); chips `from ₹599` + the standard 4; R3 under the CTAs. Fold at 360×640: photo top + 160 = 565 against the sticky bar at 583 (17.8 px spare), price chip and first trust chip whole (decisions §1).
+- **SP-1:** eyebrow *Dog grooming in Ludhiana*; [Book on WhatsApp] → `/book/?src=hero_dog-grooming` (amber), [See exact prices] → `#prices` (hidden below `md`); chips `from ₹599` + the standard 4; R3 under the CTAs. Fold at 360×640: photo top + 160 = 565 against the sticky bar at 583 (17.8 px spare), price chip and first trust chip whole (decisions §1).
 - **SP-2:** proof line → `[FILL:GBP_LINK]`; the E6 empty state until 3 real reviews exist (`reviews.ts`); the E4 CTA row = `Book Dog Grooming — from ₹599` → `/book/?src=service_dog-grooming` with R2 beside it.
 - **SP-3:** the §3 lead-in (bold first sentence) sits beside the sealed-kit photo from `md` and above the grid; below `md` the photo follows the haircut line so the grid is not pushed a screen down. Grid = `PACKAGE_TABLES['dog-grooming']` verbatim (Premium Spa column "Premium Spa (dog spa at home)", "Most booked" on Full Groom, no header note — `/pricing/`'s "full body dog grooming" note is that page's, W1L-13), duration row, footnotes (a) + the matting line, then the haircut line.
 - **SP-4:** matrix + R1/R2 → the à-la-carte line with the nail-trim thumbnail (112 px, 160 px from `md`) → mid-page CTA `Book Dog Grooming — from ₹599` → "Compare every service on the full price list" → H3 "Grooming by breed" (7 rows, `wide` table: scrolls sideways below `md`, sticky Breed column). "Tick & Flea treatment" links `/ludhiana/tick-flea-treatment/` once live; plain bold text until then.

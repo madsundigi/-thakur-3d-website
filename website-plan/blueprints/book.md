@@ -30,6 +30,18 @@
 | same day slot · how fast do you confirm · reschedule or cancel | FAQ #1–#3 |
 | grooming karwani hai (Hinglish) | BK-1 microcopy line (the page's one Hinglish use) |
 
+
+### A2a · SERP-intent check (`02` P040) — 2026-10-08
+
+- **Query:** `book dog grooming at home ludhiana` (primary keyword, `01-SITEMAP.md` §1). Transactional / conversion
+  intent: the searcher wants to complete a booking, not read a guide. The organic competition is the same city-template
+  service pages and directories as the `dog-grooming.md` §2a cluster; no distinct informational SERP exists for the
+  "book …" phrasing.
+- **How this page matches:** `/book/` is the **conversion endpoint**, not an organic landing page — the service pages
+  (`/`, `/ludhiana/dog-grooming/` …) rank and funnel here. It is indexable and thin-safe (BreadcrumbList only, blueprint
+  §A), opens with the booking widget (price before contact), carries the no-JS WhatsApp/call fallback and a 4-question
+  FAQ. It satisfies the "book" intent directly while the ranking work sits on the service pages.
+
 ### A3 · Blocks (DOM order)
 
 | # | Block | Spec |
