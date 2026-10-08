@@ -11,7 +11,7 @@ import BookingWidget from '../components/booking/BookingWidget.tsx';
 import { R1, R2, R3, R5, R7 } from '../data/content';
 import { isLive } from '../data/routes';
 import { site, telHref, waHref, WA_DEFAULT_TEXT } from '../data/site';
-import { breadcrumbLd } from '../lib/schema';
+import { schemaGraphLd } from '../lib/schema';
 
 const crumbs = [{ label: 'Home', path: '/' }, { label: 'Book', path: '/book/' }];
 const next = [
@@ -27,7 +27,7 @@ const next = [
   path="/book/"
   hideStickyBar
   hideWaFloat
-  jsonLd={[breadcrumbLd(crumbs, Astro.site)]}
+  jsonLd={[schemaGraphLd({ type: 'breadcrumb-only', crumbs }, Astro.site)]}
 >
   <Breadcrumb items={crumbs} />
 

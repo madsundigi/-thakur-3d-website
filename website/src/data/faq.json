@@ -106,9 +106,9 @@
     "id": "book-3",
     "category": "booking",
     "q": "Can I reschedule or cancel?",
-    "a": "Yes. Rescheduling or cancelling is free until 2 hours before your confirmed slot — just reply on WhatsApp. Since we never take advance payment, there's nothing to refund. Full details are on our terms page and our refund & cancellation policy page.",
+    "a": "Yes. Rescheduling or cancelling is free until 2 hours before your confirmed slot — just reply on WhatsApp. Since we never take advance payment, there's nothing to refund. Full details are on our terms page.",
     "pages": ["/book/", "/faq/"],
-    "links": [{ "text": "terms page", "href": "/terms/" }, { "text": "refund & cancellation policy page", "href": "/refund-policy/" }]
+    "links": [{ "text": "terms page", "href": "/terms/" }]
   },
   {
     "id": "book-4",
@@ -273,9 +273,8 @@
     "id": "cat-grooming-6",
     "category": "grooming",
     "q": "Is it hygienic if you groomed a dog before my cat?",
-    "a": "Yes. Every pet gets a fresh, sealed, sanitised kit opened in front of you — blades, combs and towels never move from one pet to another — and cats get cat-only shampoo. Your groomer is background-verified, and our full protocol is published on the safety page.",
-    "pages": ["/ludhiana/cat-grooming/"],
-    "links": [{ "text": "safety page", "href": "/safety-hygiene/" }]
+    "a": "Yes. Every pet gets a fresh, sealed, sanitised kit opened in front of you — blades, combs and towels never move from one pet to another — and cats get cat-only shampoo. Your groomer is background-verified, and we follow a documented hygiene protocol on every visit.",
+    "pages": ["/ludhiana/cat-grooming/"]
   },
   {
     "id": "cat-grooming-7",
@@ -351,9 +350,9 @@
     "id": "vet-at-home-1",
     "category": "vet",
     "q": "What does the ₹699 home visit include?",
-    "a": "A full examination at your home by a registered veterinarian — temperature, weight, heart and lungs, skin, ears, eyes and teeth — plus diagnosis, a written prescription and a summary on WhatsApp. It usually takes 20–30 minutes. Medicines or vaccines, if needed, are charged at printed MRP. Pay by UPI or cash after the visit.",
+    "a": "A full examination at your home by a registered veterinarian — temperature, weight, heart and lungs, skin, ears, eyes and teeth — plus diagnosis, a written prescription and a summary on WhatsApp. It usually takes 20–30 minutes. Medicines or vaccines, if needed, are charged at printed MRP — see the full price list. Pay by UPI or cash after the visit.",
     "pages": ["/ludhiana/vet-at-home/", "/faq/"],
-    "links": [{ "text": "charged at printed MRP", "href": "/pricing/" }]
+    "links": [{ "text": "full price list", "href": "/pricing/" }]
   },
   {
     "id": "vet-at-home-2",
@@ -528,9 +527,8 @@
     "id": "puppy-grooming-1",
     "category": "grooming",
     "q": "When can a puppy have its first bath or groom?",
-    "a": "From about 8 weeks, ideally 10–12 weeks once the first vaccinations have started — very young puppies can't regulate body temperature well. Before that, spot-clean with a damp cloth. Check your pup's vaccination dates on our vaccination page first.",
-    "pages": ["/ludhiana/puppy-grooming/", "/faq/"],
-    "links": [{ "text": "vaccination page", "href": "/ludhiana/dog-vaccination/" }]
+    "a": "From about 8 weeks, ideally 10–12 weeks once the first vaccinations have started — very young puppies can't regulate body temperature well. Before that, spot-clean with a damp cloth. Check your pup's vaccination dates with your vet first.",
+    "pages": ["/ludhiana/puppy-grooming/", "/faq/"]
   },
   {
     "id": "puppy-grooming-2",

@@ -49,7 +49,7 @@ const H = `h${level}` as 'h2' | 'h3' | 'h4';
   {/* The prefix ends in a real space, so without CSS (crawlers, link extractors) the heading reads
       "Pet grooming at home in Sarabha Nagar", not "…inSarabha Nagar". */}
   <H class="area-card-title t-h3 m-0 mt-3 text-ink">
-    {prefix ? <span class="block text-sm font-medium text-slate">{`${prefix} `}</span> : null}{name}
+    {prefix && live ? <span class="block text-sm font-medium text-slate">{`${prefix} `}</span> : null}{name}
   </H>
   {oneLiner ? <span class="mt-2 text-sm text-slate">{oneLiner}</span> : null}
 </Tag>

@@ -118,6 +118,10 @@ const members = team.filter((p) => !isPlaceholder(p)); // AB-6: real people only
       <div class="prose">
         <h2 id="ludhiana-heading">{LUDHIANA.heading}</h2>
         <p>{LUDHIANA.line(languagesProse(TEAM_LANGUAGES))}</p>
+        <p>
+          See every service and its {isLive('/pricing/') ? <a href="/pricing/">fixed price</a> : 'fixed price'}, or read
+          {' '}{isLive('/how-it-works/') ? <a href="/how-it-works/">how a visit works</a> : 'how a visit works'}, before you book.
+        </p>
       </div>
     </div>
   </section>

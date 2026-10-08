@@ -140,7 +140,7 @@ const CONFIG: Record<MoneyPath, PageConfig> = {
       `(from your ${routeLabel('/ludhiana/dog-walking/')} page). My area: ___ . My dog: ___`,
     og: {
       file: 'dog-walking.jpg',
-      alt: `PetDoorStep — daily dog walking at your doorstep in Ludhiana, ${planPrice('dog-walking', 'walk-1x')}/month`,
+      alt: `PetDoorStep — a daily dog walker in Ludhiana, from ${planPrice('dog-walking', 'walk-1x')} a month`,
     },
   },
   '/ludhiana/vet-at-home/': {
@@ -154,7 +154,7 @@ const CONFIG: Record<MoneyPath, PageConfig> = {
     trust: ['Registered veterinarians only', 'Medicines at MRP — bill shown', `Fixed visit fee ${flatPrice('vet-visit')}`, 'Mon–Sun 9:00–19:00'],
     areas: ['civil-lines', 'model-town', 'haibowal-kalan'],
     waPrefill: bookText('a vet home visit', routeLabel('/ludhiana/vet-at-home/')),
-    og: { file: 'vet-at-home.jpg', alt: `PetDoorStep — a registered vet at your home in Ludhiana, ${flatPrice('vet-visit')} per visit` },
+    og: { file: 'vet-at-home.jpg', alt: `PetDoorStep — a registered vet at your home in Ludhiana, ${flatPrice('vet-visit')} visit` },
   },
   '/ludhiana/dog-vaccination/': {
     serviceIds: ['vaccination', 'deworming'],

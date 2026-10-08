@@ -23,7 +23,7 @@ export const HOME_HEAD = {
  * decision E3 — decisions/w1-home.md W1H-01). The areas stay covered by H-9 and the FAQ.
  */
 export const HOME_HERO = {
-  eyebrow: site.tagline,
+  eyebrow: 'Doorstep pet care, Ludhiana', // P091: geo in the first <p> (00 §11); subhead stays short for the fold (P150)
   h1: 'Pet Grooming & Pet Care at Home in Ludhiana',
   subhead: `Grooming, walking and vet visits at your door — background-verified professionals, sealed kit, fixed prices from ${lowestFixedPrice()}.`,
   hinglish: site.taglineHinglish,

@@ -229,7 +229,7 @@ const RELATED: Readonly<Record<MoneyPage, readonly MoneyPath[]>> = {
   'dog-grooming': ['/ludhiana/puppy-grooming/', '/ludhiana/tick-flea-treatment/', '/ludhiana/cat-grooming/'],
   'cat-grooming': ['/ludhiana/dog-grooming/', '/ludhiana/tick-flea-treatment/'],
   'dog-walking': ['/ludhiana/dog-grooming/', '/ludhiana/vet-at-home/'],
-  'vet-at-home': ['/ludhiana/dog-vaccination/', '/ludhiana/tick-flea-treatment/', '/ludhiana/dog-walking/'],
+  'vet-at-home': ['/ludhiana/cat-grooming/', '/ludhiana/dog-vaccination/', '/ludhiana/tick-flea-treatment/', '/ludhiana/dog-walking/'],
   'dog-vaccination': ['/ludhiana/vet-at-home/', '/ludhiana/puppy-grooming/'],
   'tick-flea-treatment': ['/ludhiana/dog-grooming/', '/ludhiana/vet-at-home/'],
   'puppy-grooming': ['/ludhiana/dog-vaccination/', '/ludhiana/dog-grooming/'],
@@ -429,7 +429,7 @@ const inner = 'mx-auto max-w-[1200px] px-4 lg:px-6';
         <ul class="m-0 mt-6 grid list-none grid-cols-2 gap-4 p-0 md:grid-cols-3 lg:gap-6">
           {m.areas.map((a) => <li class="min-w-0"><AreaCard slug={a} prefix={c.sp9.prefix} /></li>)}
         </ul>
-        <p class="measure m-0 mt-6">…and {otherAreas.join(', ')} — all of Ludhiana served.</p>
+        <p class="measure m-0 mt-6">…and {otherAreas.join(', ')} — {isLive('/ludhiana/') ? <a href="/ludhiana/" class="prose-link">all of Ludhiana</a> : 'all of Ludhiana'} served.</p>
       </section>
     </div>
   </div>

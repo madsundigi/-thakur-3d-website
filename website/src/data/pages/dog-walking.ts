@@ -27,7 +27,7 @@ export const HEAD = {
 /** SP-1 (§3; 06 §2.3): eyebrow, subhead, the primary label and the §5 hero alt (08 §5.2 shot 9: Beagle, park). The
  *  primary's target is the layout's (/book/?service=dog-walking&src=hero_dog-walking, Trial Week preselected — D2). */
 export const HERO = {
-  eyebrow: 'Daily dog walking',
+  eyebrow: 'Dog walking in Ludhiana',
   subhead:
     'The same fixed, verified walker every day, with GPS route and photo update after every walk. ' +
     `Try a full week for ${trial} before you commit.`,

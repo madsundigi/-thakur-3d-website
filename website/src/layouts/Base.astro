@@ -54,6 +54,11 @@ const {
 if (import.meta.env.PROD && path !== '/404/' && Astro.url.pathname !== path) {
   throw new Error(`Base.astro: path="${path}" but this page is served at "${Astro.url.pathname}" — pass the page's own path (04 §3.1).`);
 }
+// site.domain must be the BARE hostname (no https://), matching SITE_URL — the analytics `location.hostname === DOMAIN`
+// check and the /contact/ "Website:" line both break if a scheme sneaks in (09 §3.1). Guard once it is filled.
+if (!site.domain.startsWith('[FILL:') && (site.domain.includes('://') || (Astro.site && site.domain !== Astro.site.hostname))) {
+  throw new Error(`Base.astro: site.domain="${site.domain}" must be the bare hostname matching SITE_URL ("${Astro.site?.hostname}") — drop any "https://" (09 §3.1).`);
+}
 
 const canonical = new URL(path, Astro.site).href;
 // Preview deploys must never index (04 §1.7): Cloudflare Pages sets CF_PAGES_BRANCH at build time.
@@ -64,7 +69,7 @@ const robots = noindex || isPreview ? 'noindex, follow' : null; // E7: every noi
 // OG / Twitter (04 §4): og:title = <title> minus " | PetDoorStep"; image + alt per page, brand image by default.
 const ogTitle = ogTitleFrom(title);
 const ogPath = !ogImage ? '/og/petdoorstep-home.jpg' : ogImage.includes('/') ? ogImage : `/og/${ogImage}`;
-const ogAlt = ogImageAlt ?? (ogImage ? ogTitle : `${site.name} — ${site.tagline} in ${site.city}`);
+const ogAlt = ogImageAlt ?? (ogImage ? ogTitle : `${site.name} — ${site.tagline[0].toLowerCase()}${site.tagline.slice(1)} in ${site.city}`);
 // A share image missing from public/ means a blank WhatsApp preview (02 P118/P122) — fail the build instead. Checked
 // whenever the build runs from the project root (npm run build), where public/ is.
 const publicDir = join(cwd(), 'public');
