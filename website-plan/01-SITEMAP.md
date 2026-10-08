@@ -21,13 +21,15 @@
 | `/ludhiana/cat-grooming/` | Cat Grooming at Home | 1 | cat grooming at home ludhiana | `blueprints/cat-grooming.md` | Service + FAQPage + BreadcrumbList | built (Wave 1; audited 2026-10-08) |
 | `/ludhiana/dog-walking/` | Dog Walking | 1 | dog walker ludhiana · dog walking service near me | `blueprints/dog-walking.md` | Service + FAQPage + BreadcrumbList | built (Wave 1; audited 2026-10-08) |
 | `/ludhiana/vet-at-home/` | Vet at Home | 1 | vet home visit ludhiana · veterinary doctor home service | `blueprints/vet-at-home.md` | Service + FAQPage + BreadcrumbList | built (Wave 1; audited 2026-10-08) |
-| `/ludhiana/dog-vaccination/` | Dog Vaccination at Home | 2 | dog vaccination at home ludhiana | `blueprints/dog-vaccination.md` | Service + FAQPage + BreadcrumbList | blueprinted |
-| `/ludhiana/tick-flea-treatment/` | Tick & Flea Treatment | 2 | tick treatment for dogs ludhiana | `blueprints/tick-flea-treatment.md` | Service + FAQPage + BreadcrumbList | blueprinted |
-| `/ludhiana/puppy-grooming/` | Puppy Grooming | 2 | puppy grooming at home ludhiana | `blueprints/puppy-grooming.md` | Service + FAQPage + BreadcrumbList | blueprinted |
-| `/ludhiana/` | Ludhiana city hub | 2 | pet care services in ludhiana | `_TEMPLATE-service-page.md` §3 City-hub variant | BreadcrumbList + WebPage (`about` → `#business`) | blueprinted |
+| `/ludhiana/dog-vaccination/` | Dog Vaccination at Home | 2 | dog vaccination at home ludhiana | `blueprints/dog-vaccination.md` | Service + FAQPage + BreadcrumbList | built (Wave 2; live 2026-10-08) |
+| `/ludhiana/tick-flea-treatment/` | Tick & Flea Treatment | 2 | tick treatment for dogs ludhiana | `blueprints/tick-flea-treatment.md` | Service + FAQPage + BreadcrumbList | built (Wave 2; live 2026-10-08) |
+| `/ludhiana/puppy-grooming/` | Puppy Grooming | 2 | puppy grooming at home ludhiana | `blueprints/puppy-grooming.md` | Service + FAQPage + BreadcrumbList | built (Wave 2; live 2026-10-08) |
+| `/ludhiana/` | Ludhiana city hub | 2 | pet care services in ludhiana | `_TEMPLATE-service-page.md` §3 City-hub variant | BreadcrumbList + WebPage (`about` → `#business`) | built (Wave 2; live 2026-10-08) |
 
 ### Area pages (long-tail local + "near me" support)
 All Wave 2 · all from `blueprints/_TEMPLATE-area-page.md` · Schema: Service + BreadcrumbList · keyword pattern: *pet grooming / dog groomer in {area} ludhiana*
+
+**Status (2026-10-08): built + gate-green, held `planned` (not published).** The dynamic route builds an area only once its route is flipped live, so none ship yet. Each goes live when Sunny supplies that area's `[FILL:LANDMARKS_*]` + `[FILL:PINCODES_*]` and its §0 publish gate passes — staggered 3–4 first, then one every 2–4 weeks (05-LOCAL-SEO §6.10).
 
 | URL | Area |
 |---|---|
@@ -49,23 +51,23 @@ All Wave 2 · all from `blueprints/_TEMPLATE-area-page.md` · Schema: Service + 
 | `/about/` | About / our story | 1 | petdoorstep (brand) | `blueprints/about.md` | AboutPage + BreadcrumbList | built (Wave 1; audited 2026-10-08) |
 | `/contact/` | Contact | 1 | pet grooming contact number ludhiana | `blueprints/contact.md` | LocalBusiness + ContactPage + BreadcrumbList | built (Wave 1; audited 2026-10-08) |
 | `/faq/` | Master FAQ | 1 | pet grooming at home questions | `blueprints/faq.md` | FAQPage + BreadcrumbList | built (Wave 1; audited 2026-10-08) |
-| `/reviews/` | Reviews & results | 2 | petdoorstep reviews | `blueprints/reviews.md` | BreadcrumbList only — no Review markup (see 04) | blueprinted |
-| `/safety-hygiene/` | Safety & hygiene standards | 2 | — (trust differentiator) | `blueprints/safety-hygiene.md` | BreadcrumbList | blueprinted |
-| `/join-as-groomer/` | Careers: groomers/walkers | 2 | pet groomer jobs ludhiana | `blueprints/join-as-groomer.md` | BreadcrumbList + JobPosting per live role | blueprinted |
-| `/offers/` | Offers & Groom Club | 2 | dog grooming offers ludhiana | `blueprints/offers.md` | BreadcrumbList + OfferCatalog (live offers) | blueprinted |
+| `/reviews/` | Reviews & results | 2 | petdoorstep reviews | `blueprints/reviews.md` | BreadcrumbList only — no Review markup (see 04) | built (Wave 2; live 2026-10-08) |
+| `/safety-hygiene/` | Safety & hygiene standards | 2 | — (trust differentiator) | `blueprints/safety-hygiene.md` | BreadcrumbList | built (Wave 2; live 2026-10-08) |
+| `/join-as-groomer/` | Careers: groomers/walkers | 2 | pet groomer jobs ludhiana | `blueprints/join-as-groomer.md` | BreadcrumbList + JobPosting per live role | built (Wave 2; live 2026-10-08) |
+| `/offers/` | Offers & Groom Club | 2 | dog grooming offers ludhiana | `blueprints/offers.md` | BreadcrumbList + OfferCatalog (live offers) | built (Wave 2; live 2026-10-08) |
 
 ### Blog (informational silo — supports money pages)
 | URL | Page | Wave | Source |
 |---|---|---|---|
-| `/blog/` | Blog index | 2 | `_TEMPLATE-blog-post.md` §6 Index variant |
-| `/blog/<post-slug>/` | 26 posts, 1/week | 3 | topics + keywords in `10-CONTENT-CALENDAR.md`; anatomy in `_TEMPLATE-blog-post.md` |
+| `/blog/` | Blog index | 2 | `_TEMPLATE-blog-post.md` §6 Index variant — **built + live 2026-10-08** |
+| `/blog/<post-slug>/` | 26 posts, 1/week | 3 | topics + keywords in `10-CONTENT-CALENDAR.md`; anatomy in `_TEMPLATE-blog-post.md`. **First 2 live 2026-10-08:** `/blog/dog-grooming-price-list-ludhiana/`, `/blog/puppy-vaccination-schedule-india/` |
 
 ### Legal & utility
 | URL | Wave | Blueprint | Notes |
 |---|---|---|---|
 | `/privacy-policy/` | 1 | `blueprints/privacy-policy.md` | Mention lead data, WhatsApp, analytics (data: `website/src/data/legal.ts`) |
 | `/terms/` | 1 | `blueprints/terms.md` | Service terms incl. pet-handling consent (data: `website/src/data/legal.ts`) |
-| `/refund-policy/` | 2 | — | Must match what we honour (reschedule/refund rules) |
+| `/refund-policy/` | 2 | `blueprints/refund-policy.md` (as-built) | **built + live 2026-10-08**; must match what we honour — lawyer review pending (§9) |
 | `/404` | 1 | `04-TECHNICAL-SEO.md` §1.6 | Friendly + search + top services links |
 | `/sitemap-0.xml`, `/robots.txt` | 1 | `04-TECHNICAL-SEO.md` §1.5, §7.1 | Auto via Astro integration (see `04-TECHNICAL-SEO.md`) |
 
