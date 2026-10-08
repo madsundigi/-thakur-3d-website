@@ -59,7 +59,7 @@ const copy = COPY[variant];
       try { sessionStorage.setItem('pds_exit_shown', '1'); } catch (err) { return; }
       opener = document.activeElement;
       card.show();
-      card.querySelector('a').focus();
+      // 07 §9: focus is NOT moved on open — the trigger is a mouse gesture (restore-on-close still runs).
     });
     card.querySelector('[data-exit-dismiss]').addEventListener('click', close);
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });

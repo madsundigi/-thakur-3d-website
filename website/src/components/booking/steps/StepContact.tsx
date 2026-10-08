@@ -37,15 +37,17 @@ export default function StepContact({ state, set, errors }: StepProps) {
           <input id={FIELD_IDS.consent} data-field="consent" type="checkbox" className="mt-1 h-5 w-5 flex-none accent-brand"
             checked={state.consent} onChange={(e) => set({ consent: e.target.checked })} aria-describedby={errId('consent')} />
           <span className="text-sm">
-            Confirm my booking on WhatsApp at this number.{' '}
-            {isLive(PRIVACY) ? (
-              <a href={PRIVACY} target="_blank" rel="noopener" data-testid="consent-privacy"
-                className="text-brand underline decoration-[1.5px] underline-offset-[3px] hover:text-brand-deep">
-                {promise}<span className="sr-only"> (Privacy Policy, opens in a new tab)</span>
-              </a>
-            ) : promise}
+            Confirm my booking on WhatsApp at this number. {promise}
           </span>
         </label>
+        {isLive(PRIVACY) ? (
+          <p className="m-0 mt-1 pl-8 text-sm">
+            <a href={PRIVACY} target="_blank" rel="noopener" data-testid="consent-privacy"
+              className="text-brand underline decoration-[1.5px] underline-offset-[3px] hover:text-brand-deep">
+              Privacy policy<span className="sr-only"> (opens in a new tab)</span>
+            </a>
+          </p>
+        ) : null}
         <FieldError id={errId('consent')} message={errors.consent} />
       </div>
     </div>
