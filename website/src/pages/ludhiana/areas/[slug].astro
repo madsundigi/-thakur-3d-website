@@ -1,0 +1,273 @@
+---
+// /ludhiana/areas/<slug>/ — a locality page. Blueprint: website-plan/blueprints/_TEMPLATE-area-page.md (block order
+// AP-0…AP-11 binding). getStaticPaths builds all 10 localities (00 §3.3); the integrator flips each route to 'live'
+// when its §0 publish gate passes (≥ 600 words, real local proof, filled landmarks/pin codes). Schema = Service (area
+// variant) + BreadcrumbList (04 §2.9). Zero client JS: AP-10 is a WhatsApp CTA + a link to the /book/ widget, NOT an
+// island — 04 §5.3 / check:budgets P103 allow the booking island on /book/ only.
+//
+// Honesty (template §0): per-area facts come from AREA_LINES (content.ts) + AREAS (areas.ts), both drawn from the
+// template §4 research. The street landmarks and pin codes a page needs are [FILL:LANDMARKS_<SLUG>] /
+// [FILL:PINCODES_<SLUG>] tokens — Sunny fills them from local knowledge / India Post before the page goes live.
+import Base from '../../../layouts/Base.astro';
+import AreaCard from '../../../components/AreaCard.astro';
+import Breadcrumb from '../../../components/Breadcrumb.astro';
+import Button from '../../../components/Button.astro';
+import CtaBand from '../../../components/CtaBand.astro';
+import Hero from '../../../components/Hero.astro';
+import Photo from '../../../components/Photo.astro';
+import PromiseBand from '../../../components/PromiseBand.astro';
+import ServiceCard from '../../../components/ServiceCard.astro';
+import StepsStrip from '../../../components/StepsStrip.astro';
+import Icon from '../../../components/icons/Icon.astro';
+import { AREA_LINES, AREA_SLUGS, r8 } from '../../../data/content';
+import { AREAS, requireArea, slugToken } from '../../../data/areas';
+import { isLive, routeLabel } from '../../../data/routes';
+import { MONEY_PAGES } from '../../../data/services';
+import { site, telHref, waHref } from '../../../data/site';
+import { bookHref, DOG_GROOM_IDS, fromPrice, priceRange } from '../../../lib/pricing';
+import { schemaGraphLd } from '../../../lib/schema';
+
+export function getStaticPaths() {
+  return AREA_SLUGS.map((slug) => ({ params: { slug } }));
+}
+
+const { slug } = Astro.params as { slug: string };
+const data = requireArea(slug);
+const lines = AREA_LINES[slug];
+const path = `/ludhiana/areas/${slug}/`;
+const name = routeLabel(path);
+if (name === path) throw new Error(`area page: "${slug}" is not an area route`);
+const prep = data.road ? 'on' : 'in';
+const token = slugToken(slug);
+const from = fromPrice(DOG_GROOM_IDS);
+
+const crumbs = [
+  { label: 'Home', path: '/' },
+  { label: routeLabel('/ludhiana/'), path: '/ludhiana/' },
+  { label: name, path },
+];
+const jsonLd = [schemaGraphLd({ type: 'area', area: slug, crumbs }, Astro.site)];
+
+const title = `Pet Grooming & Vet ${prep} ${name}, Ludhiana | PetDoorStep`;
+// Meta ≤ 158 (02 P019 launch-blocker — the §3 "PetDoorStep brings … to homes in {Area}" wording runs long for the
+// three longest local lines, so it is tightened here; the local line stays the §4 value). ₹ from pricing.ts.
+const meta =
+  `Doorstep grooming, walking and vet visits ${prep} ${name}, Ludhiana — ${lines.localLine}. ` +
+  `Fixed prices from ${from}. Book on WhatsApp.`;
+const h1 = `Pet Grooming at Home in ${name}, Ludhiana`;
+
+const heroPhoto = {
+  name: `pet-grooming-at-home-${slug}-ludhiana.jpg`,
+  alt: `A dog being groomed at home in ${name}, Ludhiana`,
+};
+const heroSrc = `hero_${slug}`;
+const localityWa = `Hi PetDoorStep! I want pet grooming at home ${prep} ${name}. My pet: ___`;
+
+// AP-3 — the four core money pages with locality anchors (template §3 table).
+const AP3_CARDS = [
+  { path: '/ludhiana/dog-grooming/', anchor: `Dog grooming at home in ${name}` },
+  { path: '/ludhiana/cat-grooming/', anchor: `Cat grooming in ${name}` },
+  { path: '/ludhiana/dog-walking/', anchor: `Dog walker in ${name}` },
+  { path: '/ludhiana/vet-at-home/', anchor: `Vet home visit in ${name}` },
+] as const;
+
+// AP-8 — 3 local FAQs, area-adapted (plain HTML; NO FAQPage markup — area schema is Service + Breadcrumb, 04 §2.9).
+const LOCAL_FAQS: { q: string; a: string }[] = [
+  {
+    q: `How soon can you come to ${name}?`,
+    a: `Most days we have same-week slots ${prep} ${name}, and weekends book out first. Send your preferred day on WhatsApp — a real person replies within 10 minutes (9:00–19:00) and confirms your exact slot.`,
+  },
+  {
+    q: `Is there an extra charge for ${name}?`,
+    a: `No. ${name} is inside Ludhiana, so the price you see is the full price — there is no travel or visit charge anywhere in the city.`,
+  },
+  {
+    q: 'My flat has no balcony tap — can you still bathe my dog?',
+    a: 'Yes. A bathroom works fine; we bring our own warm-water gear, grooming table and dryer. All we need is a tap point and a plug.',
+  },
+];
+
+// AP-5 logistics (true values; pin codes are the India-Post [FILL] token).
+const LOGISTICS: { term: string; value: string }[] = [
+  { term: 'Typical slots', value: 'Same-week slots most days — weekends book out first.' },
+  { term: 'Arrival window', value: "We arrive inside your confirmed 3-hour window (Morning 9–12 · Afternoon 12–3 · Evening 3–6) and WhatsApp you when we're 15 minutes away." },
+  { term: 'Travel charge', value: `None — ${name} is inside Ludhiana, so the listed price is the full price.` },
+  { term: 'Pin codes served', value: `[FILL:PINCODES_${token}]` },
+  { term: 'What we need', value: 'A tap point and a plug — we bring the table, towels, warm-water gear and dryer.' },
+  { term: 'Gated societies', value: 'Add your society’s visitor-entry process (MyGate / guard register) in your booking note and we’ll be ready at the gate.' },
+];
+
+const callLabel = `Call ${site.phone}`;
+const alsoServing = data.alsoServing.length ? ` Also serving ${data.alsoServing.join(', ')}.` : '';
+
+const bands = ['ap2', 'ap3', 'ap4', 'ap5', 'ap6', 'ap7', 'ap8', 'ap9', 'ap10'];
+const band = (key: string) => ['py-12 lg:py-20', bands.indexOf(key) % 2 === 0 ? 'bg-sand' : 'bg-paper'];
+const inner = 'mx-auto max-w-[1200px] px-4 lg:px-6';
+---
+<Base
+  title={title}
+  description={meta}
+  path={path}
+  waText={localityWa}
+  jsonLd={jsonLd}
+>
+  <Photo slot="head" preload preset="hero" name={heroPhoto.name} />
+
+  {/* AP-0 */}
+  <Breadcrumb items={crumbs} />
+
+  {/* AP-1 hero */}
+  <Hero
+    eyebrow={lines.oneLiner}
+    h1={h1}
+    subhead={`${name} pet parents book PetDoorStep for grooming, walking and vet visits at home — we arrive inside your confirmed 3-hour window and message when we're 15 minutes away. Bath & Brush from ${from}, fixed price.`}
+    crumbAbove
+    primary={{ label: 'Book on WhatsApp', href: bookHref({ src: heroSrc }), source: heroSrc }}
+    secondary={{ label: callLabel, href: telHref(), source: heroSrc }}
+    priceChip={from}
+    photo={heroPhoto}
+  />
+
+  {/* AP-2 local intro */}
+  <div class:list={band('ap2')}>
+    <div class={inner}>
+      <section aria-labelledby="ap2-heading" class="prose">
+        <h2 id="ap2-heading">Doorstep pet care in {name}</h2>
+        <p>
+          In {name}, pet grooming at home means a trained PetDoorStep groomer, a fresh sealed kit and a fixed price
+          come to you — no car ride, no salon queue. {name} is {data.anchorLine}, and pet parents here book us for
+          {data.housing ? ` ${data.housing}` : ' doorstep grooming, walking and vet visits'}.
+        </p>
+        <p>
+          Our groomers find your home by [FILL:LANDMARKS_{token}] — the landmarks we use for directions {prep} {name}.
+          We cover {lines.localLine}, and because {name} is inside Ludhiana there is never a travel charge. Tell us your
+          breed and any notes (first groom, anxious, senior, skin issues) when you book and the right person comes
+          prepared.
+        </p>
+      </section>
+    </div>
+  </div>
+
+  {/* AP-3 services & prices */}
+  <div class:list={band('ap3')}>
+    <div class={inner}>
+      <section aria-labelledby="ap3-heading">
+        <h2 id="ap3-heading" class="t-h2 m-0">Book any service in {name}</h2>
+        <p class="measure m-0 mt-3">Every PetDoorStep service comes to homes {prep} {name}. Pick one to see sizes and exact prices:</p>
+        <ul class="mt-6 grid list-none grid-cols-1 gap-4 p-0 md:grid-cols-2 lg:grid-cols-4 lg:gap-6">
+          {AP3_CARDS.map((c) => (
+            <li class="min-w-0">
+              <ServiceCard path={c.path} name={c.anchor} blurb={MONEY_PAGES[c.path as keyof typeof MONEY_PAGES].card.blurb} photo={MONEY_PAGES[c.path as keyof typeof MONEY_PAGES].card.photo} onPage="ludhiana" />
+            </li>
+          ))}
+        </ul>
+        <p class="measure m-0 mt-6">
+          Dog grooming by size: Bath &amp; Brush {priceRange('bath-brush')} · Full Groom {priceRange('full-groom')} ·
+          Premium Spa {priceRange('premium-spa')} — the exact price is fixed on WhatsApp before we arrive.
+        </p>
+        <p class="m-0 mt-3">
+          {isLive('/pricing/') ? <a href="/pricing/" class="prose-link">Every price, every size: see the full price list</a> : 'Every price, every size is on the full price list.'}
+        </p>
+      </section>
+    </div>
+  </div>
+
+  {/* AP-4 local proof */}
+  <div class:list={band('ap4')}>
+    <div class={inner}>
+      <section aria-labelledby="ap4-heading">
+        <h2 id="ap4-heading" class="t-h2 m-0">What {name} pet parents say</h2>
+        <p class="measure m-0 mt-3 text-slate">
+          We publish reviews from {name} here as our first local grooms land — first name, pet and month, quoted from
+          Google, never invented.
+          <a href={site.gbpLink} target="_blank" rel="noopener" class="prose-link"> Read what Ludhiana pet parents say on our Google profile.</a>
+        </p>
+      </section>
+    </div>
+  </div>
+
+  {/* AP-5 logistics */}
+  <div class:list={band('ap5')}>
+    <div class={inner}>
+      <section aria-labelledby="ap5-heading">
+        <h2 id="ap5-heading" class="t-h2 m-0">Visiting you in {name}</h2>
+        <dl class="mt-6 grid gap-4">
+          {LOGISTICS.map((row) => (
+            <div>
+              <dt class="font-semibold text-ink">{row.term}</dt>
+              <dd class="measure m-0 mt-1 text-slate">{row.value}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+    </div>
+  </div>
+
+  {/* AP-6 how it works */}
+  <div class:list={band('ap6')}>
+    <div class={inner}>
+      <StepsStrip heading="How it works — booked in under 2 minutes" headingId="ap6-heading">
+        {isLive('/how-it-works/') ? <p class="m-0"><a href="/how-it-works/" class="prose-link">See the full process</a></p> : null}
+      </StepsStrip>
+    </div>
+  </div>
+
+  {/* AP-7 promise band */}
+  <div class:list={band('ap7')}>
+    <div class={inner}><PromiseBand /></div>
+  </div>
+
+  {/* AP-8 local FAQs (plain accordion, no FAQPage markup) */}
+  <div class:list={band('ap8')}>
+    <div class={inner}>
+      <section aria-labelledby="ap8-heading">
+        <h2 id="ap8-heading" class="t-h2 m-0">{name} questions</h2>
+        <div class="mt-4 border-t border-line">
+          {LOCAL_FAQS.map((f) => (
+            <details class="faq">
+              <summary><h3 class="t-h3 m-0">{f.q}</h3><span class="faq-icon"><Icon name="plus" size={20} /></span></summary>
+              <div class="faq-body"><p class="m-0">{f.a}</p></div>
+            </details>
+          ))}
+        </div>
+      </section>
+    </div>
+  </div>
+
+  {/* AP-9 nearby areas */}
+  <div class:list={band('ap9')}>
+    <div class={inner}>
+      <section aria-labelledby="ap9-heading">
+        <h2 id="ap9-heading" class="t-h2 m-0">Also near you</h2>
+        <ul class="mt-6 grid list-none grid-cols-2 gap-4 p-0 md:grid-cols-3 lg:gap-6">
+          {data.adjacent.map((adj) => <li class="min-w-0"><AreaCard slug={adj} /></li>)}
+        </ul>
+        <p class="measure m-0 mt-6">
+          {isLive('/ludhiana/') ? <a href="/ludhiana/" class="prose-link">All of Ludhiana is served</a> : 'All of Ludhiana is served'} — no travel charge anywhere.{alsoServing}
+        </p>
+      </section>
+    </div>
+  </div>
+
+  {/* AP-10 book in {area} — WhatsApp CTA + the full /book/ form (no island on this page, 04 §5.3) */}
+  <div class:list={band('ap10')}>
+    <div class={inner}>
+      <section aria-labelledby="ap10-heading">
+        <h2 id="ap10-heading" class="t-h2 m-0">Book in {name}</h2>
+        <p class="measure m-0 mt-3">Send your area, pet and preferred day on WhatsApp — or open the full booking form and we confirm your slot in 10 minutes.</p>
+        <div class="mt-6 flex flex-col gap-3 md:flex-row">
+          <Button href={waHref(localityWa)} variant="whatsapp" source={`${slug}_page`}>Book on WhatsApp</Button>
+          <Button href={bookHref({ src: `${slug}_page` })} variant="secondary">Open the booking form</Button>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  {/* AP-11 final CTA band */}
+  <CtaBand
+    heading={r8('pet', name)}
+    support={`Fixed prices from ${from} · no advance payment · a photo update after every visit.`}
+    primary={{ label: 'Book on WhatsApp', href: waHref(localityWa), source: `ctaband_${slug}` }}
+    secondary={{ label: callLabel, href: telHref(), source: `ctaband_${slug}` }}
+  />
+</Base>

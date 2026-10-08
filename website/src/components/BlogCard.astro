@@ -1,0 +1,64 @@
+---
+// Blog card (08-DESIGN-SYSTEM §4.15): the /blog/ index grid and the "Related posts" row (BP-10). Borderless on paper —
+// the 16:9 image carries the card; the whole card is one <a> to /blog/<slug>/, and only once that post's route is live
+// (routes registry; posts publish one per week). Before then it renders as a plain card with no link.
+// Anatomy: ① 16:9 image ② category chip (mint / brand-deep, from front-matter) ③ h3 title (2-line clamp) ④ excerpt
+// (small slate, 2-line clamp) ⑤ meta row (micro slate): date (updated ?? published, 04 §2.7) · read-time.
+import Photo from './Photo.astro';
+import Icon from './icons/Icon.astro';
+import { isLive } from '../data/routes';
+
+interface Props {
+  /** Post slug — the /blog/<slug>/ target. */
+  slug: string;
+  title: string;
+  /** Category label from front-matter (one of BLOG_CATEGORIES). */
+  category: string;
+  /** Short excerpt — the post description. */
+  excerpt: string;
+  /** Date to show: the post's updated date if set, else its publish date. ISO 'YYYY-MM-DD'. */
+  date: string;
+  /** Whole-minute read estimate (body words ÷ 200). */
+  readMinutes: number;
+  /** Hero photo — the 08 §5.2 filename in src/assets/photos/ + its 08 §5.4 alt. */
+  heroImage: string;
+  heroAlt: string;
+  /** Heading level inside the card (default 3). */
+  level?: 2 | 3 | 4;
+  class?: string;
+}
+
+const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+const { slug, title, category, excerpt, date, readMinutes, heroImage, heroAlt, level = 3, class: cls = '' } = Astro.props;
+const path = `/blog/${slug}/`;
+const live = isLive(path);
+const Tag = live ? 'a' : 'div';
+const H = `h${level}` as 'h2' | 'h3' | 'h4';
+const dateText = /^\d{4}-\d{2}-\d{2}$/.test(date)
+  ? `${Number(date.slice(8, 10))} ${MONTHS[Number(date.slice(5, 7)) - 1]} ${date.slice(0, 4)}`
+  : date;
+---
+<Tag
+  href={live ? path : undefined}
+  class:list={['blog-card flex h-full min-w-0 flex-col gap-3 text-ink no-underline', live ? 'is-link' : '', cls]}
+>
+  <Photo name={heroImage} alt={heroAlt} preset="blog" class="block h-auto w-full rounded-md object-cover" />
+  <span class="inline-flex h-6 w-max max-w-full items-center rounded-pill bg-mint px-2 t-micro font-semibold text-brand-deep">{category}</span>
+  <H class="blog-card-title clamp-2 t-h3 m-0">{title}</H>
+  <p class="clamp-2 m-0 text-sm text-slate">{excerpt}</p>
+  <p class="m-0 mt-auto flex items-center gap-2 t-micro text-slate">
+    <time datetime={date}>{dateText}</time>
+    <span aria-hidden="true">·</span>
+    <span>{readMinutes} min read</span>
+    {live ? <span class="blog-card-arrow ml-auto text-brand"><Icon name="arrow-right" size={18} /></span> : null}
+  </p>
+</Tag>
+
+<style>
+  /* 2-line clamp (08 §4.15), kept in this scoped style so the utility never enters the site-wide stylesheet. */
+  .clamp-2 { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; }
+  .blog-card-arrow { transition: transform var(--dur-1) ease-out; }
+  .blog-card.is-link:hover .blog-card-title { color: var(--color-brand); text-decoration: underline; text-underline-offset: 3px; }
+  .blog-card.is-link:hover .blog-card-arrow { transform: translateX(4px); }
+  .blog-card.is-link:focus-visible { outline-offset: 4px; border-radius: var(--radius-md); }
+</style>

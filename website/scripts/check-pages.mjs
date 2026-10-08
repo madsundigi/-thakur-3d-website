@@ -222,6 +222,26 @@ function checkPage(path, file) {
     R.fail(path, 'P124', `canonical ${q(attr(canon[0], 'href') ?? '')} on a noindex page must point at itself (${self}) or be omitted`);
   }
 
+  // og:type (04 §4 / §2.7) — a blog post is og:type=article and carries article:published_time + article:modified_time
+  // (ISO dates = its BlogPosting datePublished/dateModified); every other indexable page stays og:type=website.
+  if (!info.noindex) {
+    const isBlogPost = /^\/blog\/[a-z0-9-]+\/$/.test(path);
+    const ogType = metaProp('og:type');
+    const typeVal = ogType.length ? (attr(ogType[0], 'content') ?? '') : '';
+    if (ogType.length !== 1) R.fail(path, 'P117', `needs exactly one og:type, found ${ogType.length}`);
+    if (isBlogPost) {
+      if (typeVal !== 'article') R.fail(path, 'P117', `blog post og:type must be "article" (04 §2.7), got ${q(typeVal || 'none')}`);
+      for (const prop of ['article:published_time', 'article:modified_time']) {
+        const m = metaProp(prop);
+        const v = m.length ? (attr(m[0], 'content') ?? '') : '';
+        if (m.length !== 1) R.fail(path, 'P117', `blog post needs exactly one <meta property="${prop}">, found ${m.length}`);
+        else if (!/^\d{4}-\d{2}-\d{2}/.test(v)) R.fail(path, 'P117', `${prop} ${q(v || 'empty')} is not an ISO date (04 §2.7)`);
+      }
+    } else if (typeVal && typeVal !== 'website') {
+      R.fail(path, 'P117', `og:type must be "website" (only blog posts are "article"), got ${q(typeVal)}`);
+    }
+  }
+
   // images (P060 / P056 / P057 / P063 / P064)
   const imgs = byTag(doc, 'img');
   const heroWrap = find(doc, (n) => hasAttr(n, 'data-hero-photo'));
@@ -349,7 +369,7 @@ function checkRef(path, self, ids, { el, raw, kind }) {
       return;
     }
     if (!exists) {
-      if (!ALL && (route.wave ?? 99) <= 1) R.warn(path, 'P074', `links to ${p} (live Wave-1 route) which is not in this dist — fine while another builder owns it; --all must find it built`);
+      if (!ALL) R.warn(path, 'P074', `links to ${p} (live route, wave ${route.wave ?? '?'}) which is not in this dist — fine while another builder owns it; --all must find it built`);
       else R.fail(path, 'P074', `${describe(el)} links to ${p}, which is live in routes.ts but not built (${relDist(file)} missing)`);
       return;
     }
@@ -383,8 +403,9 @@ function checkJsonLd(path, self, doc, body) {
     for (const k of ['aggregateRating', 'review', 'reviews']) if (Object.hasOwn(n, k)) R.fail(path, 'P086', `ld+json node ${typesOf(n).join('/') || '?'} has "${k}" — no self-serving review markup (04 §2.0.4)`);
   }
 
-  // 04 §2.9 matrix: the page's top-level node types
-  const row = schemaRow(path);
+  // 04 §2.9 matrix: the page's top-level node types. The /blog/ index row (BreadcrumbList only — _TEMPLATE-blog-post.md
+  // §6) is not in plan.mjs's schemaRow(), so it is supplied here; blog posts / area pages / the city hub already have rows.
+  const row = path === '/blog/' ? { req: ['BreadcrumbList'], opt: [] } : schemaRow(path);
   if (!row) R.warn(path, 'P077', 'no 04-TECHNICAL-SEO §2.9 row for this page — JSON-LD types not checked');
   else {
     const present = new Set(top.flatMap(typesOf));
