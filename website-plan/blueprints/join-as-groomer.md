@@ -52,3 +52,52 @@
 - [ ] `[FILL:PAY_RANGES]` published or the pay line reads "shared on your first call" — never vague promises of income
 - [ ] JobPosting markup only for roles open today, with real `validThrough` and `baseSalary`
 - [ ] Process wording identical to `safety-hygiene.md` SH-4
+
+---
+
+## 4 · As built (Wave 2 · w2-trust-b · 2026-10-08)
+
+Built as `website/src/pages/join-as-groomer.astro`. `git switch` base `c41a6b2`.
+
+- **Head** — Title/Meta/H1 exactly as §1 (no ₹, static strings). Primary keyword *pet groomer jobs ludhiana* in
+  Title · H1 · the JG-1 subhead.
+- **JG-0** — breadcrumb `Home › Careers`: the second crumb label is `Careers` (the blueprint's trail name), passed
+  to both the visible `<Breadcrumb>` and the BreadcrumbList JSON-LD so they match (P084). The route label stays
+  "Join as Groomer" for nav/footer.
+- **JG-1** — header (H1 · subhead · [Apply on WhatsApp] · R3), text-only, **no `[data-hero]`**: the long mandated
+  66-char H1 would risk the 360×640 fold law in the Hero component, so a plain header is used (decision log). Apply →
+  `waHref(applyText)`, `source="hero_join-as-groomer"`.
+- **JG-2** — 4 why-join tiles verbatim; tile 2 carries the honest `[FILL:PAY_RANGES]` token (00 §8), so the pay line
+  is never a vague income promise (ship check).
+- **JG-3** — 3 role cards (the blueprint calls JG-3 "3 cards"); each "You'll need" list verbatim, the Partner-vet
+  card carries `[FILL:VET_PARTNER_TERMS]`.
+- **JG-4** — the SH-4 steps **verbatim** from `content.ts` `hiringSteps()`. The police step is policy-gated
+  (`policy.policeVerified = false`, 00 §3.4), so it is omitted and the heading counts the claimable steps:
+  **"Our 5-step process — the same one we promise customers"** (content.ts: never hard-code six while gated).
+  Decision logged. Line "No joining fee or deposit — ever…" verbatim.
+- **JG-5** — "What to send" list verbatim + "No CV needed." Apply → `waHref(applyText)`, `source="join-as-groomer_page"`.
+  `applyText` = the JG-5 prefill with `{role}` = "groomer, walker or vet" (one button, all roles; the list asks the
+  applicant to name their role).
+- **JG-6** — 5 Q&As as **plain HTML** (`<dl>`), **no FAQPage markup** (04 §2.9 allows BreadcrumbList + JobPosting only).
+- **JG-7** — CtaBand "Love pets? Let's talk." · [Apply on WhatsApp], `source="ctaband_join-as-groomer"`.
+- **Schema** — `schemaGraphLd({ type: 'breadcrumb-only', crumbs })` = BreadcrumbList only. **JobPosting is added per
+  live role with real `validThrough` + `baseSalary`; none is open yet** (schema.ts §535), so breadcrumb-only today.
+- **Gates** — build · check:prices · check:budgets (CSS 42,073 B) · test:site (no overflow 360/768/1280, axe 0,
+  ld+json ok) all green. `check:pages`: only the self-canonical P074 (route 'planned' until integrator flips live).
+- Ship checks: [x] pay line is the honest `[FILL:PAY_RANGES]` token (never vague income) · [x] no JobPosting markup
+  until a role is open · [x] process wording identical to safety-hygiene.md SH-4 (shared `HIRING_STEPS`).
+
+## 5 · P040 · SERP intent — *pet groomer jobs ludhiana* (checked 2026-10-08)
+
+Note: WebSearch is US-biased, so Ludhiana-local results were thin; the SERP **format** is still clear.
+
+- Google ranks **job-board / aggregator listings** (apna.co "beautician/hair-stylist jobs in Ludhiana",
+  evaniosjobs.com pet-groomer pages, jobstreet career-advice) — the format is a **JobPosting feed**, not editorial
+  career pages.
+- Real **Ludhiana-based groomer openings are thin**: the nearest concrete listing was Amritsar (Kay Cee, Ranjit
+  Avenue — **₹20,000–₹35,000/month, 1+ year experience, basic English, full-time, work-from-office**). Useful
+  benchmarks: that pay band informs `[FILL:PAY_RANGES]`, and "1+ year experience" matches our Groomer requirement.
+- **Verdict:** a branded **recruitment page carrying JobPosting markup per live role** (once roles open, with real
+  `validThrough`/`baseSalary`) matches the JobPosting-feed intent and can rank against job boards while a clear
+  WhatsApp "apply in 2 minutes" flow + honest pay/no-fee messaging differentiate it. Confirms the 04 §2.9 plan:
+  BreadcrumbList now, JobPosting per opening.
