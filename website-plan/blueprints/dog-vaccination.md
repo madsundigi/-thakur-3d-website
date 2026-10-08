@@ -88,3 +88,51 @@ In-answer links: #3 → week-2 post (once live) · #7 → `/ludhiana/vet-at-home
 - [ ] `vet-at-home.md` §0 legal rules satisfied
 - [ ] Schedule tables render as real `<table>` elements (snippet eligibility)
 - [ ] One Hinglish use only (FAQ #8)
+
+## 1a · SERP intent check (`02` P040) — 2026-10-08
+
+Checked before/at build for the sitemap query **"dog vaccination ludhiana"** (`01` §1) and the primary keyword
+**"dog vaccination at home ludhiana"** (`03` §2.6 P). Tool: the build session's web search — a US-based index, not
+google.co.in on a Ludhiana phone, and it cannot show the map pack. **Repeat on a phone in Ludhiana during the launch
+audit (`02` §5).**
+
+- **What ranks:** no Ludhiana at-home dog-vaccination page at all. National/metro brand pages (Vetic "dog vaccination
+  near me", plus Ghaziabad/Delhi/Hyderabad vaccination landing pages — not offered in Ludhiana); pan-India explainers
+  ("is rabies mandatory", first-shot timing); and Ludhiana civic news (Tribune: dog-bite counts, the MC sterilisation +
+  anti-rabies drive — a civic programme, not a pricing option). The exact "…at home in Ludhiana" phrase is empty locally.
+- **Competitor figures** (US-SERP 2026-10-08, *re-verify before quoting*): Vetic metro per-dose lists anti-rabies ≈ ₹699,
+  DHPPiL ≈ ₹899–999, Puppy DP ≈ ₹849, with bundled courses (≈ ₹6,499 puppy / ₹3,199 adult); nobody publishes a separate
+  home-visit fee. These are metro pages, not Ludhiana, and stay **off** this page (template §0 rule 5): our model is the
+  fixed ₹199 home-service fee + vaccine at printed MRP, which the SERP's bundle/per-dose pricing never states plainly.
+- **Intent:** buyer — someone who wants their pet vaccinated without a clinic trip — plus an informational slice
+  (schedule, "is rabies compulsory"), both answered by SP-4's schedule tables and FAQ #3/#4.
+- **Format that ranks:** directories, national brand pages, explainers. Nothing local publishes a fixed home fee, the
+  cold-chain promise, the India schedule, or a reminder service — the gaps this page fills.
+- **How this page matches:** the service landing page the query lacks — fixed ₹199 + MRP (hero chip, SP-4 flat list +
+  Service Offer), registered vet + cold-chain + wrapper-shown (SP-3), the puppy/cat schedules and deworming rhythm
+  (SP-4 H3 tables), the free reminder calendar gated on a YES reply (SP-3 ✓-list, FAQ #5; `00` §11 D4), and honest
+  emergency routing in the hero notice (vet-at-home §0 rule 2).
+
+## 7 · As built (branch `wave2/w2-money`, 2026-10-08)
+
+- **Page:** `website/src/pages/ludhiana/dog-vaccination.astro` — a thin `ServicePage` config + two slot components
+  (`src/components/pages/dog-vaccination/VaccineInclusions.astro` → `sp3`, `Schedules.astro` → `sp4-extra`). Chips,
+  body CTA, 3 areas (Dugri · Haibowal Kalan · Ferozepur Road), OG image and the wa.me prefill come from
+  `MONEY_PAGES['/ludhiana/dog-vaccination/']`; the 8 FAQs (`dog-vaccination-1…8`) from `faq.json`; the Service +
+  FAQPage + BreadcrumbList `@graph` from `schema.ts`. Every ₹ via `pricing.ts` helpers (`check:prices` green).
+- **SP-1 eyebrow** adapted to **"Dog vaccination in Ludhiana"** so the eyebrow carries the geo (`00` §11 2026-10-08
+  P091), in place of the blueprint's "Puppies, dogs & cats"; `subheadShort` = "Registered vet, cold-chain carried
+  vaccine, done in your living room" so the hero + the mandatory emergency notice clear the 360×640 fold (W1L-5).
+- **SP-1 emergency notice** added (vet-at-home §0 rule 2 applies here verbatim; brief "emergency disclaimer like
+  vet-at-home"): the vet-at-home wording verbatim. Fold law **passes** at 360×640 with the notice (test:site).
+- **SP-3 H2** written as **"What a home vaccination visit includes"** (blueprint names none; template "what … includes"
+  pattern, parallel to vet-at-home). The Deworming card title is the blueprint's SP-3 H3 "Deworming Visit".
+- **SP-7** = "Meet your vet" (`team: 'vet'`, `variant: 'full'`) + `sp8.medical` registered-vets line — identical to
+  vet-at-home; the vet card renders its `[FILL]` tokens (P046, `check:fill` launch gate).
+- **Images** (all grey placeholders until shot): hero `vet-home-visit-pomeranian-ludhiana.jpg` (shot 10); new shots
+  `vaccine-cold-box-home-ludhiana.jpg` (SP-3) and `dog-vaccination-card-ludhiana.jpg` (SP-4) — requested for `08` §5.2.
+- **Gates (PUBLIC_PDS_PREVIEW_LIVE=wave1):** build OK · check:prices OK · check:budgets 0 FAIL · test:site 0 FAIL
+  (fold ok at 360×640, incl. the notice; 1 P099 LCP WARN = grey placeholder hero). check:pages: the only FAILs are the
+  page's own canonical/og:url being "not live" (its route is `planned` until the integrator flips it — §6 request).
+- **Open:** the medical sign-off gate (vet writes off the schedule tables + FAQ #3/#6/#7 before publishing) is a human
+  gate, not code — see `requests/w2-money.md`.

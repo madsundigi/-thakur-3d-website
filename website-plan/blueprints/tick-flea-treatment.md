@@ -78,3 +78,52 @@ In-answer links: #2 → week-21 post · #3 → `/ludhiana/vet-at-home/` · #7 �
 - [ ] Symptoms box routes to the vet page, not to grooming
 - [ ] Permethrin/cat warning present twice (SP-4 H3 + FAQ #5)
 - [ ] One Hinglish use only (FAQ #8)
+
+## 1a · SERP intent check (`02` P040) — 2026-10-08
+
+Checked at build for the primary keyword **"tick treatment for dogs ludhiana"** (`03` §2.7 P) and the "anti tick bath
+at home" / "tick and flea treatment at home" set. Tool: the build session's web search — a US-based index, not
+google.co.in on a Ludhiana phone, no map pack. **Repeat on a Ludhiana phone at the launch audit (`02` §5).** This
+confirms the blueprint's SEO note ("JustDial's category page is the only local result — the field is wide open").
+
+- **What ranks:** no Ludhiana at-home anti-tick service page. The results are pan-India pet-care how-tos and vet columns
+  (Headsupfortails "ticks and fleas", VOSD "how dangerous are ticks", Supertails tick-&-flea shampoos), product
+  listings (IndiaMART sprays/dips/powders), and GADVASU's Ludhiana teaching veterinary hospital as a local vet
+  reference. Nobody local publishes a fixed at-home anti-tick price, a full-body check + safe removal, or season timing.
+- **Intent:** mixed — buyers wanting the dog treated at home, and informational searches ("how to remove a tick",
+  "tick fever signs", "is it safe for puppies/cats") — all answered by SP-3, the SP-4 season table and FAQ #2/#3/#6/#7.
+- **Format that ranks:** blogs, vet columns, product catalogues. The gap is a local service landing page with fixed
+  prices and honest safety routing — exactly this page. Publish before April (season timing, `10` week 21 links here).
+- **How this page matches:** fixed ₹399 add-on / ₹699 standalone (hero chip, SP-4 flat list + two Service Offers), the
+  full-body check + proper-tool removal (SP-3 ✓-lists), the species/age/weight product rule + the cat-permethrin
+  warning twice (SP-4 H3 + FAQ #5), the Punjab month-by-month season table (SP-4 H3), and the coral symptoms box that
+  routes tick-fever cases to the ₹699 vet home visit, not to a grooming treatment (SP-3, FAQ #3).
+- **No competitor ₹ figures** surfaced that are local or home-visit-specific; none placed on the page (template §0
+  rule 5).
+
+## 7 · As built (branch `wave2/w2-money`, 2026-10-08)
+
+- **Page:** `website/src/pages/ludhiana/tick-flea-treatment.astro` — a thin `ServicePage` config + two slot components
+  (`src/components/pages/tick-flea-treatment/TickOptions.astro` → `sp3`, `TickSeason.astro` → `sp4-extra`). Chips, body
+  CTA, 3 areas (Ferozepur Road · South City · BRS Nagar), OG image and the wa.me prefill from
+  `MONEY_PAGES['/ludhiana/tick-flea-treatment/']`; 8 FAQs (`tick-flea-treatment-1…8`) from `faq.json`; Service +
+  FAQPage + BreadcrumbList from `schema.ts`. Every ₹ via `pricing.ts` (`check:prices` green).
+- **SP-1 eyebrow** adapted to **"Anti-tick bath in Ludhiana"** so the eyebrow carries the geo (`00` §11 2026-10-08
+  P091), keeping the secondary keyword "anti-tick bath"; `subheadShort` = "Ticks love Punjab's monsoon. We don't." —
+  the 4-line blueprint H1 + full subhead overflowed the 360×640 fold, so only the opening shows below md (W1L-5); the
+  dropped prices/kit repeat the chips. Full subhead stays in the DOM for md+/SEO.
+- **SP-3** "Anti-tick bath — what's included": lead-in, the two ✓-list cards (Add-on / Standalone), the printed product
+  rule (species/age/weight; never dog products on cats), and the **coral** "When it's more than ticks" symptoms box
+  (alert-hue border + tint, alert icon) routing to `/ludhiana/vet-at-home/` (live) — §6 ship check "routes to the vet
+  page, not grooming" ✓. SP-3 image reuses shot 14 `dog-tick-check-at-home-ludhiana.jpg` (the tick-tool close-up).
+- **SP-5** `kind: 'pairs'` — before/after renders only once reviews.ts has ≥ 2 consented pairs (omitted now).
+- **Hero photo** new shot `anti-tick-bath-indie-dog-ludhiana.jpg` (grey placeholder until shot) — requested for `08`
+  §5.2.
+- **Fold note (W1L-7):** the registry hero price chip (standalone + add-on + "with a groom") is ~178px, so at 360 the
+  **first trust chip is cut** — but `test:site`'s fold law accepts the (fully-visible) price chip as "a chip", so the
+  gate **passes**. The stricter manual reading (a *trust* chip visible) is not met. The chip text is copy owned by
+  `pricing.ts` (`heroPriceChip`), not this page — resolution is Sunny's call (shorter chip, or a logged P150
+  exception): see `decisions/w2-money.md` + `requests/w2-money.md`.
+- **Gates (wave1 preview):** build OK · check:prices OK · check:budgets 0 FAIL · test:site 0 FAIL (fold ok at 360×640;
+  P099 LCP WARNs = grey placeholder hero). check:pages FAILs = only the page's own canonical/og:url "not live" until the
+  route flips.
