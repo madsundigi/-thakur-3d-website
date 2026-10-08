@@ -6,7 +6,7 @@
 // catches them. Police verification is gated in src/data/content.ts (policy.policeVerified) and drops out of the
 // verification steps until true; the incident-cost promise is held back behind the same gate as 06 §6 answer 4.
 // The 5-point Promise (SH-2) and the verification steps (SH-4) render from the shared src/data/content.ts, so this
-// page can never drift from /about/ or the FAQ. No ₹ figure here.
+// page can never drift from /about/ or the FAQ. No rupee figure here.
 import { routeLabel } from '../routes';
 
 export const SAFETY_PATH = '/safety-hygiene/';

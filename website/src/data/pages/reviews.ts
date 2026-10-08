@@ -5,7 +5,7 @@
 // live ONLY in src/data/reviews.ts + src/data/site.ts as real values or [FILL:*] tokens — never invented here. NO
 // Review/AggregateRating markup, ever (04 §2.0.4). The page publishes only once ≥ 10 real Google reviews exist
 // (reviews.md ship checks); until then the cards block renders the E6 empty state (REVIEWS_EMPTY_STATE) and the
-// proof bar carries the [FILL:GOOGLE_RATING]/[FILL:REVIEW_COUNT] tokens. No ₹ figure here.
+// proof bar carries the [FILL:GOOGLE_RATING]/[FILL:REVIEW_COUNT] tokens. No rupee figure here.
 import { routeLabel } from '../routes';
 
 export const REVIEWS_PATH = '/reviews/';
@@ -46,11 +46,11 @@ export const REVIEW_SERVICE_FILTERS: readonly { id: string; label: string; servi
   { id: 'vet', label: 'Vet & vaccination', serviceIds: ['vet-visit', 'vaccination', 'deworming'] },
 ] as const;
 
-/** RV-7 "Not happy?" — heading + line verbatim from reviews.md RV-7. */
+/** RV-7 "Not happy?" — H2 = the block name; body = the quote verbatim (reviews.md RV-7). */
 export const RV_NOT_HAPPY = {
-  heading: 'Had a not-so-great experience?',
+  heading: 'Not happy?',
   body:
-    "Tell us on WhatsApp — a real person reads every message and replies within 10 minutes (9:00–19:00). We'd rather fix it than lose your trust.",
+    "Had a not-so-great experience? Tell us on WhatsApp — a real person reads every message and replies within 10 minutes (9:00–19:00). We'd rather fix it than lose your trust.",
   cta: 'WhatsApp us',
 } as const;
 
