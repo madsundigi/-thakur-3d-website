@@ -129,3 +129,24 @@ season per the `10` §2.2 timing column.
 - [ ] Real photos with compliant alts; no stock
 - [ ] BlogPosting + BreadcrumbList validate with zero errors; no FAQPage markup
 - [ ] Post-publish steps from `10-CONTENT-CALENDAR.md` §3 done (GSC URL inspection → request indexing; repurpose to Instagram + WhatsApp status)
+
+---
+
+## 8 · As built (Wave 2 FOUNDATION — 2026-10-08, `wave2/w2-foundation`)
+
+Collection: `website/src/content.config.ts` (Astro 7 content layer — **not** `src/content/config.ts`, which Astro 7
+rejects as legacy). Posts: `src/content/blog/<slug>.md`; the glob loader excludes `README.md`, which holds the
+authoring contract. Index: `src/pages/blog/index.astro` (empty-state listing until posts land). Post:
+`src/pages/blog/[...slug].astro`. Card: `src/components/BlogCard.astro` (08 §4.15). Helper: `src/data/blog.ts`
+(`getBlogPosts`, `relatedPosts`, `readMinutes`). Schema: `schemaGraphLd({ type: 'blog', post, crumbs })` → BlogPosting +
+BreadcrumbList. Head: `og:type=article` + `article:published_time`/`article:modified_time` (via new `Base.astro`
+`ogType`/article props). All gate-green; verified end-to-end with a throwaway post.
+
+Front-matter contract additions/clarifications (full contract: `src/content/blog/README.md`):
+- **`category`** (NEW, required) — one of the six §6 index topics (`Grooming`, `Health & vaccination`, `Ticks &
+  seasons`, `Walking`, `Cats`, `Puppies`); it is the BlogCard chip label. §1 did not carry it.
+- **`heroImage`** = an 08 §5.2 filename in `src/assets/photos/` (the site `<Photo>` system), not `./images/<slug>-hero.jpg`.
+  The 1200×630 og crop is `/og/blog/<slug>.jpg`, added to `public/og/blog/` by the author (the build fails without it).
+- **`description`** is 120–158 chars (check:pages P019), not just ≤ 155.
+- `reviewer` stays optional (name/credential/registration) — the "Medically reviewed by…" box + `reviewedBy` render only
+  when it is set; otherwise health/tick posts get the general-information line.
