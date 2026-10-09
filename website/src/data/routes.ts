@@ -69,6 +69,20 @@ export const routes: RouteEntry[] = [
   { path: '/blog/home-grooming-vs-salon-india/', label: 'Home Grooming vs Salon in India', group: 'blog', wave: 3, status: 'live' },
   { path: '/blog/how-often-bathe-dog-india/', label: 'How Often to Bathe Your Dog', group: 'blog', wave: 3, status: 'live' },
   { path: '/blog/vet-home-visit-vs-clinic/', label: 'Vet Home Visit vs Clinic', group: 'blog', wave: 3, status: 'live' },
+  { path: '/blog/3/', label: 'Blog — Page 3', group: 'blog', wave: 3, status: 'live' },
+  // Wave-3.5 seasonal posts (calendar weeks 15–26), published out-of-window per Sunny's choice (00 §11 W3.5).
+  { path: '/blog/shih-tzu-coat-care-india/', label: 'Shih Tzu Coat Care at Home', group: 'blog', wave: 3, status: 'live' },
+  { path: '/blog/persian-cat-grooming-schedule-india/', label: 'Persian Cat Grooming Schedule', group: 'blog', wave: 3, status: 'live' },
+  { path: '/blog/labrador-shedding-solutions-india/', label: 'Labrador Shedding Solutions', group: 'blog', wave: 3, status: 'live' },
+  { path: '/blog/golden-retriever-summer-grooming/', label: 'Golden Retriever Summer Grooming', group: 'blog', wave: 3, status: 'live' },
+  { path: '/blog/summer-dog-care-ludhiana/', label: 'Summer Dog Care in Ludhiana', group: 'blog', wave: 3, status: 'live' },
+  { path: '/blog/dog-walking-summer-timings-ludhiana/', label: 'Dog Walking in Ludhiana Summers', group: 'blog', wave: 3, status: 'live' },
+  { path: '/blog/tick-season-ludhiana-prevention-calendar/', label: 'Tick Season in Ludhiana', group: 'blog', wave: 3, status: 'live' },
+  { path: '/blog/tick-fever-dogs-symptoms-treatment/', label: 'Tick Fever in Dogs', group: 'blog', wave: 3, status: 'live' },
+  { path: '/blog/remove-tick-from-dog-safely/', label: 'Remove a Tick Safely at Home', group: 'blog', wave: 3, status: 'live' },
+  { path: '/blog/best-tick-flea-prevention-india/', label: 'Best Tick & Flea Prevention', group: 'blog', wave: 3, status: 'live' },
+  { path: '/blog/dog-skin-problems-summer-punjab/', label: 'Dog Skin Problems in Punjab Summers', group: 'blog', wave: 3, status: 'live' },
+  { path: '/blog/monsoon-pet-care-checklist-punjab/', label: 'Monsoon Pet Care Checklist', group: 'blog', wave: 3, status: 'live' },
   // areas (staggered publishing — 05-LOCAL-SEO §6.10)
   ...[
     ['sarabha-nagar', 'Sarabha Nagar'], ['brs-nagar', 'BRS Nagar'], ['model-town', 'Model Town'],

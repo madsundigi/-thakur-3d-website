@@ -42,6 +42,11 @@ export const ROUTE_SLUGS = [
   'dog-walker-cost-india', 'puppy-diet-plan-first-3-months', 'puppy-first-grooming-age',
   'dog-deworming-schedule-india', 'dog-vaccination-cost-ludhiana', 'full-dog-grooming-package-included',
   'home-grooming-vs-salon-india', 'how-often-bathe-dog-india', 'vet-home-visit-vs-clinic',
+  // Wave-3.5 seasonal posts (calendar weeks 15–26):
+  'shih-tzu-coat-care-india', 'persian-cat-grooming-schedule-india', 'labrador-shedding-solutions-india',
+  'golden-retriever-summer-grooming', 'summer-dog-care-ludhiana', 'dog-walking-summer-timings-ludhiana',
+  'tick-season-ludhiana-prevention-calendar', 'tick-fever-dogs-symptoms-treatment', 'remove-tick-from-dog-safely',
+  'best-tick-flea-prevention-india', 'dog-skin-problems-summer-punjab', 'monsoon-pet-care-checklist-punjab',
 ] as const;
 
 /** Service ids for `service_<id>` — the `services[].id` values of src/data/pricing.json (07 §2 row 4). */
