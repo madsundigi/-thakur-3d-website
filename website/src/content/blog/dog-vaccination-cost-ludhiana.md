@@ -1,6 +1,6 @@
 ---
-title: "Dog Vaccination Cost in Ludhiana: A 2027 Home Guide"
-seoTitle: "Dog Vaccination Cost in Ludhiana: 2027 Home Price Guide"
+title: "Dog Vaccination Cost in Ludhiana: A 2026 Home Guide"
+seoTitle: "Dog Vaccination Cost in Ludhiana: 2026 Home Price Guide"
 description: "Dog vaccination at home in Ludhiana is a flat ₹199 service fee plus the vaccine at MRP. Here is the full maths for the 9-in-1 and rabies shots."
 slug: "dog-vaccination-cost-ludhiana"
 date: 2026-10-09
