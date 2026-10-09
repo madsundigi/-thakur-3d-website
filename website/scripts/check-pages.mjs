@@ -225,7 +225,7 @@ function checkPage(path, file) {
   // og:type (04 §4 / §2.7) — a blog post is og:type=article and carries article:published_time + article:modified_time
   // (ISO dates = its BlogPosting datePublished/dateModified); every other indexable page stays og:type=website.
   if (!info.noindex) {
-    const isBlogPost = /^\/blog\/[a-z0-9-]+\/$/.test(path);
+    const isBlogPost = /^\/blog\/[a-z0-9-]+\/$/.test(path) && !/^\/blog\/\d+\/$/.test(path); // /blog/2/ … are paginated indices (og:type=website), not posts
     const ogType = metaProp('og:type');
     const typeVal = ogType.length ? (attr(ogType[0], 'content') ?? '') : '';
     if (ogType.length !== 1) R.fail(path, 'P117', `needs exactly one og:type, found ${ogType.length}`);

@@ -13,9 +13,8 @@ import { getBlogPosts } from '../../data/blog';
 import { site, telHref, waHref, WA_DEFAULT_TEXT } from '../../data/site';
 import { schemaGraphLd } from '../../lib/schema';
 
-const PAGE_SIZE = 12; // keep in step with index.astro
-
 export async function getStaticPaths() {
+  const PAGE_SIZE = 12; // keep in step with index.astro (Astro runs getStaticPaths in an isolated scope)
   const posts = await getBlogPosts();
   const totalPages = Math.max(1, Math.ceil(posts.length / PAGE_SIZE));
   const paths = [];
