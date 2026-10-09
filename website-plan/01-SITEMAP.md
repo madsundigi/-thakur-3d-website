@@ -59,8 +59,8 @@ All Wave 2 · all from `blueprints/_TEMPLATE-area-page.md` · Schema: Service + 
 ### Blog (informational silo — supports money pages)
 | URL | Page | Wave | Source |
 |---|---|---|---|
-| `/blog/` | Blog index | 2 | `_TEMPLATE-blog-post.md` §6 Index variant — **built + live 2026-10-08** |
-| `/blog/<post-slug>/` | 26 posts, 1/week | 3 | topics + keywords in `10-CONTENT-CALENDAR.md`; anatomy in `_TEMPLATE-blog-post.md`. **First 2 live 2026-10-08:** `/blog/dog-grooming-price-list-ludhiana/`, `/blog/puppy-vaccination-schedule-india/` |
+| `/blog/` | Blog index | 2 | `_TEMPLATE-blog-post.md` §6 Index variant — **built + live 2026-10-08**; paginated `/blog/` + `/blog/2/` (Wave 3, 04 §3.6) |
+| `/blog/<post-slug>/` | 26 posts, 1/week | 2–3 | topics/keywords in `10-CONTENT-CALENDAR.md`; anatomy in `_TEMPLATE-blog-post.md`. **14 posts live:** weeks 1–2 (2026-10-08) + weeks 3–14 (Wave 3, 2026-10-09). Weeks 15–26 held for their seasons. |
 
 ### Legal & utility
 | URL | Wave | Blueprint | Notes |

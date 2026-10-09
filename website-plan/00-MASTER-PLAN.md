@@ -201,10 +201,22 @@ multi-city stage (they then link down to each city version).
 > medical sign-off for `/ludhiana/dog-vaccination/`, and the lawyer review for `/refund-policy/` (folds into the §9
 > legal review). Decisions + open owner items logged in §11.
 
-### Wave 3 — Compounding (ongoing)
-- [ ] 1 blog post/week per `10-CONTENT-CALENDAR.md`
+### Wave 3 — Compounding (first batch built + audited 2026-10-09)
+- [x] First 12 posts live (calendar weeks 3–14): `diwali-pet-care-ludhiana`, `winter-dog-care-north-india`,
+  `wedding-season-pet-care-punjab`, `dog-walker-cost-india`, `puppy-diet-plan-first-3-months`,
+  `puppy-first-grooming-age`, `dog-deworming-schedule-india`, `dog-vaccination-cost-ludhiana`,
+  `full-dog-grooming-package-included`, `home-grooming-vs-salon-india`, `how-often-bathe-dog-india`,
+  `vet-home-visit-vs-clinic` — **14 posts total**, blog index paginated (`/blog/` + `/blog/2/`).
+- [ ] Remaining calendar posts (weeks 15–26: summer / tick / monsoon) — **held for their seasons** (publish ahead of
+  each window, 10 §2.2 timing; never after a season peaks). Then continue ~1 post/week.
 - [ ] Monthly SEO + local routine per `05` + `09`
 - [ ] Expansion assessment per `11-EXPANSION-PLAYBOOK.md`
+
+> **Wave 3 status (2026-10-09):** 12 new posts written by a parallel workflow + the `/blog/2/` pagination the index
+> needs past 12 posts; 13 routes flipped live (12 posts + pagination) with `lastmod` 2026-10-09. Every gate green
+> (`check:pages --all` 0/0 on 40 pages, `check:budgets` 0/0, `check:legal --dist` 0 FAIL, `check:prices` OK,
+> `test:e2e` 55/55, `test:site`), plus a fresh cross-site audit. Medical posts ship general-information (no vet signed);
+> the two competitor-benchmark posts carry the re-verify caveat. Decisions in §11.
 
 ---
 
@@ -304,5 +316,12 @@ templated-text-only city pages (doorway risk) — file 11 defines the minimum un
 | 2026-10-08 | **W2-5 · Blog share images.** Each post's `/og/blog/<slug>.jpg` is the branded `blog-default` 1200×630 image as a placeholder (hero photos are not shot yet); per-post crops land with the real photo shoot. Build + budgets pass (29 KB each) | Session |
 | 2026-10-08 | **W2-6 · Cross-site audit fixes.** A fresh read-only audit (27 live + 10 preview-area pages) found every gate green and honesty/schema/links/a11y clean; three findings applied: **(MAJOR, de-cannibalization, 03-KEYWORD-MAP)** the `dog-grooming-price-list-ludhiana` post's head was reframed from a competing rate-card to the informational angle so `/pricing/` keeps the transactional terms — H1 "How Much Does Dog Grooming Cost in Ludhiana? (2026 Guide)", `<title>` "Dog Grooming Cost in Ludhiana (2026): At-Home Guide", keywords trimmed to the "cost" intent (slug unchanged — URLs never change; body stays editorial and funnels to `/pricing/`). **(MINOR)** the puppy post's TL;DR "about a week" aligned to the body's "one to two weeks". **(MINOR, noted not changed)** blog prose tables use semantic `<table>` rather than the money-page `TableFrame` scroll region — verified no overflow + axe-clean at 360/768/1280, so this is a deliberate scope line (TableFrame governs the price matrices); a focusable-scroll wrapper is a possible Wave-3 enhancement and was left out here because it would spend the shared CSS-budget headroom (W2-2) for no functional gain | Session |
 | 2026-10-08 | **Open Wave-2 owner items** (not code): Sunny's 20 area tokens (`[FILL:LANDMARKS_*]` + `[FILL:PINCODES_*]`) to publish areas; the **vet medical sign-off** for `/ludhiana/dog-vaccination/` schedule tables + FAQ; the **lawyer review** of `/refund-policy/` (folds into the §9.7 legal review); 4 new area/money photo shots (08 §5.2); the tick-flea hero price-chip fold note (`requests/w2-money.md` B-1, Sunny's copy call) | Session |
+
+| 2026-10-09 | **Wave 3 — first 12 blog posts + pagination.** A parallel workflow (1 competitor-research agent + 12 writers) wrote calendar weeks 3–14; each was validated (title ≤70, seoTitle 50–60, description 120–158, one TL;DR mint box with no new utility class, BOFU link in the first half, a `/blog/` link, intra-cluster related posts, plain-Markdown FAQ, ₹ matched to pricing.json). 13 routes flipped live (12 posts + `/blog/2/`) + `lastmod` 2026-10-09. All gates green (check:pages --all 0/0 on 40 pages, budgets 0/0, legal 0 FAIL, prices OK, e2e 55/55, test:site) + a fresh cross-site audit. Provenance: `decisions/w3-blog.md`, `requests/w3-blog.md` | Session |
+| 2026-10-09 | **W3-1 · Blog pagination = `/blog/2/`** (04 §3.6, not `/blog/page/2/`). New `src/pages/blog/[page].astro` with a manual `getStaticPaths` building pages 2…N only (page 1 stays `/blog/`); `index.astro` + each page get a visible prev/next `<nav aria-label="Pagination">`, no `rel=prev/next` head tags, self-canonical per page. Gate edits: `plan.mjs` adds a `/blog/\d+/` → BreadcrumbList schema row; `check-pages.mjs` exempts `/blog/\d+/` from the P068 orphan rule (reachable only via the pagination nav), the P161 source-drift set, and the P117 og:type blog-post classifier (paginated index = og:type website, not article). `/blog/2/` is a live route + lastmod so P127 sitemap=live=built holds | Session |
+| 2026-10-09 | **W3-2 · Publish dates + page split.** All 12 dated 2026-10-09 (honest — published today, not the calendar's future dates). Newest-first therefore puts the 12 new posts on page 1 and the 2 original posts (2026-10-08) on `/blog/2/`; the cornerstones stay strongly cross-linked via related sections + money pages, so page-2 placement is accepted (featured-pinning to force page 1 is not built, out of scope) | Session |
+| 2026-10-09 | **W3-3 · Index honesty fix.** `/blog/` no longer claims "vet-reviewed" guides or that a "partner vet" writes them (no vet partner is signed; every post ships the general-information caveat). Reworded the meta description and the intro to an honest "our team / local guides" framing | Session |
+| 2026-10-09 | **W3-4 · Cannibalization (mirror W2-6).** `dog-vaccination-cost-ludhiana` ships as an informational cost *guide* (title "…Cost in Ludhiana: A 2027 Home Guide"), not a rate card — `/ludhiana/dog-vaccination/` keeps the transactional terms; `dog-walker-cost-india` stays national-framed; `full-dog-grooming-package-included` keeps the transactional keyword in the body, not the title | Session |
+| 2026-10-09 | **W3-5 · Stale-doc housekeeping.** Built reality overrides three stale lines: `10 §3 step 7` ("Article+FAQPage" — posts carry BlogPosting+BreadcrumbList only, no FAQPage); `10 §4` front-matter fields (use the `content.config.ts` schema, not publishDate/cluster/etc.); the `/blog/page/2/` references in `_TEMPLATE-blog-post.md` and the old `index.astro` comment (pagination is `/blog/2/`). Blog share images reuse `blog-default.jpg` as a placeholder until the photo shoot (W2-5 precedent) | Session |
 
 *2026-10-03 rows: D1–D4 are that day's owner decisions and E1–E12 its engineering decisions. They are not the §2 D-numbers. Other files cite them as "`00` §11 D1 (2026-10-03)" or just "D1"/"E7" next to that date.*
