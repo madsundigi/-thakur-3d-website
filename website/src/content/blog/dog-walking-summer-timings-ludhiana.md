@@ -22,7 +22,7 @@ Dog walking in Ludhiana summers comes down to one rule: walk in the cool hours. 
 **The short version**
 
 - In May and June, walk **before ~7am or after ~7:30pm**; skip 11am–6pm entirely.
-- **The tarmac test:** press the back of your hand on the road for 7 seconds — if you can't hold it, it's too hot for paws.
+- **The tarmac test:** press the back of your hand on the road for 5 seconds — if you can't hold it, it's too hot for paws.
 - Dark asphalt can reach **50–60°C when the air is only 25–30°C**, enough to burn pads in under a minute.
 - **Heatstroke** = heavy panting, bright red gums, drooling, wobbliness or collapse. Cool with cool (not ice-cold) water and get to a vet now.
 - Our Ludhiana walkers shift to early-morning and post-sunset slots in summer — Trial Week ₹699.
@@ -53,7 +53,7 @@ On a 44°C heat-wave day in May, pull both windows even earlier and keep the wal
 
 ## The 5-second tarmac test
 
-Before you step onto any paved road, press the back of your hand flat on the surface. If you can't hold it comfortably for about **7 seconds**, it's too hot for your dog's paws. Pads are tougher than our skin, but they still burn.
+Before you step onto any paved road, press the back of your hand flat on the surface. If you can't hold it comfortably for about **5 seconds**, it's too hot for your dog's paws. Pads are tougher than our skin, but they still burn.
 
 Dark asphalt stores heat long after the air has started to cool: when the air is only 25–30°C, a road in direct sun can reach **50–60°C** — enough to blister a pad in under a minute. On stretches like Ferozepur Road the tarmac bakes all afternoon. Stick to grass, the shaded side of the lane, or carry your dog across short hot patches. Treat the test as a rough, conservative guide — it's strictest for puppies, seniors and thin-padded dogs, which is the point.
 
@@ -90,7 +90,7 @@ Before about 7:00–7:30am and after 7:00–7:30pm from April to June. Mornings 
 Early morning before the sun gets strong, and again after sunset once the roads cool. Through the afternoon, let your dog out only for a quick toilet break in the shade and keep the exercise for the cool hours.
 
 **How do I know if the road is too hot for my dog?**
-Press the back of your hand on the surface. If you can't hold it there comfortably for about 7 seconds, it's too hot for paws — move to grass or the shaded side, or carry your dog across the hot stretch.
+Press the back of your hand on the surface. If you can't hold it there comfortably for about 5 seconds, it's too hot for paws — move to grass or the shaded side, or carry your dog across the hot stretch.
 
 **My dog still has energy at mid-day — is a short walk okay?**
 No. Burn that energy indoors with tug, fetch down a hallway or a food puzzle instead. A mid-day walk on hot tarmac risks burned pads and heatstroke even if your dog seems keen.
