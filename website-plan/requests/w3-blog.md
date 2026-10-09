@@ -10,8 +10,10 @@ For the owner (Sunny) and future waves. None blocks the 14 live posts.
 - **Competitor benchmarks re-verify.** `dog-walker-cost-india` and `dog-vaccination-cost-ludhiana` use October-2026
   SERP-mined ranges with the re-verify caveat. Re-check the live SERP before relying on the figures, and at the January
   price-refresh (10 §4), bump the year in the title + the figures.
-- **Seasonal posts (weeks 15–26).** Publish ahead of each window, never after it peaks (10 §2.2 timing): pre-summer
-  Feb–Mar, tick late-Mar→Apr, monsoon early-May. Each is a future ~1/week batch.
+- **Seasonal posts (weeks 15–26) — PUBLISHED 2026-10-09, out of window** (Wave 3.5, Sunny's choice; 00 §11). They are
+  live now rather than held for their seasons. Action shifts from "publish ahead of each window" to **re-promote them in
+  their windows** (Instagram / WhatsApp status: pre-summer Feb–Mar for the breed-grooming posts, Apr–Jun for summer +
+  tick, early May + late June for monsoon) and **refresh per 10 §4** (update temps/timings, bump `updated`).
 - **Real per-post share images + hero photos.** All 14 posts reuse `blog-default.jpg` for `/og/blog/<slug>.jpg` and
   render the placeholder hero. The photo shoot (08 §5.2) replaces both; regenerate a bespoke 1200×630 og crop per post.
 - **Blog category/tag pages** (`/blog/<category>/`) stay Wave-3+ infra — the index chips become links when they exist

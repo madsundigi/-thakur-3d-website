@@ -206,17 +206,20 @@ multi-city stage (they then link down to each city version).
   `wedding-season-pet-care-punjab`, `dog-walker-cost-india`, `puppy-diet-plan-first-3-months`,
   `puppy-first-grooming-age`, `dog-deworming-schedule-india`, `dog-vaccination-cost-ludhiana`,
   `full-dog-grooming-package-included`, `home-grooming-vs-salon-india`, `how-often-bathe-dog-india`,
-  `vet-home-visit-vs-clinic` — **14 posts total**, blog index paginated (`/blog/` + `/blog/2/`).
-- [ ] Remaining calendar posts (weeks 15–26: summer / tick / monsoon) — **held for their seasons** (publish ahead of
-  each window, 10 §2.2 timing; never after a season peaks). Then continue ~1 post/week.
+  `vet-home-visit-vs-clinic` — blog index paginated.
+- [x] Remaining calendar posts (weeks 15–26: pre-summer breed grooming / summer / tick / monsoon) — **built + published
+  2026-10-09, out of their seasons, at Sunny's explicit choice** (Wave 3.5). The SEO tradeoff was flagged; they are
+  written year-round-readable and should be **re-promoted (Instagram / WhatsApp) in their seasons** and refreshed per
+  `10 §4`. **All 26 calendar posts are now live**, blog index paginated to 3 pages (`/blog/` + `/blog/2/` + `/blog/3/`).
+- [ ] Ongoing: ~1 new/refreshed post per week from the `10 §5` backlog (week-27+), re-promotion of seasonal posts in window.
 - [ ] Monthly SEO + local routine per `05` + `09`
 - [ ] Expansion assessment per `11-EXPANSION-PLAYBOOK.md`
 
-> **Wave 3 status (2026-10-09):** 12 new posts written by a parallel workflow + the `/blog/2/` pagination the index
-> needs past 12 posts; 13 routes flipped live (12 posts + pagination) with `lastmod` 2026-10-09. Every gate green
-> (`check:pages --all` 0/0 on 40 pages, `check:budgets` 0/0, `check:legal --dist` 0 FAIL, `check:prices` OK,
-> `test:e2e` 55/55, `test:site`), plus a fresh cross-site audit. Medical posts ship general-information (no vet signed);
-> the two competitor-benchmark posts carry the re-verify caveat. Decisions in §11.
+> **Wave 3 status (2026-10-09):** the full 26-post content library is live. Wave 3 shipped weeks 3–14 (12 posts) +
+> `/blog/2/`; Wave 3.5 shipped weeks 15–26 (12 seasonal posts) + `/blog/3/`, published out-of-window per Sunny's
+> choice. Every gate green (`check:pages --all` 0/0 on 53 pages, `check:budgets` 0/0, `check:legal --dist` 0 FAIL,
+> `check:prices` OK, `test:e2e` 55/55, `test:site`), plus fresh cross-site audits each batch. Medical posts ship
+> general-information (no vet signed); market/product figures carry the re-verify caveat. Decisions in §11.
 
 ---
 
@@ -323,5 +326,7 @@ templated-text-only city pages (doorway risk) — file 11 defines the minimum un
 | 2026-10-09 | **W3-3 · Index honesty fix.** `/blog/` no longer claims "vet-reviewed" guides or that a "partner vet" writes them (no vet partner is signed; every post ships the general-information caveat). Reworded the meta description and the intro to an honest "our team / local guides" framing | Session |
 | 2026-10-09 | **W3-4 · Cannibalization (mirror W2-6).** `dog-vaccination-cost-ludhiana` ships as an informational cost *guide* (title "…Cost in Ludhiana: A 2027 Home Guide"), not a rate card — `/ludhiana/dog-vaccination/` keeps the transactional terms; `dog-walker-cost-india` stays national-framed; `full-dog-grooming-package-included` keeps the transactional keyword in the body, not the title | Session |
 | 2026-10-09 | **W3-5 · Stale-doc housekeeping.** Built reality overrides three stale lines: `10 §3 step 7` ("Article+FAQPage" — posts carry BlogPosting+BreadcrumbList only, no FAQPage); `10 §4` front-matter fields (use the `content.config.ts` schema, not publishDate/cluster/etc.); the `/blog/page/2/` references in `_TEMPLATE-blog-post.md` and the old `index.astro` comment (pagination is `/blog/2/`). Blog share images reuse `blog-default.jpg` as a placeholder until the photo shoot (W2-5 precedent) | Session |
+
+| 2026-10-09 | **Wave 3.5 — the remaining 12 seasonal posts, published out-of-window (Sunny's choice).** After confirming the site was feature-complete for Waves 0–3, Sunny chose to build + publish calendar weeks 15–26 now (pre-summer breed grooming, summer, tick, monsoon) rather than hold them for their seasons. The out-of-season SEO tradeoff was flagged in the choice and accepted. A 12-writer workflow wrote them (medical/product facts web-verified; see-a-vet caveat, no reviewer box; prices from pricing.json; market/product figures caveated; the monsoon checklist offered via WhatsApp, no on-site PDF). Written year-round-readable; **re-promote + refresh in season** (`10 §4`). 26 posts total → blog index paginated to 3 pages; added `/blog/3/` (route + lastmod; the Wave-3 `/blog/\d+/` pagination mechanics already covered it). All gates green (53 pages) + a fresh cross-site audit. Provenance: `decisions/w3-blog.md`, `requests/w3-blog.md` (updated) | Session |
 
 *2026-10-03 rows: D1–D4 are that day's owner decisions and E1–E12 its engineering decisions. They are not the §2 D-numbers. Other files cite them as "`00` §11 D1 (2026-10-03)" or just "D1"/"E7" next to that date.*
