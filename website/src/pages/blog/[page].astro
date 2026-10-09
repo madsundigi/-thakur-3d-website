@@ -1,0 +1,91 @@
+---
+// /blog/2/, /blog/3/ … — paginated blog index pages 2…N (04-TECHNICAL-SEO §3.6: URLs /blog/, /blog/2/, /blog/3/, no
+// ?page=). Page 1 stays at /blog/ (src/pages/blog/index.astro); this route builds ONLY pages 2…N via a manual
+// getStaticPaths (not Astro paginate(), which would emit a duplicate /blog/1/ and clash with the [...slug] post route).
+// Each page is indexable + self-canonical (Base builds canonical/og:url from `path`); schema = BreadcrumbList only.
+// A named [page] param and the rest [...slug] post route coexist — named params match first and the concrete paths are
+// disjoint (digits here, non-numeric slugs there). routes.ts registers /blog/2/ live + lastmod so the sitemap/P127 pass.
+import Base from '../../layouts/Base.astro';
+import BlogCard from '../../components/BlogCard.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import { getBlogPosts } from '../../data/blog';
+import { site, telHref, waHref, WA_DEFAULT_TEXT } from '../../data/site';
+import { schemaGraphLd } from '../../lib/schema';
+
+const PAGE_SIZE = 12; // keep in step with index.astro
+
+export async function getStaticPaths() {
+  const posts = await getBlogPosts();
+  const totalPages = Math.max(1, Math.ceil(posts.length / PAGE_SIZE));
+  const paths = [];
+  for (let n = 2; n <= totalPages; n++) {
+    paths.push({
+      params: { page: String(n) },
+      props: { pageNum: n, totalPages, items: posts.slice((n - 1) * PAGE_SIZE, n * PAGE_SIZE) },
+    });
+  }
+  return paths;
+}
+
+const { pageNum, totalPages, items } = Astro.props;
+const PATH = `/blog/${pageNum}/`;
+const prevHref = pageNum === 2 ? '/blog/' : `/blog/${pageNum - 1}/`;
+const crumbs = [
+  { label: 'Home', path: '/' },
+  { label: 'Blog', path: '/blog/' },
+  { label: `Page ${pageNum}`, path: PATH },
+];
+const callLabel = `Call ${site.phone}`;
+---
+<Base
+  title={`Pet Care Guides for Ludhiana — Page ${pageNum} | PetDoorStep`}
+  description={`Practical, local pet care guides for Ludhiana pet parents: grooming prices, vaccination schedules, tick season, summer walks and more (page ${pageNum}).`}
+  path={PATH}
+  ogImage="blog-default.jpg"
+  ogImageAlt="PetDoorStep pet care guides for Ludhiana pet parents"
+  jsonLd={[schemaGraphLd({ type: 'breadcrumb-only', crumbs }, Astro.site)]}
+>
+  <Breadcrumb items={crumbs} />
+
+  <div class="mx-auto max-w-[1200px] px-4 pb-16 lg:px-6">
+    <header class="pt-4 md:pt-6">
+      <h1 class="t-h1 m-0">Pet care guides for Ludhiana pet parents — page {pageNum}</h1>
+      <p class="measure m-0 mt-3 text-slate">
+        More of our Ludhiana pet care guides. Every one answers a question pet parents actually ask us on WhatsApp,
+        with real local detail and honest prices.
+      </p>
+    </header>
+
+    <ul class="mt-8 grid list-none grid-cols-1 gap-6 p-0 md:grid-cols-2 lg:grid-cols-3 lg:gap-6">
+      {items.map((p) => (
+        <li class="min-w-0">
+          <BlogCard
+            slug={p.slug}
+            title={p.title}
+            category={p.category}
+            excerpt={p.description}
+            date={p.date}
+            readMinutes={p.readMinutes}
+            heroImage={p.heroImage}
+            heroAlt={p.heroAlt}
+          />
+        </li>
+      ))}
+    </ul>
+
+    {/* Pagination (04 §3.6): visible prev/next anchors; no rel=prev/next head tags. */}
+    <nav aria-label="Pagination" class="mt-12 flex items-center justify-between gap-4">
+      <a href={prevHref} class="prose-link">← Newer guides</a>
+      <span class="text-sm text-slate">Page {pageNum} of {totalPages}</span>
+      {pageNum < totalPages ? <a href={`/blog/${pageNum + 1}/`} class="prose-link">Older guides →</a> : <span></span>}
+    </nav>
+  </div>
+
+  <CtaBand
+    heading="A question we haven't covered yet?"
+    support="A real person replies on WhatsApp within 10 minutes, 9:00–19:00 — no app, no login."
+    primary={{ label: 'Ask on WhatsApp', href: waHref(WA_DEFAULT_TEXT), source: 'ctaband_blog' }}
+    secondary={{ label: callLabel, href: telHref(), source: 'ctaband_blog' }}
+  />
+</Base>

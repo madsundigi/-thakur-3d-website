@@ -85,6 +85,7 @@ export function schemaRow(path) {
   if (path === '/how-it-works/') return R(['HowTo', 'BreadcrumbList']);
   if (path === '/about/') return R(['AboutPage', 'BreadcrumbList']);
   if (path === '/faq/') return R(['FAQPage', 'BreadcrumbList']);
+  if (/^\/blog\/\d+\/$/.test(path)) return R(['BreadcrumbList']); // paginated index page (/blog/2/ …) — 04 §3.6
   if (/^\/blog\/[a-z0-9-]+\/$/.test(path) && !/^\/blog\/\d+\/$/.test(path)) return R(['BlogPosting', 'BreadcrumbList']);
   if (path === '/offers/') return R(['BreadcrumbList', 'OfferCatalog']);
   if (path === '/join-as-groomer/') return R(['BreadcrumbList'], ['JobPosting']);

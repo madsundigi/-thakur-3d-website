@@ -53,8 +53,22 @@ export const routes: RouteEntry[] = [
   // blog (index + the first two posts — 01-SITEMAP §4; anatomy blueprints/_TEMPLATE-blog-post.md). The posts' .md
   // content is owned by the content builder (src/content/blog/); these rows let isLive() gate the links to them.
   { path: '/blog/', label: 'Blog', group: 'blog', wave: 2, status: 'live' },
+  { path: '/blog/2/', label: 'Blog — Page 2', group: 'blog', wave: 3, status: 'live' },
   { path: '/blog/dog-grooming-price-list-ludhiana/', label: 'Dog Grooming Price List in Ludhiana', group: 'blog', wave: 2, status: 'live' },
   { path: '/blog/puppy-vaccination-schedule-india/', label: 'Puppy Vaccination Schedule (India)', group: 'blog', wave: 2, status: 'live' },
+  // Wave-3 posts (calendar weeks 3–14) — go live with their .md + og crop in the same commit (01-SITEMAP §4).
+  { path: '/blog/diwali-pet-care-ludhiana/', label: 'Diwali & Cracker-Season Pet Care', group: 'blog', wave: 3, status: 'live' },
+  { path: '/blog/winter-dog-care-north-india/', label: 'Winter Dog Care in North India', group: 'blog', wave: 3, status: 'live' },
+  { path: '/blog/wedding-season-pet-care-punjab/', label: 'Wedding-Season Pet Care in Punjab', group: 'blog', wave: 3, status: 'live' },
+  { path: '/blog/dog-walker-cost-india/', label: 'Dog Walker Cost in India', group: 'blog', wave: 3, status: 'live' },
+  { path: '/blog/puppy-diet-plan-first-3-months/', label: 'Puppy Diet Plan: First 3 Months', group: 'blog', wave: 3, status: 'live' },
+  { path: '/blog/puppy-first-grooming-age/', label: "Puppy's First Grooming Age", group: 'blog', wave: 3, status: 'live' },
+  { path: '/blog/dog-deworming-schedule-india/', label: 'Dog Deworming Schedule in India', group: 'blog', wave: 3, status: 'live' },
+  { path: '/blog/dog-vaccination-cost-ludhiana/', label: 'Dog Vaccination Cost in Ludhiana', group: 'blog', wave: 3, status: 'live' },
+  { path: '/blog/full-dog-grooming-package-included/', label: "What's in a Full Grooming Package", group: 'blog', wave: 3, status: 'live' },
+  { path: '/blog/home-grooming-vs-salon-india/', label: 'Home Grooming vs Salon in India', group: 'blog', wave: 3, status: 'live' },
+  { path: '/blog/how-often-bathe-dog-india/', label: 'How Often to Bathe Your Dog', group: 'blog', wave: 3, status: 'live' },
+  { path: '/blog/vet-home-visit-vs-clinic/', label: 'Vet Home Visit vs Clinic', group: 'blog', wave: 3, status: 'live' },
   // areas (staggered publishing — 05-LOCAL-SEO §6.10)
   ...[
     ['sarabha-nagar', 'Sarabha Nagar'], ['brs-nagar', 'BRS Nagar'], ['model-town', 'Model Town'],

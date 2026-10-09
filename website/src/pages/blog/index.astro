@@ -23,10 +23,11 @@ const posts = await getBlogPosts();
 const callLabel = `Call ${site.phone}`;
 const PAGE_SIZE = 12; // 04 §3.6 / 08 §4.15
 const shown = posts.slice(0, PAGE_SIZE);
+const totalPages = Math.max(1, Math.ceil(posts.length / PAGE_SIZE));
 ---
 <Base
   title="Pet Care Guides for Ludhiana Pet Parents | PetDoorStep"
-  description="Practical, vet-reviewed pet care guides for Ludhiana: grooming prices, vaccination schedules, tick season, summer walks and more."
+  description="Practical, local pet care guides for Ludhiana pet parents: grooming prices, vaccination schedules, tick season, summer walks and more."
   path={PATH}
   ogImage="blog-default.jpg"
   ogImageAlt="PetDoorStep pet care guides for Ludhiana pet parents"
@@ -40,8 +41,8 @@ const shown = posts.slice(0, PAGE_SIZE);
     <header class="pt-4 md:pt-6">
       <h1 class="t-h1 m-0">Pet care guides for Ludhiana pet parents</h1>
       <p class="measure m-0 mt-3 text-slate">
-        Our groomers and partner vet write these — the same people who come to your door. Every guide answers a
-        question Ludhiana pet parents actually ask us on WhatsApp, with real local detail and honest prices.
+        Our team writes these — the same people who groom and care for pets at Ludhiana homes. Every guide answers a
+        question pet parents actually ask us on WhatsApp, with real local detail and honest prices.
       </p>
     </header>
 
@@ -85,6 +86,15 @@ const shown = posts.slice(0, PAGE_SIZE);
         </p>
       </div>
     )}
+
+    {/* Pagination (04 §3.6): page 1 lives at /blog/; older guides at /blog/2/ … No rel=prev/next head tags. */}
+    {totalPages > 1 ? (
+      <nav aria-label="Pagination" class="mt-12 flex items-center justify-between gap-4">
+        <span></span>
+        <span class="text-sm text-slate">Page 1 of {totalPages}</span>
+        <a href="/blog/2/" class="prose-link">Older guides →</a>
+      </nav>
+    ) : null}
   </div>
 
   {/* CTA band (§6 "Default CtaBand.astro") */}

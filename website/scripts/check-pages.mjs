@@ -501,7 +501,9 @@ if (ALL) {
   const inbound = new Map(indexable.map((i) => [i.path, new Set()]));
   for (const src of indexable) for (const t of src.contextual) if (inbound.has(t)) inbound.get(t).add(src.path);
   for (const [p, from] of inbound) {
-    if (p === '/' || from.size) continue;
+    // /blog/2/ … paginated indices are reached only via the pagination <nav> (excluded from contextual links), so they
+    // are legitimately "orphan" by the <main>-link rule; the crawlable pagination control covers reachability (04 §3.6).
+    if (p === '/' || /^\/blog\/\d+\/$/.test(p) || from.size) continue;
     R.fail(p, 'P068', 'orphan: no other indexable page links here from its <main> (outside header/footer/nav) — 01 §2 silo links');
   }
 
@@ -554,7 +556,9 @@ async function checkSitemap(indexable) {
 // ---- registry drift: sources.ts copies routes.ts slugs and pricing.json ids (it must stay import-free) ---------------
 if (sources.mod && routes.ok) {
   const have = new Set(sources.mod.ROUTE_SLUGS ?? []);
-  const want = new Set(routes.routes.map((r) => routeSlug(r.path)));
+  // Paginated blog indices (/blog/2/ …) have a numeric last segment and emit only fixed sources (blog_card/ctaband_blog),
+  // never a `<slug>_page` — so their slug is not a ROUTE_SLUGS tracking slug; exclude them from the drift set.
+  const want = new Set(routes.routes.filter((r) => !/^\/blog\/\d+\/$/.test(r.path)).map((r) => routeSlug(r.path)));
   for (const s of want) if (!have.has(s)) R.warn('src/data/sources.ts', 'P161', `route slug "${s}" (routes.ts) is missing from ROUTE_SLUGS — hero_${s} / ctaband_${s} / ${s}_page would be rejected`);
   for (const s of have) if (!want.has(s)) R.warn('src/data/sources.ts', 'P161', `ROUTE_SLUGS has "${s}", which is not a route in routes.ts`);
   const pricingFile = join(WEBSITE, 'src/data/pricing.json');

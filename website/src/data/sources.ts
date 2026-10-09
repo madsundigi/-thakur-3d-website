@@ -35,8 +35,13 @@ export const ROUTE_SLUGS = [
   'privacy-policy', 'terms', 'refund-policy',
   'sarabha-nagar', 'brs-nagar', 'model-town', 'civil-lines', 'dugri',
   'pakhowal-road', 'south-city', 'ferozepur-road', 'haibowal-kalan', 'kitchlu-nagar',
-  // blog index + the first two posts (01-SITEMAP §4) — `blog_page`, `hero_<post-slug>`, `ctaband_<post-slug>` etc.
+  // blog index + posts (01-SITEMAP §4) — `blog_page`, `hero_<post-slug>`, `ctaband_<post-slug>`, `<post-slug>_page`.
   'blog', 'dog-grooming-price-list-ludhiana', 'puppy-vaccination-schedule-india',
+  // Wave-3 posts (calendar weeks 3–14):
+  'diwali-pet-care-ludhiana', 'winter-dog-care-north-india', 'wedding-season-pet-care-punjab',
+  'dog-walker-cost-india', 'puppy-diet-plan-first-3-months', 'puppy-first-grooming-age',
+  'dog-deworming-schedule-india', 'dog-vaccination-cost-ludhiana', 'full-dog-grooming-package-included',
+  'home-grooming-vs-salon-india', 'how-often-bathe-dog-india', 'vet-home-visit-vs-clinic',
 ] as const;
 
 /** Service ids for `service_<id>` — the `services[].id` values of src/data/pricing.json (07 §2 row 4). */
