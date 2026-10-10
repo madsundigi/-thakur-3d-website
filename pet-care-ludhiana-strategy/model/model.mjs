@@ -1,12 +1,13 @@
 #!/usr/bin/env node
 // PetDoorStep — launch → first ₹1 crore. Deterministic, zero-dependency month-by-month model of the managed
-// marketplace (independent providers deliver; the platform earns commission + subscriptions).
+// marketplace (independent providers deliver and are the legal supplier; PetDoorStep earns commission + subscriptions).
 //
-//   node model.mjs            → writes model-output.json (3 scenarios + sensitivities + investment tiers)
+//   node model.mjs            → writes model-output.json (scenarios × tiers + sensitivities + investment tables)
 //   node model.mjs --check    → also runs the integrity assertions and exits non-zero on any failure
 //
-// Inputs: assumptions.json (every number carries a source in `sources`) + the live price list
-// ../../website/src/data/pricing.json (AOV is computed from it, never typed in). Nothing here touches the website build.
+// Inputs: assumptions.json (every number has a source in `sources`, research ids → facts.json) + the live price list
+// ../../website/src/data/pricing.json (AOV and commission per job are computed from it, never typed in).
+// Nothing here touches the website build.
 import fs from 'node:fs';
 import path from 'node:path';
 import url from 'node:url';
@@ -15,48 +16,56 @@ const DIR = path.dirname(url.fileURLToPath(import.meta.url));
 const A = JSON.parse(fs.readFileSync(path.join(DIR, 'assumptions.json'), 'utf8'));
 const PRICING = JSON.parse(fs.readFileSync(path.join(DIR, A.pricingPath), 'utf8'));
 const CRORE = 1e7;
+const LAKH = 1e5;
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 // ---------- prices (from pricing.json) ----------
-function priceOf(id, sizeSplit) {
+function servicePrice(id) {
   for (const s of PRICING.services) {
-    if (s.id === id) {
-      const p = s.pricing;
-      if (p.type === 'by_size') return sizeSplit.small * p.small + sizeSplit.medium * p.medium + sizeSplit.large * p.large;
-      if (p.type === 'flat' || p.type === 'flat_plus') return p.price;
-      throw new Error(`priceOf: ${id} needs a plan id`);
-    }
+    if (s.id === id) return s.pricing;
     if (s.pricing.type === 'plans') {
       const plan = s.pricing.plans.find((x) => x.id === id);
-      if (plan) return plan.price;
+      if (plan) return { type: 'flat', price: plan.price };
     }
   }
-  if (id === 'tick-addon') return PRICING.services.find((s) => s.id === 'tick-flea').pricing.addonPrice;
-  throw new Error(`priceOf: unknown id ${id}`);
+  throw new Error(`unknown service id ${id}`);
 }
-const mixAvg = (mix, size) => mix.reduce((t, m) => t + m.share * priceOf(m.id, size), 0);
-const mixShare = (mix) => mix.reduce((t, m) => t + m.share, 0);
+// a mix → weighted "atoms" {share, price} (by_size services expand into S/M/L)
+function atoms(mix, size, k) {
+  const out = [];
+  for (const m of mix) {
+    const p = servicePrice(m.id);
+    if (p.type === 'by_size') for (const z of ['small', 'medium', 'large']) out.push({ id: `${m.id}:${z}`, share: m.share * size[z], price: p[z] * k });
+    else out.push({ id: m.id, share: m.share, price: p.price * k });
+  }
+  return out;
+}
+const avg = (at) => at.reduce((t, a) => t + a.share * a.price, 0);
 
 function prices(sc) {
   const size = A.demand.sizeSplit;
   const k = sc.priceMult ?? 1;
-  const groomBase = mixAvg(A.mix.groom, size);
-  const addon = A.mix.tickAddonAttach * priceOf('tick-addon', size) *
-    A.mix.groom.filter((m) => ['full-groom', 'bath-brush', 'premium-spa'].includes(m.id)).reduce((t, m) => t + m.share, 0);
-  const fullGroom = priceOf('full-groom', size);
-  const health = A.mix.health.map((m) => ({ ...m, price: priceOf(m.id, size) * k }));
-  const walk = A.mix.walk.reduce((t, m) => t + m.share * priceOf(m.id, size), 0);
+  const groom = atoms(A.mix.groom, size, k);
+  const groomedShare = A.mix.groom.filter((m) => ['full-groom', 'bath-brush', 'premium-spa'].includes(m.id)).reduce((t, m) => t + m.share, 0);
+  const addonPerJob = A.mix.tickAddonAttach * groomedShare * servicePrice('tick-flea').addonPrice * k;
+  const member = atoms([{ id: 'full-groom', share: 1 }], size, k * (1 - A.offers.groomClubPercent / 100));
+  const health = A.mix.health.map((m) => ({ ...m, price: servicePrice(m.id).price * k }));
+  const walk = atoms(A.mix.walk, size, k);
   return {
-    groomAOV: (groomBase + addon) * k,
-    groomAOVExAddon: groomBase * k,
-    fullGroom: fullGroom * k,
-    memberJob: fullGroom * k * (1 - A.offers.groomClubPercent / 100),
+    groomAtoms: groom, memberAtoms: member, addonPerJob,
+    groomAOV: avg(groom) + addonPerJob,
+    groomAOVExAddon: avg(groom),
+    fullGroom: avg(atoms([{ id: 'full-groom', share: 1 }], size, k)),
+    memberJob: avg(member),
     health,
     healthAOV: health.reduce((t, m) => t + m.share * m.price, 0),
-    walkMonthly: walk * k,
-    walkTrial: priceOf('walk-trial', size) * k,
+    healthFeePerJob: health.reduce((t, h) => t + h.share * (h.flatFee ?? h.price * A.take.healthPct), 0),
+    walkMonthly: avg(walk),
+    walkTrial: servicePrice('walk-trial').price * k,
   };
 }
+// commission per job at take t with a per-job cap (₹) — the cap blunts the incentive to take big jobs off-platform
+const commissionPerJob = (at, t, cap) => at.reduce((s, a) => s + a.share * Math.min(a.price * t, cap), 0);
 
 // ---------- helpers ----------
 const calLabel = (m) => {
@@ -67,276 +76,305 @@ const calMonth = (m) => (A.timeline.startMonthIndex + m) % 12;
 const step = (table, x) => { let v = table[0][1]; for (const [from, val] of table) if (x >= from) v = val; return v; };
 const lerp = (a, b, t) => a + (b - a) * Math.max(0, Math.min(1, t));
 
-// ---------- one scenario run ----------
+// ---------- one run (scenario × tier) ----------
 function run(scName, over = {}) {
-  const base = A.scenarios[scName];
-  const sc = { ...base, ...over };
+  const sc = { ...A.scenarios[scName], ...over };
+  const tierName = sc.tier ?? 'recommended';
+  const TR = A.tiers[tierName];
   const H = A.timeline.horizon;
   const P = prices(sc);
-  const D = A.demand, T = A.take, O = A.offers, C = A.costs, X = A.expansion, S = A.supply;
+  const D = A.demand, T = A.take, O = A.offers, C = A.costs, X = A.expansion, S = A.supply, TX = A.tax, PAY = A.payments;
+  const takeDelta = sc.takeDelta ?? 0;
 
-  // cities: Ludhiana open at M1 (public launch); the others open when the gate passes
   const cities = X.cities.map((c, i) => ({
     ...c, idx: i, open: i === 0 ? 1 : null,
     tam: D.ludhianaTAM * sc.tamMult * c.sizeFactor,
-    cum: 0, repeaters: 0, members: 0, walkActive: 0, newPrev: 0, gateStreak: 0,
+    cum: 0, repeaters: 0, walkActive: 0, newPrev: 0, gateStreak: 0,
   }));
 
+  const prelaunchCost = A.investment.prelaunch.reduce((t, it) => t + (tierName === 'bootstrap' ? it.lowcost : it.standard), 0);
   const rows = [];
-  let cumGMV = 0, cumRev = 0, cumOpCash = 0, cash = sc.startingCash ?? A.funding.startingCash;
-  let appBuilt = false, lastOpen = 1;
-  const prelaunch = A.investment.tierForScenario[scName] ?? 'recommended';
-  const prelaunchCost = A.investment.prelaunch.reduce((t, it) => t + (prelaunch === 'bootstrap' ? it.lowcost : it.standard), 0);
+  let cumGMV = 0, cumRev = 0, cumOpCash = 0;
+  let appBuilt = false, gstFrom = sc.gstVoluntary ? 0 : null, fyRev = 0, splitPayFrom = null;
 
   for (let m = 0; m <= H; m++) {
     const season = A.seasonality[calMonth(m)];
+    if (calMonth(m) === 3) fyRev = 0; // Indian FY starts in April
+    const gstOn = gstFrom !== null && m >= gstFrom;
     const r = { m, label: calLabel(m), cities: [] };
     let jobs = 0, groomJobs = 0, memberJobs = 0, healthJobs = 0, walkPlans = 0, walkTrials = 0, newCust = 0, gmv = 0;
-    let commission = 0, subs = 0, proFees = 0, promo = 0, marketing = 0, groomers = 0, walkers = 0, vets = 0;
-    let members = 0, repeatJobs = 0, cityLeads = 0, citySetup = 0, providerPayout = 0, healthMRPpassThrough = 0;
+    let groomGMV = 0, groomComm = 0, commission = 0, subs = 0, promo = 0, marketing = 0, groomers = 0, walkers = 0, vets = 0;
+    let members = 0, repeatJobs = 0, cityLeadCost = 0, cityLeads = 0, citySetup = 0, healthMRP = 0;
 
-    // M0 = prelaunch pilot in Ludhiana only
     if (m === 0) {
+      // M0 = pre-launch pilot in Ludhiana (friends/family/RWA) to earn the first reviews; the platform tops up the
+      // provider for the pilot discount (counted in the pre-launch investment line "pilot grooms"), so GMV is list price.
       const pj = D.pilotJobs;
       groomJobs = pj; jobs = pj; newCust = pj;
-      gmv = pj * P.fullGroom * (1 - D.pilotDiscount);
-      commission = gmv * T.groomLaunch;
-      promo = 0; // the pilot discount is shared pro rata (lower GMV), not platform-funded
+      groomGMV = gmv = pj * P.fullGroom;
+      groomComm = commission = pj * commissionPerJob(atoms([{ id: 'full-groom', share: 1 }], A.demand.sizeSplit, sc.priceMult ?? 1), T.groomByAge[0][1], T.groomCap);
       groomers = S.minGroomersAtLaunch; vets = 1;
-      marketing = C.marketingFixedPerCity;
-      cities[0].cum = pj; cities[0].newPrev = pj;
-      cities[0].repeaters = pj * D.repeatRate.start;
+      marketing = TR.marketingFixedPerCity;
+      cities[0].cum = pj; cities[0].newPrev = pj; cities[0].repeaters = pj * D.repeatRate.start;
     } else {
       for (const c of cities) {
         if (c.open === null || m < c.open) continue;
         const age = m - c.open; // 0 in the opening month
-        const adsOn = m >= sc.adsStartMonth;
+        const adsOn = m >= (sc.adsStartMonth ?? TR.adsStartMonth);
         const p = D.bassP * sc.pMult * (adsOn ? D.adsPMult : 1) * (c.idx > 0 && age < X.launchBoostMonths ? X.launchBoostP : 1);
         const q = D.bassQ * sc.qMult;
-        const raw = (p + q * c.cum / c.tam) * Math.max(0, c.tam - c.cum);
-        const nNew = raw * lerp(1, season, D.seasonOnNew);
-        // repeaters: last month's new customers who come back (repeat probability ramps with age of the city)
+        const nNew = (p + q * c.cum / c.tam) * Math.max(0, c.tam - c.cum) * lerp(1, season, D.seasonOnNew);
         const rr = lerp(D.repeatRate.start, D.repeatRate.mature * sc.repeatMult, age / D.repeatRate.rampMonths);
         c.repeaters = c.repeaters * (1 - D.repeaterChurn) + c.newPrev * rr;
         const memberShare = age < O.groomClubStartAge ? 0 : lerp(O.groomClubAdoption.start, O.groomClubAdoption.mature, (age - O.groomClubStartAge) / O.groomClubAdoption.rampMonths);
         const mem = c.repeaters * memberShare;
-        const nonMem = c.repeaters - mem;
         const cMemberJobs = mem * O.memberFrequency * season;
-        const cRepeatNonMember = nonMem * D.repeatFrequency * season;
+        const cRepeatNonMember = (c.repeaters - mem) * D.repeatFrequency * season;
         const cGroom = nNew + cMemberJobs + cRepeatNonMember;
         const cHealth = cGroom * lerp(D.healthRatio.start, D.healthRatio.mature, age / 12);
-        // walking: trials from a share of new customers, a share convert to monthly plans
         const cTrials = nNew * D.walkTrialShareOfNew;
         c.walkActive = c.walkActive * (1 - D.walkChurn) + cTrials * D.walkTrialConversion;
-        c.cum += nNew; c.newPrev = nNew; c.members = mem;
+        c.cum += nNew; c.newPrev = nNew;
 
-        const cGMV = nNew * P.groomAOV + cRepeatNonMember * P.groomAOV + cMemberJobs * P.memberJob
-          + cHealth * P.healthAOV + c.walkActive * P.walkMonthly + cTrials * P.walkTrial;
-        // take rates (by month since the city opened)
-        const tGroom = step(T.groomByAge, age) + (sc.takeDelta ?? 0);
-        const groomGMV = (nNew + cRepeatNonMember) * P.groomAOV + cMemberJobs * P.memberJob;
-        const healthFees = cHealth * P.health.reduce((t, h) => t + h.share * (h.flatFee ?? h.price * T.healthPct), 0);
-        const walkGMV = c.walkActive * P.walkMonthly + cTrials * P.walkTrial;
-        const cComm = groomGMV * tGroom + healthFees + walkGMV * (T.walk + (sc.takeDelta ?? 0));
-        const cSubs = mem * (O.groomClubFee / (A.tax.subscriptionInclGST ? 1 + A.tax.gstRate : 1));
+        // GMV (service value only — vaccines/medicines at MRP are the vet's own sale, tracked as pass-through)
+        const cGroomGMV = (nNew + cRepeatNonMember) * P.groomAOV + cMemberJobs * P.memberJob;
+        const cWalkGMV = c.walkActive * P.walkMonthly + cTrials * P.walkTrial;
+        const cGMV = cGroomGMV + cHealth * P.healthAOV + cWalkGMV;
+
+        // commission: capped % on grooming (launch rate for the first months of each city), flat fees on vet work,
+        // a low % on walking (walkers' economics, R1/R2)
+        const t = step(T.groomByAge, age) + takeDelta;
+        const cGroomComm = (nNew + cRepeatNonMember) * (commissionPerJob(P.groomAtoms, t, T.groomCap) + P.addonPerJob * t)
+          + cMemberJobs * commissionPerJob(P.memberAtoms, t, T.groomCap);
+        const cComm = cGroomComm + cHealth * P.healthFeePerJob + cWalkGMV * (T.walk + takeDelta);
+        const cSubs = mem * (O.groomClubFeeYear / 12) / (gstOn ? 1 + TX.gstRate : 1);
 
         // platform-funded promotions
-        const firstGroomCost = nNew * O.firstGroomUptake * (O.firstGroomOff + O.freeNailVisitUse * O.freeNailVisitProviderPay);
-        const referralCost = nNew * D.referralShareOfNew * (O.referralYou + O.referralFriend);
-        const memberNailCost = mem * O.memberNailVisitUse * O.freeNailVisitProviderPay;
-        const lateCost = (cGroom + cHealth) * O.lateRate * O.onTimeOff;
-        const launchOfferCost = (c.idx > 0 && age < X.launchBoostMonths) ? nNew * X.launchOfferCostPerNew : 0;
-        const cPromo = firstGroomCost + referralCost + memberNailCost + lateCost + launchOfferCost;
+        const firstGroom = nNew * O.firstGroomUptake * (O.firstGroomOff + O.freeNailVisitUse * O.freeNailVisitProviderPay);
+        const referral = nNew * D.referralShareOfNew * (O.referralYou + O.referralFriend);
+        const memberNail = mem * O.memberNailVisitUse * O.memberNailPlatformCost;
+        const late = (cGroom + cHealth) * O.lateRate * O.onTimeOff * O.lateCostPlatformShare;
+        const launchOffer = (c.idx > 0 && age < X.launchBoostMonths) ? nNew * X.launchOfferCostPerNew : 0;
+        const cPromo = firstGroom + referral + memberNail + late + launchOffer;
 
-        // marketing: channel CAC on non-referral new customers + a fixed floor per open city
-        const nonRef = nNew * (1 - D.referralShareOfNew);
+        // marketing: blended channel CAC on non-referral new customers + a fixed floor per open city
         const mix = adsOn ? D.channelMixWithAds : D.channelMix;
-        const cac = Object.entries(mix).reduce((t, [ch, share]) => t + share * D.cac[ch], 0);
-        const cMkt = nonRef * cac + C.marketingFixedPerCity + (c.idx > 0 && age < X.launchBoostMonths ? X.launchMarketingPerMonth : 0);
+        const cac = Object.entries(mix).reduce((s2, [ch, share]) => s2 + share * D.cac[ch], 0);
+        const cMkt = nNew * (1 - D.referralShareOfNew) * cac + TR.marketingFixedPerCity
+          + (c.idx > 0 && age < X.launchBoostMonths ? TR.cityLaunchMarketingPerMonth : 0);
 
         // supply needed
-        const cGroomers = Math.max(S.minGroomersAtLaunch, Math.ceil((cGroom + cHealth * S.healthDoneByGroomersShare) / (S.groomerJobsPerDay * S.workDays * S.targetUtilisation)));
+        const cGroomers = Math.max(S.minGroomersAtLaunch, Math.ceil(cGroom / (S.groomerJobsPerDay * S.workDays * S.targetUtilisation)));
         const cWalkers = c.walkActive > 0.5 ? Math.ceil(c.walkActive / S.plansPerWalker) : 0;
-        const cVets = Math.max(1, Math.ceil(cHealth * (1 - S.healthDoneByGroomersShare) / S.vetVisitsPerMonth));
+        const cVets = Math.max(1, Math.ceil(cHealth / S.vetVisitsPerMonth));
 
         groomJobs += cGroom; memberJobs += cMemberJobs; repeatJobs += cMemberJobs + cRepeatNonMember; healthJobs += cHealth;
-        walkPlans += c.walkActive; walkTrials += cTrials; newCust += nNew; gmv += cGMV; commission += cComm; subs += cSubs;
-        promo += cPromo; marketing += cMkt; groomers += cGroomers; walkers += cWalkers; vets += cVets; members += mem;
-        healthMRPpassThrough += cHealth * A.mix.healthMRPPerJob;
-        const cJobs = cGroom + cHealth + c.walkActive; // T1 definition: a walking plan = 1 booking/month
+        walkPlans += c.walkActive; walkTrials += cTrials; newCust += nNew; gmv += cGMV; groomGMV += cGroomGMV;
+        groomComm += cGroomComm; commission += cComm; subs += cSubs; promo += cPromo; marketing += cMkt;
+        groomers += cGroomers; walkers += cWalkers; vets += cVets; members += mem; healthMRP += cHealth * A.mix.healthMRPPerJob;
+        const cJobs = cGroom + cHealth + c.walkActive; // doc 11 T1: a walking plan = 1 booking/month
         jobs += cJobs;
-        if (c.idx > 0) cityLeads += 1;
-        if (c.idx > 0 && age === 0) citySetup += (A.investment.tierForScenario[scName] === 'bootstrap' ? X.citySetupLowcost : X.citySetup);
-        r.cities.push({ city: c.name, age, newCustomers: nNew, jobs: cJobs, gmv: cGMV, commission: cComm + cSubs,
+        if (c.idx > 0) {
+          cityLeads += 1;
+          cityLeadCost += TR.cityLead.mode === 'salary' ? TR.cityLead.salary : TR.cityLead.retainer + TR.cityLead.revShare * (cComm + cSubs);
+          if (age === 0) citySetup += A.investment.perCity.reduce((s2, it) => s2 + (tierName === 'bootstrap' ? it.lowcost : it.standard), 0);
+        }
+        r.cities.push({ city: c.name, age, newCustomers: nNew, jobs: cJobs, gmv: cGMV, revenue: cComm + cSubs,
           repeatShare: cGroom > 0 ? (cMemberJobs + cRepeatNonMember) / cGroom : 0, contribution: cComm + cSubs - cPromo - cMkt });
       }
-      // provider subscriptions ("Pro")
-      if (m >= A.offers.proStartMonth) proFees = Math.round(groomers * A.offers.proAdoption) * A.offers.proFee;
     }
 
-    // provider earnings sanity (average groomer)
-    const groomGMVTotal = gmv - walkPlans * P.walkMonthly - walkTrials * P.walkTrial - healthJobs * P.healthAOV * (1 - S.healthDoneByGroomersShare);
-    const groomerJobsEach = groomers ? (groomJobs + healthJobs * S.healthDoneByGroomersShare) / groomers : 0;
-    const groomerGross = groomers ? groomGMVTotal / groomers : 0;
-    const tNow = (m === 0 ? T.groomLaunch : step(T.groomByAge, m - 1)) + (sc.takeDelta ?? 0);
-    const groomerNet = groomerGross * (1 - tNow * (1 + A.tax.gstRate)) - groomerJobsEach * (S.consumablesPerJob + S.travelPerJob);
-    // cold-start: guarantee the core launch groomers a minimum monthly net for the first months (platform tops up)
+    // provider-side revenue lines
+    const pro = m >= O.proStartMonth ? Math.round(groomers * O.proAdoption) * O.proFee : 0;
+    const supplies = m >= O.suppliesStartMonth ? groomJobs * O.suppliesAttach * S.consumablesPerJob * O.suppliesMargin : 0;
+    const revenue = commission + subs + pro + supplies; // "platform revenue" = the ₹1 Cr net milestone (ex-GST)
+
+    // provider earnings sanity (average groomer, after commission + GST on commission once registered, consumables, travel)
+    const groomerJobsEach = groomers ? groomJobs / groomers : 0;
+    const groomerNet = groomers ? (groomGMV - groomComm * (gstOn ? 1 + TX.gstRate : 1)) / groomers
+      - groomerJobsEach * (S.consumablesPerJob + S.travelPerJob) - (m >= O.proStartMonth ? O.proAdoption * O.proFee : 0) : 0;
+    // cold-start: the recommended tier guarantees the 2 core launch groomers a minimum net for the first months
     const G = S.launchGuarantee;
-    const incentives = (m >= 1 && m <= G.months) ? Math.max(0, G.monthly - groomerNet) * Math.min(G.providers, groomers) : 0;
+    const incentives = TR.launchGuarantee && m >= 1 && m <= G.months ? Math.max(0, G.monthly - groomerNet) * Math.min(G.providers, groomers) : 0;
 
-    // ---------- costs ----------
-    const payment = gmv * C.paymentCostPctOfGMV + (groomers + walkers + vets) * C.payoutsPerProviderPerMonth * C.payoutFee;
-    const revenue = commission + subs + proFees;
-    const contribution = revenue - promo - incentives - payment - marketing;
-    const founder = step(sc.founderDraw ?? C.founderDraw, m);
+    // payments: providers are paid directly by customers (UPI/cash) at launch → no gateway cost; commission is settled
+    // weekly by providers. From PAY.splitAtJobs, customers pay through an RBI-authorised PA split product.
+    if (splitPayFrom === null && jobs >= PAY.splitAtJobs) splitPayFrom = m + 1;
+    const split = splitPayFrom !== null && m >= splitPayFrom;
+    const payment = split ? gmv * PAY.digitalShare * PAY.splitFeePct + (groomers + walkers + vets) * PAY.payoutsPerProviderPerMonth * PAY.payoutFee : 0;
+    // statutory / contingent
+    const levy = m >= TX.aggregatorLevyFromMonth ? revenue * TX.aggregatorLevyPct : 0;
+    const taxRisk = sc.gst95 ? groomGMV * TX.gstRate / (1 + TX.gstRate) : 0; // s.9(5) downside: platform pays GST on grooming GMV
+    const contribution = revenue - promo - incentives - payment - levy - taxRisk - marketing;
+
+    // fixed costs
+    const founder = step(TR.founderDraw, m);
     const opsStaff = C.opsHires.reduce((n, h) => n + (jobs >= h.atJobs ? 1 : 0), 0);
-    const staff = opsStaff * C.opsSalary + cityLeads * X.cityLeadSalary;
-    const tools = step(C.tools, m) + cityLeads * C.toolsPerExtraCity;
-    const insurance = (m % 12 === 0) ? C.insuranceAnnual * (1 + cityLeads * 0.5) : 0;
-    const fixed = founder + staff + tools + C.accounting + insurance + C.misc;
+    const staff = opsStaff * C.opsSalary + cityLeadCost;
+    const tools = step(TR.tools, m) + cityLeads * C.toolsPerExtraCity;
+    const accounting = C.accounting + (gstOn ? C.accountingGST : 0);
+    const insurance = calMonth(m) === calMonth(TR.insuranceFromMonth) && m >= TR.insuranceFromMonth ? C.insuranceAnnual * (1 + cityLeads * 0.5) : 0;
+    const fixed = founder + staff + tools + accounting + insurance + C.misc;
     const ebitda = contribution - fixed;
-    let capex = 0;
-    if (m === 0) capex += prelaunchCost;
+
+    let capex = m === 0 ? prelaunchCost : 0;
     capex += citySetup;
-    // custom app: built once active repeat customers pass the Phase-2 trigger (strategy report: 500–1,000 repeat customers)
     const activeRepeaters = cities.reduce((t, c) => t + (c.open !== null && m >= c.open ? c.repeaters : 0), 0);
-    if (!appBuilt && A.tech.buildApp && activeRepeaters >= A.tech.appTriggerRepeaters) { capex += A.tech.appCost; appBuilt = m; }
+    if (appBuilt === false && activeRepeaters >= A.tech.appTriggerRepeaters) { capex += TR.appCost; appBuilt = m; }
     const opCash = ebitda - capex;
-    cumGMV += gmv; cumRev += revenue; cumOpCash += opCash; cash += opCash;
+    cumGMV += gmv; cumRev += revenue; cumOpCash += opCash; fyRev += revenue;
+    if (gstFrom === null && fyRev > TX.gstThreshold) gstFrom = m + 1; // registration trigger: platform's own FY turnover
 
-    providerPayout = gmv - revenue + proFees; // what flows to providers (before their own costs/GST on commission)
-
-    // ---------- expansion gate (doc 11 §1 T1/T3/T5, modelled; T2/T4 are assumed met if the numbers are) ----------
-    const lud = r.cities.find((x) => x.city === cities[0].name);
-    if (m >= 1) {
-      const lastOpenCity = cities.filter((c) => c.open !== null).at(-1);
-      const lc = r.cities.find((x) => x.city === lastOpenCity.name);
-      const gateBase = lastOpenCity.idx === 0
-        ? (lc && lc.jobs >= X.gate.jobs && lc.repeatShare >= X.gate.repeat && lc.contribution > 0 && m >= X.gate.minMonth)
-        : (lc && lc.jobs >= X.gate.jobs * lastOpenCity.sizeFactor * X.gate.nextCityShare && lc.contribution > 0 && m - lastOpenCity.open >= X.gate.minGapMonths);
-      lastOpenCity.gateStreak = gateBase ? lastOpenCity.gateStreak + 1 : 0;
+    // expansion gate (doc 11 §1: T1 volume, T3 contribution, T5 repeat — T2/T4 are people/reviews, assumed to follow)
+    if (m >= 1 && sc.expand !== false) {
+      const last = cities.filter((c) => c.open !== null).at(-1);
+      const lc = r.cities.find((x) => x.city === last.name);
+      const pass = last.idx === 0
+        ? lc && lc.jobs >= X.gate.jobs && lc.repeatShare >= X.gate.repeat && lc.contribution > 0 && m >= X.gate.minMonth
+        : lc && lc.jobs >= X.gate.jobs * last.sizeFactor * X.gate.nextCityShare && lc.contribution > 0 && m - last.open >= X.gate.minGapMonths;
+      last.gateStreak = pass ? last.gateStreak + 1 : 0;
       const next = cities.find((c) => c.open === null);
-      if (next && lastOpenCity.gateStreak >= X.gate.consecutive && sc.expand !== false) {
-        next.open = m + X.cloneMonths; // 10–12 week clone → opens ~3 months later
-        lastOpen = next.open;
-      }
+      if (next && last.gateStreak >= X.gate.consecutive) next.open = m + X.cloneMonths;
     }
 
     Object.assign(r, {
       newCustomers: newCust, groomJobs, memberJobs, repeatJobs, healthJobs, walkPlans, walkTrials, jobs,
       repeatShare: groomJobs > 0 ? repeatJobs / groomJobs : 0,
-      gmv, healthMRPpassThrough, commission, subscriptions: subs, providerFees: proFees, revenue, providerPayout,
-      promo, incentives, payment, marketing, contribution, founder, staff, opsStaff, tools, insurance, fixed, ebitda, capex, opCash,
-      cumGMV, cumRevenue: cumRev, cumOpCash, cash, members, groomers, walkers, vets,
-      groomerNetEarnings: groomerNet, groomerJobsEach, citiesOpen: cities.filter((c) => c.open !== null && m >= c.open).map((c) => c.name),
-      gstIfPrincipal: (gmv - healthJobs * P.healthAOV) * A.tax.gstRate / (1 + A.tax.gstRate), // risk line: GST on full non-vet GMV
+      gmv, groomGMV, healthMRPpassThrough: healthMRP,
+      commission, subscriptions: subs, providerFees: pro, supplies, revenue, takeRate: gmv ? revenue / gmv : 0,
+      promo, incentives, payment, levy, taxRisk, marketing, contribution,
+      founder, staff, opsStaff, tools, accounting, insurance, fixed, ebitda, capex, opCash,
+      cumGMV, cumRevenue: cumRev, cumOpCash, members, groomers, walkers, vets,
+      groomerNetEarnings: groomerNet, groomerJobsEach, gstRegistered: gstOn, splitPayments: split,
+      citiesOpen: cities.filter((c) => c.open !== null && m >= c.open).map((c) => c.name),
     });
     rows.push(r);
-    if (m >= H) break;
   }
 
-  const first = (pred) => { const r = rows.find(pred); return r ? { m: r.m, label: r.label } : null; };
-  const minCum = rows.reduce((mn, r) => Math.min(mn, r.cumOpCash), 0);
-  const ludhianaPeak = Math.max(...rows.map((r) => (r.cities.find((c) => c.city === cities[0].name)?.jobs ?? 0)));
+  const first = (pred) => { const x = rows.find(pred); return x ? { m: x.m, label: x.label } : null; };
+  const minCum = Math.min(0, ...rows.map((x) => x.cumOpCash));
+  const sum = (from, to, k) => rows.slice(from, to + 1).reduce((t, x) => t + x[k], 0);
   return {
-    scenario: scName, overrides: over, prices: P,
+    scenario: scName, tier: tierName, overrides: over,
+    prices: { groomAOV: P.groomAOV, groomAOVExAddon: P.groomAOVExAddon, addonPerJob: P.addonPerJob, fullGroom: P.fullGroom, memberJob: P.memberJob, healthAOV: P.healthAOV, healthFeePerJob: P.healthFeePerJob, walkMonthly: P.walkMonthly, walkTrial: P.walkTrial },
     summary: {
-      gmv1cr: first((r) => r.cumGMV >= CRORE),
-      revenue1cr: first((r) => r.cumRevenue >= CRORE),
-      contributionBreakeven: first((r) => r.m >= 1 && r.contribution > 0),
-      operatingBreakeven: first((r) => r.m >= 3 && r.ebitda > 0 && rows.slice(r.m, r.m + 3).every((x) => x.ebitda > 0)),
-      cashPositive: first((r) => r.m >= 1 && r.cumOpCash >= 0 && rows.slice(r.m).every((x) => x.cumOpCash >= 0)),
+      gmv1cr: first((x) => x.cumGMV >= CRORE),
+      revenue1cr: first((x) => x.cumRevenue >= CRORE),
+      contributionPositive: first((x) => x.m >= 1 && x.contribution > 0 && rows.slice(x.m, x.m + 3).every((y) => y.contribution > 0)),
+      operatingBreakeven: first((x) => x.m >= 1 && x.ebitda > 0 && rows.slice(x.m, x.m + 3).every((y) => y.ebitda > 0)),
+      paybackMonth: first((x) => x.m >= 1 && rows.slice(x.m).every((y) => y.cumOpCash >= 0)),
       peakCashNeed: -minCum,
-      peakCashMonth: first((r) => r.cumOpCash === minCum),
-      prelaunchTier: prelaunch, prelaunchCost,
-      citiesOpened: cities.filter((c) => c.open !== null).map((c) => ({ city: c.name, open: c.open, label: calLabel(c.open) })),
-      appBuiltMonth: appBuilt === false ? null : { m: appBuilt, label: calLabel(appBuilt) },
-      ludhianaPeakJobs: ludhianaPeak,
-      at24: pick(rows[24]), at36: pick(rows[36]), atEnd: pick(rows.at(-1)),
+      peakCashMonth: minCum < 0 ? first((x) => x.cumOpCash === minCum) : null,
+      prelaunchCost,
+      burnM1toM6: -Math.min(0, sum(1, 6, 'opCash')),
+      gstRegisteredFrom: gstFrom === null ? null : { m: gstFrom, label: calLabel(gstFrom) },
+      splitPaymentsFrom: splitPayFrom === null ? null : { m: splitPayFrom, label: calLabel(splitPayFrom) },
+      citiesOpened: cities.filter((c) => c.open !== null && c.open <= H).map((c) => ({ city: c.name, m: c.open, label: calLabel(c.open) })),
+      appBuilt: appBuilt === false ? null : { m: appBuilt, label: calLabel(appBuilt) },
+      year1: { gmv: sum(1, 12, 'gmv'), revenue: sum(1, 12, 'revenue'), ebitda: sum(1, 12, 'ebitda') },
+      year2: { gmv: sum(13, 24, 'gmv'), revenue: sum(13, 24, 'revenue'), ebitda: sum(13, 24, 'ebitda') },
+      year3: { gmv: sum(25, 36, 'gmv'), revenue: sum(25, 36, 'revenue'), ebitda: sum(25, 36, 'ebitda') },
+      milestones: [1, 3, 6, 12, 18, 24, 36, 48, 60].filter((m) => m <= H).map((m) => snap(rows[m])),
     },
     rows,
   };
 }
-const pick = (r) => r && ({ m: r.m, label: r.label, jobs: r.jobs, gmv: r.gmv, revenue: r.revenue, ebitda: r.ebitda, cumGMV: r.cumGMV, cumRevenue: r.cumRevenue, groomers: r.groomers, cities: r.citiesOpen.length });
-
-// ---------- investment tiers ----------
-function investment() {
-  const sum = (arr, k) => arr.reduce((t, it) => t + it[k], 0);
-  const I = A.investment;
-  return {
-    prelaunch: I.prelaunch, firstSixMonths: I.firstSixMonths, perCity: I.perCity,
-    totals: {
-      prelaunch: { standard: sum(I.prelaunch, 'standard'), lowcost: sum(I.prelaunch, 'lowcost') },
-      firstSixMonths: { standard: sum(I.firstSixMonths, 'standard'), lowcost: sum(I.firstSixMonths, 'lowcost') },
-      perCity: { standard: sum(I.perCity, 'standard'), lowcost: sum(I.perCity, 'lowcost') },
-    },
-  };
-}
+const snap = (r) => ({ m: r.m, label: r.label, jobs: r.jobs, newCustomers: r.newCustomers, repeatShare: r.repeatShare, gmv: r.gmv, revenue: r.revenue, contribution: r.contribution, ebitda: r.ebitda, cumGMV: r.cumGMV, cumRevenue: r.cumRevenue, cumOpCash: r.cumOpCash, groomers: r.groomers, walkers: r.walkers, vets: r.vets, groomerNet: r.groomerNetEarnings, cities: r.citiesOpen.length, opsStaff: r.opsStaff });
 
 // ---------- build ----------
-const scenarios = Object.fromEntries(Object.keys(A.scenarios).map((s) => [s, run(s)]));
+const runs = {
+  conservative: run('conservative'),
+  base: run('base'),
+  aggressive: run('aggressive'),
+};
+const tiers = { bootstrap: run('base', { tier: 'bootstrap' }), recommended: runs.base };
 const sens = A.sensitivities.map((s) => {
   const o = run('base', s.over);
-  return { name: s.name, over: s.over, gmv1cr: o.summary.gmv1cr, revenue1cr: o.summary.revenue1cr, peakCashNeed: o.summary.peakCashNeed, operatingBreakeven: o.summary.operatingBreakeven };
+  return { name: s.name, note: s.note ?? '', over: s.over, gmv1cr: o.summary.gmv1cr, revenue1cr: o.summary.revenue1cr, peakCashNeed: o.summary.peakCashNeed, operatingBreakeven: o.summary.operatingBreakeven };
 });
+const inv = A.investment;
+const tot = (arr, k) => arr.reduce((t, it) => t + it[k], 0);
+const investment = {
+  prelaunch: inv.prelaunch, perCity: inv.perCity,
+  totals: {
+    prelaunch: { standard: tot(inv.prelaunch, 'standard'), lowcost: tot(inv.prelaunch, 'lowcost') },
+    perCity: { standard: tot(inv.perCity, 'standard'), lowcost: tot(inv.perCity, 'lowcost') },
+  },
+  funding: Object.fromEntries(Object.entries(tiers).map(([k, v]) => [k, {
+    prelaunch: v.summary.prelaunchCost, burnM1toM6: v.summary.burnM1toM6, peakCashNeed: v.summary.peakCashNeed,
+    peakCashMonth: v.summary.peakCashMonth, recommendedRaise: Math.ceil(v.summary.peakCashNeed * (1 + A.funding.buffer) / 50000) * 50000,
+  }])),
+};
+const strip = (o) => ({ ...o, rows: o.rows.map(({ cities, ...rest }) => ({ ...rest, cities })) });
 const out = {
   generated: A.meta.asOf, crore: CRORE, horizon: A.timeline.horizon,
-  scenarios: Object.fromEntries(Object.entries(scenarios).map(([k, v]) => [k, v])),
+  scenarios: Object.fromEntries(Object.entries(runs).map(([k, v]) => [k, strip(v)])),
+  tiers: { bootstrap: strip(tiers.bootstrap) },
   sensitivities: sens,
-  investment: investment(),
+  investment,
 };
 fs.writeFileSync(path.join(DIR, 'model-output.json'), JSON.stringify(out, (k, v) => (typeof v === 'number' ? Math.round(v * 100) / 100 : v), 1));
 
-const fmt = (x) => (x == null ? '—' : `M${x.m} (${x.label})`);
-const L = (n) => `₹${(n / 1e5).toFixed(2)} L`;
-for (const [k, v] of Object.entries(scenarios)) {
+// ---------- console summary ----------
+const fm = (x) => (x == null ? 'not by M' + A.timeline.horizon : `M${x.m} ${x.label}`);
+const L = (n) => `₹${(n / LAKH).toFixed(2)}L`;
+const line = (k, v) => {
   const s = v.summary;
-  console.log(`${k.padEnd(13)} AOV ₹${v.prices.groomAOV.toFixed(0)} | ₹1Cr GMV ${fmt(s.gmv1cr)} | ₹1Cr revenue ${fmt(s.revenue1cr)} | contrib BE ${fmt(s.contributionBreakeven)} | op BE ${fmt(s.operatingBreakeven)} | peak cash ${L(s.peakCashNeed)} @ ${fmt(s.peakCashMonth)} | cities ${s.citiesOpened.map((c) => `${c.city}@M${c.open}`).join(', ')}`);
+  console.log(`${k.padEnd(22)} AOV ₹${v.prices.groomAOV.toFixed(0)} | ₹1Cr GMV ${fm(s.gmv1cr)} | ₹1Cr revenue ${fm(s.revenue1cr)} | contrib+ ${fm(s.contributionPositive)} | EBITDA+ ${fm(s.operatingBreakeven)} | peak cash ${L(s.peakCashNeed)} | GST reg ${fm(s.gstRegisteredFrom)} | split-pay ${fm(s.splitPaymentsFrom)} | cities ${s.citiesOpened.map((c) => `${c.city.split(' ')[0]}@M${c.m}`).join(',')}`);
+};
+for (const [k, v] of Object.entries(runs)) line(k, v);
+line('base · bootstrap tier', tiers.bootstrap);
+for (const ms of runs.base.summary.milestones) {
+  console.log(`  base M${ms.m} ${ms.label}: jobs ${ms.jobs.toFixed(0)} new ${ms.newCustomers.toFixed(0)} repeat ${(ms.repeatShare * 100).toFixed(0)}% GMV ${L(ms.gmv)} rev ${L(ms.revenue)} contrib ${L(ms.contribution)} EBITDA ${L(ms.ebitda)} groomers ${ms.groomers} net/groomer ₹${ms.groomerNet.toFixed(0)} cumCash ${L(ms.cumOpCash)} cities ${ms.cities}`);
 }
-for (const m of [1, 3, 6, 12, 18, 24, 36]) {
-  const r = scenarios.base.rows[m];
-  if (r) console.log(`  base M${m} ${r.label}: jobs ${r.jobs.toFixed(0)} (groom ${r.groomJobs.toFixed(0)}, repeat ${(r.repeatShare * 100).toFixed(0)}%) GMV ${L(r.gmv)} rev ${L(r.revenue)} contrib ${L(r.contribution)} EBITDA ${L(r.ebitda)} groomers ${r.groomers} net/groomer ₹${r.groomerNetEarnings.toFixed(0)} cash ${L(r.cumOpCash)}`);
-}
+for (const s of sens) console.log(`  sens ${s.name.padEnd(34)} GMV ${fm(s.gmv1cr)} | rev ${fm(s.revenue1cr)} | peak ${L(s.peakCashNeed)} | EBITDA+ ${fm(s.operatingBreakeven)}`);
+console.log(`  investment: pre-launch standard ${L(investment.totals.prelaunch.standard)} / low-cost ${L(investment.totals.prelaunch.lowcost)}; per city ${L(investment.totals.perCity.standard)} / ${L(investment.totals.perCity.lowcost)}; raise (rec) ${L(investment.funding.recommended.recommendedRaise)} / (boot) ${L(investment.funding.bootstrap.recommendedRaise)}`);
 
 // ---------- --check ----------
 if (process.argv.includes('--check')) {
   const fails = [];
   const ok = (cond, msg) => { if (!cond) fails.push(msg); };
-  for (const [k, v] of Object.entries(scenarios)) {
+  for (const [k, v] of Object.entries({ ...runs, bootstrap: tiers.bootstrap })) {
     let g = 0, rv = 0, oc = 0;
     for (const r of v.rows) {
       g += r.gmv; rv += r.revenue; oc += r.opCash;
       ok(Math.abs(g - r.cumGMV) < 1, `${k} M${r.m}: cumGMV ≠ Σ gmv`);
       ok(Math.abs(rv - r.cumRevenue) < 1, `${k} M${r.m}: cumRevenue ≠ Σ revenue`);
       ok(Math.abs(oc - r.cumOpCash) < 1, `${k} M${r.m}: cumOpCash ≠ Σ opCash`);
-      ok(r.revenue <= r.gmv + 1e-6, `${k} M${r.m}: revenue > GMV`);
-      ok(r.groomers * A.supply.groomerJobsPerDay * A.supply.workDays >= r.groomJobs - 1e-6, `${k} M${r.m}: groomer capacity < groom jobs`);
-      ok(Math.abs(r.contribution - (r.revenue - r.promo - r.incentives - r.payment - r.marketing)) < 1e-6, `${k} M${r.m}: contribution identity`);
+      ok(r.revenue <= r.gmv, `${k} M${r.m}: revenue > GMV`);
+      ok(r.groomers * A.supply.groomerJobsPerDay * A.supply.workDays >= r.groomJobs, `${k} M${r.m}: groomer capacity < groom jobs`);
+      ok(Math.abs(r.contribution - (r.revenue - r.promo - r.incentives - r.payment - r.levy - r.taxRisk - r.marketing)) < 1e-6, `${k} M${r.m}: contribution identity`);
       ok(Math.abs(r.ebitda - (r.contribution - r.fixed)) < 1e-6, `${k} M${r.m}: EBITDA identity`);
+      ok(Math.abs(r.opCash - (r.ebitda - r.capex)) < 1e-6, `${k} M${r.m}: cash identity`);
+      ok(r.cities.reduce((t, c) => t + c.gmv, 0) - r.gmv < 1 || r.m === 0, `${k} M${r.m}: city GMV ≠ total`);
     }
     const s = v.summary;
-    if (s.gmv1cr) {
-      ok(v.rows[s.gmv1cr.m].cumGMV >= CRORE && (s.gmv1cr.m === 0 || v.rows[s.gmv1cr.m - 1].cumGMV < CRORE), `${k}: gmv1cr not first crossing`);
-    }
+    if (s.gmv1cr) ok(v.rows[s.gmv1cr.m].cumGMV >= CRORE && (s.gmv1cr.m === 0 || v.rows[s.gmv1cr.m - 1].cumGMV < CRORE), `${k}: gmv1cr not the first crossing`);
     if (s.revenue1cr) {
-      ok(v.rows[s.revenue1cr.m].cumRevenue >= CRORE && v.rows[s.revenue1cr.m - 1].cumRevenue < CRORE, `${k}: revenue1cr not first crossing`);
-      ok(!s.gmv1cr || s.gmv1cr.m <= s.revenue1cr.m, `${k}: revenue crossed before GMV`);
+      ok(v.rows[s.revenue1cr.m].cumRevenue >= CRORE && v.rows[s.revenue1cr.m - 1].cumRevenue < CRORE, `${k}: revenue1cr not the first crossing`);
+      ok(s.gmv1cr && s.gmv1cr.m <= s.revenue1cr.m, `${k}: revenue crossed ₹1 Cr before GMV`);
     }
-    ok(Math.abs(s.peakCashNeed + Math.min(0, ...v.rows.map((r) => r.cumOpCash))) < 1, `${k}: peak cash ≠ min cumulative cash`);
-    // provider-earnings sanity after the first 6 months in Ludhiana-only months
-    const bad = v.rows.filter((r) => r.m >= 6 && r.groomerNetEarnings < A.supply.minGroomerNet);
-    if (bad.length) console.log(`  ⚠ ${k}: avg groomer net < ₹${A.supply.minGroomerNet} in ${bad.length} months from M6 (first ${bad[0].label}: ₹${bad[0].groomerNetEarnings.toFixed(0)})`);
+    ok(Math.abs(s.peakCashNeed + Math.min(0, ...v.rows.map((r) => r.cumOpCash))) < 1, `${k}: peak cash ≠ −min cumulative cash`);
+    const bad = v.rows.filter((r) => r.m >= 4 && r.groomerNetEarnings < A.supply.minGroomerNet);
+    if (bad.length) console.log(`  ⚠ ${k}: avg groomer net < ₹${A.supply.minGroomerNet} in ${bad.length} month(s) from M4 (first ${bad[0].label}: ₹${bad[0].groomerNetEarnings.toFixed(0)})`);
   }
   const order = ['conservative', 'base', 'aggressive'];
   const mOf = (x) => (x ? x.m : Infinity);
-  for (let i = 0; i < order.length - 1; i++) {
-    const a = scenarios[order[i]].summary, b = scenarios[order[i + 1]].summary;
-    ok(mOf(a.gmv1cr) >= mOf(b.gmv1cr), `scenario order: ${order[i]} reaches ₹1Cr GMV before ${order[i + 1]}`);
-    ok(mOf(a.revenue1cr) >= mOf(b.revenue1cr), `scenario order: ${order[i]} reaches ₹1Cr revenue before ${order[i + 1]}`);
+  for (let i = 0; i < 2; i++) {
+    const a = runs[order[i]].summary, b = runs[order[i + 1]].summary;
+    ok(mOf(a.gmv1cr) >= mOf(b.gmv1cr), `order: ${order[i]} hits ₹1 Cr GMV before ${order[i + 1]}`);
+    ok(mOf(a.revenue1cr) >= mOf(b.revenue1cr), `order: ${order[i]} hits ₹1 Cr revenue before ${order[i + 1]}`);
   }
-  // AOV recomputed by hand from pricing.json for the base mix
-  const p = scenarios.base.prices;
-  console.log(`  AOV check: groom mix ₹${p.groomAOVExAddon.toFixed(2)} + tick add-on ₹${(p.groomAOV - p.groomAOVExAddon).toFixed(2)} = ₹${p.groomAOV.toFixed(2)}; member job ₹${p.memberJob.toFixed(2)}; health ₹${p.healthAOV.toFixed(2)}; walk plan ₹${p.walkMonthly.toFixed(2)}/mo`);
+  // AOV recomputed independently from pricing.json for the base mix (no price multiplier)
+  const size = A.demand.sizeSplit;
+  let hand = 0;
+  for (const g of A.mix.groom) {
+    const p = servicePrice(g.id);
+    hand += g.share * (p.type === 'by_size' ? size.small * p.small + size.medium * p.medium + size.large * p.large : p.price);
+  }
+  const pb = runs.base.prices;
+  ok(Math.abs(hand - pb.groomAOVExAddon) < 0.01, `AOV hand-check ${hand} ≠ ${pb.groomAOVExAddon}`);
+  console.log(`  AOV check: groom mix ₹${hand.toFixed(2)} (hand) = ₹${pb.groomAOVExAddon.toFixed(2)} (model) + tick add-on ₹${pb.addonPerJob.toFixed(2)} = ₹${pb.groomAOV.toFixed(2)}; member job ₹${pb.memberJob.toFixed(2)}; vet-line service AOV ₹${pb.healthAOV.toFixed(2)} (platform fee ₹${pb.healthFeePerJob.toFixed(2)}/job); walk plan ₹${pb.walkMonthly.toFixed(2)}/mo`);
   if (fails.length) { console.error(`CHECK FAILED (${fails.length}):\n  ` + fails.slice(0, 30).join('\n  ')); process.exit(1); }
   console.log('CHECK OK');
 }

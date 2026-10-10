@@ -137,7 +137,6 @@
   ]
  },
  "take": {
-  "groomLaunch": 0.15,
   "groomByAge": [
    [
     0,
@@ -149,15 +148,16 @@
    ],
    [
     12,
-    0.25
+    0.22
    ]
   ],
-  "walk": 0.2,
+  "groomCap": 350,
+  "walk": 0.12,
   "healthPct": 0.2
  },
  "offers": {
   "groomClubPercent": 15,
-  "groomClubFee": 149,
+  "groomClubFeeYear": 499,
   "groomClubStartAge": 2,
   "groomClubAdoption": {
    "start": 0.15,
@@ -166,6 +166,7 @@
   },
   "memberFrequency": 0.95,
   "memberNailVisitUse": 0.4,
+  "memberNailPlatformCost": 0,
   "firstGroomUptake": 0.6,
   "firstGroomOff": 200,
   "freeNailVisitUse": 0.5,
@@ -174,46 +175,31 @@
   "referralFriend": 150,
   "lateRate": 0.03,
   "onTimeOff": 100,
+  "lateCostPlatformShare": 0.5,
   "proStartMonth": 6,
-  "proAdoption": 0.25,
-  "proFee": 499
+  "proAdoption": 0.2,
+  "proFee": 299,
+  "suppliesStartMonth": 3,
+  "suppliesAttach": 0.4,
+  "suppliesMargin": 0.15
  },
  "supply": {
   "minGroomersAtLaunch": 2,
-  "groomerJobsPerDay": 3.5,
+  "groomerJobsPerDay": 3,
   "workDays": 26,
   "targetUtilisation": 0.6,
   "plansPerWalker": 8,
-  "vetVisitsPerMonth": 80,
-  "healthDoneByGroomersShare": 0,
+  "vetVisitsPerMonth": 50,
   "consumablesPerJob": 90,
-  "travelPerJob": 70,
+  "travelPerJob": 50,
   "minGroomerNet": 25000,
   "launchGuarantee": {
-   "months": 4,
+   "months": 3,
    "providers": 2,
-   "monthly": 15000
+   "monthly": 12000
   }
  },
  "costs": {
-  "paymentCostPctOfGMV": 0.004,
-  "payoutsPerProviderPerMonth": 4,
-  "payoutFee": 5,
-  "marketingFixedPerCity": 8000,
-  "founderDraw": [
-   [
-    0,
-    0
-   ],
-   [
-    7,
-    20000
-   ],
-   [
-    13,
-    40000
-   ]
-  ],
   "opsHires": [
    {
     "atJobs": 250
@@ -229,22 +215,9 @@
    }
   ],
   "opsSalary": 20000,
-  "tools": [
-   [
-    0,
-    1500
-   ],
-   [
-    6,
-    6000
-   ],
-   [
-    13,
-    12000
-   ]
-  ],
   "toolsPerExtraCity": 2000,
-  "accounting": 3000,
+  "accounting": 2500,
+  "accountingGST": 2500,
   "insuranceAnnual": 30000,
   "misc": 3000
  },
@@ -289,38 +262,35 @@
   "citySetupLowcost": 60000
  },
  "tech": {
-  "buildApp": true,
-  "appTriggerRepeaters": 1000,
-  "appCost": 400000
+  "appTriggerRepeaters": 1000
  },
  "tax": {
   "gstRate": 0.18,
-  "subscriptionInclGST": true
+  "gstThreshold": 2000000,
+  "aggregatorLevyPct": 0.01,
+  "aggregatorLevyFromMonth": 1
  },
  "funding": {
-  "startingCash": 0
+  "buffer": 0.3
  },
  "scenarios": {
   "conservative": {
    "tamMult": 0.7,
    "pMult": 0.7,
    "qMult": 0.8,
-   "repeatMult": 0.85,
-   "adsStartMonth": 6
+   "repeatMult": 0.85
   },
   "base": {
    "tamMult": 1.0,
    "pMult": 1.0,
    "qMult": 1.0,
-   "repeatMult": 1.0,
-   "adsStartMonth": 4
+   "repeatMult": 1.0
   },
   "aggressive": {
    "tamMult": 1.3,
    "pMult": 1.4,
    "qMult": 1.15,
-   "repeatMult": 1.1,
-   "adsStartMonth": 3
+   "repeatMult": 1.1
   }
  },
  "sensitivities": [
@@ -337,7 +307,7 @@
    }
   },
   {
-   "name": "Prices −15%",
+   "name": "Prices −15% (price war)",
    "over": {
     "priceMult": 0.85
    }
@@ -363,13 +333,13 @@
    }
   },
   {
-   "name": "Repeat rate low",
+   "name": "Repeat rate −25%",
    "over": {
     "repeatMult": 0.75
    }
   },
   {
-   "name": "Repeat rate high",
+   "name": "Repeat rate +20%",
    "over": {
     "repeatMult": 1.2
    }
@@ -379,35 +349,380 @@
    "over": {
     "expand": false
    }
+  },
+  {
+   "name": "GST registered from day 1 (voluntary)",
+   "over": {
+    "gstVoluntary": true
+   }
+  },
+  {
+   "name": "GST s.9(5) applied to grooming (downside)",
+   "over": {
+    "gst95": true
+   },
+   "note": "Platform pays 18% GST on grooming GMV from unregistered groomers - R3-04; CA must rule out"
   }
  ],
  "investment": {
-  "tierForScenario": {
-   "conservative": "bootstrap",
-   "base": "recommended",
-   "aggressive": "recommended"
-  },
   "prelaunch": [
    {
-    "item": "placeholder",
-    "standard": 150000,
-    "lowcost": 60000
-   }
-  ],
-  "firstSixMonths": [
+    "group": "Legal & tax",
+    "item": "Business entity",
+    "standard": 12000,
+    "standardHow": "Private Limited via an online filing service (DSC, name, stamp duty, professional fee)",
+    "lowcost": 0,
+    "lowcostHow": "Sole proprietorship + free Udyam registration + current account; convert to Pvt Ltd/LLP only when raising equity",
+    "tradeoff": "Proprietorship has no liability shield and no DPIIT/startup benefits; fine until ~₹20 L revenue or first investor",
+    "src": "R3-15,R3-16,R3-17,R3-18 (professional fees: get 2 quotes)"
+   },
    {
-    "item": "placeholder",
-    "standard": 0,
-    "lowcost": 0
+    "group": "Legal & tax",
+    "item": "Trademark 'PetDoorStep' (Class 44)",
+    "standard": 7500,
+    "standardHow": "₹4,500 govt fee + attorney search & filing",
+    "lowcost": 4500,
+    "lowcostHow": "Self-file on IP India with Udyam status (₹4,500 rate)",
+    "tradeoff": "DIY risks a weak clearance search; do a free public search first",
+    "src": "R3-19"
+   },
+   {
+    "group": "Legal & tax",
+    "item": "CA structuring consult (GST s.9(5), TCS, TDS 194-O, entity)",
+    "standard": 10000,
+    "standardHow": "Ludhiana CA, one 2-hour session + written note",
+    "lowcost": 3000,
+    "lowcostHow": "One focused call with a CA using this plan's question list",
+    "tradeoff": "Cheapest high-impact spend in the plan - do not skip it",
+    "src": "R3 needs_CA_or_lawyer"
+   },
+   {
+    "group": "Legal & tax",
+    "item": "Lawyer review: T&Cs, privacy, provider agreement",
+    "standard": 25000,
+    "standardHow": "Fixed-fee review by a practising advocate",
+    "lowcost": 7500,
+    "lowcostHow": "Law-school legal-aid clinic / junior advocate fixed fee",
+    "tradeoff": "Provider agreement (independent contractor, non-solicit) must be right before scale",
+    "src": "R3-08,R3-21,R3-22, R1 CA list"
+   },
+   {
+    "group": "Tech & comms",
+    "item": "Domain + email",
+    "standard": 4800,
+    "standardHow": "Domain + Google Workspace for 2 users (12 months)",
+    "lowcost": 800,
+    "lowcostHow": "Domain + free email forwarding to Gmail",
+    "tradeoff": "Shared Gmail looks less professional",
+    "src": "R5 (pending)"
+   },
+   {
+    "group": "Tech & comms",
+    "item": "Dedicated business phone + WhatsApp Business",
+    "standard": 1500,
+    "standardHow": "New SIM + plan for 3 months; WhatsApp Business app (free)",
+    "lowcost": 500,
+    "lowcostHow": "New prepaid SIM; WhatsApp Business app (free)",
+    "tradeoff": "None at launch volumes",
+    "src": "R4 WhatsApp app free"
+   },
+   {
+    "group": "Brand",
+    "item": "Brand polish (logo files, social templates)",
+    "standard": 10000,
+    "standardHow": "Freelance designer, 1 round",
+    "lowcost": 0,
+    "lowcostHow": "Reuse the website's design system + free Canva templates",
+    "tradeoff": "Slightly less polished social posts",
+    "src": "website-plan/08-DESIGN-SYSTEM"
+   },
+   {
+    "group": "Brand",
+    "item": "Photo shoot (real groomers, pets, Ludhiana homes)",
+    "standard": 20000,
+    "standardHow": "Local photographer, half day",
+    "lowcost": 3000,
+    "lowcostHow": "Photography student on barter (free groom for their pet) + good phone",
+    "tradeoff": "Fewer hero-quality shots",
+    "src": "website-plan/08 §5.2"
+   },
+   {
+    "group": "Supply",
+    "item": "Background verification (6 launch providers)",
+    "standard": 7200,
+    "standardHow": "Private BGV package ~₹1,200 each (court + address)",
+    "lowcost": 1500,
+    "lowcostHow": "PP Saanjh verification ₹200 + Aadhaar QR check ~₹10 each",
+    "tradeoff": "Saanjh takes up to 30 days - start now",
+    "src": "R2-23,R2-24,R2-25"
+   },
+   {
+    "group": "Supply",
+    "item": "Uniform + ID card (6 providers)",
+    "standard": 3300,
+    "standardHow": "2 embroidered polos + PVC ID with lanyard ~₹550 each",
+    "lowcost": 2400,
+    "lowcostHow": "2 printed polos + PVC ID ~₹400 each, bought from Ludhiana hosiery suppliers",
+    "tradeoff": "None",
+    "src": "R2-27"
+   },
+   {
+    "group": "Supply",
+    "item": "Training & standards (3 groomers)",
+    "standard": 9000,
+    "standardHow": "Senior groomer mentor ₹1,500/session × 2 supervised sessions each",
+    "lowcost": 3000,
+    "lowcostHow": "1 supervised session each + written SOP + video",
+    "tradeoff": "Skip ₹49-65k academy courses either way",
+    "src": "R2-26, R2 rec"
+   },
+   {
+    "group": "Supply",
+    "item": "Sealed-kit consumables starter stock",
+    "standard": 20000,
+    "standardHow": "Sealed blade/towel packs + shampoo, resold to providers at cost+15%",
+    "lowcost": 8000,
+    "lowcostHow": "Smaller first order; providers buy their own to the same spec",
+    "tradeoff": "Working capital, recovered through supplies sales",
+    "src": "R1-09,R2-19,R2-20"
+   },
+   {
+    "group": "Supply",
+    "item": "Loaner groomer kit",
+    "standard": 19000,
+    "standardHow": "1 basic kit (clipper, dryer, scissors, tub) lent to a skilled groomer without kit, recovered via EMI from payouts",
+    "lowcost": 0,
+    "lowcostHow": "Recruit only groomers who own a kit",
+    "tradeoff": "Smaller recruiting pool",
+    "src": "R2-21"
+   },
+   {
+    "group": "Supply",
+    "item": "Vet cold-chain carrier",
+    "standard": 1600,
+    "standardHow": "1 vaccine carrier with ice packs",
+    "lowcost": 0,
+    "lowcostHow": "The partner vet brings their own",
+    "tradeoff": "None",
+    "src": "R2-22"
+   },
+   {
+    "group": "Supply",
+    "item": "Provider accident cover (PMSBY)",
+    "standard": 120,
+    "standardHow": "PMSBY ₹20/yr × 6 providers (provider enrols, platform reimburses)",
+    "lowcost": 120,
+    "lowcostHow": "Same",
+    "tradeoff": "Accident cover only, not pet-injury liability",
+    "src": "R3-29"
+   },
+   {
+    "group": "Launch",
+    "item": "Pilot grooms for first reviews (12 jobs at 50% off)",
+    "standard": 8400,
+    "standardHow": "12 Full Grooms at half price; platform tops up the groomer",
+    "lowcost": 5000,
+    "lowcostHow": "8 pilot grooms with friends/RWA contacts",
+    "tradeoff": "Fewer seed reviews at launch",
+    "src": "website-plan/09 §8.2, 05 §3"
+   },
+   {
+    "group": "Launch",
+    "item": "Launch print kit (flyers, standees, QR stickers)",
+    "standard": 12000,
+    "standardHow": "2,000 A5 flyers + 2 roll-up standees + 500 QR stickers",
+    "lowcost": 4000,
+    "lowcostHow": "500 flyers + QR stickers only",
+    "tradeoff": "Less reach in societies",
+    "src": "R4 (pending)"
+   },
+   {
+    "group": "Launch",
+    "item": "RWA / pet-meetup launch stalls",
+    "standard": 10000,
+    "standardHow": "2 society stalls with demo nail-trims",
+    "lowcost": 2000,
+    "lowcostHow": "1 stall, borrowed table, demo only",
+    "tradeoff": "Slower first-month bookings",
+    "src": "website-plan/06"
    }
   ],
   "perCity": [
    {
-    "item": "placeholder",
-    "standard": 0,
-    "lowcost": 0
+    "group": "City clone",
+    "item": "City lead hiring + 1 month overlap/training",
+    "standard": 30000,
+    "standardHow": "Salaried city lead ₹30k, 1 month before launch",
+    "lowcost": 0,
+    "lowcostHow": "City lead on revenue share (₹10k retainer + 10% of city revenue) - no upfront cost",
+    "tradeoff": "Harder to find a strong lead on revenue share",
+    "src": "website-plan/11 §2-3"
+   },
+   {
+    "group": "City clone",
+    "item": "Provider onboarding (4 providers)",
+    "standard": 15000,
+    "standardHow": "BGV + uniform + 2 supervised sessions",
+    "lowcost": 4000,
+    "lowcostHow": "Saanjh + printed polos + 1 session",
+    "tradeoff": "As Ludhiana",
+    "src": "R2-23,R2-27"
+   },
+   {
+    "group": "City clone",
+    "item": "Operating base for GBP verification (3 months)",
+    "standard": 15000,
+    "standardHow": "Co-working desk / small shared office",
+    "lowcost": 0,
+    "lowcostHow": "City lead's home address (hidden service-area business)",
+    "tradeoff": "GBP must still verify at a real address",
+    "src": "website-plan/11 §2, 05 §1"
+   },
+   {
+    "group": "City clone",
+    "item": "Founder travel & stay during clone",
+    "standard": 20000,
+    "standardHow": "6 trips + stays over 10-12 weeks",
+    "lowcost": 8000,
+    "lowcostHow": "Bus/train day-trips; Jalandhar is 1¼ h away",
+    "tradeoff": "More founder time",
+    "src": "website-plan/11 §3"
+   },
+   {
+    "group": "City clone",
+    "item": "Launch print + events",
+    "standard": 20000,
+    "standardHow": "Flyers, standees, 2 society stalls",
+    "lowcost": 6000,
+    "lowcostHow": "Flyers + 1 stall",
+    "tradeoff": "Slower ramp",
+    "src": "website-plan/11 §6"
+   },
+   {
+    "group": "City clone",
+    "item": "City photo shoot",
+    "standard": 10000,
+    "standardHow": "Half-day photographer",
+    "lowcost": 2000,
+    "lowcostHow": "Student barter + phone",
+    "tradeoff": "Fewer quality photos",
+    "src": "website-plan/08"
+   },
+   {
+    "group": "City clone",
+    "item": "Registration/legal per city",
+    "standard": 5000,
+    "standardHow": "Shops & Establishments intimation / local counsel if needed",
+    "lowcost": 0,
+    "lowcostHow": "Not needed for a service-area business with no premises (confirm)",
+    "tradeoff": "Check Punjab S&E Act applicability",
+    "src": "R3 open question"
    }
   ]
  },
- "sources": {}
+ "sources": {},
+ "payments": {
+  "splitAtJobs": 400,
+  "digitalShare": 0.85,
+  "splitFeePct": 0.01,
+  "payoutsPerProviderPerMonth": 4,
+  "payoutFee": 5
+ },
+ "tiers": {
+  "recommended": {
+   "label": "Recommended",
+   "founderDraw": [
+    [
+     0,
+     0
+    ],
+    [
+     1,
+     15000
+    ],
+    [
+     13,
+     30000
+    ],
+    [
+     25,
+     50000
+    ]
+   ],
+   "tools": [
+    [
+     0,
+     1500
+    ],
+    [
+     1,
+     4000
+    ],
+    [
+     7,
+     8000
+    ],
+    [
+     13,
+     15000
+    ]
+   ],
+   "marketingFixedPerCity": 15000,
+   "cityLaunchMarketingPerMonth": 30000,
+   "adsStartMonth": 4,
+   "cityLead": {
+    "mode": "salary",
+    "salary": 30000
+   },
+   "launchGuarantee": true,
+   "insuranceFromMonth": 1,
+   "appCost": 400000
+  },
+  "bootstrap": {
+   "label": "Bootstrap minimum",
+   "founderDraw": [
+    [
+     0,
+     0
+    ],
+    [
+     13,
+     20000
+    ],
+    [
+     25,
+     40000
+    ]
+   ],
+   "tools": [
+    [
+     0,
+     500
+    ],
+    [
+     1,
+     1000
+    ],
+    [
+     7,
+     3000
+    ],
+    [
+     13,
+     8000
+    ]
+   ],
+   "marketingFixedPerCity": 5000,
+   "cityLaunchMarketingPerMonth": 10000,
+   "adsStartMonth": 7,
+   "cityLead": {
+    "mode": "revshare",
+    "retainer": 10000,
+    "revShare": 0.1
+   },
+   "launchGuarantee": false,
+   "insuranceFromMonth": 7,
+   "appCost": 60000
+  }
+ }
 }
