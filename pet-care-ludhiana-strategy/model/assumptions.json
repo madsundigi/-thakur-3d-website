@@ -369,6 +369,13 @@
     "gst95": true
    },
    "note": "Platform pays 18% GST on grooming GMV from unregistered groomers - R3-04; CA must rule out"
+  },
+  {
+   "name": "Gig-worker levy charged on GMV, not revenue",
+   "over": {
+    "levyOnGMV": true
+   },
+   "note": "Code on Social Security base unclear (R2-31, R3-23)"
   }
  ],
  "investment": {
@@ -629,7 +636,7 @@
  },
  "sources": {
   "demand.ludhianaTAM": "R4-02,R4-03,R4-04,R4-08,R4-12 + R4 rec: ~60-80k car-owning households x 15-25% with a dog x share willing to try paid home grooming → 5,000 lifetime trial customers (base); conservative 0.7x, aggressive 1.3x",
-  "demand.bassP/bassQ": "Calibrated so base M1/M3/M6 jobs ≈ website-plan/09 §8.2 targets (15/60/150)",
+  "demand.bassP/bassQ": "Calibrated to the R4 market size with a cautious ramp: base M1/M3/M6 jobs come out at ~21/37/116, i.e. below website-plan/09 §8.2's 15/60/150 at M3/M6 — keep 09's numbers as stretch targets and plan cash on the model",
   "demand.repeatRate": "R4-15 (30-40% first-timer second booking), R4-16 (UC 77% NTV from repeat), R4 rec 35-45% yr-1",
   "demand.repeatFrequency": "R4-13 (groom every 4-8 weeks; 3-6/yr typical) → 0.45/month for regulars",
   "offers.memberFrequency": "Groom Club = 1 Full Groom/month (website/src/data/pricing.json groomClub) with some skips → 0.9",

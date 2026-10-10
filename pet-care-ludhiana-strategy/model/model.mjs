@@ -204,7 +204,7 @@ function run(scName, over = {}) {
     const split = splitPayFrom !== null && m >= splitPayFrom;
     const payment = split ? gmv * PAY.digitalShare * PAY.splitFeePct + (groomers + walkers + vets) * PAY.payoutsPerProviderPerMonth * PAY.payoutFee : 0;
     // statutory / contingent
-    const levy = m >= TX.aggregatorLevyFromMonth ? revenue * TX.aggregatorLevyPct : 0;
+    const levy = m >= TX.aggregatorLevyFromMonth ? (sc.levyOnGMV ? gmv : revenue) * TX.aggregatorLevyPct : 0;
     const taxRisk = sc.gst95 ? groomGMV * TX.gstRate / (1 + TX.gstRate) : 0; // s.9(5) downside: platform pays GST on grooming GMV
     const contribution = revenue - promo - incentives - payment - levy - taxRisk - marketing;
 
@@ -280,7 +280,7 @@ function run(scName, over = {}) {
     rows,
   };
 }
-const snap = (r) => ({ m: r.m, label: r.label, jobs: r.jobs, newCustomers: r.newCustomers, repeatShare: r.repeatShare, gmv: r.gmv, revenue: r.revenue, contribution: r.contribution, ebitda: r.ebitda, cumGMV: r.cumGMV, cumRevenue: r.cumRevenue, cumOpCash: r.cumOpCash, groomers: r.groomers, walkers: r.walkers, vets: r.vets, groomerNet: r.groomerNetEarnings, cities: r.citiesOpen.length, opsStaff: r.opsStaff });
+const snap = (r) => ({ m: r.m, label: r.label, jobs: r.jobs, members: r.members, takeRate: r.takeRate, newCustomers: r.newCustomers, repeatShare: r.repeatShare, gmv: r.gmv, revenue: r.revenue, contribution: r.contribution, ebitda: r.ebitda, cumGMV: r.cumGMV, cumRevenue: r.cumRevenue, cumOpCash: r.cumOpCash, groomers: r.groomers, walkers: r.walkers, vets: r.vets, groomerNet: r.groomerNetEarnings, cities: r.citiesOpen.length, opsStaff: r.opsStaff });
 
 // ---------- build ----------
 const runs = {

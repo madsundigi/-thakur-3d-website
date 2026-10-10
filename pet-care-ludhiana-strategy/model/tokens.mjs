@@ -184,5 +184,33 @@ T['base.jobs600'] = firstM((r) => r.m >= 1 && (r.cities.find((c) => c.city === '
 T['base.groomers10'] = firstM((r) => r.groomers >= 10);
 T['base.repeat40'] = firstM((r) => r.m >= 1 && r.repeatShare >= 0.4);
 
+// extra tokens requested by the writers
+T['a.suppliesMargin'] = `cost + ${pct(A.offers.suppliesMargin)}`;
+T['a.lateShare'] = `${pct(A.offers.lateCostPlatformShare)} PetDoorStep / ${pct(1 - A.offers.lateCostPlatformShare)} provider`;
+T['a.freeNailPay'] = inr(A.offers.freeNailVisitProviderPay);
+T['a.splitFee'] = pct(A.payments.splitFeePct, 2);
+T['a.insuranceAnnual'] = `${inr(A.costs.insuranceAnnual)}/year (estimate — get 2–3 quotes)`;
+T['a.insuranceStart.rec'] = `month ${A.tiers.recommended.insuranceFromMonth}`;
+T['a.insuranceStart.boot'] = `month ${A.tiers.bootstrap.insuranceFromMonth}`;
+T['a.accounting'] = `${inr(A.costs.accounting)}/month (+${inr(A.costs.accountingGST)} once GST-registered; estimate)`;
+const lab = (m) => O.scenarios.base.rows[m] ? O.scenarios.base.rows[m].label : `month ${m}`;
+T['a.adsStart.rec.label'] = lab(A.tiers.recommended.adsStartMonth);
+T['a.adsStart.boot.label'] = lab(A.tiers.bootstrap.adsStartMonth);
+T['a.partnerRateMonths'] = String(A.take.groomByAge[1][0]);
+for (const [k, r] of Object.entries(runs)) for (const ms of r.summary.milestones) {
+  T[`${k}.m${ms.m}.contrib`] = money(ms.contribution);
+  T[`${k}.m${ms.m}.effTake`] = pct(ms.takeRate, 1);
+  T[`${k}.m${ms.m}.clubMembers`] = int(ms.members);
+}
+const tot = (r) => r.rows.reduce((t, x) => ({ g: t.g + x.gmv, v: t.v + x.revenue }), { g: 0, v: 0 });
+const tb = tot(O.scenarios.base);
+T['base.gmvPerRevenue'] = `${(tb.g / tb.v).toFixed(1)}×`;
+for (const k of ['conservative', 'aggressive', 'bootstrap']) {
+  const rr = runs[k].rows;
+  const f2 = (pred) => { const r = rr.find(pred); return r ? `${r.label} (month ${r.m})` : `not within ${O.horizon} months`; };
+  T[`${k}.jobs600`] = f2((r) => r.m >= 1 && (r.cities.find((c) => c.city === 'Ludhiana')?.jobs ?? 0) >= 600);
+  T[`${k}.opsHire1`] = f2((r) => r.opsStaff >= 1);
+}
+
 fs.writeFileSync(path.join(DIR, 'tokens.json'), JSON.stringify(T, null, 1));
 console.log(`${Object.keys(T).length} tokens`);
