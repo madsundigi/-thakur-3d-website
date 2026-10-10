@@ -24,18 +24,18 @@
   0.8
  ],
  "demand": {
-  "ludhianaTAM": 8000,
-  "bassP": 0.002,
+  "ludhianaTAM": 5000,
+  "bassP": 0.0032,
   "bassQ": 0.2,
   "adsPMult": 1.6,
   "seasonOnNew": 0.5,
   "repeatRate": {
    "start": 0.35,
-   "mature": 0.55,
+   "mature": 0.5,
    "rampMonths": 12
   },
   "repeaterChurn": 0.05,
-  "repeatFrequency": 0.55,
+  "repeatFrequency": 0.45,
   "healthRatio": {
    "start": 0.08,
    "mature": 0.15
@@ -66,10 +66,10 @@
   },
   "cac": {
    "gbpSeo": 50,
-   "rwaFlyers": 150,
+   "rwaFlyers": 200,
    "vetPetshop": 150,
    "influencer": 250,
-   "metaAds": 500
+   "metaAds": 600
   }
  },
  "mix": {
@@ -164,7 +164,7 @@
    "mature": 0.35,
    "rampMonths": 12
   },
-  "memberFrequency": 0.95,
+  "memberFrequency": 0.9,
   "memberNailVisitUse": 0.4,
   "memberNailPlatformCost": 0,
   "firstGroomUptake": 0.6,
@@ -229,7 +229,7 @@
    },
    {
     "name": "Chandigarh Tricity",
-    "sizeFactor": 1.3
+    "sizeFactor": 1.5
    },
    {
     "name": "Jalandhar",
@@ -351,6 +351,13 @@
    }
   },
   {
+   "name": "Gateway split payments from 1,500 jobs/month",
+   "over": {
+    "splitAtJobs": 1500
+   },
+   "note": "Razorpay Route/Cashfree Easy Split ~2.65% of collected GMV (R5-02..06)"
+  },
+  {
    "name": "GST registered from day 1 (voluntary)",
    "over": {
     "gstVoluntary": true
@@ -369,12 +376,12 @@
    {
     "group": "Legal & tax",
     "item": "Business entity",
-    "standard": 12000,
-    "standardHow": "Private Limited via an online filing service (DSC, name, stamp duty, professional fee)",
+    "standard": 7000,
+    "standardHow": "LLP (₹500 govt fee + DSC + professional fee): keeps DPIIT, Startup Punjab, VLIIF and Seed Fund routes open, no audit below ₹40 L turnover; convert to Pvt Ltd before equity",
     "lowcost": 0,
-    "lowcostHow": "Sole proprietorship + free Udyam registration + current account; convert to Pvt Ltd/LLP only when raising equity",
-    "tradeoff": "Proprietorship has no liability shield and no DPIIT/startup benefits; fine until ~₹20 L revenue or first investor",
-    "src": "R3-15,R3-16,R3-17,R3-18 (professional fees: get 2 quotes)"
+    "lowcostHow": "Sole proprietorship + free Udyam registration + current account",
+    "tradeoff": "A proprietorship cannot get DPIIT recognition, so it cannot use the incubator grants; incorporate before applying (and keep the company under 2 years old for the Seed Fund)",
+    "src": "R3-15,R3-16,R3-18,R5-30,R5-34,R5-39 (professional fees: get 2 quotes)"
    },
    {
     "group": "Legal & tax",
@@ -408,13 +415,13 @@
    },
    {
     "group": "Tech & comms",
-    "item": "Domain + email",
-    "standard": 4800,
-    "standardHow": "Domain + Google Workspace for 2 users (12 months)",
-    "lowcost": 800,
-    "lowcostHow": "Domain + free email forwarding to Gmail",
-    "tradeoff": "Shared Gmail looks less professional",
-    "src": "R5 (pending)"
+    "item": "Domain (.in)",
+    "standard": 1000,
+    "standardHow": ".in domain, renewal-safe budget (Workspace seats are in monthly tools)",
+    "lowcost": 1000,
+    "lowcostHow": "Same - no cheaper safe option",
+    "tradeoff": "None",
+    "src": "R5-18"
    },
    {
     "group": "Tech & comms",
@@ -424,7 +431,7 @@
     "lowcost": 500,
     "lowcostHow": "New prepaid SIM; WhatsApp Business app (free)",
     "tradeoff": "None at launch volumes",
-    "src": "R4 WhatsApp app free"
+    "src": "R4-29,R5-10"
    },
    {
     "group": "Brand",
@@ -529,22 +536,22 @@
    {
     "group": "Launch",
     "item": "Launch print kit (flyers, standees, QR stickers)",
-    "standard": 12000,
-    "standardHow": "2,000 A5 flyers + 2 roll-up standees + 500 QR stickers",
-    "lowcost": 4000,
-    "lowcostHow": "500 flyers + QR stickers only",
+    "standard": 15000,
+    "standardHow": "5,000 A5 flyers with WhatsApp QR + newspaper insertion on affluent-sector routes + 4 roll-up standees at partner vet clinics/pet shops",
+    "lowcost": 5000,
+    "lowcostHow": "1,000 flyers hand-delivered in 2 sectors + QR stickers + 1 standee",
     "tradeoff": "Less reach in societies",
-    "src": "R4 (pending)"
+    "src": "R4-33,R4-34,R4-35"
    },
    {
     "group": "Launch",
-    "item": "RWA / pet-meetup launch stalls",
+    "item": "Launch stalls (GADVASU Dog Show, Dec 2026 + RWA camps)",
     "standard": 10000,
-    "standardHow": "2 society stalls with demo nail-trims",
+    "standardHow": "Stall at the GADVASU Dog Show (100+ dog owners) + 2 society camps with demo nail-trims",
     "lowcost": 2000,
-    "lowcostHow": "1 stall, borrowed table, demo only",
+    "lowcostHow": "1 free society camp (notice board + demo) in exchange for a free vaccination/grooming camp",
     "tradeoff": "Slower first-month bookings",
-    "src": "website-plan/06"
+    "src": "R4-36,R4-38"
    }
   ],
   "perCity": [
@@ -620,13 +627,48 @@
    }
   ]
  },
- "sources": {},
+ "sources": {
+  "demand.ludhianaTAM": "R4-02,R4-03,R4-04,R4-08,R4-12 + R4 rec: ~60-80k car-owning households x 15-25% with a dog x share willing to try paid home grooming → 5,000 lifetime trial customers (base); conservative 0.7x, aggressive 1.3x",
+  "demand.bassP/bassQ": "Calibrated so base M1/M3/M6 jobs ≈ website-plan/09 §8.2 targets (15/60/150)",
+  "demand.repeatRate": "R4-15 (30-40% first-timer second booking), R4-16 (UC 77% NTV from repeat), R4 rec 35-45% yr-1",
+  "demand.repeatFrequency": "R4-13 (groom every 4-8 weeks; 3-6/yr typical) → 0.45/month for regulars",
+  "offers.memberFrequency": "Groom Club = 1 Full Groom/month (website/src/data/pricing.json groomClub) with some skips → 0.9",
+  "demand.cac": "R4-20..23 (Meta CPL ₹100-250, 25-40% lead→booking, +18% GST if unregistered → ~₹600 paid CAC), R4-33..36 (print), R4-30/31 (nano barter)",
+  "demand.referralShareOfNew": "R4-18, R4-19, R4 rec (referrals 10-20% of new by M6)",
+  "seasonality": "Assumption: Punjab grooming peaks pre-summer/summer (Apr-Jun), dips in Dec-Jan cold; tick season Jul-Sep (website-plan/10 content calendar)",
+  "take.groomByAge": "R1-04 (UC beauty 8.5-25%, avg 20-22%), R2-05 (UC ~28%, protests above 30%), R1 rec 15-20% at launch → 20-25%",
+  "take.groomCap": "R1-05 (UC capped slab ₹399), R1-33 (commission doubles leakage, more on high tickets)",
+  "take.walk": "R1-26/27, R2-07/08, R2 rec (walkers need ~₹85-90/walk → 10-15% take)",
+  "mix.health flat fees": "R2 rec (vet keeps ₹500-550 of ₹699), R3-27 (vet sells MRP items, platform takes no drug margin)",
+  "offers.groomClubFeeYear": "R1-11 (UC Plus ₹249-399/6-12 mo), R1-29 (Zigly ₹499/yr) → ₹499/yr",
+  "offers.proFee": "R1 rec (optional ₹299-499/mo Pro, no deposits tied to targets), R1-07",
+  "offers.supplies": "R1-09 (UC tools/consumables ~16% of revenue), R2-19/20 (consumables ₹50-170/groom)",
+  "supply.groomerJobsPerDay": "R2-06 (UC partners ~91 platform hours/month), R2 rec (2 grooms/day realistic) → 3/day max at 60% utilisation",
+  "supply.consumablesPerJob": "R2-19, R2-20",
+  "supply.travelPerJob": "R2-28, R2-29 (₹17-40 fuel per 10-16 km round trip; ₹30-95 all-in)",
+  "supply.minGroomerNet": "R1-08/R2-06 (UC avg net ₹28,322/month), R2-01/02 (salaried ₹17-35k)",
+  "supply.launchGuarantee": "Recommended tier only; R1-10 warns full guarantees need VC money → small 3-month top-up for 2 core groomers",
+  "payments": "R5-01..07, R5 rec: direct UPI/cash to provider (0% MDR ≤₹2,000 and small merchants), weekly commission settlement; gateway split only after ₹40 L turnover (Route gate R5-04) at ~2.65%",
+  "tax.gstThreshold": "R3-01, R5-12 (₹20 L services; Punjab normal-category)",
+  "tax.aggregatorLevyPct": "R2-31, R3-23 (Code on Social Security 1-2% of turnover, cap 5% of payouts; contingent)",
+  "tax.gst95 (sensitivity)": "R3-04 (s.9(5) 'housekeeping' risk)",
+  "costs.opsSalary": "R2-30 (Punjab skilled minimum wage ₹15,414 from 1 May 2026) → ₹20k coordinator",
+  "costs.insuranceAnnual": "UNSOURCED - R3 could not price CGL/care-custody cover; get 2-3 quotes",
+  "costs.accounting": "UNSOURCED estimate - CA retainer for books, TDS 194-O/26Q, GST returns after registration",
+  "tiers.*.tools": "R5-13 (Workspace ₹270+GST/seat), R4-27 (AiSensy ₹1,350-1,500+GST), R4-24/25 (WA messages), R5-14/15 (AppSheet/Glide)",
+  "tiers.*.appCost": "R5-22/23 (freelance Flutter MVP ₹6.5-9.5 L; agency ₹6-55 L); bootstrap = no-code upgrade",
+  "tiers.recommended.cityLead": "website-plan/11 §2-3; bootstrap = revenue share (assumption)",
+  "expansion.cities.sizeFactor": "Assumption vs Ludhiana: Tricity larger/more affluent with the densest competitor field (website-plan/11 §2, R1-20..24), Jalandhar/Amritsar/Patiala smaller",
+  "expansion.gate": "website-plan/11 §1 T1 (≥600 jobs/month ×2), T3, T5 (≥40% repeat), month-12+",
+  "investment": "See each line's src; unsourced lines are estimates to replace with quotes",
+  "funding": "R5-25..38"
+ },
  "payments": {
-  "splitAtJobs": 400,
+  "splitAtJobs": null,
   "digitalShare": 0.85,
-  "splitFeePct": 0.01,
+  "splitFeePct": 0.0265,
   "payoutsPerProviderPerMonth": 4,
-  "payoutFee": 5
+  "payoutFee": 7
  },
  "tiers": {
   "recommended": {
@@ -656,11 +698,11 @@
     ],
     [
      1,
-     4000
+     3000
     ],
     [
      7,
-     8000
+     6000
     ],
     [
      13,
@@ -676,7 +718,7 @@
    },
    "launchGuarantee": true,
    "insuranceFromMonth": 1,
-   "appCost": 400000
+   "appCost": 700000
   },
   "bootstrap": {
    "label": "Bootstrap minimum",
@@ -701,11 +743,11 @@
     ],
     [
      1,
-     1000
+     500
     ],
     [
      7,
-     3000
+     2500
     ],
     [
      13,
@@ -722,7 +764,7 @@
    },
    "launchGuarantee": false,
    "insuranceFromMonth": 7,
-   "appCost": 60000
+   "appCost": 100000
   }
  }
 }

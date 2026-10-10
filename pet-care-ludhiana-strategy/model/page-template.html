@@ -1,0 +1,362 @@
+<title>PetDoorStep ₹1 Crore Plan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,650&family=Inter:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: an operating binder — verdict band, then a sticky scenario bar driving the live numbers, then the plan itself
+   with a contents rail on wide screens. Palette and faces are PetDoorStep's own design system (website/src/styles). */
+:root {
+  --bg: #ffffff;
+  --surface: #f4faf8;
+  --mint: #e9f5f2;
+  --sand: #fbf5ea;
+  --ink: #15242a;
+  --slate: #51646c;
+  --muted: #6b7f86;
+  --line: #d7e3e0;
+  --brand: #0e7c72;
+  --brand-deep: #0a5a53;
+  --cta: #c46d0c;
+  --cta-soft: #fdf0de;
+  --alert: #b03a2a;
+  --alert-soft: #fbe9e6;
+  --good: #1d7a4a;
+  --chart-a: #0e7c72;
+  --chart-b: #c46d0c;
+  --chart-c: #51646c;
+  --grid: #e6eeec;
+  --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  --measure: 68ch;
+  --r: 10px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e181b; --surface: #132126; --mint: #16302c; --sand: #221d14; --ink: #e5eeec; --slate: #a9bcb8; --muted: #8aa09c;
+    --line: #26393d; --brand: #4fb8ab; --brand-deep: #7fd0c5; --cta: #f0a14a; --cta-soft: #2c2214; --alert: #f08a7a;
+    --alert-soft: #2c1714; --good: #5fc98f; --chart-a: #4fb8ab; --chart-b: #f0a14a; --chart-c: #a9bcb8; --grid: #1f3034;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e181b; --surface: #132126; --mint: #16302c; --sand: #221d14; --ink: #e5eeec; --slate: #a9bcb8; --muted: #8aa09c;
+  --line: #26393d; --brand: #4fb8ab; --brand-deep: #7fd0c5; --cta: #f0a14a; --cta-soft: #2c2214; --alert: #f08a7a;
+  --alert-soft: #2c1714; --good: #5fc98f; --chart-a: #4fb8ab; --chart-b: #f0a14a; --chart-c: #a9bcb8; --grid: #1f3034;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+a { color: var(--brand); text-underline-offset: 2px; }
+a:focus-visible, button:focus-visible, input:focus-visible, summary:focus-visible { outline: 2px solid var(--cta); outline-offset: 2px; border-radius: 4px; }
+.wrap { max-width: 1180px; margin: 0 auto; padding-inline: 16px; }
+@media (min-width: 760px) { .wrap { padding-inline: 28px; } }
+
+/* ---------- verdict band ---------- */
+.band { background: var(--mint); border-bottom: 1px solid var(--line); padding-block: 28px 24px; }
+.eyebrow { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--brand-deep); font-weight: 600; margin: 0 0 8px; }
+h1 { font-family: var(--font-display); font-weight: 650; font-size: clamp(30px, 5.4vw, 50px); line-height: 1.08; margin: 0; letter-spacing: -.01em; text-wrap: balance; max-width: 22ch; }
+.lede { color: var(--slate); max-width: 62ch; margin: 12px 0 0; font-size: 17px; }
+.verdict { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-top: 22px; }
+.tile { background: var(--bg); border: 1px solid var(--line); border-radius: var(--r); padding: 14px 16px; min-width: 0; }
+.tile .k { font-size: 12.5px; color: var(--muted); font-weight: 600; letter-spacing: .02em; }
+.tile .v { font-family: var(--font-display); font-size: 27px; font-weight: 650; line-height: 1.15; margin-top: 4px; font-variant-numeric: tabular-nums; }
+.tile .s { font-size: 13px; color: var(--slate); margin-top: 2px; }
+.tile.primary { border-color: var(--brand); box-shadow: inset 0 0 0 1px var(--brand); }
+.tile.primary .v { color: var(--brand-deep); }
+
+/* ---------- scenario bar ---------- */
+.bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent); backdrop-filter: blur(6px); border-bottom: 1px solid var(--line); }
+.bar .wrap { display: flex; gap: 10px 16px; align-items: center; flex-wrap: wrap; padding-block: 10px; }
+.bar .lbl { font-size: 13px; color: var(--muted); font-weight: 600; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; padding: 3px; gap: 2px; flex-wrap: wrap; background: var(--surface); }
+.seg button { font: inherit; font-size: 13.5px; font-weight: 600; border: 0; background: transparent; color: var(--slate); padding: 6px 12px; border-radius: 999px; cursor: pointer; min-height: 34px; }
+.seg button[aria-pressed="true"] { background: var(--brand); color: var(--bg); }
+.bar .note { font-size: 12.5px; color: var(--muted); flex: 1 1 220px; min-width: 0; }
+
+/* ---------- dashboard ---------- */
+.dash { padding-block: 26px 10px; }
+.dash h2 { font-family: var(--font-display); font-weight: 650; font-size: 24px; margin: 0 0 4px; }
+.dash .sub { color: var(--slate); margin: 0 0 16px; font-size: 14.5px; max-width: 70ch; }
+.charts { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; }
+.chart { border: 1px solid var(--line); border-radius: var(--r); padding: 12px 12px 6px; min-width: 0; background: var(--bg); }
+.chart h3 { font-size: 14px; margin: 0; font-weight: 600; }
+.chart .cap { font-size: 12.5px; color: var(--muted); margin: 2px 0 4px; }
+.chart svg { width: 100%; height: auto; display: block; }
+svg .ax { fill: var(--muted); font: 11px var(--font-body); font-variant-numeric: tabular-nums; }
+svg .gl { stroke: var(--grid); stroke-width: 1; }
+svg .zero { stroke: var(--line); stroke-width: 1.2; }
+svg .target { stroke: var(--cta); stroke-width: 1.4; stroke-dasharray: 5 4; }
+svg .tlabel { fill: var(--cta); font: 600 11px var(--font-body); }
+svg .city { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 2 3; opacity: .7; }
+svg .clabel { fill: var(--muted); font: 10px var(--font-body); }
+svg .dot-label { fill: var(--ink); font: 600 11.5px var(--font-body); }
+.months { margin-top: 16px; }
+.months details { border: 1px solid var(--line); border-radius: var(--r); margin-top: 8px; background: var(--bg); }
+.months summary { cursor: pointer; padding: 10px 14px; font-weight: 600; font-size: 14.5px; display: flex; gap: 12px; flex-wrap: wrap; align-items: baseline; }
+.months summary span { font-weight: 400; color: var(--slate); font-size: 13.5px; font-variant-numeric: tabular-nums; }
+
+/* ---------- document ---------- */
+.doc { display: grid; grid-template-columns: 1fr; gap: 28px; padding-block: 18px 60px; }
+@media (min-width: 1040px) { .doc { grid-template-columns: 250px minmax(0, 1fr); } }
+.toc { min-width: 0; }
+.toc details { border: 1px solid var(--line); border-radius: var(--r); padding: 10px 14px; background: var(--surface); }
+.toc summary { cursor: pointer; font-weight: 600; font-size: 14px; }
+.toc ol { margin: 10px 0 0; padding-left: 20px; font-size: 13.5px; display: grid; gap: 4px; }
+.toc a { color: var(--slate); text-decoration: none; }
+.toc a:hover, .toc a.on { color: var(--brand); }
+@media (min-width: 1040px) { .toc details { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 70px); max-height: calc(100vh - 90px); overflow: auto; border: 0; background: transparent; padding: 0; } .toc summary { list-style: none; color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .08em; } .toc summary::-webkit-details-marker { display: none; } }
+article { min-width: 0; }
+.doc-section { padding-block: 8px 30px; border-bottom: 1px solid var(--line); margin-bottom: 26px; scroll-margin-top: 70px; }
+.doc-section:last-child { border-bottom: 0; }
+.doc-section h2 { font-family: var(--font-display); font-weight: 650; font-size: clamp(24px, 3.4vw, 32px); line-height: 1.15; margin: 0 0 14px; text-wrap: balance; letter-spacing: -.005em; }
+.doc-section h3 { font-size: 18px; margin: 26px 0 8px; line-height: 1.3; text-wrap: balance; }
+.doc-section h4 { font-size: 15.5px; margin: 20px 0 6px; }
+.doc-section p, .doc-section li { max-width: var(--measure); }
+.doc-section p { margin: 0 0 12px; }
+.doc-section ul, .doc-section ol { padding-left: 22px; margin: 0 0 14px; }
+.doc-section li { margin: 4px 0; }
+.doc-section blockquote { margin: 12px 0; padding: 10px 14px; border-left: 3px solid var(--cta); background: var(--cta-soft); border-radius: 0 var(--r) var(--r) 0; }
+.doc-section blockquote p:last-child { margin: 0; }
+code { font-size: .88em; background: var(--surface); border: 1px solid var(--line); padding: 1px 5px; border-radius: 5px; overflow-wrap: anywhere; }
+.cite { font-size: 11.5px; font-weight: 600; color: var(--brand-deep); background: var(--mint); padding: 0 5px; border-radius: 4px; text-decoration: none; white-space: nowrap; vertical-align: 1px; }
+.table-wrap { overflow-x: auto; margin: 10px 0 18px; border: 1px solid var(--line); border-radius: var(--r); }
+table { border-collapse: collapse; width: 100%; font-size: 14px; font-variant-numeric: tabular-nums; }
+th, td { text-align: left; vertical-align: top; padding: 8px 12px; border-bottom: 1px solid var(--line); }
+th { background: var(--surface); font-size: 12.5px; letter-spacing: .02em; color: var(--slate); font-weight: 600; white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+table.sources td:nth-child(2) { min-width: 300px; }
+table.sources tr:target td { background: var(--cta-soft); }
+td { min-width: 90px; }
+.checklist { list-style: none; padding-left: 0 !important; }
+.checklist li { display: flex; gap: 10px; align-items: flex-start; padding: 4px 0; }
+.checklist input { margin-top: 5px; width: 17px; height: 17px; accent-color: var(--brand); flex: none; }
+.checklist label { cursor: pointer; }
+.checklist input:checked + label { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--line); }
+[data-key="summary"] { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px 8px; }
+@media (min-width: 760px) { [data-key="summary"] { padding: 24px 28px 12px; } }
+
+/* budget builder */
+.builder { border: 1px solid var(--brand); border-radius: 14px; padding: 16px; margin: 6px 0 22px; background: var(--bg); }
+.builder h3 { margin: 0 0 4px !important; }
+.builder .tot { display: flex; flex-wrap: wrap; gap: 10px 22px; align-items: baseline; margin: 6px 0 12px; }
+.builder .tot b { font-family: var(--font-display); font-size: 28px; font-variant-numeric: tabular-nums; color: var(--brand-deep); }
+.builder .actions { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+.builder .actions button { font: inherit; font-size: 13px; font-weight: 600; border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 999px; padding: 6px 12px; cursor: pointer; min-height: 34px; }
+.lines { display: grid; gap: 6px; }
+.line { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; align-items: center; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; }
+.line .nm { font-size: 14px; font-weight: 600; min-width: 0; }
+.line .how { grid-column: 1 / -1; font-size: 12.5px; color: var(--slate); }
+.pick { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; }
+.pick button { font: inherit; font-size: 12.5px; border: 0; background: transparent; color: var(--slate); padding: 5px 10px; cursor: pointer; font-variant-numeric: tabular-nums; min-height: 32px; }
+.pick button[aria-pressed="true"] { background: var(--mint); color: var(--brand-deep); font-weight: 700; }
+footer { border-top: 1px solid var(--line); padding-block: 22px 40px; color: var(--muted); font-size: 13px; }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+</style>
+
+<header class="band">
+  <div class="wrap">
+    <p class="eyebrow">PetDoorStep · Ludhiana → Punjab · plan of 10 Oct 2026</p>
+    <h1>Launch to the first ₹1 crore</h1>
+    <p class="lede">What to do next, what it costs, and the cheap way to do each part. PetDoorStep runs as a managed marketplace: independent groomers, walkers and vets deliver, and PetDoorStep earns commission and subscriptions. The plan tracks two milestones: <strong>₹1 crore paid by customers (GMV)</strong> and <strong>₹1 crore kept by PetDoorStep (platform revenue)</strong>.</p>
+    <div class="verdict" id="verdict" aria-live="polite"></div>
+  </div>
+</header>
+
+<div class="bar" role="region" aria-label="Scenario">
+  <div class="wrap">
+    <span class="lbl" id="seg-label">Scenario</span>
+    <div class="seg" role="group" aria-labelledby="seg-label" id="seg"></div>
+    <span class="note" id="seg-note"></span>
+  </div>
+</div>
+
+<main>
+  <section class="wrap dash" aria-labelledby="dash-h">
+    <h2 id="dash-h">The model at a glance</h2>
+    <p class="sub">Month 1 is the public launch in Ludhiana, Dec 2026. Dashed verticals mark new cities opening. The dashed orange line is ₹1 crore. Switch scenarios above. Everything below the charts is the written plan, which quotes the base case.</p>
+    <div class="charts">
+      <figure class="chart" style="margin:0"><h3>Cumulative GMV</h3><p class="cap">Total customer payments for services booked</p><div id="ch-gmv"></div></figure>
+      <figure class="chart" style="margin:0"><h3>Cumulative platform revenue</h3><p class="cap">Commission + subscriptions + provider fees, ex-GST</p><div id="ch-rev"></div></figure>
+      <figure class="chart" style="margin:0"><h3>Cumulative cash</h3><p class="cap" id="cash-cap">Lowest point = the money you must line up</p><div id="ch-cash"></div></figure>
+    </div>
+    <div class="months" id="months"></div>
+  </section>
+
+  <div class="wrap doc">
+    <nav class="toc" aria-label="Contents">
+      <details id="toc" open>
+        <summary>Contents</summary>
+        <ol><!--__TOC__--></ol>
+      </details>
+    </nav>
+    <article>
+<!--__SECTIONS__-->
+    </article>
+  </div>
+</main>
+<footer>
+  <div class="wrap">Built from the PetDoorStep model (<code>pet-care-ludhiana-strategy/model/</code>) and 174 researched facts gathered 10 Oct 2026. These are planning numbers, not forecasts. Legal and tax points need a CA or lawyer to confirm them before you act.</div>
+</footer>
+
+<script>
+(function () {
+  const D = /*__DATA__*/null;
+  const keys = ['conservative', 'base', 'aggressive', 'bootstrap'];
+  const names = { conservative: 'Conservative', base: 'Base', aggressive: 'Aggressive', bootstrap: 'Bootstrap budget' };
+  const notes = {
+    conservative: 'Smaller market, slower word of mouth, lower repeat rate. Recommended spending.',
+    base: 'The plan’s base case: recommended spending, research-based demand.',
+    aggressive: 'Larger market and faster growth. Recommended spending.',
+    bootstrap: 'Base-case demand with the low-cost choices: deferred founder pay, revenue-share city leads, no-code app.'
+  };
+  const store = {
+    get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch (e) { /* storage unavailable */ } }
+  };
+  const inr = (n) => '₹' + Math.round(n).toLocaleString('en-IN');
+  const money = (n) => { const a = Math.abs(n), s = n < 0 ? '−' : ''; if (a >= 1e7) return s + '₹' + (a / 1e7).toFixed(2) + ' Cr'; if (a >= 1e5) return s + '₹' + (a / 1e5).toFixed(1) + ' L'; return s + inr(a); };
+  const axisMoney = (n) => { const a = Math.abs(n), s = n < 0 ? '−' : ''; if (a >= 1e7) return s + '₹' + (+(a / 1e7).toFixed(1)) + ' Cr'; if (a >= 1e5) return s + '₹' + Math.round(a / 1e5) + ' L'; if (a === 0) return '0'; return s + '₹' + Math.round(a / 1e3) + 'k'; };
+  const when = (x) => x ? x.label : 'Beyond 5 years';
+  const whenSub = (x) => x ? 'Month ' + x.m + ' after launch' : 'Not reached in ' + D.scenarios.base.rows.length + ' months';
+
+  let cur = store.get('pds-scn');
+  if (!keys.includes(cur)) cur = 'base';
+
+  // segmented control
+  const seg = document.getElementById('seg');
+  keys.forEach((k) => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.textContent = names[k]; b.dataset.k = k; b.id = 'scn-' + k;
+    b.addEventListener('click', () => { cur = k; store.set('pds-scn', k); render(); });
+    seg.appendChild(b);
+  });
+
+  function tiles(s) {
+    const S = s.summary;
+    const cities = S.citiesOpened.filter((c) => c.m > 1).map((c) => c.city.split(' ')[0]).join(', ') || 'Ludhiana only';
+    return [
+      ['₹1 crore GMV', when(S.gmv1cr), whenSub(S.gmv1cr), true],
+      ['₹1 crore platform revenue', when(S.revenue1cr), whenSub(S.revenue1cr), true],
+      ['Monthly profit turns positive', when(S.operatingBreakeven), 'EBITDA, before one-off spends', false],
+      ['Money to line up', money(S.peakCashNeed), 'Peak cash need, ' + (S.peakCashMonth ? S.peakCashMonth.label : '—'), false],
+      ['Cities by month 60', String(1 + S.citiesOpened.filter((c) => c.m > 1).length), cities, false],
+    ].map(([k, v, sub, p]) => `<div class="tile${p ? ' primary' : ''}"><div class="k">${k}</div><div class="v">${v}</div><div class="s">${sub}</div></div>`).join('');
+  }
+
+  function chart(el, rows, field, opts) {
+    const W = 360, H = 210, L = 46, R = 10, T = 12, B = 26;
+    const xs = rows.map((r) => r.m), ys = rows.map((r) => r[field]);
+    const xmax = xs[xs.length - 1];
+    let ymin = Math.min(0, ...ys), ymax = Math.max(...ys, opts.target || 0);
+    const span = ymax - ymin || 1;
+    const stepRaw = span / 4, mag = Math.pow(10, Math.floor(Math.log10(stepRaw)));
+    const step = [1, 2, 2.5, 5, 10].map((f) => f * mag).find((v) => v >= stepRaw);
+    ymin = Math.floor(ymin / step) * step; ymax = Math.ceil(ymax / step) * step;
+    const X = (m) => L + (m / xmax) * (W - L - R);
+    const Y = (v) => T + (1 - (v - ymin) / (ymax - ymin)) * (H - T - B);
+    let g = '';
+    for (let v = ymin; v <= ymax + step / 2; v += step) g += `<line class="${Math.abs(v) < step / 1e3 ? 'zero' : 'gl'}" x1="${L}" x2="${W - R}" y1="${Y(v)}" y2="${Y(v)}"/><text class="ax" x="${L - 6}" y="${Y(v) + 4}" text-anchor="end">${axisMoney(v)}</text>`;
+    for (let m = 0; m <= xmax; m += 12) g += `<text class="ax" x="${X(m)}" y="${H - 8}" text-anchor="middle">${m === 0 ? 'M0' : 'M' + m}</text>`;
+    (opts.cities || []).forEach((c) => { if (c.m > 1 && c.m <= xmax) g += `<line class="city" x1="${X(c.m)}" x2="${X(c.m)}" y1="${T}" y2="${H - B}"/><text class="clabel" x="${X(c.m) + 3}" y="${T + 9}">${c.city.split(' ')[0]}</text>`; });
+    if (opts.target) g += `<line class="target" x1="${L}" x2="${W - R}" y1="${Y(opts.target)}" y2="${Y(opts.target)}"/><text class="tlabel" x="${L + 4}" y="${Y(opts.target) - 5}">₹1 crore</text>`;
+    const d = rows.map((r, i) => (i ? 'L' : 'M') + X(r.m).toFixed(1) + ' ' + Y(r[field]).toFixed(1)).join(' ');
+    const area = d + ` L${X(xmax).toFixed(1)} ${Y(Math.max(ymin, 0)).toFixed(1)} L${X(0).toFixed(1)} ${Y(Math.max(ymin, 0)).toFixed(1)} Z`;
+    g += `<path d="${area}" fill="${opts.color}" fill-opacity="0.10" stroke="none"/>`;
+    g += `<path d="${d}" fill="none" stroke="${opts.color}" stroke-width="2.2" stroke-linejoin="round"/>`;
+    if (opts.mark) {
+      const r = rows[opts.mark.m];
+      const tx = X(r.m), ty = Y(r[field]);
+      g += `<circle cx="${tx}" cy="${ty}" r="4.5" fill="${opts.color}" stroke="var(--bg)" stroke-width="2"/>`;
+      if (opts.markText) g += `<text class="dot-label" x="${tx - 8}" y="${ty - 9}" text-anchor="end">${opts.markText}</text>`;
+    }
+    el.innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${opts.aria}">${g}</svg>`;
+  }
+
+  function months(s) {
+    const rows = s.rows;
+    const years = [];
+    for (let y = 0; y * 12 + 1 <= rows.length - 1; y++) years.push(rows.slice(y * 12 + 1, y * 12 + 13));
+    const head = '<tr><th>Month</th><th>Jobs</th><th>GMV</th><th>Revenue</th><th>EBITDA</th><th>Cum. cash</th><th>Groomers</th><th>Cities</th></tr>';
+    const pre = rows[0];
+    let html = '<details><summary>M0 · ' + pre.label + ' — pre-launch pilot <span>' + pre.jobs + ' pilot jobs · setup spend ' + money(-pre.cumOpCash) + '</span></summary></details>';
+    years.forEach((ys, i) => {
+      if (!ys.length) return;
+      const sum = (k) => ys.reduce((t, r) => t + r[k], 0);
+      html += `<details${i === 0 ? ' open' : ''}><summary>Year ${i + 1} · ${ys[0].label} – ${ys[ys.length - 1].label} <span>GMV ${money(sum('gmv'))} · revenue ${money(sum('revenue'))} · EBITDA ${money(sum('ebitda'))}</span></summary><div class="table-wrap" style="margin:0;border:0;border-top:1px solid var(--line);border-radius:0"><table><thead>${head}</thead><tbody>` +
+        ys.map((r) => `<tr><td>M${r.m} · ${r.label}</td><td>${r.jobs.toLocaleString('en-IN')}</td><td>${money(r.gmv)}</td><td>${money(r.revenue)}</td><td>${money(r.ebitda)}</td><td>${money(r.cumOpCash)}</td><td>${r.groomers}</td><td>${r.cities}</td></tr>`).join('') +
+        '</tbody></table></div></details>';
+    });
+    document.getElementById('months').innerHTML = '<h3 style="font-size:15px;margin:0">Month by month</h3>' + html;
+  }
+
+  function render() {
+    const s = D.scenarios[cur];
+    seg.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.k === cur)));
+    document.getElementById('seg-note').textContent = notes[cur];
+    document.getElementById('verdict').innerHTML = tiles(s);
+    const S = s.summary, cities = S.citiesOpened;
+    chart(document.getElementById('ch-gmv'), s.rows, 'cumGMV', { target: 1e7, color: 'var(--chart-a)', cities, mark: S.gmv1cr, markText: S.gmv1cr ? S.gmv1cr.label : '', aria: 'Cumulative GMV by month for the ' + names[cur] + ' scenario' });
+    chart(document.getElementById('ch-rev'), s.rows, 'cumRevenue', { target: 1e7, color: 'var(--chart-b)', cities, mark: S.revenue1cr, markText: S.revenue1cr ? S.revenue1cr.label : '', aria: 'Cumulative platform revenue by month for the ' + names[cur] + ' scenario' });
+    const low = s.rows.reduce((a, r) => (r.cumOpCash < a.cumOpCash ? r : a), s.rows[0]);
+    chart(document.getElementById('ch-cash'), s.rows, 'cumOpCash', { color: 'var(--chart-c)', cities, mark: { m: low.m }, markText: '', aria: 'Cumulative cash by month for the ' + names[cur] + ' scenario' });
+    document.getElementById('cash-cap').textContent = 'Lowest point ' + money(low.cumOpCash) + ' in ' + low.label + ' = the money to line up';
+    months(s);
+  }
+  render();
+
+  // budget builder in the investment section
+  const inv = document.querySelector('[data-key="investment"]');
+  if (inv && D.investment) {
+    const items = D.investment.prelaunch;
+    let picks;
+    try { picks = JSON.parse(store.get('pds-budget') || 'null'); } catch (e) { picks = null; }
+    if (!Array.isArray(picks) || picks.length !== items.length) picks = items.map(() => 'low');
+    const box = document.createElement('div');
+    box.className = 'builder';
+    box.innerHTML = '<h3>Build your pre-launch budget</h3><p style="margin:0;color:var(--slate);font-size:14px">Pick standard or low-cost for each line. The total updates as you go.</p><div class="tot"><b id="bb-total"></b><span id="bb-delta" style="color:var(--slate);font-size:14px"></span></div><div class="actions"><button type="button" id="bb-low">All low-cost</button><button type="button" id="bb-std">All standard</button></div><div class="lines" id="bb-lines"></div>';
+    const h2 = inv.querySelector('h2');
+    h2.insertAdjacentElement('afterend', box);
+    const linesEl = box.querySelector('#bb-lines');
+    items.forEach((it, i) => {
+      const row = document.createElement('div');
+      row.className = 'line';
+      row.innerHTML = `<div class="nm">${it.item}</div><div class="pick" role="group" aria-label="${it.item}"><button type="button" id="bb-${i}-low" data-i="${i}" data-v="low">Low ${inr(it.lowcost)}</button><button type="button" id="bb-${i}-std" data-i="${i}" data-v="std">Std ${inr(it.standard)}</button></div><div class="how" id="bb-how-${i}"></div>`;
+      linesEl.appendChild(row);
+    });
+    const upd = () => {
+      let tot = 0;
+      items.forEach((it, i) => {
+        const v = picks[i];
+        tot += v === 'std' ? it.standard : it.lowcost;
+        box.querySelector(`#bb-${i}-low`).setAttribute('aria-pressed', String(v === 'low'));
+        box.querySelector(`#bb-${i}-std`).setAttribute('aria-pressed', String(v === 'std'));
+        box.querySelector(`#bb-how-${i}`).textContent = v === 'std' ? it.standardHow : it.lowcostHow;
+      });
+      box.querySelector('#bb-total').textContent = inr(tot);
+      const all = items.reduce((t, it) => t + it.standard, 0);
+      box.querySelector('#bb-delta').textContent = 'vs ' + inr(all) + ' all-standard · saving ' + inr(all - tot);
+      store.set('pds-budget', JSON.stringify(picks));
+    };
+    linesEl.addEventListener('click', (e) => { const b = e.target.closest('button[data-i]'); if (!b) return; picks[+b.dataset.i] = b.dataset.v; upd(); });
+    box.querySelector('#bb-low').addEventListener('click', () => { picks = items.map(() => 'low'); upd(); });
+    box.querySelector('#bb-std').addEventListener('click', () => { picks = items.map(() => 'std'); upd(); });
+    upd();
+  }
+
+  // checklists remember ticks per viewer
+  document.querySelectorAll('input[data-chk]').forEach((c) => {
+    const k = 'pds-' + c.dataset.chk;
+    if (store.get(k) === '1') c.checked = true;
+    c.addEventListener('change', () => store.set(k, c.checked ? '1' : '0'));
+  });
+
+  // contents highlight + collapse on phones
+  const toc = document.getElementById('toc');
+  if (window.matchMedia('(max-width: 1039px)').matches) toc.removeAttribute('open');
+  const links = [...document.querySelectorAll('.toc a')];
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) links.forEach((a) => a.classList.toggle('on', a.getAttribute('href') === '#' + e.target.id)); }), { rootMargin: '-20% 0px -70% 0px' });
+    document.querySelectorAll('.doc-section').forEach((s) => io.observe(s));
+  }
+})();
+</script>

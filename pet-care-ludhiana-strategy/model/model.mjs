@@ -199,7 +199,8 @@ function run(scName, over = {}) {
 
     // payments: providers are paid directly by customers (UPI/cash) at launch → no gateway cost; commission is settled
     // weekly by providers. From PAY.splitAtJobs, customers pay through an RBI-authorised PA split product.
-    if (splitPayFrom === null && jobs >= PAY.splitAtJobs) splitPayFrom = m + 1;
+    const splitAt = sc.splitAtJobs ?? PAY.splitAtJobs;
+    if (splitPayFrom === null && splitAt != null && jobs >= splitAt) splitPayFrom = m + 1;
     const split = splitPayFrom !== null && m >= splitPayFrom;
     const payment = split ? gmv * PAY.digitalShare * PAY.splitFeePct + (groomers + walkers + vets) * PAY.payoutsPerProviderPerMonth * PAY.payoutFee : 0;
     // statutory / contingent
