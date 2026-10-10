@@ -3,6 +3,12 @@
 > **Next step of this project:** the Phase-1 website planning system lives in
 > [`../website-plan/`](../website-plan/00-MASTER-PLAN.md) — brand **PetDoorStep**,
 > start at `00-MASTER-PLAN.md`.
+>
+> **Business plan (2026-10-10, supersedes this report's numbers):**
+> [`LAUNCH-TO-1-CRORE.md`](LAUNCH-TO-1-CRORE.md) — launch → first ₹1 crore as an
+> asset-light managed marketplace (commission + subscriptions), with the investment
+> breakdown and low-cost alternatives. Its numbers come from the reproducible model in
+> [`model/`](model/): `node model.mjs --check && node tokens.mjs && node build-report.mjs`.
 
 A business strategy & feasibility report for an on-demand doorstep **pet-care
 services** venture (grooming, bathing, dog walking, vet-at-home and more)

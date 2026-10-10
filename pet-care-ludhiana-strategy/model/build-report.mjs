@@ -53,7 +53,7 @@ function numbersSection() {
       ...O.sensitivities.map((s) => [s.name, when(s.gmv1cr), when(s.revenue1cr), money(s.peakCashNeed)])]);
   return `## The numbers: scenarios, milestones and what moves them
 
-Every figure in this plan comes from one model (\`pet-care-ludhiana-strategy/model/\`). It runs month by month from the pre-launch pilot (M0 = ${T['timeline.m0']}) through public launch (M1 = ${T['timeline.m1']}) for ${O.horizon} months. Demand follows a word-of-mouth adoption curve for each city, calibrated to the website plan's launch targets. Repeat customers, Groom Club members, walking plans and vet visits build on top. Commission comes from today's price list, and costs from the research. These are **planning numbers, not forecasts**: they show what has to be true, and you replace them with real data month by month.
+Every figure in this plan comes from one model (\`pet-care-ludhiana-strategy/model/\`). It runs month by month from the pre-launch pilot (M0 = ${T['timeline.m0']}) through public launch (M1 = ${T['timeline.m1']}) for ${O.horizon} months. Demand follows a word-of-mouth adoption curve for each city, sized from the researched Ludhiana market with a cautious ramp. It runs below the website plan's 15 / 60 / 150 booking targets at months 3 and 6, which stay as stretch targets. Repeat customers, Groom Club members, walking plans and vet visits build on top. Commission comes from today's price list, and costs from the research. These are **planning numbers, not forecasts**: they show what has to be true, and you replace them with real data month by month.
 
 **GMV** is everything customers pay for services booked through PetDoorStep. **Platform revenue** is what PetDoorStep keeps: commission, Groom Club fees, provider Pro fees and the supplies margin, excluding GST. **EBITDA** is monthly operating profit before tax and one-off spends (pre-launch setup, new-city setup, the app build). **Peak cash need** is the deepest your cumulative cash goes, including those one-off spends. It is the amount you must have available.
 
@@ -74,21 +74,6 @@ ${yr}
 ${se}
 
 The two lines that matter most: **Ludhiana alone never reaches ₹1 crore of platform revenue inside five years**, so the second milestone depends on the Punjab expansion. And **if grooming were taxed under GST s.9(5)**, the business would not make money at today's prices. A CA must rule that out before launch (see Legal).`;
-}
-
-function investmentTables() {
-  const row = (it) => [it.item, inr(it.standard), it.standardHow, inr(it.lowcost), it.lowcostHow];
-  const pre = mdTable(['Item', 'Standard', 'How', 'Low-cost', 'How (low-cost)'], A.investment.prelaunch.map(row));
-  const city = mdTable(['Item', 'Standard', 'How', 'Low-cost', 'How (low-cost)'], A.investment.perCity.map(row));
-  const t = O.investment.totals, f = O.investment.funding;
-  const tiers = mdTable(['Money needed', 'Recommended', 'Bootstrap minimum'], [
-    ['Pre-launch setup (one-off)', money(t.prelaunch.standard), money(t.prelaunch.lowcost)],
-    ['Operating burn, months 1–6', money(f.recommended.burnM1toM6), money(f.bootstrap.burnM1toM6)],
-    ['Peak cash need (whole plan, incl. expansion & app)', money(f.recommended.peakCashNeed), money(f.bootstrap.peakCashNeed)],
-    ['Suggested funding to line up (+30% buffer)', money(f.recommended.recommendedRaise), money(f.bootstrap.recommendedRaise)],
-    ['Each new city (one-off setup)', money(t.perCity.standard), money(t.perCity.lowcost)],
-  ]);
-  return `### The totals\n\n${tiers}\n\n### Pre-launch line items — standard vs low-cost\n\n${pre}\n\n### Each new city — standard vs low-cost\n\n${city}\n\nSources and trade-offs for every line are in Appendix A. A line marked "get quotes" is an estimate: replace it with two real quotes.`;
 }
 
 function appendixAssumptions() {
@@ -130,7 +115,6 @@ for (const id of order) {
   let md = resolve(s.markdown.trim(), id);
   checkCites(md, id);
   for (const m of md.matchAll(/\[(R[1-5]-\d{2})\]/g)) cited.add(m[1]);
-  if (id === 'investment') md += '\n\n' + investmentTables();
   parts.push({ id, md });
 }
 parts.push({ id: 'appendix-a', md: appendixAssumptions() });
