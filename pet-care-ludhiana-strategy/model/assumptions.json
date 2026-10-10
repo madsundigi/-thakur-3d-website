@@ -1,0 +1,413 @@
+{
+ "meta": {
+  "asOf": "2026-10-10",
+  "note": "Every number is an assumption with a source in `sources`. Research fact ids (R1-xx…R5-xx) point into facts.json. Change a number here, re-run `node model.mjs --check`."
+ },
+ "pricingPath": "../../website/src/data/pricing.json",
+ "timeline": {
+  "startYear": 2026,
+  "startMonthIndex": 10,
+  "horizon": 60
+ },
+ "seasonality": [
+  0.8,
+  0.85,
+  1.0,
+  1.12,
+  1.2,
+  1.15,
+  1.05,
+  1.0,
+  1.0,
+  1.05,
+  0.98,
+  0.8
+ ],
+ "demand": {
+  "ludhianaTAM": 8000,
+  "bassP": 0.002,
+  "bassQ": 0.2,
+  "adsPMult": 1.6,
+  "seasonOnNew": 0.5,
+  "repeatRate": {
+   "start": 0.35,
+   "mature": 0.55,
+   "rampMonths": 12
+  },
+  "repeaterChurn": 0.05,
+  "repeatFrequency": 0.55,
+  "healthRatio": {
+   "start": 0.08,
+   "mature": 0.15
+  },
+  "walkTrialShareOfNew": 0.05,
+  "walkTrialConversion": 0.5,
+  "walkChurn": 0.08,
+  "referralShareOfNew": 0.2,
+  "pilotJobs": 12,
+  "pilotDiscount": 0.5,
+  "sizeSplit": {
+   "small": 0.45,
+   "medium": 0.3,
+   "large": 0.25
+  },
+  "channelMix": {
+   "gbpSeo": 0.45,
+   "rwaFlyers": 0.25,
+   "vetPetshop": 0.15,
+   "influencer": 0.15
+  },
+  "channelMixWithAds": {
+   "gbpSeo": 0.4,
+   "rwaFlyers": 0.15,
+   "vetPetshop": 0.12,
+   "influencer": 0.08,
+   "metaAds": 0.25
+  },
+  "cac": {
+   "gbpSeo": 50,
+   "rwaFlyers": 150,
+   "vetPetshop": 150,
+   "influencer": 250,
+   "metaAds": 500
+  }
+ },
+ "mix": {
+  "groom": [
+   {
+    "id": "full-groom",
+    "share": 0.36
+   },
+   {
+    "id": "bath-brush",
+    "share": 0.3
+   },
+   {
+    "id": "premium-spa",
+    "share": 0.06
+   },
+   {
+    "id": "puppy-intro",
+    "share": 0.05
+   },
+   {
+    "id": "cat-bath-brush",
+    "share": 0.06
+   },
+   {
+    "id": "cat-full",
+    "share": 0.04
+   },
+   {
+    "id": "nail-ear",
+    "share": 0.08
+   },
+   {
+    "id": "tick-flea",
+    "share": 0.05
+   }
+  ],
+  "tickAddonAttach": 0.12,
+  "health": [
+   {
+    "id": "vet-visit",
+    "share": 0.45,
+    "flatFee": 150
+   },
+   {
+    "id": "vaccination",
+    "share": 0.4,
+    "flatFee": 50
+   },
+   {
+    "id": "deworming",
+    "share": 0.15
+   }
+  ],
+  "healthMRPPerJob": 400,
+  "walk": [
+   {
+    "id": "walk-1x",
+    "share": 0.7
+   },
+   {
+    "id": "walk-2x",
+    "share": 0.3
+   }
+  ]
+ },
+ "take": {
+  "groomLaunch": 0.15,
+  "groomByAge": [
+   [
+    0,
+    0.15
+   ],
+   [
+    3,
+    0.2
+   ],
+   [
+    12,
+    0.25
+   ]
+  ],
+  "walk": 0.2,
+  "healthPct": 0.2
+ },
+ "offers": {
+  "groomClubPercent": 15,
+  "groomClubFee": 149,
+  "groomClubStartAge": 2,
+  "groomClubAdoption": {
+   "start": 0.15,
+   "mature": 0.35,
+   "rampMonths": 12
+  },
+  "memberFrequency": 0.95,
+  "memberNailVisitUse": 0.4,
+  "firstGroomUptake": 0.6,
+  "firstGroomOff": 200,
+  "freeNailVisitUse": 0.5,
+  "freeNailVisitProviderPay": 150,
+  "referralYou": 150,
+  "referralFriend": 150,
+  "lateRate": 0.03,
+  "onTimeOff": 100,
+  "proStartMonth": 6,
+  "proAdoption": 0.25,
+  "proFee": 499
+ },
+ "supply": {
+  "minGroomersAtLaunch": 2,
+  "groomerJobsPerDay": 3.5,
+  "workDays": 26,
+  "targetUtilisation": 0.6,
+  "plansPerWalker": 8,
+  "vetVisitsPerMonth": 80,
+  "healthDoneByGroomersShare": 0,
+  "consumablesPerJob": 90,
+  "travelPerJob": 70,
+  "minGroomerNet": 25000,
+  "launchGuarantee": {
+   "months": 4,
+   "providers": 2,
+   "monthly": 15000
+  }
+ },
+ "costs": {
+  "paymentCostPctOfGMV": 0.004,
+  "payoutsPerProviderPerMonth": 4,
+  "payoutFee": 5,
+  "marketingFixedPerCity": 8000,
+  "founderDraw": [
+   [
+    0,
+    0
+   ],
+   [
+    7,
+    20000
+   ],
+   [
+    13,
+    40000
+   ]
+  ],
+  "opsHires": [
+   {
+    "atJobs": 250
+   },
+   {
+    "atJobs": 900
+   },
+   {
+    "atJobs": 1800
+   },
+   {
+    "atJobs": 3000
+   }
+  ],
+  "opsSalary": 20000,
+  "tools": [
+   [
+    0,
+    1500
+   ],
+   [
+    6,
+    6000
+   ],
+   [
+    13,
+    12000
+   ]
+  ],
+  "toolsPerExtraCity": 2000,
+  "accounting": 3000,
+  "insuranceAnnual": 30000,
+  "misc": 3000
+ },
+ "expansion": {
+  "cities": [
+   {
+    "name": "Ludhiana",
+    "sizeFactor": 1.0
+   },
+   {
+    "name": "Chandigarh Tricity",
+    "sizeFactor": 1.3
+   },
+   {
+    "name": "Jalandhar",
+    "sizeFactor": 0.6
+   },
+   {
+    "name": "Amritsar",
+    "sizeFactor": 0.7
+   },
+   {
+    "name": "Patiala",
+    "sizeFactor": 0.4
+   }
+  ],
+  "gate": {
+   "jobs": 600,
+   "repeat": 0.4,
+   "minMonth": 12,
+   "consecutive": 2,
+   "nextCityShare": 0.6,
+   "minGapMonths": 6
+  },
+  "cloneMonths": 3,
+  "launchBoostMonths": 3,
+  "launchBoostP": 2.0,
+  "launchOfferCostPerNew": 150,
+  "launchMarketingPerMonth": 30000,
+  "cityLeadSalary": 30000,
+  "citySetup": 150000,
+  "citySetupLowcost": 60000
+ },
+ "tech": {
+  "buildApp": true,
+  "appTriggerRepeaters": 1000,
+  "appCost": 400000
+ },
+ "tax": {
+  "gstRate": 0.18,
+  "subscriptionInclGST": true
+ },
+ "funding": {
+  "startingCash": 0
+ },
+ "scenarios": {
+  "conservative": {
+   "tamMult": 0.7,
+   "pMult": 0.7,
+   "qMult": 0.8,
+   "repeatMult": 0.85,
+   "adsStartMonth": 6
+  },
+  "base": {
+   "tamMult": 1.0,
+   "pMult": 1.0,
+   "qMult": 1.0,
+   "repeatMult": 1.0,
+   "adsStartMonth": 4
+  },
+  "aggressive": {
+   "tamMult": 1.3,
+   "pMult": 1.4,
+   "qMult": 1.15,
+   "repeatMult": 1.1,
+   "adsStartMonth": 3
+  }
+ },
+ "sensitivities": [
+  {
+   "name": "Take rate −5 pp",
+   "over": {
+    "takeDelta": -0.05
+   }
+  },
+  {
+   "name": "Take rate +5 pp",
+   "over": {
+    "takeDelta": 0.05
+   }
+  },
+  {
+   "name": "Prices −15%",
+   "over": {
+    "priceMult": 0.85
+   }
+  },
+  {
+   "name": "Prices +15%",
+   "over": {
+    "priceMult": 1.15
+   }
+  },
+  {
+   "name": "Growth −30%",
+   "over": {
+    "pMult": 0.7,
+    "qMult": 0.7
+   }
+  },
+  {
+   "name": "Growth +30%",
+   "over": {
+    "pMult": 1.3,
+    "qMult": 1.3
+   }
+  },
+  {
+   "name": "Repeat rate low",
+   "over": {
+    "repeatMult": 0.75
+   }
+  },
+  {
+   "name": "Repeat rate high",
+   "over": {
+    "repeatMult": 1.2
+   }
+  },
+  {
+   "name": "Ludhiana only (no expansion)",
+   "over": {
+    "expand": false
+   }
+  }
+ ],
+ "investment": {
+  "tierForScenario": {
+   "conservative": "bootstrap",
+   "base": "recommended",
+   "aggressive": "recommended"
+  },
+  "prelaunch": [
+   {
+    "item": "placeholder",
+    "standard": 150000,
+    "lowcost": 60000
+   }
+  ],
+  "firstSixMonths": [
+   {
+    "item": "placeholder",
+    "standard": 0,
+    "lowcost": 0
+   }
+  ],
+  "perCity": [
+   {
+    "item": "placeholder",
+    "standard": 0,
+    "lowcost": 0
+   }
+  ]
+ },
+ "sources": {}
+}
